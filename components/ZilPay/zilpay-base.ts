@@ -139,8 +139,7 @@ export class ZilPayBase {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
       }
       //@xalkan
-      const code =
-        `
+      const code = `
         (* v6.5
           DIDxWALLET: W3C Decentralized Identifier Smart Contract Wallet
           Self-Sovereign Identity Protocol
@@ -1127,8 +1126,7 @@ export class ZilPayBase {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
       }
       //@xalkan
-      const code =
-        `
+      const code = `
         (* v0.2.1
           AIRxWALLET: TYRON Airdrop DID Social-Recovery Wallet
           Self-Sovereign Identity Protocol
@@ -1492,11 +1490,11 @@ export class ZilPayBase {
         "zil1nz79e74mqyd6w6hwjsr83g2ey65yz2mgxh2dws",
         "zil1uawfpg7whcg39znryqf68j24r7ga95vknkk4yf",
         "zil1wyj03epll33sv3jlch6ywhuddhfvyrzrt9ky0e",
-        "zil1va6mfw2jk6jds65fx6y8qyekhhn5uurq5ve0tz"
-      ]
-      let list: any = []
+        "zil1va6mfw2jk6jds65fx6y8qyekhhn5uurq5ve0tz",
+      ];
+      let list: any = [];
       for (let i = 0; i < init_list.length; i += 1) {
-        list.push(zcrypto.normaliseAddress(init_list[i]))
+        list.push(zcrypto.normaliseAddress(init_list[i]));
       }
       const init = [
         {
@@ -1943,19 +1941,18 @@ export class ZilPayBase {
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
       let proxy = "0xdfe5e46db3c01fd9a4a012c999d581f69fcacc61"; //'0xdfc81a41a7a1ce6ed99e27f9aa1ede4f6d97c7d0';
-      let impl = '0xdf370b7b588e905d6047dfba1be85cbc65201c0b'//'0xa577e9aa8a52c7d2c6b024a5e897e97b6f56006a'//v3.6.1 "0x42b10bd38ffb75086db9c376b3fbc1a5a7e93d99"; // v3.5
+      let impl = "0xdf370b7b588e905d6047dfba1be85cbc65201c0b"; //'0xa577e9aa8a52c7d2c6b024a5e897e97b6f56006a'//v3.6.1 "0x42b10bd38ffb75086db9c376b3fbc1a5a7e93d99"; // v3.5
       //"0x54eabb9766259dac5a57ae4f2aa48b2a0208177c"
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         proxy = "0xb36fbf7ec4f2ede66343f7e64914846024560595";
-        impl = '0x58B5ac42cB3e09a044feb54C24dDf9a5101a6E9B'// v3.8 '0xbf938603ac3ca05ace71ff03ba573a9064c2de27'//"0x962f93bc5b005fb097750ec84fc8e29e78399076"; //3.7 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
+        impl = "0x58B5ac42cB3e09a044feb54C24dDf9a5101a6E9B"; // v3.8 '0xbf938603ac3ca05ace71ff03ba573a9064c2de27'//"0x962f93bc5b005fb097750ec84fc8e29e78399076"; //3.7 'zil15evg8d69q5juaat5xgj5zx38409rqr3dav6q48'//3.6 '0x39c50dc95fd79dfe6fb38ece8766145aefb9502e'//"0xa60aa11ba93a4e2e36a8647f8ec1b4a402ec0d5d"
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
-      const code =
-        `
+      const code = `
         (* v3.10
           INIT DAPP: SSI Initialization & DNS <> Implementation smart contract
           Self-Sovereign Identity Protocol
@@ -2940,7 +2937,7 @@ export class ZilPayBase {
       let init_token_uris: Array<{ key: string; val: any }> = [];
       let init_ty: Array<{ key: string; val: any }> = [];
       for (let i = 0; i < token_uris.length; i += 1) {
-        const tot = token_uris[i][0]
+        const tot = token_uris[i][0];
         const inner = Object.entries(token_uris[i][1] as any);
         let inner_n: any = [];
         // let init_ty: any = [];
@@ -2951,7 +2948,7 @@ export class ZilPayBase {
           });
           init_ty.push({
             key: inner[i][0],
-            val: tot
+            val: tot,
           });
         }
         init_token_uris.push({
@@ -2969,13 +2966,13 @@ export class ZilPayBase {
             values.push({
               key: kv.val,
               val: "ssi",
-            },);
+            });
           }
         });
 
         init_tydras.push({ key, val: values });
-      })
-      console.log("tydras", JSON.stringify(init_tydras))
+      });
+      console.log("tydras", JSON.stringify(init_tydras));
 
       const get_token_id_count =
         await init.API.blockchain.getSmartContractSubState(
@@ -3143,8 +3140,10 @@ export class ZilPayBase {
 
   async deployDollar(net: string, address: string) {
     try {
-      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
 
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
@@ -3156,8 +3155,7 @@ export class ZilPayBase {
       const { contracts } = zilPay;
 
       //@ssidollar
-      const code =
-        `
+      const code = `
 (* dollar.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I): Fungible Decentralised Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
@@ -3795,7 +3793,7 @@ transition TransferFrom(
 end
 `;
 
-      const empty = []
+      const empty = [];
       const contract_init = [
         {
           vname: "_scilla_version",
@@ -3825,27 +3823,27 @@ end
         {
           vname: "symbol",
           type: "String",
-          value: "S$I",//@edit
+          value: "S$I", //@edit
         },
         {
           vname: "decimals",
           type: "Uint32",
-          value: "18",//@edit
+          value: "18", //@edit
         },
         {
           vname: "init_fund",
           type: "String",
-          value: `${init_fund}`,//@edit
+          value: `${init_fund}`, //@edit
         },
         {
           vname: "init_supply",
           type: "Uint128",
-          value: "0",//@edit
+          value: "0", //@edit
         },
         {
           vname: "init_balances",
           type: "Map ByStr20 Uint128",
-          value: empty,//@edit
+          value: empty, //@edit
         },
       ];
 
@@ -3872,8 +3870,10 @@ end
 
   async deploySGDollar(net: string, address: string) {
     try {
-      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
 
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
@@ -3885,8 +3885,7 @@ end
       const { contracts } = zilPay;
 
       //@ssidollar
-      const code =
-        `
+      const code = `
 (* dollar.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I): Fungible Decentralised Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
@@ -4527,9 +4526,9 @@ end
       const empty = [
         {
           key: address,
-          val: '1000000000000000000000',
-        }
-      ]
+          val: "1000000000000000000000",
+        },
+      ];
       const contract_init = [
         {
           vname: "_scilla_version",
@@ -4559,27 +4558,27 @@ end
         {
           vname: "symbol",
           type: "String",
-          value: "SGD",//@edit
+          value: "SGD", //@edit
         },
         {
           vname: "decimals",
           type: "Uint32",
-          value: "18",//@edit
+          value: "18", //@edit
         },
         {
           vname: "init_fund",
           type: "String",
-          value: `${init_fund}`,//@edit
+          value: `${init_fund}`, //@edit
         },
         {
           vname: "init_supply",
           type: "Uint128",
-          value: "0",//@edit
+          value: "0", //@edit
         },
         {
           vname: "init_balances",
           type: "Map ByStr20 Uint128",
-          value: empty,//@edit
+          value: empty, //@edit
         },
       ];
 
@@ -4608,8 +4607,10 @@ end
     try {
       let network = tyron.DidScheme.NetworkNamespace.Mainnet;
 
-      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
 
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
       let previous_version = "0x7c8e77441667ce1e223c1a5bd658287ab1ebd5cc";
@@ -4617,15 +4618,14 @@ end
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
-        previous_version = "0x38e7670000523e81eebac1f0912b280f968e5fb0"
+        previous_version = "0x38e7670000523e81eebac1f0912b280f968e5fb0";
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
       //@tyron
-      const code =
-        `
+      const code = `
 (* dollar.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I): Fungible Decentralised Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
@@ -5269,52 +5269,46 @@ end
         "balances"
       );
       const previous_balances = Object.entries(get_state.result.balances);
-      const mapu_controller = '0x92CCd2d3b771e3526EbF27722194F76A26Bc88a4'
-      const max_supply = 1e19
-      const dao_account = '0x696613a8e6f6c2a36b0fcc93e67eeb72d0b61e41'
+      const mapu_controller = "0x92CCd2d3b771e3526EbF27722194F76A26Bc88a4";
+      const max_supply = 1e19;
+      const dao_account = "0x696613a8e6f6c2a36b0fcc93e67eeb72d0b61e41";
 
-
-      let supply = 0
+      let supply = 0;
       let balances: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < previous_balances.length; i += 1) {
-        const key_ = previous_balances[i][0].toLowerCase()
-        let val_: string = previous_balances[i][1] as string
+        const key_ = previous_balances[i][0].toLowerCase();
+        let val_: string = previous_balances[i][1] as string;
 
         if (Number(val_) > 100000 && key_ !== dao_account) {
-          if (key_ === '0xad9f05b75b05d685e0447aa381646447fbcf0699') {
-            val_ = '0'
-          } else if (key_ === '0xffa61abe72fd784f1be5cf8fc5d8c57e85a4d06a') {
-            val_ = '94228080000000000'
+          if (key_ === "0xad9f05b75b05d685e0447aa381646447fbcf0699") {
+            val_ = "0";
+          } else if (key_ === "0xffa61abe72fd784f1be5cf8fc5d8c57e85a4d06a") {
+            val_ = "94228080000000000";
           } else if (key_ === mapu_controller.toLowerCase()) {
-            val_ = '47619060000000000'
-          } else if (key_ === '0x07bb058ed01582232a6e5ec32caafeb51a7904a1') {
-            val_ = '0'
-          } else if (key_ === '0x7d56579e04cdacb153ee7c980751ecd955a8358d') {
-            val_ = '0'
+            val_ = "47619060000000000";
+          } else if (key_ === "0x07bb058ed01582232a6e5ec32caafeb51a7904a1") {
+            val_ = "0";
+          } else if (key_ === "0x7d56579e04cdacb153ee7c980751ecd955a8358d") {
+            val_ = "0";
           }
 
-          if (val_ !== '0') {
-            supply = supply + Number(val_)
-            balances.push(
-              {
-                key: key_,
-                val: val_,
-              }
-            );
-
+          if (val_ !== "0") {
+            supply = supply + Number(val_);
+            balances.push({
+              key: key_,
+              val: val_,
+            });
           }
         }
       }
-      console.log("SUPPLY: ", supply)
-      const dao_amount = max_supply - supply
-      balances.push(
-        {
-          key: dao_account,
-          val: String(dao_amount),
-        }
-      );
+      console.log("SUPPLY: ", supply);
+      const dao_amount = max_supply - supply;
+      balances.push({
+        key: dao_account,
+        val: String(dao_amount),
+      });
 
-      console.log(JSON.stringify(balances, null, 2))
+      console.log(JSON.stringify(balances, null, 2));
       const contract_init = [
         {
           vname: "_scilla_version",
@@ -5651,8 +5645,10 @@ end
 
   async deployDollarTransmuter(net: string, address: string) {
     try {
-      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
 
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
@@ -5664,8 +5660,7 @@ end
       const { contracts } = zilPay;
 
       //@transmuter.ssi
-      const code =
-        `
+      const code = `
 (* transmuter.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I) Transmuter
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
@@ -6401,7 +6396,7 @@ end
           vname: "init_fund",
           type: "String",
           value: `${init_fund}`,
-        }
+        },
       ];
 
       const contract = contracts.new(code, contract_init);
@@ -6427,22 +6422,23 @@ end
 
   async deployCommunity2(net: string, address: string) {
     try {
-      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
-      let init_fladdr = '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
+      let init_fladdr = "0x92ccd2d3b771e3526ebf27722194f76a26bc88a4";
       if (net === "testnet") {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
-        init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0"
+        init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0";
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
       //@community.ssi
-      const code =
-        `
+      const code = `
 (* community.ssi DApp v2
 Self-Sovereign Identity Dollar (S$I) Decentralised Exchange & Liquidity Pool Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
@@ -8260,7 +8256,7 @@ end
         {
           vname: "init_fllimit",
           type: "Uint128",
-          value: '94500' + `000000000000000000`, //S$I
+          value: "94500" + `000000000000000000`, //S$I
         },
         {
           vname: "init_flprice",
@@ -8291,22 +8287,23 @@ end
   }
   async deployTyronS$ICommunity(net: string, address: string) {
     try {
-      const init_nft = "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64" //tyronmapu.ssi
-      const init_fund = "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a" //$tyron.ssi
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
 
-      let init_fladdr = '0x92ccd2d3b771e3526ebf27722194f76a26bc88a4'
+      let init_fladdr = "0x92ccd2d3b771e3526ebf27722194f76a26bc88a4";
       if (net === "testnet") {
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
-        init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0"
+        init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0";
       }
 
       const zilPay = await this.zilpay();
       const { contracts } = zilPay;
 
       //@community.ssi
-      const code =
-        `
+      const code = `
 (* community.ssi DApp v1
 Self-Sovereign Identity Dollar (S$I) Decentralised Exchange & Liquidity Pool Token
 Tyron SSI: Self-Sovereign Identity (SSI) Protocol
@@ -10746,16 +10743,15 @@ end
 
       //mainnet addresses
       let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
-      let ud = '0x9611c53be6d1b32058b2747bdececed7e1216793'//"zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz";
+      let ud = "0x9611c53be6d1b32058b2747bdececed7e1216793"; //"zil1jcgu2wlx6xejqk9jw3aaankw6lsjzeunx2j0jz";
 
       if (net === "testnet") {
         network = tyron.DidScheme.NetworkNamespace.Testnet;
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
-        ud = '0xb925add1d5eaf13f40efd43451bf97a22ab3d727'//"zil1hyj6m5w4atcn7s806s69r0uh5g4t84e8gp6nps";
+        ud = "0xb925add1d5eaf13f40efd43451bf97a22ab3d727"; //"zil1hyj6m5w4atcn7s806s69r0uh5g4t84e8gp6nps";
       }
       //@xalkan
-      const code =
-        `
+      const code = `
         (* SSI DNS v0.8
           SSI Domain Name System that includes the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
           Self-Sovereign Identity Protocol
@@ -12049,7 +12045,7 @@ end
       );
       // console.log(JSON.stringify(get_state))
       const init_domains = Object.entries(get_state.result.records);
-      console.log(init_domains.length)
+      console.log(init_domains.length);
 
       let zil_domains: Array<{ key: string; val: string }> = [];
       for (let i = 0; i < init_domains.length; i += 1) {
@@ -12062,7 +12058,7 @@ end
           });
         }
       }
-      console.log(zil_domains.length)
+      console.log(zil_domains.length);
       // console.log(JSON.stringify(zil_domains));
       const init = [
         {
@@ -12101,21 +12097,21 @@ end
           value: zil_domains,
         },
         {
-          "vname": "_library",
-          "type": "Bool",
-          "value": { "constructor": "True", "argtypes": [], "arguments": [] }
+          vname: "_library",
+          type: "Bool",
+          value: { constructor: "True", argtypes: [], arguments: [] },
         },
         {
-          "vname": "_extlibs",
-          "type": "List(Pair String ByStr20)",
-          "value": [
+          vname: "_extlibs",
+          type: "List(Pair String ByStr20)",
+          value: [
             {
-              "constructor": "Pair",
-              "argtypes": ["String", "ByStr20"],
-              "arguments": ["RegistryLib", `${ud}`]
-            }
-          ]
-        }
+              constructor: "Pair",
+              argtypes: ["String", "ByStr20"],
+              arguments: ["RegistryLib", `${ud}`],
+            },
+          ],
+        },
       ];
       const contract = contracts.new(code, init);
       const [tx, deployed_contract] = await contract.deploy({
@@ -12141,8 +12137,7 @@ end
         init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
       }
       //@xalkan
-      const code =
-        `
+      const code = `
         (* SSI DNS v0.7
           SSI Domain Name System that includes the Zilliqa-Reference-Contract #6 standard (which has an SPDX-License-Identifier: MIT)
           Self-Sovereign Identity Protocol
@@ -13421,8 +13416,9 @@ end
           end
           *)
         `;
-      const init_nft = '0xa6839868185028d3a0fdb1990de911403189e7747decd872f3916a09b97b7285' // $tyronzlp.did hash
-      const init_dns = []
+      const init_nft =
+        "0xa6839868185028d3a0fdb1990de911403189e7747decd872f3916a09b97b7285"; // $tyronzlp.did hash
+      const init_dns = [];
       const init = [
         {
           vname: "_scilla_version",
@@ -13469,6 +13465,769 @@ end
       const [tx, deployed_contract] = await contract.deploy({
         gasLimit: "100000",
         gasPrice: "2000000000",
+      });
+      return [tx, deployed_contract];
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async deployXSGD_S$IVault(net: string) {
+    try {
+      const init_nft =
+        "0x29eee3e10b6c4138fc2cabac8581df59a491c05c49d72d107f90dbb7af022e64"; //tyronmapu.ssi
+      const init_fund =
+        "0xaff6d74e75efc1465c6faf19c91339ffe30d44495123e49a71bb2e499ba2407a"; //$tyron.ssi
+      let init_tyron = "0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9";
+
+      let init_fladdr = "0x92ccd2d3b771e3526ebf27722194f76a26bc88a4";
+      if (net === "testnet") {
+        init_tyron = "0xec194d20eab90cfab70ead073d742830d3d2a91b";
+        init_fladdr = "0x510B5c7cAb4412A7Be40fc53023717dF0cb756a0";
+      }
+
+      const zilPay = await this.zilpay();
+      const { contracts } = zilPay;
+
+      //@vault.ssi
+      const code = `
+(* vault.ssi DApp v0.3
+Self-Sovereign Identity Dollar (S$I) Vault
+Tyron SSI: Self-Sovereign Identity (SSI) Protocol
+Copyright Tyron Mapu Community Interest Company 2023. All rights reserved.
+You acknowledge and agree that Tyron Mapu Community Interest Company (Tyron) own all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this repository (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this repository.
+You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of Tyron; and
+2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by Tyron in its sole discretion:
+1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+You will not use any trade mark, service mark, trade name, logo of Tyron or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*)
+
+scilla_version 0
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+
+import BoolUtils IntUtils
+
+library SSIVault
+  type Error =
+    | CodeWrongSender
+    | CodeDidIsNull
+    | CodeWrongStatus
+    | CodeIsNull
+    | CodeSameValue
+    | CodeIsInsufficient
+    | CodeNotValid
+
+  type Action =
+    | Add
+    | Remove
+
+  let add = Add
+  let remove = Remove
+  let true = True
+  let false = False
+  let zero = Uint128 0
+  let zero_256 = Uint256 0
+  let zero_addr = 0x0000000000000000000000000000000000000000
+  let zero_hash = 0x0000000000000000000000000000000000000000000000000000000000000000
+  let one = Uint128 1
+  let one_256 = Uint256 1
+  let fee_denom_128 = Uint128 10000 (* Fee denominated in basis points: 1 b.p. = 0.01% *)
+  let empty_string = ""
+  let ssi_id = "s$i"
+
+  let option_value = tfun 'A => fun(default: 'A) => fun(input: Option 'A) =>
+    match input with
+    | Some v => v
+    | None => default
+    end
+  let option_uint128_value = let f = @option_value Uint128 in f zero
+  let option_bystr20_value = let f = @option_value ByStr20 in f zero_addr
+
+  let grow: Uint128 -> Uint256 =
+    fun(var : Uint128) =>
+      let get_big = builtin to_uint256 var in match get_big with
+        | Some big => big
+        | None => builtin sub zero_256 one_256 (* @error throws an integer underflow - should never happen *)
+        end
+
+  let fraction: Uint128 -> Uint128 -> Uint128 -> Uint128 =
+    fun(dX: Uint128) => fun(x: Uint128) => fun(y: Uint128) =>
+      let dX_u256 = grow dX in
+      let x_u256 = grow x in
+      let y_u256 = grow y in
+      let numerator = builtin mul dX_u256 y_u256 in
+      let result = builtin div numerator x_u256 in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+
+  let compute_token: Uint128 -> Uint256 -> Uint256 -> Uint128 =
+    fun(amount: Uint128) => fun(price: Uint256) => fun(m: Uint256) =>
+      let amount_u256 = grow amount in
+      let numerator = builtin mul amount_u256 m in
+      let result = builtin div numerator price in
+      let result_uint128 = builtin to_uint128 result in match result_uint128 with
+        | None => builtin sub zero one (* @error throws an integer overflow by computing -1 in uint *)
+        | Some r => r
+        end
+
+  let one_msg = fun(msg: Message) => let nil_msg = Nil{Message} in Cons{Message} msg nil_msg
+
+  let two_msgs = fun(msg1: Message) => fun(msg2: Message) =>
+    let msgs_tmp = one_msg msg2 in Cons{Message} msg1 msgs_tmp
+
+  let make_error = fun (error: Error) => fun (version: String) => fun (code: Int32) =>
+    let exception = match error with
+    | CodeWrongSender    => "WrongSender"
+    | CodeDidIsNull      => "DidIsNull"
+    | CodeWrongStatus    => "WrongStatus"
+    | CodeIsNull         => "ZeroValueOrNull"
+    | CodeSameValue      => "SameValue"
+    | CodeIsInsufficient => "InsufficientAmount"
+    | CodeNotValid       => "InvalidValue"
+    end in { _exception: exception; contractVersion: version; errorCode: code }
+  
+  let string_is_not_empty = fun(s : String ) =>
+    let zero = Uint32 0 in
+    let s_length = builtin strlen s in
+    let is_empty = builtin eq s_length zero in
+    negb is_empty
+
+contract SSIVault(
+  token_id: String,
+  init_nft: ByStr32,
+  init: ByStr20 with contract field dApp: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field dns: Map String ByStr20,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20,
+      field verification_methods: Map String ByStr33,
+      field services: Map String ByStr20,
+      field did_domain_dns: Map String ByStr20 end end end,
+  init_fund: String,
+  init_fee: Uint128 (* 1% fee = 100 *)
+  )
+  (* Contract constraints *)
+  with
+    let token_ok = string_is_not_empty token_id in
+    let fund_ok = string_is_not_empty init_fund in
+    let valid_str = andb token_ok fund_ok in
+    let is_valid =
+      let is_invalid = 
+        (* The initial domain name must not be null *)
+        let null = builtin eq init_nft zero_hash in
+        let insufficient = uint128_le fee_denom_128 init_fee in
+        orb null insufficient in
+      negb is_invalid in
+    andb valid_str is_valid
+  =>
+
+  (***************************************************)
+  (*               Mutable parameters                *)
+  (***************************************************)
+
+  (* Contract owner.
+        @field nft_domain:
+        Contract owner's .did domain.
+        @field pending_domain:
+        New owner's .did domain for ownership transfer. *)
+  field nft_domain: ByStr32 = init_nft
+  field pending_domain: ByStr32 = zero_hash
+  
+  field pauser: ByStr32 = init_nft
+  field is_paused: Bool = False
+
+  (* Token balance per user *)
+  field balances: Map ByStr20 Uint128 = Emp ByStr20 Uint128
+  field min_affiliation: Uint128 = Uint128 220000000000000000 (* 0.22 S$I *)
+  field profit_fee: Uint128 = init_fee
+  field price: Uint256 = Uint256 1000000000000 (* 1 $$I = 1 XSGD *)
+  field ml: Uint256 = Uint256 1
+
+  (* DID Services *)
+  field services: Map String ByStr20 = Emp String ByStr20
+  field profit_fund: String = init_fund
+
+  (* The block number when the last transition occurred *)
+  field ledger_time: BNum = BNum 0
+  
+  (* A monotonically increasing number representing the amount of transitions that have taken place *)
+  field tx_number: Uint128 = zero
+
+  (* The smart contract @version *)
+  field version: String = "S$IVaultDApp_0.3.0"
+
+(***************************************************)
+(*               Contract procedures               *)
+(***************************************************)
+
+(* Emits an error & cancels the transaction.
+      @param err: The Error data type.
+      @param code: A signed integer type of 32 bits. *)
+procedure ThrowError(err: Error, code: Int32)
+  ver <- version; e = make_error err ver code; throw e
+end
+
+(* Verifies that the contract is active (unpaused). *) 
+procedure RequireNotPaused()
+  paused <- is_paused; match paused with
+    | False => | True => err = CodeWrongStatus; code = Int32 -1; ThrowError err code
+    end
+end
+
+(* Verifies the origin of the call.
+    It must match the input address.
+      @param addr: A 20-byte string. *)
+procedure VerifyOrigin(addr: ByStr20)
+  verified = builtin eq _origin addr; match verified with
+    | True => | False => err = CodeWrongSender; code = Int32 -2; ThrowError err code
+    end
+end
+
+(* Verifies that the transaction comes from the contract owner.
+      @param ssi_init: A 20-byte string representing the address of the SSI INIT DApp. *)
+procedure VerifyOwner(
+  ssi_init: ByStr20 with contract
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end
+  )
+  id <- nft_domain; domain_ = builtin to_string id;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -3; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller
+    end
+end
+
+procedure ThrowIfZero(val: Uint128)
+  is_null = builtin eq zero val; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -4; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullAddr(addr: ByStr20)
+  is_null = builtin eq addr zero_addr; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -5; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullHash(input: ByStr32)
+  is_null = builtin eq input zero_hash; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -6; ThrowError err code
+    end
+end
+
+procedure ThrowIfNullString(input: String)
+  is_null = builtin eq input empty_string; match is_null with
+    | False => | True => err = CodeIsNull; code = Int32 -7; ThrowError err code end
+end
+
+procedure Donate(
+  ssi_init: ByStr20 with contract field dns: Map String ByStr20 end,
+  donate: Uint128
+  )
+  is_zero = builtin eq zero donate; match is_zero with
+    | True => | False =>
+      donateDomain = "donate"; get_addr <-& ssi_init.dns[donateDomain];
+      addr = option_bystr20_value get_addr; ThrowIfNullAddr addr;
+      accept; msg = let m = { _tag: "AddFunds"; _recipient: addr; _amount: donate } in one_msg m; send msg
+    end
+end
+
+procedure TyronCommunityFund(
+  ssi_init: ByStr20 with contract
+    field implementation: ByStr20 with contract
+      field utility: Map String Map String Uint128 end,
+    field did_dns: Map String ByStr20 with contract
+      field controller: ByStr20 end end,
+  id: String
+  )
+  fund <- profit_fund;
+  txID = builtin concat fund id;
+  init_did <-& ssi_init.implementation; ver <- version;
+  get_fee <-& init_did.utility[ver][txID]; fee = option_uint128_value get_fee;
+  
+  is_zero = builtin eq fee zero; match is_zero with
+    | True => | False =>
+      get_did <-& ssi_init.did_dns[fund]; match get_did with
+        | Some did_ => msg = let m = { _tag: "AddFunds"; _recipient: did_; _amount: fee } in one_msg m; send msg
+        | None => err = CodeDidIsNull; code = Int32 -8; ThrowError err code
+        end
+    end
+end
+
+procedure RequireContractOwner(
+  donate: Uint128,
+  tx: String
+  )
+  ssi_init <-& init.dApp; VerifyOwner ssi_init;
+  Donate ssi_init donate; TyronCommunityFund ssi_init tx
+end
+
+procedure Timestamp()
+  current_block <- &BLOCKNUMBER; ledger_time := current_block;
+  latest_tx_number <- tx_number; new_tx_number = builtin add latest_tx_number one;
+  tx_number := new_tx_number
+end
+
+procedure ThrowIfSameVal(
+  a: Uint128,
+  b: Uint128
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -9; ThrowError err code
+    end
+end
+
+procedure ThrowIfSameDomain(
+  a: ByStr32,
+  b: ByStr32
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -10; ThrowError err code
+    end
+end
+
+(* Verifies that the given addresses are not equal.
+      @params a & b: 20-byte strings. *) 
+procedure ThrowIfSameAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_same = builtin eq a b; match is_same with
+    | False => | True => err = CodeSameValue; code = Int32 -11; ThrowError err code
+    end
+end
+
+procedure ThrowIfDifferentAddr(
+  a: ByStr20,
+  b: ByStr20
+  )
+  is_same = builtin eq a b; match is_same with
+    | True => | False => err = CodeNotValid; code = Int32 -12; ThrowError err code
+    end
+end
+
+procedure FetchServiceAddr(id: String)
+  ssi_init <-& init.dApp;
+  initId = "init"; get_did <-& ssi_init.did_dns[initId]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -13; ThrowError err code
+    | Some did_ =>
+      get_service <-& did_.services[id]; addr = option_bystr20_value get_service;
+      ThrowIfNullAddr addr; services[id] := addr;
+      ssi_service <-& did_.services[ssi_id]; ssi_addr = option_bystr20_value ssi_service;
+      ThrowIfNullAddr ssi_addr; services[ssi_id] := ssi_addr
+    end
+end
+
+procedure IsSender(id: String)
+  ThrowIfNullString id; ssi_init <-& init.dApp;
+
+  get_addr <-& ssi_init.dns[id]; match get_addr with
+    | None => err = CodeIsNull; code = Int32 -14; ThrowError err code
+    | Some addr =>
+      is_sender = builtin eq addr _sender; match is_sender with
+        | True => | False =>
+          err = CodeWrongSender; code = Int32 -15; ThrowError err code
+        end
+    end
+end
+
+procedure IsSufficient(
+  value: Uint128,
+  amount: Uint128
+  )
+  is_sufficient = uint128_ge value amount; match is_sufficient with
+    | True => | False => err = CodeIsInsufficient; code = Int32 -16; ThrowError err code
+    end
+end
+
+procedure IsAffiliationSufficient(amount: Uint128)
+  current_min <- min_affiliation; IsSufficient amount current_min
+end
+
+procedure TransferFundsFrom(
+  addr: ByStr20,
+  to: ByStr20,
+  amount: Uint128
+  )
+  msg = let m = { _tag: "TransferFrom"; _recipient: addr; _amount: zero;
+    from: _sender;
+    to: to;
+    amount: amount } in one_msg m; send msg
+end
+
+procedure TransferFee(
+  addr: ByStr20,
+  amount: Uint128
+  )
+  fund <- profit_fund; ssi_init <-& init.dApp;
+
+  get_did <-& ssi_init.did_dns[fund]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 -17; ThrowError err code
+    | Some did_ => TransferFundsFrom addr did_ amount
+    end
+end
+
+procedure UpdateBalance(
+  action: Action,
+  addr: ByStr20,
+  amount: Uint128
+)
+  get_balance <- balances[_sender]; balance = option_uint128_value get_balance;
+
+  match action with
+  | Add =>
+    TransferFundsFrom addr _this_address amount;
+    new_balance = builtin add balance amount; balances[_sender] := new_balance
+  | Remove =>
+    new_balance = builtin sub balance amount; (* @error: Integer underflow. *)
+    balances[_sender] := new_balance;
+    
+    msg = let m = { _tag: "Transfer"; _recipient: addr; _amount: zero;
+    to: _sender;
+    amount: amount } in one_msg m; send msg
+  end
+end
+
+procedure MintDollars(
+  amount: Uint128,
+  beneficiary: ByStr20
+  )
+  get_ssi_addr <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi_addr;
+  
+  msg = let m = { _tag: "Mint"; _recipient: ssi_addr; _amount: zero;
+    recipient: beneficiary;
+    amount: amount } in one_msg m; send msg
+end
+
+procedure BurnDollars(amount: Uint128)
+  get_ssi_addr <- services[ssi_id]; ssi_addr = option_bystr20_value get_ssi_addr;
+  
+  msg = let m = { _tag: "Burn"; _recipient: ssi_addr; _amount: zero;
+    burn_account: _sender;
+    amount: amount } in one_msg m; send msg
+end
+
+procedure Mint_(
+  beneficiary: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfNullAddr beneficiary; ThrowIfSameAddr beneficiary _this_address;
+  IsAffiliationSufficient amount;
+
+  current_price <- price; current_mul <- ml;
+  token_amount = compute_token amount current_price current_mul;
+  
+  FetchServiceAddr token_id;
+  get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr;
+      
+  current_fee <- profit_fee;
+  is_zero = builtin eq zero current_fee; match is_zero with
+    | True => | False =>
+      fee = fraction token_amount fee_denom_128 current_fee;
+      (* Transfer token fee *)
+      TransferFee token_addr fee
+    end;
+  
+  UpdateBalance add token_addr token_amount;
+  
+  (* Mint S$I dollars *)
+  MintDollars amount beneficiary
+end
+
+procedure Burn_(
+  originator: ByStr20,
+  amount: Uint128
+  )
+  ThrowIfDifferentAddr _sender originator;
+  ThrowIfZero amount;
+
+  current_price <- price; current_mul <- ml;
+  token_amount = compute_token amount current_price current_mul;
+
+  FetchServiceAddr token_id;
+  get_token_addr <- services[token_id]; token_addr = option_bystr20_value get_token_addr;
+  UpdateBalance remove token_addr token_amount;
+
+  (* Burn S$I dollars *)
+  BurnDollars amount
+end
+
+procedure IsValidTransferFrom(
+  amount: Uint128,
+  initiator: ByStr20,
+  recipient: ByStr20
+  )
+  ThrowIfZero amount;
+  ThrowIfDifferentAddr initiator _this_address; ThrowIfDifferentAddr recipient _this_address
+end
+
+(***************************************************)
+(*              Contract transitions               *)
+(***************************************************)
+
+transition UpdateDomain(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullHash domain;
+  tag = "UpdateDomain"; RequireContractOwner donate tag;
+  id <- nft_domain; ThrowIfSameDomain id domain;
+  ssi_init <-& init.dApp; domain_ = builtin to_string domain;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 1; ThrowError err code
+    | Some did_ => pending_domain := domain
+    end;
+  Timestamp
+end
+
+transition AcceptPendingDomain()
+  RequireNotPaused; ssi_init <-& init.dApp;
+  domain <- pending_domain; domain_ = builtin to_string domain;
+
+  get_did <-& ssi_init.did_dns[domain_]; match get_did with
+    | None => err = CodeDidIsNull; code = Int32 2; ThrowError err code
+    | Some did_ =>
+      controller <-& did_.controller; VerifyOrigin controller;
+      nft_domain := domain; pending_domain := zero_hash
+    end;
+  Timestamp
+end
+
+transition UpdatePauser(
+  domain: ByStr32,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdatePauser"; RequireContractOwner donate tag;
+  current_pauser <- pauser; ThrowIfSameDomain current_pauser domain;
+
+  pauser := domain;
+  ver <- version; e = { _eventname: "SSIDApp_PauserUpdated"; version: ver;
+    newPauser: domain }; event e;
+  Timestamp
+end
+
+(* Pauses the whole dApp *)
+transition Pause()
+  RequireNotPaused;
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := true;
+  ver <- version; e = { _eventname: "SSIDApp_Paused"; version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+(* Unpauses the whole dApp *)
+transition Unpause()
+  paused <- is_paused; match paused with
+    | True => | False => (* Not Paused Error *)
+      err = CodeWrongStatus; code = Int32 3; ThrowError err code
+    end;
+      
+  domain <- pauser; id = builtin to_string domain; IsSender id;
+  
+  is_paused := false;
+  ver <- version; e = { _eventname: "SSIDApp_Unpaused";
+    version: ver;
+    pauser: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateMinAffiliation(
+  val: Uint128,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfZero val;
+  tag = "UpdateMinAffiliation"; RequireContractOwner donate tag;
+  current <- min_affiliation; ThrowIfSameVal current val;
+  
+  min_affiliation := val;
+  ver <- version; e = { _eventname: "SSIDApp_MinAffiliationUpdated"; version: ver;
+    value: val;
+    sender: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitFee(
+  val: Uint128,
+  donate: Uint128
+  )
+  RequireNotPaused;
+  tag = "UpdateProfitDenom"; RequireContractOwner donate tag;
+  verified = uint128_le val fee_denom_128; match verified with
+    | True => | False => err = CodeNotValid; code = Int32 4; ThrowError err code
+    end;
+  
+  profit_fee := val;
+  ver <- version; e = { _eventname: "SSIDApp_ProfitFeeUpdated"; version: ver;
+    newValue: val;
+    sender: _sender }; event e;
+  Timestamp
+end
+
+transition UpdateProfitFund(
+  val: String,
+  donate: Uint128
+  )
+  RequireNotPaused; ThrowIfNullString val;
+  tag = "UpdateProfitFund"; RequireContractOwner donate tag;
+  
+  profit_fund := val;
+  ver <- version; e = { _eventname: "ProfitFundUpdated"; version: ver;
+    newValue: val }; event e;
+  Timestamp
+end
+
+(* Mints new dollars.
+  The caller (_sender) must have enough token balance.
+    @param recipient: Address of the beneficiary whose balance increases.
+    @param amount: Number of dollars minted. *)
+transition Mint(
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  Mint_ recipient amount;
+  ver <- version; e = { _eventname: "SSIDApp_DollarsMinted"; version: ver;
+    minter: _sender;
+    beneficiary: recipient;
+    amount: amount }; event e;
+  Timestamp
+end
+
+(* Burns existing dollars.
+  The caller (_sender) must have enough dollar balance.
+    @param burn_account: Address of the originator whose balance decreases.
+    @param amount: Number of dollars burned. *)
+transition Burn(
+  burn_account: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  Burn_ burn_account amount;
+  ver <- version; e = { _eventname: "SSIDApp_DollarsBurned"; version: ver;
+    burner: _sender;
+    amount: amount }; event e;
+  Timestamp
+end
+
+transition BurnSuccessCallBack(
+  burner: ByStr20,
+  burn_account: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfDifferentAddr burner _this_address; ThrowIfZero amount;
+  Timestamp
+end
+
+transition MintSuccessCallBack(
+  minter: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+  ThrowIfDifferentAddr minter _this_address; ThrowIfZero amount;
+  Timestamp
+end
+
+transition RecipientAcceptTransferFrom(
+  initiator: ByStr20,
+  sender: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; IsValidTransferFrom amount initiator recipient;
+  Timestamp
+end
+
+transition TransferFromSuccessCallBack(
+  initiator: ByStr20,
+  sender: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused; IsValidTransferFrom amount initiator recipient;
+  Timestamp
+end
+
+transition TransferSuccessCallBack(
+  sender: ByStr20,
+  recipient: ByStr20,
+  amount: Uint128
+  )
+  RequireNotPaused;
+
+  is_valid = builtin eq sender _this_address; match is_valid with
+    | True => | False => err = CodeNotValid; code = Int32 5; ThrowError err code
+    end;
+  Timestamp
+end`;
+
+      const contract_init = [
+        {
+          vname: "_scilla_version",
+          type: "Uint32",
+          value: "0",
+        },
+        {
+          vname: "token_id",
+          type: "String",
+          value: "xsgd",
+        },
+        {
+          vname: "init_nft",
+          type: "ByStr32",
+          value: `${init_nft}`,
+        },
+        {
+          vname: "init",
+          type: "ByStr20",
+          value: `${init_tyron}`,
+        },
+        {
+          vname: "init_fund",
+          type: "String",
+          value: `${init_fund}`,
+        },
+        {
+          vname: "init_fee",
+          type: "Uint128",
+          value: "0",
+        },
+      ];
+
+      const contract = contracts.new(code, contract_init);
+      const [tx, deployed_contract] = await contract.deploy({
+        gasLimit: "65000",
+        gasPrice: "2000000000",
+      });
+      toast.info("Contract successfully deployed.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "dark",
       });
       return [tx, deployed_contract];
     } catch (error) {
