@@ -180,6 +180,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         {
                             balance_xwallet: 0,
                             balance_zilpay: 0,
+                            full_bal_xwallet: 0,
+                            full_bal_zilpay: 0,
                         },
                     ]
                     if (
@@ -190,22 +192,25 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             resolvedInfo?.addr!,
                             '_balance'
                         )
-                        const balance_xwallet = balance!.result._balance
+                        const balance_xwallet = Number(balance!.result._balance)
 
                         const zilpay = new ZilPayBase().zilpay
                         const zilPay = await zilpay()
                         const blockchain = zilPay.blockchain
 
-                        const balance_zilpay = await blockchain.getBalance(
+                        const bal_zilpay = await blockchain.getBalance(
                             zilpay_addr
+                        )
+                        const balance_zilpay = Number(
+                            bal_zilpay.result!.balance
                         )
 
                         if (pair[0].meta.symbol === 'ZIL') {
                             balances_[0] = {
-                                balance_xwallet: Number(balance_xwallet),
-                                balance_zilpay: Number(
-                                    balance_zilpay.result!.balance
-                                ),
+                                balance_xwallet: balance_xwallet,
+                                balance_zilpay: balance_zilpay,
+                                full_bal_xwallet: balance_xwallet,
+                                full_bal_zilpay: balance_zilpay,
                             }
 
                             const tokenAddressObject1: TokenBalance = {
@@ -221,19 +226,20 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 await provider.fetchBalancesPerTokenAddr(
                                     wallet.base16,
                                     zilpay_addr,
-                                    [tokenAddressObject1],
-                                    false
+                                    [tokenAddressObject1]
                                 )
                             balances_[1] = {
                                 balance_xwallet: balance[0].balance_xwallet,
                                 balance_zilpay: balance[0].balance_zilpay,
+                                full_bal_xwallet: balance[0].full_bal_xwallet,
+                                full_bal_zilpay: balance[0].full_bal_zilpay,
                             }
                         } else {
                             balances_[1] = {
-                                balance_xwallet: Number(balance_xwallet),
-                                balance_zilpay: Number(
-                                    balance_zilpay.result!.balance
-                                ),
+                                balance_xwallet: balance_xwallet,
+                                balance_zilpay: balance_zilpay,
+                                full_bal_xwallet: balance_xwallet,
+                                full_bal_zilpay: balance_zilpay,
                             }
                             const tokenAddressObject0: TokenBalance = {
                                 id: pair[0].meta.symbol,
@@ -248,12 +254,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                 await provider.fetchBalancesPerTokenAddr(
                                     wallet.base16,
                                     zilpay_addr,
-                                    [tokenAddressObject0],
-                                    false
+                                    [tokenAddressObject0]
                                 )
                             balances_[0] = {
                                 balance_xwallet: balance[0].balance_xwallet,
                                 balance_zilpay: balance[0].balance_zilpay,
+                                full_bal_xwallet: balance[0].full_bal_xwallet,
+                                full_bal_zilpay: balance[0].full_bal_zilpay,
                             }
                         }
                     } else {
@@ -284,15 +291,15 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         balances_ = await provider.fetchBalancesPerTokenAddr(
                             wallet.base16,
                             zilpay_addr,
-                            token_balances,
-                            false
+                            token_balances
                         )
                     }
 
-                    let wallet_bal = 'balance_xwallet'
+                    let wallet_bal = 'full_bal_xwallet'
                     if (!isDEFIx) {
-                        wallet_bal = 'balance_zilpay'
+                        wallet_bal = 'full_bal_zilpay'
                     }
+                    console.log(JSON.stringify(balances_, null, 2))
                     balance0 = String(balances_[0][wallet_bal])
                     balance1 = String(balances_[1][wallet_bal])
                 }
