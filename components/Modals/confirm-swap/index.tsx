@@ -626,62 +626,63 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                         : selectedDex}
                                 </div>
                             </div>
-                            {pair[0].meta.symbol !== 'XSGD' && (
-                                <>
-                                    <div className={styles.rowLiq}>
-                                        <div className={styles.txtRow}>
-                                            {pair[0].meta.symbol} LIQUIDITY
+                            {priceInfo.input !== '0' &&
+                                priceInfo.output !== '0' && (
+                                    <>
+                                        <div className={styles.rowLiq}>
+                                            <div className={styles.txtRow}>
+                                                {pair[0].meta.symbol} LIQUIDITY
+                                            </div>
+                                            <div className={styles.txtRow2}>
+                                                {Number(
+                                                    priceInfo.input
+                                                ).toLocaleString()}{' '}
+                                                {/* {pair[0].meta.symbol} */}
+                                                <Image
+                                                    src={
+                                                        pair[0].meta.symbol ===
+                                                        'S$I'
+                                                            ? iconS$I
+                                                            : getIconURL(
+                                                                  pair[0].meta
+                                                                      .bech32
+                                                              )
+                                                    }
+                                                    alt={pair[0].meta.symbol}
+                                                    lazyRoot={lazyRoot}
+                                                    height="17"
+                                                    width="17"
+                                                />
+                                            </div>
                                         </div>
-                                        <div className={styles.txtRow2}>
-                                            {Number(
-                                                priceInfo.input
-                                            ).toLocaleString()}{' '}
-                                            {/* {pair[0].meta.symbol} */}
-                                            <Image
-                                                src={
-                                                    pair[0].meta.symbol ===
-                                                    'S$I'
-                                                        ? iconS$I
-                                                        : getIconURL(
-                                                              pair[0].meta
-                                                                  .bech32
-                                                          )
-                                                }
-                                                alt={pair[0].meta.symbol}
-                                                lazyRoot={lazyRoot}
-                                                height="14"
-                                                width="14"
-                                            />
+                                        <div className={styles.rowLiq}>
+                                            <div className={styles.txtRow}>
+                                                {pair[1].meta.symbol} LIQUIDITY
+                                            </div>
+                                            <div className={styles.txtRow2}>
+                                                {Number(
+                                                    priceInfo.output
+                                                ).toLocaleString()}{' '}
+                                                {/* {pair[1].meta.symbol} */}
+                                                <Image
+                                                    src={
+                                                        pair[1].meta.symbol ===
+                                                        'S$I'
+                                                            ? iconS$I
+                                                            : getIconURL(
+                                                                  pair[1].meta
+                                                                      .bech32
+                                                              )
+                                                    }
+                                                    alt={pair[1].meta.symbol}
+                                                    lazyRoot={lazyRoot}
+                                                    height="17"
+                                                    width="17"
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className={styles.rowLiq}>
-                                        <div className={styles.txtRow}>
-                                            {pair[1].meta.symbol} LIQUIDITY
-                                        </div>
-                                        <div className={styles.txtRow2}>
-                                            {Number(
-                                                priceInfo.output
-                                            ).toLocaleString()}{' '}
-                                            {/* {pair[1].meta.symbol} */}
-                                            <Image
-                                                src={
-                                                    pair[1].meta.symbol ===
-                                                    'S$I'
-                                                        ? iconS$I
-                                                        : getIconURL(
-                                                              pair[1].meta
-                                                                  .bech32
-                                                          )
-                                                }
-                                                alt={pair[1].meta.symbol}
-                                                lazyRoot={lazyRoot}
-                                                height="14"
-                                                width="14"
-                                            />
-                                        </div>
-                                    </div>
-                                </>
-                            )}
+                                    </>
+                                )}
                             <br />
                             <div className={styles.row}>
                                 <div className={styles.txtRowEO}>
@@ -704,19 +705,21 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                         }
                                         alt={pair[1].meta.symbol}
                                         lazyRoot={lazyRoot}
-                                        height="14"
-                                        width="14"
+                                        height="17"
+                                        width="17"
                                     />
                                 </div>
                             </div>
-                            <div className={styles.row}>
-                                <div className={styles.txtRow}>
-                                    PRICE IMPACT
+                            {priceInfo.input !== '0' && (
+                                <div className={styles.row}>
+                                    <div className={styles.txtRow}>
+                                        PRICE IMPACT
+                                    </div>
+                                    <div className={styles.txtRow2}>
+                                        {String(priceInfo.impact)}%
+                                    </div>
                                 </div>
-                                <div className={styles.txtRow2}>
-                                    {String(priceInfo.impact)}%
-                                </div>
-                            </div>
+                            )}
                         </div>
                         <div className={classNames(styles.column, 'muted')}>
                             <div className={styles.row}>
@@ -742,8 +745,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                         }
                                         alt={pair[1].meta.symbol}
                                         lazyRoot={lazyRoot}
-                                        height="14"
-                                        width="14"
+                                        height="17"
+                                        width="17"
                                     />
                                 </div>
                             </div>
