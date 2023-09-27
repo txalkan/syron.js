@@ -357,5 +357,8 @@
     "NONE": "None",
     "SELECT PROFILE NFT": "Select NFT Profile Picture",
     "UNREGISTERED DOMAIN": "This domain is not in the DNS, so you can register it.",
-    "GLITCH": "The app could not resolve the domain, but you can always use the main search bar to access your wallets (no need to log in). Perhaps the NFT is not registered in the DNS yet, or the Zilliqa node has some momentary issue. It could also be due to your internet connection. Please try again in a bit or ask for help on Telegram (@ssiprotocol)."
+    "GLITCH": "The app could not resolve the domain, but you can always use the main search bar to access your wallets (no need to log in). Perhaps the NFT is not registered in the DNS yet, or the Zilliqa node has some momentary issue. It could also be due to your internet connection. Please try again in a bit or ask for help on Telegram (@ssiprotocol).",
+    "EXECUTE RECOVERY": "Execute Recovery",
+    "CONFIGURE RECOVERY": "Configure Recovery",
+    "DEPOSIT TOKENS": "Deposit Tokens"
 }

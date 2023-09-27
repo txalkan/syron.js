@@ -15,14 +15,16 @@ import icoRecSoc from '../../src/assets/icons/ssi_icon_didx_rec-social.svg'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
+// import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
+// import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 
 import { SocialRecovery, SocialTree } from '..'
+import { useTranslation } from 'next-i18next'
 function Component() {
+    const { t } = useTranslation()
     const [active, setActive] = useState('account')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
+    // const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const toggleActive = (id: string) => {
         resetState()
@@ -67,7 +69,7 @@ function Component() {
                 </div>
                 {active === 'account' && (
                     <div className={styles.cardSub}>
-                        <div className={styles.closeIcoWrapper}>
+                        {/* <div className={styles.closeIcoWrapper}>
                             <div
                                 onClick={() => toggleActive('')}
                                 className={styles.closeIco}
@@ -78,7 +80,7 @@ function Component() {
                                     alt="close-ico"
                                 />
                             </div>
-                        </div>
+                        </div> */}
                         <div className={styles.wrapper}>
                             {/* @dev: social tree */}
                             <div className={styles.subWrapper}>
@@ -94,8 +96,7 @@ function Component() {
                                     <div className={styles.icoWrapper2}>
                                         <Image src={icoTree} alt="tree-ico" />
                                         <div className={styles.title2}>
-                                            {' '}
-                                            social tree
+                                            {t('SOCIAL TREE')}
                                         </div>
                                     </div>
                                     <div className={styles.icoWrapper}>
@@ -111,7 +112,7 @@ function Component() {
                                 </div>
                                 {activeAcc === 'tree' && (
                                     <div className={styles.cardSub2}>
-                                        <div className={styles.closeIcoWrapper}>
+                                        {/* <div className={styles.closeIcoWrapper}>
                                             <div
                                                 onClick={() =>
                                                     toggleActiveAcc('')
@@ -124,7 +125,7 @@ function Component() {
                                                     alt="close-ico"
                                                 />
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <SocialTree />
                                     </div>
                                 )}
@@ -140,17 +141,15 @@ function Component() {
                                             : styles.card2
                                     }
                                 >
-                                    {/* @review: translates */}
                                     <div className={styles.icoWrapper2}>
                                         <Image
                                             src={icoRecSoc}
                                             alt="recsoc-ico"
                                         />
                                         <div className={styles.title2}>
-                                            social recovery
+                                            {t('SOCIAL RECOVERY')}
                                         </div>
                                     </div>
-                                    {/* </div> */}
                                     <div className={styles.icoWrapper}>
                                         <Image
                                             src={
@@ -164,20 +163,6 @@ function Component() {
                                 </div>
                                 {activeAcc === 'recovery' && (
                                     <div className={styles.cardSub2}>
-                                        <div className={styles.closeIcoWrapper}>
-                                            <div
-                                                onClick={() =>
-                                                    toggleActiveAcc('')
-                                                }
-                                                className={styles.closeIco}
-                                            >
-                                                <Image
-                                                    width={10}
-                                                    src={CloseIco}
-                                                    alt="close-ico"
-                                                />
-                                            </div>
-                                        </div>
                                         <SocialRecovery />
                                     </div>
                                 )}

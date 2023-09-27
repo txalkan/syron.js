@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import { useStore as effectorStore } from 'effector-react'
 import * as tyron from 'tyron'
-import Image from 'next/image'
-import { Lock, Sign, Spinner } from '../../..'
-import stylesDark from './styles.module.scss'
-import stylesLight from './styleslight.module.scss'
+import { Lock } from '../../..'
+import styles from './styles.module.scss'
 import { $doc } from '../../../../src/store/did-doc'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { $loadingDoc } from '../../../../src/store/loading'
@@ -16,10 +14,9 @@ import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import routerHook from '../../../../src/hooks/router'
 import fetch from '../../../../src/hooks/fetch'
-import CloseReg from '../../../../src/assets/icons/ic_cross.svg'
-import CloseBlack from '../../../../src/assets/icons/ic_cross_black.svg'
 import { toast } from 'react-toastify'
 import { useStore } from 'react-stores'
+import ThreeDots from '../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
@@ -40,20 +37,12 @@ function Component() {
         loginInfo?.zilAddr !== null
             ? loginInfo?.zilAddr.base16.toLowerCase()
             : ''
-    const styles = isLight ? stylesLight : stylesDark
-    const Close = isLight ? CloseBlack : CloseReg
-
     const [hideLock, setHideLock] = useState(true)
     const [lockLegend, setLockLegend] = useState('LOCK')
-
-    const [hideSig, setHideSig] = useState(true)
-    const [sigLegend, setSigLegend] = useState('SIGN ADDRESS')
 
     const is_operational =
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Deactivated &&
         resolvedInfo?.status !== tyron.Sidetree.DIDStatus.Locked
-
-    const spinner = <Spinner />
 
     useEffect(() => {
         fetchDoc()
@@ -61,17 +50,9 @@ function Component() {
     }, [resolvedDomain])
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                flexDirection: 'column',
-                textAlign: 'center',
-                marginBottom: '17px',
-            }}
-            // className="sectionWrapper"
-        >
+        <div className={styles.wrapper}>
             {loadingDoc ? (
-                spinner
+                <ThreeDots color="da-igual" />
             ) : (
                 <>
                     {/* <div
@@ -91,82 +72,42 @@ function Component() {
                             />
                         </div>
                     </div> */}
-                    {doc?.guardians.length === 0 && hideSig && hideLock && (
-                        <div
-                            style={{ marginBottom: '2.2rem' }}
-                            className={styles.title}
-                        >
+                    {doc?.guardians.length === 0 && hideLock && (
+                        <div style={{}} className={styles.info}>
                             {t(
                                 'Social Recovery has not been enabled by X yet.',
                                 { name: resolvedDomain }
                             )}
                         </div>
                     )}
-                    <div>
-                        {doc?.guardians.length !== 0 && hideLock && hideSig && (
-                            <>
-                                <h4 style={{ marginTop: '2.2rem' }}>
-                                    {t('X HAS X GUARDIANS', {
-                                        name: resolvedDomain,
-                                        value: doc?.guardians.length,
-                                    })}
-                                </h4>
-                                <button
-                                    className={styles.button}
-                                    onClick={() => {
-                                        navigate(
-                                            `/${domainNavigate}${resolvedDomain}/didx/recovery/now`
-                                        )
-                                    }}
-                                >
-                                    <span>{t('SOCIAL RECOVER')}</span>
-                                </button>
-                            </>
-                        )}
-                    </div>
-                    <div>
-                        {doc?.guardians.length !== 0 &&
-                            is_operational &&
-                            resolvedInfo?.status !==
-                                tyron.Sidetree.DIDStatus.Deployed &&
-                            hideSig &&
-                            hideLock && (
-                                <div>
-                                    <div className={styles.danger}>
-                                        {t('DANGER ZONE')}
-                                    </div>
-                                    <button
-                                        className={styles.buttonLock}
-                                        onClick={async () => {
-                                            await connect().then(() => {
-                                                const arConnect =
-                                                    $arconnect.getState()
-                                                if (arConnect) {
-                                                    setHideLock(false)
-                                                    setLockLegend('back')
-                                                }
-                                            })
-                                        }}
-                                    >
-                                        <div
-                                            style={{
-                                                color: 'red',
-                                                textTransform: 'uppercase',
-                                            }}
-                                        >
-                                            {t(lockLegend)}
-                                        </div>
-                                    </button>
-                                </div>
-                            )}
-                        {!hideLock && (
-                            <div>
-                                <Lock />
+                    {doc?.guardians.length !== 0 && hideLock && (
+                        <div className={styles.sectionWrapper}>
+                            <div className={styles.headline}>
+                                {t('EXECUTE RECOVERY')}
                             </div>
-                        )}
-                    </div>
+                            <div className={styles.info}>
+                                {t('X HAS X GUARDIANS', {
+                                    name: resolvedDomain,
+                                    value: doc?.guardians.length,
+                                })}
+                            </div>
+                            <button
+                                className={styles.button}
+                                onClick={() => {
+                                    navigate(
+                                        `/${domainNavigate}${resolvedDomain}/didx/recovery/now`
+                                    )
+                                }}
+                            >
+                                <span>{t('SOCIAL RECOVER')}</span>
+                            </button>
+                        </div>
+                    )}
                     {controller_ === zilpay_addr && (
-                        <div className={styles.buttonWrapper}>
+                        <div className={styles.sectionWrapper}>
+                            <div className={styles.headline}>
+                                {t('CONFIGURE RECOVERY')}
+                            </div>
                             <button
                                 onClick={async () => {
                                     if (
@@ -194,6 +135,33 @@ function Component() {
                             </button>
                         </div>
                     )}
+                    {doc?.guardians.length !== 0 &&
+                        is_operational &&
+                        resolvedInfo?.status !==
+                            tyron.Sidetree.DIDStatus.Deployed &&
+                        hideLock && (
+                            <div className={styles.sectionWrapper}>
+                                <div className={styles.headline}>
+                                    {t('DANGER ZONE')}
+                                </div>
+                                <button
+                                    className={styles.buttonLock}
+                                    onClick={async () => {
+                                        await connect().then(() => {
+                                            const arConnect =
+                                                $arconnect.getState()
+                                            if (arConnect) {
+                                                setHideLock(false)
+                                                setLockLegend('back')
+                                            }
+                                        })
+                                    }}
+                                >
+                                    <span>{t(lockLegend)}</span>
+                                </button>
+                            </div>
+                        )}
+                    {!hideLock && <Lock />}
                 </>
             )}
         </div>

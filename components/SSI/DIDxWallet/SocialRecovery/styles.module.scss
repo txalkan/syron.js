@@ -1,144 +1,95 @@
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
+$font-anonymous-pro: 'Anonymous Pro', monospace;
 
-.container {
+.wrapper {
     display: flex;
-    justify-content: left;
-    align-items: center;
-    width: 90%;
-    margin-top: 7%;
-}
-
-.title {
-    color: #fff;
-}
-
-.container2 {
-    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
-    margin-top: 8%;
-    margin-bottom: 5%;
+    height: 100%;
+    margin-top: 22px;
+    margin-bottom: 22px;
 }
 
-.x {
-    color: yellow;
+.sectionWrapper {
+    margin: 22px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    padding: 11px;
 }
 
-.username {
-    color: yellow;
-    text-transform: lowercase !important;
+.headline {
+    font-family: $font-anonymous-pro;
+    font-size: 14px;
+    margin-bottom: 22px;
+    text-transform: uppercase;
+    //add text decoration overline and underline
+    text-decoration: overline;
+    text-decoration-color: #333333;
+    align-self: flex-start;
 }
 
-.button {
-    //align-items: center;
-    //justify-content: center;
-    border-radius: 4px;
+.info {
+    font-size: 12px;
+    align-self: flex-start;
+    text-transform: uppercase;
+    margin-bottom: 11px;
+    margin-left: 11px;
+}
+
+.button,
+.buttonLock {
+    font-size: 11px;
+    /* Reduce padding to make the button thinner */
+    padding: 0 8px; /* 8px left and right padding */
+    height: 1.7rem;
+
+    //make the text inside the button vertically centred
+    display: flex;
+    align-items: center;
+
+    /* Align the button to the right within its container */
+    align-self: flex-end;
+
+    /* Add a small right margin for separation from other elements */
+    margin-right: 11px;
+
+    /* Make the button edges sharper by reducing border-radius */
+    border-radius: 1px;
+
+    /* Remove the default outline when the button is focused */
     outline: 0;
+
+    /* Set the background color with some transparency */
     background-color: #ffffff2e;
+
+    /* Change the cursor to a pointer on hover, indicating interactivity */
     cursor: pointer;
-    //padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.11rem;
+
+    /* Adjust the letter spacing for better visual spacing between letters */
+    letter-spacing: 0.08rem; /* Reduced letter spacing */
+
+    /* Limit the maximum width to fit its content */
     max-width: fit-content;
+
+    /* Remove any box shadow */
     box-shadow: none !important;
+
+    /* Add a border to the button with a white color */
     border: 1px solid #fff !important;
 }
 
 .button:hover {
-    //align-items: center;
-    //justify-content: center;
-    border-radius: 4px;
-    outline: 0;
     background-color: #000;
-    cursor: pointer;
-    //padding: 0 0.6rem 0 0.8rem;
-    //letter-spacing: 0.44rem;
-    max-width: fit-content;
     border: 1px solid #ffff32 !important;
-    box-shadow: none !important;
     color: #ffff32 !important;
 }
 
-.buttonLock {
-    margin-left: 3%;
-    display: flex;
-    //align-items: center;
-    //justify-content: left;
-    border-radius: 4px;
-    outline: 0;
-    background-color: #ffffff2e;
-    cursor: pointer;
-    //padding: 0 0.6rem 0 0.8rem;
-    letter-spacing: 0.11rem;
-    max-width: fit-content;
-    box-shadow: none !important;
-    border: 1px solid red !important;
-}
-
 .buttonLock:hover {
-    //align-items: center;
-    //justify-content: center;
-    border-radius: 4px;
-    outline: 0;
     background-color: #000;
-    cursor: pointer;
-    //padding: 0 0.6rem 0 0.8rem;
-    //letter-spacing: 0.44rem;
-    max-width: fit-content;
     border: 1px solid red !important;
-    box-shadow: none !important;
     color: red !important;
-}
-
-.buttonText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 400;
-}
-
-.buttonColorText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 600;
-    color: lightblue;
-}
-
-.buttonColorDText {
-    margin: 0;
-    font-family: 'Noto Sans Mono';
-    font-weight: 600;
-    color: red;
-}
-
-.closeIcoWrapper {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-}
-
-.closeIco {
-    padding-bottom: 2rem;
-    margin-top: -1.75rem;
-    margin-right: -1.5rem;
-    cursor: pointer;
-}
-
-.buttonWrapper {
-    margin-top: 65px;
-    cursor: pointer;
-}
-
-.danger {
-    margin-bottom: 22px;
-    text-transform: uppercase;
-    text-decoration: overline;
-    text-decoration-color: red;
-}
-
-.buttonWrapper,
-.danger {
-    display: flex;
-    width: 100%;
-    margin-top: 65px;
-    padding-left: 3%;
 }

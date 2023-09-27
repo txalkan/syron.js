@@ -12,8 +12,6 @@ import icoFire from '../../src/assets/icons/ssi_icon_fire.svg'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 
 import { AddFunds, Balances, ClaimWallet } from '..'
 import { useStore as effectorStore } from 'effector-react'
@@ -27,7 +25,6 @@ function Component() {
     const { t } = useTranslation()
     const [active, setActive] = useState('')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const toggleActive = (id: string) => {
         resetState()
@@ -99,18 +96,6 @@ function Component() {
                 </div>
                 {active === 'account' && (
                     <div className={styles.cardSub}>
-                        <div className={styles.closeIcoWrapper}>
-                            <div
-                                onClick={() => toggleActive('')}
-                                className={styles.closeIco}
-                            >
-                                <Image
-                                    width={10}
-                                    src={CloseIco}
-                                    alt="close-ico"
-                                />
-                            </div>
-                        </div>
                         <div className={styles.wrapper}>
                             {controller_ === zilpay_addr ? (
                                 <div className={styles.subWrapperBal}>
@@ -153,26 +138,6 @@ function Component() {
                                         </div>
                                         {activeAcc === 'receive' && (
                                             <div className={styles.cardSub2}>
-                                                <div
-                                                    className={
-                                                        styles.closeIcoWrapper
-                                                    }
-                                                >
-                                                    <div
-                                                        onClick={() =>
-                                                            toggleActiveAcc('')
-                                                        }
-                                                        className={
-                                                            styles.closeIco
-                                                        }
-                                                    >
-                                                        <Image
-                                                            width={10}
-                                                            src={CloseIco}
-                                                            alt="close-ico"
-                                                        />
-                                                    </div>
-                                                </div>
                                                 <AddFunds type="funds" />
                                             </div>
                                         )}

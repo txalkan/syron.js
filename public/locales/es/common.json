@@ -68,7 +68,7 @@
     "DECENTRALIZED IDENTITY": "IDENTIDAD DESCENTRALIZADA",
     "DID": "DID",
     "WALLET": "BILLETERA",
-    "SOCIAL RECOVERY": "RECUPERACIÓN SOCIAL",
+    "SOCIAL RECOVERY": "Recuperación Social",
     "WEB3 WALLET": "WEB3",
     "UPDATE DID CONTROLLER": "ACTUALIZAR CONTROLADOR DID",
     "TOP UP WALLET": "CARGAR BILLETERA",
@@ -77,7 +77,7 @@
     "Accept pending username": "Aceptar Nombre de Dominio NFT pendiente",
     "DOCUMENT": "DOCUMENTO",
     "KEYS": "LLAVES",
-    "SOCIAL TREE": "ÁRBOL SOCIAL",
+    "SOCIAL TREE": "Árbol Social",
     "VERIFICATION METHODS": "MÉTODOS DE VERIFICACIÓN",
     "DID SERVICES": "SERVICIOS DID",
     "SOCIAL-RECOVERY KEY": "LLAVE DE RECUPERACIÓN SOCIAL",
@@ -356,5 +356,8 @@
     "NONE": "Ninguna",
     "SELECT PROFILE NFT": "Seleccionar Foto de Perfil NFT",
     "UNREGISTERED DOMAIN": "Este dominio no está registrado en el DNS, así que podés registrarlo.",
-    "GLITCH": "La app no pudo resolver el dominio, pero siempre podés acceder a tus billeteras a través del navegador principal (no es necesario iniciar sesión). Tal vez el NFT no está registrado en el DNS aún, o el nodo de Zilliqa tiene algún inconveniente momentáneo. También pude deberse a tu conexión de internet. Por favor, intentá nuevamente en unos momentos o pedí ayuda en Telegram (@ssiprotocol)."
+    "GLITCH": "La app no pudo resolver el dominio, pero siempre podés acceder a tus billeteras a través del navegador principal (no es necesario iniciar sesión). Tal vez el NFT no está registrado en el DNS aún, o el nodo de Zilliqa tiene algún inconveniente momentáneo. También pude deberse a tu conexión de internet. Por favor, intentá nuevamente en unos momentos o pedí ayuda en Telegram (@ssiprotocol).",
+    "EXECUTE RECOVERY": "Ejecutar Recuperación",
+    "CONFIGURE RECOVERY": "Configurar Recuperación",
+    "DEPOSIT TOKENS": "Depositar Tokens"
 }

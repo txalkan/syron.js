@@ -19,8 +19,6 @@ import icoFire from '../../src/assets/icons/ssi_icon_fire.svg'
 
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import CloseIcoReg from '../../src/assets/icons/ic_cross.svg'
-import CloseIcoBlack from '../../src/assets/icons/ic_cross_black.svg'
 import { SwapPair } from '../../src/types/swap'
 import { SwapForm } from '../swap-form'
 import { AddFunds, Balances, ClaimWallet, SBTxWALLET, ZILxWALLET } from '..'
@@ -43,7 +41,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     const { t } = useTranslation()
     const [active, setActive] = useState('trade')
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const CloseIco = isLight ? CloseIcoBlack : CloseIcoReg
 
     const toggleActive = (id: string) => {
         resetState()
@@ -124,18 +121,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                 </div>
                 {active === 'trade' && (
                     <div className={styles.cardSub}>
-                        <div className={styles.closeIcoWrapper}>
-                            <div
-                                onClick={() => toggleActive('')}
-                                className={styles.closeIco}
-                            >
-                                <Image
-                                    width={10}
-                                    src={CloseIco}
-                                    alt="close-ico"
-                                />
-                            </div>
-                        </div>
                         <div className={styles.wrapper}>
                             {/* @dev: SWAP */}
                             <SwapForm startPair={startPair} />
@@ -173,18 +158,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                     </div>
                     {active === 'account' && (
                         <div className={styles.cardSub}>
-                            <div className={styles.closeIcoWrapper}>
-                                <div
-                                    onClick={() => toggleActive('')}
-                                    className={styles.closeIco}
-                                >
-                                    <Image
-                                        width={10}
-                                        src={CloseIco}
-                                        alt="close-ico"
-                                    />
-                                </div>
-                            </div>
                             <div className={styles.wrapper}>
                                 {controller_ === zilpay_addr ? (
                                     <div className={styles.subWrapperBal}>
@@ -242,28 +215,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                                 <div
                                                     className={styles.cardSub2}
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.closeIcoWrapper
-                                                        }
-                                                    >
-                                                        <div
-                                                            onClick={() =>
-                                                                toggleActiveAcc(
-                                                                    ''
-                                                                )
-                                                            }
-                                                            className={
-                                                                styles.closeIco
-                                                            }
-                                                        >
-                                                            <Image
-                                                                width={10}
-                                                                src={CloseIco}
-                                                                alt="close-ico"
-                                                            />
-                                                        </div>
-                                                    </div>
                                                     <AddFunds type="funds" />
                                                 </div>
                                             )}
@@ -315,18 +266,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             </div>
                             {active === 'sbt' && (
                                 <div className={styles.cardSub}>
-                                    <div className={styles.closeIcoWrapper}>
-                                        <div
-                                            onClick={() => toggleActive('')}
-                                            className={styles.closeIco}
-                                        >
-                                            <Image
-                                                width={10}
-                                                src={CloseIco}
-                                                alt="close-ico"
-                                            />
-                                        </div>
-                                    </div>
                                     <div className={styles.wrapper}>
                                         <SBTxWALLET type="public" />
                                     </div>
@@ -367,18 +306,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             </div>
                             {active === 'pools' && (
                                 <div className={styles.cardSub}>
-                                    <div className={styles.closeIcoWrapper}>
-                                        <div
-                                            onClick={() => toggleActive('')}
-                                            className={styles.closeIco}
-                                        >
-                                            <Image
-                                                width={10}
-                                                src={CloseIco}
-                                                alt="close-ico"
-                                            />
-                                        </div>
-                                    </div>
                                     <div className={styles.wrapper}>
                                         <PoolOverview loading={false} />
                                     </div>

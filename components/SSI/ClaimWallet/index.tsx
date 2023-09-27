@@ -1,7 +1,6 @@
 import * as tyron from 'tyron'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-import stylesDark from './styles.module.scss'
-import stylesLight from './styleslight.module.scss'
+import styles from './styles.module.scss'
 import { useTranslation } from 'next-i18next'
 import { toast } from 'react-toastify'
 import { useState } from 'react'
@@ -23,7 +22,6 @@ function Component({ title }) {
     const dispatch = useDispatch()
     const zcrypto = tyron.Util.default.Zcrypto()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const styles = isLight ? stylesLight : stylesDark
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
@@ -312,18 +310,16 @@ function Component({ title }) {
     }
 
     return (
-        <div className={styles.cardActiveWrapper}>
-            <div
-                onClick={
-                    title === 'CLAIM DIDxWALLET'
-                        ? handleSubmitDIDxWallet
-                        : handleSubmit
-                }
-                className={isZil_ ? styles.cardZil : styles.card}
-            >
-                <div className={styles.cardTitle3}>
-                    {isLoading ? <ThreeDots color="basic" /> : title}
-                </div>
+        <div
+            onClick={
+                title === 'CLAIM DIDxWALLET'
+                    ? handleSubmitDIDxWallet
+                    : handleSubmit
+            }
+            className={styles.button}
+        >
+            <div className={styles.title}>
+                {isLoading ? <ThreeDots color="basic" /> : title}
             </div>
         </div>
     )
