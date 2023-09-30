@@ -34,6 +34,9 @@ import icoS$I from '../../../src/assets/icons/SSI_dollar.svg'
 //@ssibrowser
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
+import toastTheme from '../../../src/hooks/toastTheme'
+import { useSelector } from 'react-redux'
+import { RootState } from '../../../src/app/reducers'
 Big.PE = 999
 
 type Prop = {
@@ -66,6 +69,7 @@ export const FormInput: React.FC<Prop> = ({
     isController,
 }) => {
     //@ssibrowser
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const addr_name = token?.symbol.toLowerCase()
     let balance_ = '0'
     if (addr_name && balance) {
@@ -119,7 +123,17 @@ export const FormInput: React.FC<Prop> = ({
                     onMax(Big(String(_value)).div(decimals)) //@review: decimals
                 }
             } else {
-                toast('Use your own defi@account.ssi')
+                toast.error('Use your own defi@account.ssi', {
+                    position: 'bottom-center',
+                    autoClose: 2222,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 1,
+                    theme: toastTheme(isLight),
+                })
             }
         },
         [balance, token, onMax, gasLimit]

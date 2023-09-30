@@ -60,6 +60,7 @@ import { TokensMixine } from '../../src/mixins/token'
 import { Blockchain } from '../../src/mixins/custom-fetch'
 import smartContract from '../../src/utils/smartContract'
 import { ZilPayBase } from '../ZilPay/zilpay-base'
+import toastTheme from '../../src/hooks/toastTheme'
 //@zilpay
 type Prop = {
     startPair: SwapPair[]
@@ -71,7 +72,6 @@ const tokensMixin = new TokensMixine()
 const provider = new Blockchain()
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
-    // const isLight = useSelector((state: RootState) => state.modal.isLight)
     // const { t } = useTranslation(`swap`)
     const { t } = useTranslation()
     const tokensStore = useStore($tokens)
@@ -92,6 +92,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [pair, setPair] = React.useState<SwapPair[]>(startPair)
 
     //@ssibrowser
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const [tydra, setTydra] = React.useState({
         tydradex: '0',
         dragondex: '0',
@@ -439,12 +440,22 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                 .then(async (zilpay) => {
                     if (!zilpay.wallet.isEnable) {
                         await zilpay.wallet.connect()
-                        toast(
+                        toast.info(
                             `ZilPay connected: ${(loginInfo?.zilAddr.bech32).slice(
                                 0,
                                 11
                             )}...`,
-                            { theme: 'dark' }
+                            {
+                                position: 'top-center',
+                                autoClose: 2222,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                toastId: 1,
+                                theme: toastTheme(isLight),
+                            }
                         )
                     }
                 })
@@ -516,13 +527,24 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                             if (pair[0].meta.symbol === 'ZIL') {
                                                 setIsDEFIx(false)
                                             } else {
-                                                toast(
+                                                toast.error(
                                                     'Currently, it is only possible to use funds from Zilpay in ZIL.'
                                                 )
                                             }
                                         } else {
-                                            toast(
-                                                'Use your own defi@account.ssi'
+                                            toast.error(
+                                                'Use your own defi@account.ssi',
+                                                {
+                                                    position: 'bottom-center',
+                                                    autoClose: 2222,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    toastId: 3,
+                                                    theme: toastTheme(isLight),
+                                                }
                                             )
                                         }
                                     }}
@@ -536,8 +558,19 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                                         if (controller_ === zilpay_addr) {
                                             setIsDEFIx(true)
                                         } else {
-                                            toast(
-                                                'Use your own defi@account.ssi'
+                                            toast.error(
+                                                'Use your own defi@account.ssi',
+                                                {
+                                                    position: 'bottom-center',
+                                                    autoClose: 2222,
+                                                    hideProgressBar: false,
+                                                    closeOnClick: true,
+                                                    pauseOnHover: true,
+                                                    draggable: true,
+                                                    progress: undefined,
+                                                    toastId: 4,
+                                                    theme: toastTheme(isLight),
+                                                }
                                             )
                                         }
                                     }}

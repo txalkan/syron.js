@@ -436,6 +436,8 @@ export class DragonDex {
         let tydra_dex = BigInt(0)
         let zilswap_dex = BigInt(0)
         let aswap_dex = BigInt(0)
+
+        let decimales = this.toDecimals(limitToken.meta.decimals)
         //@dev: BUY TYRON TOKEN
         if (limitToken.meta.symbol === 'TYRON') {
             if (exactToken.meta.symbol === 'S$I') {
@@ -468,7 +470,7 @@ export class DragonDex {
                         this.tyron_reserves['tyron_s$i']
                     )
                 } catch (error) {
-                    console.error('ZIL to TYRON: ', error)
+                    console.error('ZIL to TYRON:', error)
                 }
             }
         }
@@ -481,10 +483,23 @@ export class DragonDex {
                         this.tyron_reserves['tyron_s$i']
                     )
                 } catch (error) {
-                    console.error('TYRON to S$I: ', error)
+                    console.error('TYRON to S$I:', error)
                 }
             } else if (exactToken.meta.symbol === 'XSGD') {
                 tydra_dex = Big(exact).mul(1e12)
+            } else if (exactToken.meta.symbol === 'ZIL') {
+                try {
+                    //@dex zilswap is the default intermediate dex
+                    const xsgd_addr =
+                        '0x173ca6770aa56eb00511dac8e6e13b3d7f16a5a5'
+                    decimales = this.toDecimals(6)
+                    tydra_dex = this._zilToTokensZilSwap(
+                        exact,
+                        this.getZilSwapPools[xsgd_addr]
+                    )
+                } catch (error) {
+                    console.error('ZIL to S$I:', error)
+                }
             }
         } else {
             if (
@@ -546,7 +561,6 @@ export class DragonDex {
             }
         }
 
-        const decimales = this.toDecimals(limitToken.meta.decimals)
         //@review: dex
         return {
             dragondex: Big(String(value)).div(decimales).round(4),
@@ -560,7 +574,8 @@ export class DragonDex {
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
 
-        //@ssibrowser @review: NEW TXN
+        //@ssibrowser
+        // @dev supported transactions
         if (
             (exactToken.meta.symbol === 'TYRON' &&
                 limitToken.meta.symbol === 'S$I') ||
@@ -1119,6 +1134,7 @@ export class DragonDex {
 
         return res
     }
+
     public async swapTydraDeFi(limit: bigint) {
         const contractAddress = this.wallet?.base16!
 
@@ -1178,6 +1194,7 @@ export class DragonDex {
         )
         return res
     }
+
     public async swapTydraDEX(
         exact: bigint,
         limit: bigint,
@@ -1207,7 +1224,10 @@ export class DragonDex {
         )
         let beneficiary_addr = none_addr
 
-        let minTokenAmount = String(Number(limit) * 0.98) //minus 2% @review: asap dex
+        const { blocks, slippage } = $settings.state
+        console.log('SLIPPAGE:', slippage)
+
+        let minTokenAmount = String((Number(limit) * (100 - slippage)) / 100)
 
         if (addrName === 'zil') {
             tyron_send = String(exact)
@@ -1229,7 +1249,7 @@ export class DragonDex {
                 resolvedDomain === 'tydradex' ||
                 resolvedDomain === 'tyrondex'
             ) {
-                console.log('TYDRADEX_TO:', zilpayAddr)
+                console.log('TYRONDEX_Send Funds To:', zilpayAddr)
                 beneficiary_addr = await tyron.TyronZil.default.OptionParam(
                     tyron.TyronZil.Option.some,
                     'ByStr20',
@@ -1238,8 +1258,12 @@ export class DragonDex {
             }
 
             minIntAmount = '1000' //@review: asap dex
+
+            if (toAddrName === 's$i') {
+                toAddrName = 'sgd'
+            }
         } else if (addrName === 'xsgd' && toAddrName === 's$i') {
-            minTokenAmount = String(limit) //no slippage for XSGD -> S$I
+            minTokenAmount = String(limit) //no slippage from XSGD to S$I
             toAddrName = 'sgd'
         }
 
@@ -1247,7 +1271,7 @@ export class DragonDex {
             tyron.TyronZil.Option.none,
             'Uint128'
         )
-        const { blocks } = $settings.state
+
         const params = [
             {
                 vname: 'iDex',
@@ -1317,6 +1341,7 @@ export class DragonDex {
         )
         return res
     }
+
     // public async addLiquidity(
     //     addr: string,
     //     amount: Big,
@@ -1993,6 +2018,7 @@ export class DragonDex {
         //     BigInt(ssiReserve),
         //     BigInt(tyronReserve)
         // )
+
         //@mainnet-fairlaunch
         const output = this._tyronOutputForFairLaunch(ssi_amount)
         console.log('TRADE_OUTPUT: TYRON', output)

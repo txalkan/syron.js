@@ -14,7 +14,8 @@
         "build": "next build",
         "start": "next start",
         "lint": "next lint",
-        "p": "prettier -w ."
+        "p": "prettier -w .",
+        "s": "next build && prettier -w ."
     },
     "dependencies": {
         "@reduxjs/toolkit": "^1.6.0",

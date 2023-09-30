@@ -53,6 +53,7 @@ import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
 import Image from 'next/image'
 import { getIconURL } from '../../../src/lib/viewblock'
+import toastTheme from '../../../src/hooks/toastTheme'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -80,6 +81,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
     isDEFIx,
 }) {
     //@ssibrowser
+    const isLight = useSelector((state: RootState) => state.modal.isLight)
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
@@ -376,46 +378,39 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             }
             switch (direction) {
                 case SwapDirection.ZilToToken:
-                    // if (controller_ === zilpay_addr) {
-                    await dex.swapExactZILForTokens(
-                        selectedDex,
-                        exact,
-                        limit,
-                        pair[1].meta,
-                        resolvedDomain,
-                        zilpay_addr,
-                        isDEFIx
-                    )
-                    setLoading(false)
-                    onClose()
-                    return
-                // } else {
-                //     toast('Use your own defi@account.ssi', {
-                //         position: 'bottom-center',
-                //         autoClose: 2222,
-                //         hideProgressBar: false,
-                //         closeOnClick: true,
-                //         pauseOnHover: true,
-                //         draggable: true,
-                //         progress: undefined,
-                //         toastId: 1,
-                //     })
-                //     setLoading(false)
-                //     return
-                // }
+                    if (
+                        resolvedDomain === 'tydradex' ||
+                        resolvedDomain === 'tyrondex' ||
+                        controller_ === zilpay_addr
+                    ) {
+                        await dex.swapExactZILForTokens(
+                            selectedDex,
+                            exact,
+                            limit,
+                            pair[1].meta,
+                            resolvedDomain,
+                            zilpay_addr,
+                            isDEFIx
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else {
+                        toast.error('Use your own defi@account.ssi', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 1,
+                            theme: toastTheme(isLight),
+                        })
+                        setLoading(false)
+                        return
+                    }
                 case SwapDirection.TokenToZil:
-                    // toast('Coming soon', {
-                    //     position: 'bottom-center',
-                    //     autoClose: 2222,
-                    //     hideProgressBar: false,
-                    //     closeOnClick: true,
-                    //     pauseOnHover: true,
-                    //     draggable: true,
-                    //     progress: undefined,
-                    //     toastId: 2,
-                    // })
-                    // setLoading(false)
-                    // return
                     // if (!isAllow) {
                     //     await approveToken()
                     //     setLoading(false)
@@ -433,7 +428,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Use your own defi@account.ssi', {
+                        toast.error('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -441,13 +436,14 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            toastId: 4,
+                            toastId: 2,
+                            theme: toastTheme(isLight),
                         })
                         setLoading(false)
                         return
                     }
                 case SwapDirection.TokenToTokens:
-                    toast('Coming soon', {
+                    toast('Incoming! Currently not available.', {
                         position: 'bottom-center',
                         autoClose: 2222,
                         hideProgressBar: false,
@@ -456,6 +452,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         draggable: true,
                         progress: undefined,
                         toastId: 3,
+                        theme: toastTheme(isLight),
                     })
                     setLoading(false)
                     return
@@ -487,7 +484,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Use your own defi@account.ssi', {
+                        toast.error('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -496,7 +493,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             draggable: true,
                             progress: undefined,
                             toastId: 4,
-                            theme: 'dark',
+                            theme: toastTheme(isLight),
                         })
                         setLoading(false)
                         return
@@ -508,7 +505,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else {
-                        toast('Use your own defi@account.ssi', {
+                        toast.error('Use your own defi@account.ssi', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -517,13 +514,14 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             draggable: true,
                             progress: undefined,
                             toastId: 5,
+                            theme: toastTheme(isLight),
                         })
                         setLoading(false)
                         return
                     }
                 case SwapDirection.TydraDEX:
-                    if (pair[0].meta.symbol === 'ZIL') {
-                        toast('Incoming! Currently not available.', {
+                    if (pair[1].meta.symbol === 'TYRON') {
+                        toast.info('Incoming! Currently not available.', {
                             position: 'bottom-center',
                             autoClose: 2222,
                             hideProgressBar: false,
@@ -532,51 +530,52 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             draggable: true,
                             progress: undefined,
                             toastId: 6,
+                            theme: toastTheme(isLight),
                         })
+                    } else if (
+                        pair[0].meta.symbol === 'ZIL' &&
+                        (resolvedDomain === 'tydradex' ||
+                            resolvedDomain === 'tyrondex')
+                    ) {
+                        await dex.swapTydraDEX(
+                            exact,
+                            limit,
+                            pair[0].meta,
+                            pair[1].meta,
+                            resolvedDomain,
+                            zilpay_addr
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
+                    } else if (controller_ === zilpay_addr) {
+                        await dex.swapTydraDEX(
+                            exact,
+                            limit,
+                            pair[0].meta,
+                            pair[1].meta,
+                            resolvedDomain,
+                            zilpay_addr
+                        )
+                        setLoading(false)
+                        onClose()
+                        return
                     } else {
-                        if (
-                            pair[0].meta.symbol === 'ZIL' &&
-                            (resolvedDomain === 'tydradex' ||
-                                resolvedDomain === 'tyrondex')
-                        ) {
-                            await dex.swapTydraDEX(
-                                exact,
-                                limit,
-                                pair[0].meta,
-                                pair[1].meta,
-                                resolvedDomain,
-                                zilpay_addr
-                            )
-                            setLoading(false)
-                            onClose()
-                            return
-                        } else if (controller_ === zilpay_addr) {
-                            await dex.swapTydraDEX(
-                                exact,
-                                limit,
-                                pair[0].meta,
-                                pair[1].meta,
-                                resolvedDomain,
-                                zilpay_addr
-                            )
-                            setLoading(false)
-                            onClose()
-                            return
-                        } else {
-                            toast('Use your own defi@account.ssi', {
-                                position: 'bottom-center',
-                                autoClose: 2222,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                toastId: 6,
-                            })
-                            setLoading(false)
-                            return
-                        }
+                        toast.error('Use your own defi@account.ssi', {
+                            position: 'bottom-center',
+                            autoClose: 2222,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 7,
+                            theme: toastTheme(isLight),
+                        })
+                        setLoading(false)
+                        return
                     }
+                // }
             }
         } catch (err) {
             console.error(err)
