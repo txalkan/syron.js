@@ -99,23 +99,64 @@ export async function generateSsiKeys(arweave) {
     }
 }
 
+//@dev old functions
+// export async function encryptKey(arConnect, key) {
+//     let encryptedKey = await arConnect.encrypt(key, {
+//         //(JSON.stringify(key), {
+//         algorithm: 'RSA-OAEP',
+//         hash: 'SHA-256',
+//     })
+//     encryptedKey = Arweave.utils.bufferTob64Url(encryptedKey)
+//     return encryptedKey
+// }
+async function decryptKeyOld(arConnect, encryptedKey) {
+    console.log('run old decryption on key: ', encryptedKey)
+    const encryptedArray = Arweave.utils.b64UrlToBuffer(encryptedKey)
+
+    try {
+        const decryptedKey = await arConnect.decrypt(encryptedArray, {
+            algorithm: 'RSA-OAEP',
+            hash: 'SHA-256',
+        })
+        //fix
+        const result = Arweave.utils.bufferToString(decryptedKey)
+        console.log('decrypted key', result)
+        return result
+    } catch (error) {
+        console.error(JSON.stringify(error, null, 2))
+    }
+}
+
+//@dev new functions
 export async function encryptKey(arConnect, key) {
-    let encryptedKey = await arConnect.encrypt(key, {
-        //(JSON.stringify(key), {
-        algorithm: 'RSA-OAEP',
-        hash: 'SHA-256',
+    console.log('key', key)
+    let encryptedKey = await arConnect.encrypt(new TextEncoder().encode(key), {
+        name: 'RSA-OAEP',
     })
     encryptedKey = Arweave.utils.bufferTob64Url(encryptedKey)
+    console.log('newEncryptedKey', encryptedKey)
     return encryptedKey
 }
 
 export async function decryptKey(arConnect, encryptedKey) {
     const encryptedArray = Arweave.utils.b64UrlToBuffer(encryptedKey)
-    const decryptedKey = await arConnect.decrypt(encryptedArray, {
-        algorithm: 'RSA-OAEP',
-        hash: 'SHA-256',
-    })
-    return decryptedKey
+    const key = await arConnect
+        .decrypt(encryptedArray, {
+            name: 'RSA-OAEP',
+        })
+        .then((decryptedKey) => {
+            let result = Arweave.utils.bufferToString(decryptedKey)
+            //same as:
+            //result = new TextDecoder().decode(decryptedKey);
+            console.log('result', result)
+            return result
+        })
+        .catch(async (err) => {
+            console.log('new decrypt error', JSON.stringify(err, null, 2))
+            const key = await decryptKeyOld(arConnect, encryptedKey)
+            return key
+        })
+    return key
 }
 
 export async function encryptData(data, publicEncryption) {

@@ -48,7 +48,7 @@ function Component() {
             setHideSubmit(false)
             setInput(addr)
         } else {
-            toast.warn(t('Wrong address.'), {
+            toast.error(t('Wrong address.'), {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -57,7 +57,7 @@ function Component() {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 5,
+                toastId: 1,
             })
         }
     }
@@ -84,15 +84,16 @@ function Component() {
                     )
                 setSignature(signature)
             } catch (error) {
-                toast.warn('Identity verification unsuccessful.', {
+                toast.error('Identity verification unsuccessful.', {
                     position: 'top-right',
-                    autoClose: 2000,
+                    autoClose: 2222,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
+                    toastId: 2,
                 })
             }
         } else {
@@ -110,6 +111,7 @@ function Component() {
             draggable: true,
             progress: undefined,
             theme: toastTheme(isLight),
+            toastId: 3,
         })
     }
 

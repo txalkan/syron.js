@@ -105,7 +105,7 @@
     "CONFIGURE GUARDIANS": "CONFIGURAR GUARDIANES",
     "PERMANENT DEACTIVATION": "DESACTIVAR PERMANENTE",
     "DID UPDATE": "ACTUALIZAR DID",
-    "WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT": "CON ESTA TRANSACCIÓN, PODRÁS ACTUALIZAR TU DOCUMENTO DESCENTRALIZADO.",
+    "WITH THIS TRANSACTION, YOU WILL UPDATE YOUR DIGITAL IDENTITY.": "CON ESTA TRANSACCIÓN, PODRÁS ACTUALIZAR TU IDENTIDAD DIGITAL.",
     "THIS TRANSACTION IS A SPECIFIC TYPE OF DID UPDATE OPERATION THAT IS ONLY POSSIBLE AFTER A SOCIAL RECOVERY OPERATION.": "ESTA TRANSACCIÓN ES UN TIPO ESPECÍFICO DE OPERACIÓN DE ACTUALIZACIÓN DID QUE SOLO ES POSIBLE DESPUÉS DE REALIZAR LA RECUPERACIÓN SOCIAL.",
     "You will be creating one DID key pair for each": "Crearás un par de llaves DID para cada",
     "verification relationship": "relación de verificación.",
@@ -170,7 +170,7 @@
     "UPDATE": "ACTUALIZAR",
     "X HAS X GUARDIANS": "{{name}} TIENE {{value}} GUARDIANES",
     "SOCIAL RECOVER": "RECUPERAR SOCIALMENTE",
-    "SIGN ADDRESS": "FIRMAR DIRECCIÓN",
+    "SIGN ADDRESS": "Firmar Dirección",
     "LOCK": "BLOQUEAR",
     "Social Recovery has not been enabled by X yet.": "La Recuperación Social aún no ha sido habilitada por {{name}}.",
     "SOCIAL RECOVER YOUR SELF-SOVEREIGN IDENTITY": "RECUPERÁ SOCIALMENTE ESTA IDENTIDAD DESCENTRALIZADA",
@@ -359,5 +359,6 @@
     "GLITCH": "La app no pudo resolver el dominio, pero siempre podés acceder a tus billeteras a través del navegador principal (no es necesario iniciar sesión). Tal vez el NFT no está registrado en el DNS aún, o el nodo de Zilliqa tiene algún inconveniente momentáneo. También pude deberse a tu conexión de internet. Por favor, intentá nuevamente en unos momentos o pedí ayuda en Telegram (@ssiprotocol).",
     "EXECUTE RECOVERY": "Ejecutar Recuperación",
     "CONFIGURE RECOVERY": "Configurar Recuperación",
-    "DEPOSIT TOKENS": "Depositar Tokens"
+    "DEPOSIT TOKENS": "Depositar Tokens",
+    "ADD GUARDIANS": "Agregar Guardianes"
 }

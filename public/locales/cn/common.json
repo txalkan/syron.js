@@ -103,7 +103,7 @@
     "CONFIGURE GUARDIANS": "配置监护人",
     "PERMANENT DEACTIVATION": "永久停用",
     "DID UPDATE": "更新 DID",
-    "WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT": "通过本次交易,您的DID 文档将会被更新",
+    "WITH THIS TRANSACTION, YOU WILL UPDATE YOUR DIGITAL IDENTITY.": "通过本次交易,您的DID 文档将会被更新",
     "THIS TRANSACTION IS A SPECIFIC TYPE OF DID UPDATE OPERATION THAT IS ONLY POSSIBLE AFTER A SOCIAL RECOVERY OPERATION.": "该交易是一种只有在 DID 社会恢复操作之后才有的特定类型 更新操作，。",
     "You will be creating one DID key pair for each": "您将为每个配对一个DID密钥",
     "verification relationship": "验证关系.",

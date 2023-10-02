@@ -24,12 +24,9 @@ function Index() {
             <Layout>
                 <div className={styles.headlineWrapper}>
                     <Headline data={data} />
-                    <h2 className={styles.title}>
+                    <div className={styles.title}>
                         {t('DECENTRALIZED IDENTIFIER')}
-                    </h2>
-                    <h2 className={styles.title} style={{ marginBottom: '4%' }}>
-                        {t('OPERATIONS')}
-                    </h2>
+                    </div>
                 </div>
                 <DIDOperations />
             </Layout>

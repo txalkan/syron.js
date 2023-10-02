@@ -31,7 +31,7 @@ function Create() {
                     <h2 className={styles.title}>{t('DID UPDATE')}</h2>
                     <h4 className={styles.txt}>
                         {t(
-                            'WITH THIS TRANSACTION, YOU WILL UPLOAD A BRAND NEW DID DOCUMENT'
+                            'WITH THIS TRANSACTION, YOU WILL UPDATE YOUR DIGITAL IDENTITY.'
                         )}
                     </h4>
                 </div>

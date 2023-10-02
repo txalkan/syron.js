@@ -381,9 +381,9 @@ function Component() {
                         })
                     })
             } catch (error) {
-                toast.warn('Identity verification unsuccessful.', {
+                toast.error('Identity verification unsuccessful.', {
                     position: 'top-right',
-                    autoClose: 2000,
+                    autoClose: 2222,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
@@ -456,7 +456,7 @@ function Component() {
                                         : styles.card
                                 }
                             >
-                                <div>ADD GUARDIANS</div>
+                                {t('ADD GUARDIANS')}
                             </div>
                             {txName === 'AddGuardians' && (
                                 <div className={styles.cardRight}>
@@ -556,7 +556,7 @@ function Component() {
                                         : styles.card
                                 }
                             >
-                                <div>SIGN ADDRESS</div>
+                                {t('SIGN ADDRESS')}
                             </div>
                             {txName === 'SignAddress' && (
                                 <div className={styles.cardRight}>
@@ -616,7 +616,7 @@ function Component() {
                                         : styles.card
                                 }
                             >
-                                <div>ADD GUARDIANS</div>
+                                {t('ADD GUARDIANS')}
                             </div>
                             {txName === 'AddGuardians' && (
                                 <div className={styles.cardRight}>
@@ -668,7 +668,7 @@ function Component() {
                                         : styles.card
                                 }
                             >
-                                <div>SIGN ADDRESS</div>
+                                {t('SIGN ADDRESS')}
                             </div>
                             {txName === 'SignAddress' && (
                                 <div className={styles.cardRight}>
