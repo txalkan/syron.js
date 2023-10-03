@@ -500,7 +500,12 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                     }
                 case SwapDirection.TydraDeFi:
                     if (controller_ === zilpay_addr) {
-                        await dex.swapTydraDeFi(limit)
+                        await dex.swapTydraDeFi(
+                            pair[0].meta.symbol,
+                            exact,
+                            pair[1].meta.symbol,
+                            limit
+                        )
                         setLoading(false)
                         onClose()
                         return
@@ -520,19 +525,20 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         return
                     }
                 case SwapDirection.TydraDEX:
-                    if (pair[1].meta.symbol === 'TYRON') {
-                        toast.info('Incoming! Currently not available.', {
-                            position: 'bottom-center',
-                            autoClose: 2222,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            toastId: 6,
-                            theme: toastTheme(isLight),
-                        })
-                    } else if (
+                    // if (pair[1].meta.symbol === 'TYRON') {
+                    //     toast.info('Incoming! Currently not available.', {
+                    //         position: 'bottom-center',
+                    //         autoClose: 2222,
+                    //         hideProgressBar: false,
+                    //         closeOnClick: true,
+                    //         pauseOnHover: true,
+                    //         draggable: true,
+                    //         progress: undefined,
+                    //         toastId: 6,
+                    //         theme: toastTheme(isLight),
+                    //     })
+                    // } else
+                    if (
                         pair[0].meta.symbol === 'ZIL' &&
                         (resolvedDomain === 'tydradex' ||
                             resolvedDomain === 'tyrondex')
@@ -543,7 +549,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             pair[0].meta,
                             pair[1].meta,
                             resolvedDomain,
-                            zilpay_addr
+                            zilpay_addr,
+                            isDEFIx
                         )
                         setLoading(false)
                         onClose()
@@ -555,7 +562,8 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                             pair[0].meta,
                             pair[1].meta,
                             resolvedDomain,
-                            zilpay_addr
+                            zilpay_addr,
+                            isDEFIx
                         )
                         setLoading(false)
                         onClose()

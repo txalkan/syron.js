@@ -501,6 +501,13 @@ export class DragonDex {
                     console.error('ZIL to S$I:', error)
                 }
             }
+        }
+        //@dev S$I vaults
+        else if (
+            exactToken.meta.symbol === 'S$I' &&
+            limitToken.meta.symbol === 'XSGD'
+        ) {
+            tydra_dex = Big(exact).div(1e12)
         } else {
             if (
                 //@dev: SwapExactZILForTokens
@@ -575,7 +582,8 @@ export class DragonDex {
         const [exactToken, limitToken] = pair
 
         //@ssibrowser
-        // @dev supported transactions
+        //@dev supported transactions
+        //@dev exact token is the input token
         if (
             (exactToken.meta.symbol === 'TYRON' &&
                 limitToken.meta.symbol === 'S$I') ||
@@ -593,6 +601,13 @@ export class DragonDex {
             limitToken.meta.symbol === 'S$I'
         ) {
             return SwapDirection.TydraDEX
+        }
+        //@dev Swap S$I to XSGD
+        else if (
+            exactToken.meta.symbol === 'S$I' &&
+            limitToken.meta.symbol === 'XSGD'
+        ) {
+            return SwapDirection.TydraDeFi
         }
         //@zilpay
         else if (
@@ -1135,9 +1150,14 @@ export class DragonDex {
         return res
     }
 
-    public async swapTydraDeFi(limit: bigint) {
+    //@dev For minting and burning
+    public async swapTydraDeFi(
+        input: String,
+        exact: bigint,
+        output: String,
+        limit: bigint
+    ) {
         const contractAddress = this.wallet?.base16!
-
         let none_addr = await tyron.TyronZil.default.OptionParam(
             tyron.TyronZil.Option.none,
             'ByStr20'
@@ -1150,26 +1170,42 @@ export class DragonDex {
             tyron.TyronZil.Option.none,
             'Uint128'
         )
-        const params = [
-            {
-                vname: 'dApp',
-                type: 'String',
-                value: 'tyrons$i_transmuter',
-            },
-            {
+
+        //@dev depending on the tokens
+        const params: any = []
+        let dApp = 'tyrons$i_transmuter'
+        let auth = 'True'
+        let amount = String(limit)
+
+        let transition = 'MintAuth'
+        if (input === 'S$I') {
+            transition = 'BurnAuth'
+            dApp = 'xsgd_vault'
+            auth = 'False'
+            amount = String(exact)
+        } else {
+            params.push({
                 vname: 'beneficiary',
                 type: 'Option ByStr20',
                 value: none_addr,
+            })
+        }
+
+        const params_ = [
+            {
+                vname: 'dApp',
+                type: 'String',
+                value: dApp,
             },
             {
                 vname: 'amount',
                 type: 'Uint128',
-                value: String(limit),
+                value: amount,
             },
             {
                 vname: 'auth',
                 type: 'Bool',
-                value: { constructor: 'True', argtypes: [], arguments: [] },
+                value: { constructor: auth, argtypes: [], arguments: [] },
             },
             {
                 vname: 'subdomain',
@@ -1182,7 +1218,11 @@ export class DragonDex {
                 value: none_number,
             },
         ]
-        const transition = 'MintAuth'
+        //@dev Pushes each element of params_ into params
+        params_.forEach((element) => {
+            params.push(element)
+        })
+
         const res = await this.zilpay.call(
             {
                 params,
@@ -1201,7 +1241,8 @@ export class DragonDex {
         inputToken: TokenState,
         outputToken: TokenState,
         resolvedDomain: string,
-        zilpayAddr: string
+        zilpayAddr: string,
+        isDEFIx: boolean
     ) {
         const contractAddress = this.wallet?.base16!
 
@@ -1229,6 +1270,7 @@ export class DragonDex {
 
         let minTokenAmount = String((Number(limit) * (100 - slippage)) / 100)
 
+        let allowance = String(exact)
         if (addrName === 'zil') {
             tyron_send = String(exact)
             addrName = '' //address name null means ZIL
@@ -1262,6 +1304,8 @@ export class DragonDex {
             if (toAddrName === 's$i') {
                 toAddrName = 'sgd'
             }
+
+            //@review allowance - calculate output intermediate token per S$I amount
         } else if (addrName === 'xsgd' && toAddrName === 's$i') {
             minTokenAmount = String(limit) //no slippage from XSGD to S$I
             toAddrName = 'sgd'
@@ -1301,7 +1345,7 @@ export class DragonDex {
             {
                 vname: 'allowance',
                 type: 'Uint128',
-                value: String(exact),
+                value: allowance,
             },
             {
                 vname: 'minTokenAmount',
@@ -1335,9 +1379,9 @@ export class DragonDex {
                 params,
                 contractAddress,
                 transition,
-                amount: tyron_send,
+                amount: isDEFIx ? '0' : tyron_send,
             },
-            '10000' //this.calcGasLimit(SwapDirection.TokenToTokens).toString()
+            '17000' //this.calcGasLimit(SwapDirection.TokenToTokens).toString()
         )
         return res
     }
