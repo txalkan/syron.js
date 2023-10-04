@@ -52,18 +52,18 @@ function routerHook() {
             updateBuyInfo(null)
             Router.push('/')
             setTimeout(() => {
-                toast(t('You have logged off'), {
+                toast.info(t('You have logged off'), {
                     position: 'bottom-center',
-                    autoClose: 2000,
+                    autoClose: 2222,
                     hideProgressBar: false,
                     closeOnClick: true,
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 4,
+                    toastId: 1,
                 })
-            }, 700)
+            }, 400)
         } catch (error) {
             console.error(error)
         }

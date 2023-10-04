@@ -443,7 +443,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         return
                     }
                 case SwapDirection.TokenToTokens:
-                    toast('Incoming! Currently not available.', {
+                    toast.info('Incoming! Currently not available.', {
                         position: 'bottom-center',
                         autoClose: 2222,
                         hideProgressBar: false,
@@ -556,18 +556,35 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                         onClose()
                         return
                     } else if (controller_ === zilpay_addr) {
-                        await dex.swapTydraDEX(
-                            exact,
-                            limit,
-                            pair[0].meta,
-                            pair[1].meta,
-                            resolvedDomain,
-                            zilpay_addr,
-                            isDEFIx
-                        )
-                        setLoading(false)
-                        onClose()
-                        return
+                        if (pair[1].meta.symbol !== 'TYRON') {
+                            await dex.swapTydraDEX(
+                                exact,
+                                limit,
+                                pair[0].meta,
+                                pair[1].meta,
+                                resolvedDomain,
+                                zilpay_addr,
+                                isDEFIx
+                            )
+                            setLoading(false)
+                            onClose()
+                            return
+                        } else {
+                            toast.info('Only available on tyrondex.ssi', {
+                                position: 'bottom-center',
+                                autoClose: 2222,
+                                hideProgressBar: false,
+                                closeOnClick: true,
+                                pauseOnHover: true,
+                                draggable: true,
+                                progress: undefined,
+                                toastId: 3,
+                                theme: toastTheme(isLight),
+                            })
+                            setLoading(false)
+                            onClose()
+                            return
+                        }
                     } else {
                         toast.error('Use your own defi@account.ssi', {
                             position: 'bottom-center',

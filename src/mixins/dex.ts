@@ -2043,29 +2043,28 @@ export class DragonDex {
         )
     }
 
-    //@review: urgent
     private _zilToTyron(input_amount: bigint, inputReserve: string[]) {
         const xsgd_addr = '0x173ca6770aa56eb00511dac8e6e13b3d7f16a5a5'
         let i_amount = this._zilToTokensZilSwap(
             input_amount,
             this.getZilSwapPools[xsgd_addr]
         )
-        console.log('i_amount: XSGD', i_amount)
+        console.log('i_amount: XSGD', String(i_amount))
         const multiplier: bigint = BigInt(1e12)
 
         const ssi_amount = i_amount * multiplier
 
-        // const amountAfterFee = ssi_amount - ssi_amount / this.tyronProfitDenom
-        // const [ssiReserve, tyronReserve] = inputReserve
-        // const output = this._tyronOutputFor(
-        //     amountAfterFee,
-        //     BigInt(ssiReserve),
-        //     BigInt(tyronReserve)
-        // )
+        //@with pools
+        const [ssiReserve, tyronReserve] = inputReserve
+        const output = this._tyronOutputFor(
+            ssi_amount,
+            BigInt(ssiReserve),
+            BigInt(tyronReserve)
+        )
 
-        //@mainnet-fairlaunch
-        const output = this._tyronOutputForFairLaunch(ssi_amount)
-        console.log('TRADE_OUTPUT: TYRON', output)
+        //@with fairlaunch
+        //const output = this._tyronOutputForFairLaunch(ssi_amount)
+        console.log('TRADE_OUTPUT: TYRON', String(output))
         return output
     }
 
