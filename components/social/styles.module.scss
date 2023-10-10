@@ -25,17 +25,23 @@
 }
 
 .title {
-    font-size: large;
+    font-size: 22px;
     color: #dbe4eb;
     text-transform: uppercase;
     padding-left: 10px;
+    @media only screen and (max-width: 767px) {
+        font-size: 17px;
+    }
 }
 
 .title2 {
-    font-size: medium;
+    font-size: 17px;
     color: #dbe4eb;
     text-transform: uppercase;
     padding-left: 10px;
+    @media only screen and (max-width: 767px) {
+        font-size: 14px;
+    }
 }
 
 .cardActive {
@@ -110,7 +116,6 @@
 .icoWrapper2 {
     display: flex;
     justify-content: flex-start;
-    align-items: center;
 }
 
 .cardSub {

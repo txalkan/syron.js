@@ -131,7 +131,7 @@ function Component() {
                                 }}
                                 className={styles.button}
                             >
-                                <span>settings</span>
+                                {t('SETTINGS')}
                             </button>
                         </div>
                     )}

@@ -360,5 +360,7 @@
     "EXECUTE RECOVERY": "Ejecutar Recuperación",
     "CONFIGURE RECOVERY": "Configurar Recuperación",
     "DEPOSIT TOKENS": "Depositar Tokens",
-    "ADD GUARDIANS": "Agregar Guardianes"
+    "ADD GUARDIANS": "Agregar Guardianes",
+    "ACCOUNT CONFIGURATION": "Configuración de la Cuenta",
+    "SETTINGS": "Ajustes"
 }

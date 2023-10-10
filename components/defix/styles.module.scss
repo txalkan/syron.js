@@ -1,4 +1,6 @@
-// @css: center
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+
 .container {
     display: flex;
     flex-direction: column;
@@ -23,20 +25,32 @@
     }
 }
 
-.title {
-    font-size: large;
+.title,
+.titleX {
+    font-family: $font-anonymous-pro;
+    font-size: 22px;
     color: #dbe4eb;
     text-transform: uppercase;
     padding-left: 10px;
     padding-top: 7px;
+    @media only screen and (max-width: 767px) {
+        font-size: 17px;
+    }
+}
+
+.titleX {
+    text-transform: none;
 }
 
 .title2 {
-    font-size: medium;
+    font-size: 17px;
     color: #dbe4eb;
     text-transform: uppercase;
     padding-left: 10px;
     margin-right: 17px;
+    @media only screen and (max-width: 767px) {
+        font-size: 14px;
+    }
 }
 
 .cardActive {
@@ -149,12 +163,13 @@
 }
 
 .subWrapper {
-    padding: 17px;
+    padding: 7px;
     width: 100%;
+    margin-bottom: 22px;
 }
 
 .subWrapperBal {
-    padding-top: 7%;
-    padding-bottom: 4%;
+    padding-top: 11%;
+    padding-bottom: 11%;
     width: 100%;
 }

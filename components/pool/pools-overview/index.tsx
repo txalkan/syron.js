@@ -437,7 +437,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                             // {dex_options}
                             {
                                 value: 'tydradex',
-                                label: 'TyronS$I DAO',
+                                label: 'Tyron S$I Community',
                             },
                         ]}
                         onChange={selector_handleOnChange}

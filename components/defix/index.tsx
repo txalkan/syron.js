@@ -110,7 +110,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                             height="44"
                             width="44"
                         />
-                        <div className={styles.title}>trade</div>
+                        <div className={styles.titleX}>TyronDEX</div>
                     </div>
                     <div className={styles.icoWrapper}>
                         <Image
@@ -139,7 +139,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                 : styles.card
                         }
                     >
-                        {/* @review: translates */}
                         <div className={styles.icoWrapper2}>
                             <Image
                                 src={icoZap}
@@ -147,7 +146,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                 height="44"
                                 width="44"
                             />
-                            <div className={styles.title}>{t('ACCOUNT')}</div>
+                            <div className={styles.titleX}>DEFIxWALLET</div>
                         </div>
                         <div className={styles.icoWrapper}>
                             <Image
@@ -293,7 +292,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                         height="44"
                                         width="44"
                                     />
-                                    <div className={styles.title}>defi</div>
+                                    <div className={styles.title}>earn</div>
                                 </div>
                                 <div className={styles.icoWrapper}>
                                     <Image

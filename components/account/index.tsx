@@ -85,7 +85,7 @@ function Component() {
                     {/* @review: majin translates */}
                     <div className={styles.icoWrapper2}>
                         <Image src={icoZap} alt="zap-ico" />
-                        <div className={styles.title}>{t('ACCOUNT')}</div>
+                        <div className={styles.titleX}>DIDxWALLET</div>
                     </div>
                     <div className={styles.icoWrapper}>
                         <Image

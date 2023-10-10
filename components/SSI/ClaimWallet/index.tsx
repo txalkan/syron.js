@@ -55,7 +55,7 @@ function Component({ title }) {
                         draggable: true,
                         progress: undefined,
                         theme: toastTheme(isLight),
-                        toastId: 12,
+                        toastId: 1,
                     })
                 } else {
                     const addrPendingUsername =
@@ -90,7 +90,7 @@ function Component({ title }) {
                                 draggable: true,
                                 progress: undefined,
                                 theme: toastTheme(isLight),
-                                toastId: 1,
+                                toastId: 2,
                             }
                         )
                         setIsLoading(false)
@@ -160,22 +160,22 @@ function Component({ title }) {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 12,
+                    toastId: 3,
                 })
             }
         } catch (error) {
             setIsLoading(false)
             console.error(error)
-            toast.error('Error', {
+            toast.warn('There is no new owner.', {
                 position: 'top-right',
-                autoClose: 2000,
+                autoClose: 2222,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 12,
+                toastId: 4,
             })
         }
     }
@@ -193,7 +193,7 @@ function Component({ title }) {
                 pending_controller ===
                 '0x0000000000000000000000000000000000000000'
             ) {
-                toast.warn('There is no pending SSI controller', {
+                toast.warn('There is no new controlling wallet.', {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -202,7 +202,7 @@ function Component({ title }) {
                     draggable: true,
                     progress: undefined,
                     theme: toastTheme(isLight),
-                    toastId: 12,
+                    toastId: 5,
                 })
             } else {
                 console.log(
@@ -226,7 +226,7 @@ function Component({ title }) {
                             draggable: true,
                             progress: undefined,
                             theme: toastTheme(isLight),
-                            toastId: 1,
+                            toastId: 6,
                         }
                     )
                 } else {
@@ -289,7 +289,7 @@ function Component({ title }) {
                             draggable: true,
                             progress: undefined,
                             theme: toastTheme(isLight),
-                            toastId: 12,
+                            toastId: 7,
                         })
                     }
                 }
@@ -304,7 +304,7 @@ function Component({ title }) {
                 draggable: true,
                 progress: undefined,
                 theme: toastTheme(isLight),
-                toastId: 12,
+                toastId: 8,
             })
         }
     }

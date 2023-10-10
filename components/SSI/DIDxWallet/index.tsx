@@ -313,7 +313,7 @@ function Component(props: LayoutProps) {
                                                     {loadingCard3 ? (
                                                         <ThreeDots color="yellow" />
                                                     ) : (
-                                                        t('WALLET')
+                                                        t('SETTINGS')
                                                     )}
                                                 </div>
                                             </div>
@@ -328,18 +328,9 @@ function Component(props: LayoutProps) {
                                                     {loadingCard3 ? (
                                                         <ThreeDots color="yellow" />
                                                     ) : (
-                                                        <span>
-                                                            DID
-                                                            <span
-                                                                style={{
-                                                                    textTransform:
-                                                                        'lowercase',
-                                                                }}
-                                                            >
-                                                                x
-                                                            </span>
-                                                            WALLET
-                                                        </span> // @review: translate seguimos usando esta variable? t('WEB3 WALLET')
+                                                        t(
+                                                            'ACCOUNT CONFIGURATION'
+                                                        )
                                                     )}
                                                 </div>
                                             </div>
