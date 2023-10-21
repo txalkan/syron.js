@@ -625,9 +625,9 @@ function Component() {
         }
     }
 
-    let listDomains = ['ZIL Staking xWALLET', 'Soulbound xWALLET'] // to add further xWallets
+    //let listDomains = ['ZIL Staking xWALLET', 'Soulbound xWALLET'] // to add further xWallets
     //if (net === 'testnet') {
-    listDomains = ['Decentralised Finance xWALLET', ...listDomains]
+    const listDomains = ['Decentralised Finance xWALLET'] //, ...listDomains]
     //}
 
     //@tydras @nfts
