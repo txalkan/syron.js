@@ -12,7 +12,6 @@
     "WHITEPAPER": "Whitepaper",
     "EXTERNAL WALLETS": "KEY-BASED WALLETS",
     "LOG IN": "Log in",
-    "ARWEAVE WALLET": "ArConnect Wallet",
     "DISCONNECT": "Disconnect",
     "CONNECT_WITH_ARCONNECT": "CONNECT WITH ARCONNECT",
     "EXISTING SSI": "Sign in",
@@ -57,7 +56,6 @@
     "SSI": "Decentralized identity",
     "NFT Username": "NFT Domain Name",
     "Address": "Address",
-    "ZilPay wallet": "ZilPay wallet",
     "TRANSFER": "TRANSFER",
     "TO": "TO",
     "PROCEED": "PROCEED",
@@ -352,7 +350,9 @@
     "BATCH TRANSFER": "Batch Transfer",
     "NFT GALLERY": "NFT Gallery",
     "TYRON SSI ACCOUNT": "Tyron SSI account",
-    "ZILPAY ACCOUNT": "ZilPay account",
+    "ZILPAY_WALLET": "ZilPay wallet",
+    "METAMASK_WALLET": "MetaMask wallet",
+    "ARCONNECT_WALLET": "ArConnect wallet",
     "ACCOUNT": "Account",
     "NONE": "None",
     "SELECT PROFILE NFT": "Select NFT Profile Picture",
@@ -363,5 +363,6 @@
     "DEPOSIT TOKENS": "Deposit Tokens",
     "ADD GUARDIANS": "Add Guardians",
     "ACCOUNT CONFIGURATION": "Account Configuration",
-    "SETTINGS": "Settings"
+    "SETTINGS": "Settings",
+    "SELECT NETWORK": "Select Network"
 }
