@@ -1,7 +1,6 @@
 import { ReactNode, useEffect } from 'react'
 import Head from 'next/head'
 import { Header, Footer, Body } from '..'
-import { updateShowZilpay } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'

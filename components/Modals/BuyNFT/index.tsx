@@ -25,7 +25,6 @@ import {
 import {
     updateModalTx,
     updateModalDashboard,
-    updateShowZilpay,
     updateModalTxMinimized,
 } from '../../../src/store/modal'
 import { useStore as effectorStore } from 'effector-react'
@@ -101,7 +100,7 @@ function Component() {
     //     })
     // }
 
-    //@connect
+    //@pending
     const handleConnect = React.useCallback(async () => {
         try {
             const wallet = new ZilPayBase()
@@ -115,7 +114,6 @@ function Component() {
 
             if (connected && address) {
                 dispatch(updateLoginInfoZilpay(address))
-                updateShowZilpay(true)
                 updateModalDashboard(true)
             }
 

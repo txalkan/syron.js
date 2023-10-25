@@ -94,12 +94,6 @@ export const $modalTransfer = modalTransferDomain
     .createStore<boolean | false>(false)
     .on(updateTransferModal, (_, payload) => payload)
 
-const showZilpayDomain = createDomain()
-export const updateShowZilpay = showZilpayDomain.createEvent<boolean | false>()
-export const $showZilpay = showZilpayDomain
-    .createStore<boolean | false>(false)
-    .on(updateShowZilpay, (_, payload) => payload)
-
 const showSearchBar = createDomain()
 export const updateShowSearchBar = showSearchBar.createEvent<boolean | false>()
 export const $showSearchBar = showSearchBar
@@ -206,3 +200,9 @@ export const updateSelectedNft = selectedNftDomain.createEvent<string>()
 export const $selectedNft = selectedNftDomain
     .createStore<string>('')
     .on(updateSelectedNft, (_, payload) => payload)
+
+const modalConnect = createDomain()
+export const updateConnectModal = modalConnect.createEvent<boolean | false>()
+export const $modalConnect = modalConnect
+    .createStore<boolean | false>(false)
+    .on(updateConnectModal, (_, payload) => payload)

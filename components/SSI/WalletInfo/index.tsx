@@ -23,7 +23,6 @@ import BalanceDark from '../../../src/assets/icons/W-balance_white.svg'
 import smartContract from '../../../src/utils/smartContract'
 import { useTranslation } from 'next-i18next'
 import { Spinner } from '../..'
-import { updateShowZilpay } from '../../../src/store/modal'
 import { $net } from '../../../src/store/network'
 
 interface InputType {
@@ -269,7 +268,7 @@ function Component(props: InputType) {
                             ) : infoBal === null &&
                               currency.toLowerCase() === 'zil' ? (
                                 <div
-                                    onClick={() => updateShowZilpay(true)}
+                                    // @pending onClick={() => updateShowZilpay(true)}
                                     style={{ marginTop: '10px' }}
                                     className={`button small ${
                                         isLight ? 'black' : ''

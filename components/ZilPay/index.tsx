@@ -14,9 +14,7 @@ Non-Commercial Use means each use as described in clauses (1)-(3) below, as reas
 You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
 If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
 
-//@review
-
-import { ReactNode, useEffect, useCallback } from 'react'
+import { useEffect, useCallback } from 'react'
 import { toast } from 'react-toastify'
 import { useDispatch } from 'react-redux'
 import { useStore } from 'effector-react'
@@ -24,12 +22,12 @@ import { useSelector } from 'react-redux'
 import * as tyron from 'tyron'
 import { ZilPayBase } from './zilpay-base'
 import { Block, Net } from '../../src/types/zil-pay'
-import {
-    $transactions,
-    // updateTxList, @review
-    // clearTxList,
-    // writeNewList,
-} from '../../src/store/transactions'
+// import {
+//     $transactions,
+//     updateTxList, @review
+//     clearTxList,
+//     writeNewList,
+// } from '../../src/store/transactions'
 import {
     updateDashboardState,
     updateModalDashboard,
@@ -260,7 +258,7 @@ export const ZilPay: React.FC = () => {
         // dashboardState,
     ])
 
-    //@todo-x remove zilpay connection
+    //@pending remove zilpay connection
     const disconnectZilpay = () => {
         dispatch(updateLoginInfoZilpay(null!))
         toast.info('ZilPay wallet disconnected.', {

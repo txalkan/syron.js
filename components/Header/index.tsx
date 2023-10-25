@@ -6,10 +6,10 @@ import { toast, ToastContainer } from 'react-toastify'
 import { Dashboard, Menu, SearchBar, Stats, ZilPay } from '..'
 import {
     $loading,
-    $loadingBreadcrumbs,
+    //$loadingBreadcrumbs,
     $loadingDoc,
-    updateLoading,
-    updateLoadingBreadcrumbs,
+    //updateLoading,
+    //updateLoadingBreadcrumbs,
 } from '../../src/store/loading'
 import { $menuOn } from '../../src/store/menuOn'
 import {
@@ -26,12 +26,11 @@ import {
     $modalTydra,
     $modalTransfer,
     $modalNft,
-    $showZilpay,
     $modalNewDefi,
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
-import fetch from '../../src/hooks/fetch'
+//import fetch from '../../src/hooks/fetch'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -41,7 +40,7 @@ import { useStore } from 'react-stores'
 function Header() {
     const Router = useRouter()
     const { t } = useTranslation('common')
-    const { resolveUser } = fetch()
+    //const { resolveUser } = fetch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const url = window.location.pathname
     const menuOn = effectorStore($menuOn)
@@ -59,24 +58,24 @@ function Header() {
     const showSearchBar = effectorStore($showSearchBar)
     const loading = effectorStore($loading)
     const loadingDoc = effectorStore($loadingDoc)
-    const loadingBreadcrumbs = effectorStore($loadingBreadcrumbs)
-    const showZilpay = effectorStore($showZilpay)
+    //const loadingBreadcrumbs = effectorStore($loadingBreadcrumbs)
+    // const showZilpay = effectorStore($showZilpay)
     const resolvedInfo = useStore($resolvedInfo)
-    const resolvedDomain =
-        resolvedInfo?.user_domain! && resolvedInfo.user_domain
-            ? resolvedInfo.user_domain
-            : ''
+    //const resolvedDomain =
+    resolvedInfo?.user_domain! && resolvedInfo.user_domain
+        ? resolvedInfo.user_domain
+        : ''
     //@review: subdomain
-    const resolvedSubdomain =
-        resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
-            ? resolvedInfo.user_subdomain
-            : ''
-    const resolvedTLD =
-        resolvedInfo?.user_tld! && resolvedInfo.user_tld
-            ? resolvedInfo.user_tld
-            : ''
-    const version = resolvedInfo?.version
-    const version_ = version?.toLowerCase()
+    //const resolvedSubdomain =
+    resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
+        ? resolvedInfo.user_subdomain
+        : ''
+    //const resolvedTLD =
+    resolvedInfo?.user_tld! && resolvedInfo.user_tld
+        ? resolvedInfo.user_tld
+        : ''
+    //const version = resolvedInfo?.version
+    //const version_ = version?.toLowerCase()
     const [headerClassName, setHeaderClassName] = useState('first-load')
     const [contentClassName, setContentClassName] = useState('first-load')
     const [innerClassName, setInnerClassName] = useState('first-load')
@@ -228,7 +227,7 @@ function Header() {
 
     return (
         <>
-            {showZilpay && <ZilPay />}
+            {/* {showZilpay && <ZilPay />} */}
             {!modalNewSsi &&
                 !modalGetStarted &&
                 !modalBuyNft &&

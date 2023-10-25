@@ -1,4 +1,3 @@
-import { ReactNode } from 'react'
 import { useStore } from 'effector-react'
 import {
     NewSSIModal,
@@ -11,6 +10,7 @@ import {
     TydraModal,
     UpdateNftModal,
     NewDefiModal,
+    ConnectModal,
 } from '..'
 import { $menuOn } from '../../src/store/menuOn'
 import { $loading } from '../../src/store/loading'
@@ -59,6 +59,7 @@ function Body(props: LayoutProps) {
                     <UpdateNftModal />
                     <BatchTransfer />
                     <NewDefiModal />
+                    <ConnectModal />
                 </>
             )}
             {!menuOn && !modalTx && <DashboardModal />}

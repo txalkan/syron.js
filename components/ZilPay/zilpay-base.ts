@@ -2,7 +2,7 @@ import * as tyron from 'tyron'
 import { ZIlPayInject } from '../../src/types/zil-pay'
 import { operationKeyPair } from '../../src/lib/dkms'
 import { toast } from 'react-toastify'
-import { updateShowZilpay } from '../../src/store/modal'
+//import { updateShowZilpay } from '../../src/store/modal'
 
 type Params = {
     contractAddress: string
@@ -45,7 +45,7 @@ export class ZilPayBase {
                                 toastId: 5,
                             }
                         )
-                        updateShowZilpay(false)
+                        //updateShowZilpay(false)
                     }
 
                     if (typeof window['zilPay'] !== 'undefined') {

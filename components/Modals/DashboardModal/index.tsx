@@ -16,7 +16,6 @@ import {
     updateModalBuyNft,
     updateModalTxMinimized,
     updateShowSearchBar,
-    updateShowZilpay,
     updateNewDefiModal,
 } from '../../../src/store/modal'
 import {
@@ -63,10 +62,12 @@ import iconTyron from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconDoms from '../../../src/assets/icons/ssi_icon_nfts.svg'
 import iconSubs from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
 import ThreeDots from '../../Spinner/ThreeDots'
+import zilpayHook from '../../../src/hooks/zilpayHook'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
+    const { handleConnect } = zilpayHook()
     const { navigate, logOff } = routerHook()
     const { getSmartContract, getSmartContractInit } = smartContract()
     const dispatch = useDispatch()
@@ -1398,7 +1399,6 @@ function Component() {
                 <div
                     className={styles.toggleHeaderWrapper}
                     onClick={() => {
-                        updateShowZilpay(true)
                         menuActive('eoa')
                     }}
                 >
@@ -1426,43 +1426,65 @@ function Component() {
                 </div>
                 {menu === 'eoa' && (
                     <>
-                        <div className={styles.wrapperEoa}>
-                            <Image
-                                width={25}
-                                height={25}
-                                src={ZilpayIcon}
-                                alt="zilpay-ico"
-                            />
-                            <div className={styles.txtEoa}>
-                                {t('ZILPAY ACCOUNT')}
-                            </div>
+                        {loginInfo.zilAddr ? (
+                            <>
+                                <div className={styles.wrapperEoa}>
+                                    <Image
+                                        width={25}
+                                        height={25}
+                                        src={ZilpayIcon}
+                                        alt="zilpay-ico"
+                                    />
+                                    <div className={styles.txtEoa}>
+                                        {t('ZILPAY_WALLET')}
+                                    </div>
+                                    <div
+                                        onClick={() => logOff()}
+                                        className={styles.txtDisconnect}
+                                    >
+                                        {/** @review: zilpay remove connection, disconnect key button */}
+                                        {t('DISCONNECT')}
+                                    </div>
+                                </div>
+                                <div
+                                    style={{
+                                        marginTop: '2%',
+                                        marginLeft: '3%',
+                                    }}
+                                >
+                                    <a
+                                        href={
+                                            net === 'testnet'
+                                                ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
+                                                : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
+                                        }
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className={styles.txtAddress}
+                                    >
+                                        {loginInfo.zilAddr?.bech32}
+                                    </a>
+                                </div>
+                            </>
+                        ) : (
                             <div
-                                onClick={() => logOff()}
-                                className={styles.txtDisconnect}
+                                style={{ marginBottom: '5%' }}
+                                className={styles.wrapperEoa}
                             >
-                                {/** @review: zilpay remove connection, disconnect key button */}
-                                {t('DISCONNECT')}
+                                <button
+                                    onClick={handleConnect}
+                                    className={`button small ${
+                                        isLight
+                                            ? toastTheme(isLight)
+                                            : 'secondary'
+                                    }`}
+                                >
+                                    <span className={styles.txtBtnConnect}>
+                                        {t('ZILPAY_WALLET')}
+                                    </span>
+                                </button>
                             </div>
-                        </div>
-                        <div
-                            style={{
-                                marginTop: '2%',
-                                marginLeft: '3%',
-                            }}
-                        >
-                            <a
-                                href={
-                                    net === 'testnet'
-                                        ? `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}?network=${net}`
-                                        : `https://viewblock.io/zilliqa/address/${loginInfo.zilAddr?.bech32}`
-                                }
-                                target="_blank"
-                                rel="noreferrer"
-                                className={styles.txtAddress}
-                            >
-                                {loginInfo.zilAddr?.bech32}
-                            </a>
-                        </div>
+                        )}
                         <br />
                         {loginInfo.arAddr ? (
                             <>
@@ -1474,7 +1496,7 @@ function Component() {
                                         alt="arconnect-ico"
                                     />
                                     <div className={styles.txtEoa}>
-                                        {t('ARWEAVE WALLET')}
+                                        {t('ARCONNECT_WALLET')}
                                     </div>
                                     <div
                                         onClick={() => disconnect()}
@@ -1515,8 +1537,8 @@ function Component() {
                                             : 'secondary'
                                     }`}
                                 >
-                                    <span className={styles.txtBtnArConnect}>
-                                        {t('CONNECT_WITH_ARCONNECT')}
+                                    <span className={styles.txtBtnConnect}>
+                                        {t('ARCONNECT_WALLET')}
                                     </span>
                                 </button>
                             </div>

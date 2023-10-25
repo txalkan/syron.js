@@ -8,20 +8,16 @@ import { RootState } from '../../src/app/reducers'
 import {
     updateModalDashboard,
     updateModalNewSsi,
-    updateShowZilpay,
-    // $showZilpay,
-    // $dashboardState,
+    updateConnectModal,
 } from '../../src/store/modal'
-// import { DashboardLabel, ZilPay } from '..'
-// import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 import sunIco from '../../src/assets/icons/sun.svg'
 import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
-// import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
 import zilpayHook from '../../src/hooks/zilpayHook'
+//import detectEthereumProvider from '@metamask/detect-provider'
 
 function Component() {
     const dispatch = useDispatch()
@@ -30,27 +26,49 @@ function Component() {
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const menuOn = useStore($menuOn)
     const { t } = useTranslation()
-    const { handleConnect } = zilpayHook()
+    //const { handleConnect } = zilpayHook()
 
-    const onConnect = () => {
-        if (loginInfo.zilAddr) {
-            updateModalDashboard(true)
-            updateModalNewSsi(false)
-        } else {
-            handleConnect()
-        }
-        // toast.info(t('Browsing on {{net}}', { net: net }), {
-        //     position: 'bottom-right',
-        //     autoClose: 2000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: toastTheme(loginInfo.isLight),
-        //     toastId: 4,
-        // })
+    const onConnect = async () => {
+        updateConnectModal(true)
+
+        // const provider = await detectEthereumProvider()
+
+        // if (provider) {
+        //     startApp(provider)
+        // } else {
+        //     console.log('Please install MetaMask!')
+        // }
+
+        // function startApp(provider) {
+        //     if (provider !== window.ethereum) {
+        //         updateConnectModal(true)
+        //         console.error('Do you have multiple wallets installed?')
+        //     } else {
+        //         console.log(provider)
+        //         updateModalDashboard(true)
+        //         updateModalNewSsi(false)
+        //     }
+        // }
     }
+    // const onConnectZilPay = () => {
+    //     if (loginInfo.zilAddr) {
+    //         updateModalDashboard(true)
+    //         updateModalNewSsi(false)
+    //     } else {
+    //         handleConnect()
+    //     }
+    //     // toast.info(t('Browsing on {{net}}', { net: net }), {
+    //     //     position: 'bottom-right',
+    //     //     autoClose: 2000,
+    //     //     hideProgressBar: false,
+    //     //     closeOnClick: true,
+    //     //     pauseOnHover: true,
+    //     //     draggable: true,
+    //     //     progress: undefined,
+    //     //     theme: toastTheme(loginInfo.isLight),
+    //     //     toastId: 4,
+    //     // })
+    // }
 
     const checkArConnect = () => {
         if (loginInfo.arAddr) {
@@ -58,11 +76,11 @@ function Component() {
         }
     }
 
-    useEffect(() => {
-        if (loginInfo.zilAddr !== null) {
-            updateShowZilpay(false)
-        }
-    }, [loginInfo.zilAddr])
+    // useEffect(() => {
+    //     if (loginInfo.zilAddr !== null) {
+    //         updateShowZilpay(false)
+    //     }
+    // }, [loginInfo.zilAddr])
 
     if (menuOn) {
         return null

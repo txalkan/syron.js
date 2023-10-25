@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateLoginInfoZilpay } from '../../../src/app/actions'
 import { RootState } from '../../../src/app/reducers'
-import { updateShowZilpay } from '../../../src/store/modal'
+//import { updateShowZilpay } from '../../../src/store/modal'
 import { useTranslation } from 'next-i18next'
 //@review import { updateTxList } from '../../../src/store/transactions'
 import toastTheme from '../../../src/hooks/toastTheme'
@@ -32,7 +32,7 @@ function Component() {
 
             if (connected && address) {
                 dispatch(updateLoginInfoZilpay(address))
-                updateShowZilpay(true)
+                //updateShowZilpay(true) @pending
             }
 
             // const cache = window.localStorage.getItem(

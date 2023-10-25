@@ -48,7 +48,7 @@ function routerHook() {
             updateDashboardState(null)
             dispatch(setTxId(''))
             updateArConnect(null)
-            updateModalDashboard(false)
+            //updateModalDashboard(false)
             updateBuyInfo(null)
             Router.push('/')
             setTimeout(() => {
