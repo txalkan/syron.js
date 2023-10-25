@@ -10,9 +10,10 @@ class MyDocument extends Document {
         return (
             <Html>
                 <Head>
+                    <meta property="og:title" content="Tyron" />
                     <meta
-                        name="Tyron Network"
-                        content="TYRON open-source web application"
+                        property="og:description"
+                        content="Web application of the Tyron Self-Sovereign Identity Protocol where you can manage a Web3 self-custodial account secured by social recovery."
                     />
                     <link
                         rel="icon"
@@ -26,13 +27,12 @@ class MyDocument extends Document {
                         type="image/svg+xml"
                         sizes="40x40"
                     /> */}
-                    <meta name="title" content="Tyron Network" />
-                    <meta
+                    {/* <meta name="title" content="Tyron" /> */}
+                    {/* <meta
                         name="description"
                         content="Tyron SSI is a self-sovereign identity (SSI) protocol to own & control digital identities and DeFi assets with account abstraction (AA)."
-                    />
+                    /> */}
                     <meta property="og:image" content="/tyronssi.svg" />
-                    <meta property="og:title" content="Tyron Network" />
                 </Head>
                 <body>
                     <Main />
