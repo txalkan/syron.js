@@ -1,3 +1,5 @@
+import type { AppProps } from 'next/app'
+import { useEffect, useState } from 'react'
 import '../styles/css/fontawesome-all.min.css'
 import '../styles/css/main.css'
 import '../styles/css/noscript.css'
@@ -7,15 +9,12 @@ import '../styles/scss/_normalizer.scss'
 import '../styles/scss/application.scss'
 import 'react-toastify/dist/ReactToastify.css'
 
-import type { AppProps } from 'next/app'
 import { Provider } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { store, persistor } from '../src/app/store'
 import { appWithTranslation } from 'next-i18next'
 //import { MetaMaskUIProvider } from '@metamask/sdk-react-ui'
-
 import { createWeb3Modal, defaultWagmiConfig } from '@web3modal/wagmi/react'
-
 import { WagmiConfig } from 'wagmi'
 import {
     zkSync,
@@ -23,10 +22,18 @@ import {
     polygonZkEvm,
     polygonZkEvmTestnet,
 } from 'wagmi/chains'
-import { useEffect, useState } from 'react'
+import { WalletConnectConnector } from '@wagmi/core/connectors/walletConnect'
 
-// 1. Get projectId
+// 1. Get projectId & chains
 const projectId = process.env.NEXT_PUBLIC_PROJECT_ID || ''
+const chains = [zkSync, zkSyncTestnet, polygonZkEvm, polygonZkEvmTestnet]
+
+const connector = new WalletConnectConnector({
+    chains: chains,
+    options: {
+        projectId: projectId,
+    },
+})
 
 // 2. Create wagmiConfig
 
@@ -37,7 +44,6 @@ const metadata = {
     icons: ['https://avatars.githubusercontent.com/u/37784886'], //@pending
 }
 
-const chains = [zkSync, zkSyncTestnet, polygonZkEvm, polygonZkEvmTestnet]
 const wagmiConfig = defaultWagmiConfig({ chains, projectId, metadata })
 
 // 3. Create modal
