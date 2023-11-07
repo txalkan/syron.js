@@ -1,5 +1,5 @@
 import Layout from '../../../../components/Layout'
-import { Headline, CardList } from '../../../../components'
+import { Headline, CardList, Updates } from '../../../../components'
 import stylesDark from '../../../styles.module.scss'
 import stylesLight from '../../../styleslight.module.scss'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
@@ -29,6 +29,7 @@ function Header() {
                     </h3>
                 </div>
                 <CardList />
+                <Updates />
             </Layout>
         </>
     )
