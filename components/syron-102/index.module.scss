@@ -1,0 +1,257 @@
+/*
+ZilPay.io
+Copyright (c) 2023 by Rinat <https://github.com/hicaru>
+All rights reserved.
+You acknowledge and agree that ZilPay owns all legal right, title and interest in and to the work, software, application, source code, documentation and any other documents in this file (collectively, the Program), including any intellectual property rights which subsist in the Program (whether those rights happen to be registered or not, and wherever in the world those rights may exist), whether in source code or any other form.
+Subject to the limited license below, you may not (and you may not permit anyone else to) distribute, publish, copy, modify, merge, combine with another program, create derivative works of, reverse engineer, decompile or otherwise attempt to extract the source code of, the Program or any part thereof, except that you may contribute to this software.
+You are granted a non-exclusive, non-transferable, non-sublicensable license to distribute, publish, copy, modify, merge, combine with another program or create derivative works of the Program (such resulting program, collectively, the Resulting Program) solely for Non-Commercial Use as long as you:
+1. give prominent notice (Notice) with each copy of the Resulting Program that the Program is used in the Resulting Program and that the Program is the copyright of ZilPay; and
+2. subject the Resulting Program and any distribution, publication, copy, modification, merger therewith, combination with another program or derivative works thereof to the same Notice requirement and Non-Commercial Use restriction set forth herein.
+Non-Commercial Use means each use as described in clauses (1)-(3) below, as reasonably determined by ZilPay in its sole discretion:
+1. personal use for research, personal study, private entertainment, hobby projects or amateur pursuits, in each case without any anticipated commercial application;
+2. use by any charitable organization, educational institution, public research organization, public safety or health organization, environmental protection organization or government institution; or
+3. the number of monthly active users of the Resulting Program across all versions thereof and platforms globally do not exceed 10,000 at any time.
+You will not use any trade mark, service mark, trade name, logo of ZilPay or any other company or organization in a way that is likely or intended to cause confusion about the owner or authorized user of such marks, names or logos.
+If you have any questions, comments or interest in pursuing any other use cases, please reach out to us at mapu@ssiprotocol.com.*/
+
+@import '../../styles/scss/mixins.scss';
+
+.container {
+    margin-top: 40px;
+    // background-color: #ffffff2e; //var(--card-color);
+    //padding-right: 17px;
+    // padding: 1rem 1.25rem 0.5rem;
+    //box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    //@include border-radius(17px);
+    //max-width: 550px;
+    @include flex-center-vert;
+    flex-direction: column;
+
+    & > svg {
+        cursor: pointer;
+    }
+
+    & > button {
+        width: 100%;
+        padding: 25px;
+
+        font-size: 14px;
+        text-transform: uppercase;
+
+        margin-block-end: 0.6em;
+        margin-block-start: 0.6em;
+
+        &:hover {
+            color: var(--button-color);
+            background: var(--primary-color);
+        }
+    }
+
+    // @media (max-width: 767px) {
+    //     width: 100vw;
+    //     box-shadow: none;
+    // }
+
+    // @media (max-width: 510px) {
+    //     @include border-radius(0);
+    // }
+
+    //@ssibrowser
+    width: 92%;
+}
+
+// .wrapper {
+//     @include flex-between-row;
+
+//     width: 100%;
+
+//     &>svg {
+//         cursor: pointer;
+//     }
+
+//     &>h3 {
+//         font-size: 17px;
+//         line-height: 1;
+//         font-family: 'Bold';
+
+//         &>span {
+//             font-family: 'light';
+//             font-size: 14px;
+//             color: var(--warning-color);
+//         }
+//     }
+
+//     @media only screen and (min-width: 500px) {
+//         margin-left: 22px;
+//     }
+// }
+
+.info {
+    display: none;
+    width: 100%;
+    padding-left: 16px;
+    padding-right: 16px;
+    max-width: 420px;
+    background: var(--button-color);
+
+    @include border-radius(16px);
+
+    &:global(.show) {
+        @include flex-left-column;
+    }
+
+    & > p {
+        font-family: 'light';
+        font-size: 10px;
+    }
+
+    & > li {
+        font-size: 13px;
+        margin-block-start: 5px;
+        margin-block-end: 5px;
+        color: var(--text-color);
+        font-family: 'Regular';
+
+        & > a {
+            font-family: 'Bold';
+
+            &:hover {
+                color: var(--primary-color);
+            }
+        }
+    }
+}
+
+//@ssibrowser
+.titleForm {
+    text-transform: uppercase;
+    font-size: large;
+    font-weight: bold;
+    color: #ffff32;
+    padding-left: 11px;
+    padding-right: 11px;
+    position: relative;
+
+    /* Estilos para la capa de degradado */
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+            90deg,
+            #ffffff2e,
+            #333333,
+            #dbe4eb,
+            #333333,
+            #ffffff2e
+        );
+        opacity: 0.5;
+        /* Ajusta la opacidad según sea necesario */
+        z-index: -1;
+        /* Coloca la capa detrás del texto */
+    }
+}
+
+.titleForm2 {
+    font-size: medium;
+    font-weight: bold;
+    display: flex;
+    justify-content: flex-start;
+    color: #dbe4eb;
+    // text-decoration: underline;
+    color: #ffff32;
+    text-transform: uppercase;
+    margin-left: 7px;
+    margin-right: 4px;
+}
+
+.contentWrapper {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.contentWrapper2 {
+    width: 100%;
+    padding-left: 22px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 22px;
+}
+
+.icoWrapper {
+    display: flex;
+    align-items: center;
+}
+
+.settings {
+    margin-right: 7px;
+    text-transform: uppercase;
+    font-size: small;
+    color: silver;
+    padding-top: 2px;
+}
+
+.wrapperSettings {
+    display: flex;
+    justify-content: right;
+    margin-top: 33px;
+}
+
+.ratesWrapper {
+    width: 222px;
+    margin-top: 22px;
+    margin-bottom: 70px;
+}
+
+.toggleActiveWrapper {
+    width: 44px;
+    height: 13px;
+    border-radius: 11px;
+    background-color: #fff;
+    display: flex;
+    align-items: center;
+    padding-left: 7px;
+    padding-right: 7px;
+    justify-content: flex-end;
+    cursor: pointer;
+    margin-left: 33px;
+}
+
+.toggleActiveBall {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background-color: #000;
+}
+
+.toggleInactiveWrapper {
+    width: 44px;
+    height: 13px;
+    border-radius: 11px;
+    background-color: #000;
+    display: flex;
+    align-items: center;
+    padding-left: 7px;
+    padding-right: 7px;
+    justify-content: flex-start;
+    cursor: pointer;
+    margin-left: 33px;
+}
+
+.toggleInactiveBall {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background-color: #fff;
+}
+
+.toggleTxt {
+    padding-left: 7px;
+    font-size: small;
+}

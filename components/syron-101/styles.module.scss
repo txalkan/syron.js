@@ -1,0 +1,174 @@
+@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    justify-content: flex-end;
+    width: 100%;
+    transition: z-index linear 0s 0.3s;
+    align-items: center;
+}
+
+.cardActiveWrapper {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    width: 800px;
+
+    height: fit-content;
+
+    @media only screen and (max-width: 767px) {
+        width: 92%;
+    }
+}
+
+.title,
+.titleX {
+    font-family: $font-anonymous-pro;
+    font-size: 22px;
+    color: #dbe4eb;
+    text-transform: uppercase;
+    padding-left: 10px;
+    padding-top: 7px;
+    @media only screen and (max-width: 767px) {
+        font-size: 17px;
+    }
+}
+
+.titleX {
+    text-transform: none;
+}
+
+.title2 {
+    font-size: 17px;
+    color: #dbe4eb;
+    text-transform: uppercase;
+    padding-left: 10px;
+    margin-right: 17px;
+    @media only screen and (max-width: 767px) {
+        font-size: 14px;
+    }
+}
+
+.cardActive {
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    //border-radius: 4px;
+    margin-top: 17px;
+    margin-bottom: 2px;
+    cursor: pointer;
+    //border: 1px solid silver;
+    position: relative;
+}
+
+.cardActive::before {
+    content: '';
+    position: absolute;
+    //dashboard must have position:relative
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ffff32;
+}
+
+.card {
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    // border: 1px solid silver;
+    border-radius: 4px;
+    margin-top: 17px;
+    margin-bottom: 17px;
+    cursor: pointer;
+}
+
+.cardActive2 {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    //border: 1px solid #ffff32;
+    border-radius: 4px;
+    margin-top: 11px;
+    margin-bottom: 11px;
+    cursor: pointer;
+}
+
+.card2 {
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #ffffff2e;
+    //border: 1px solid silver;
+    border-radius: 4px;
+    margin-top: 11px;
+    margin-bottom: 11px;
+    cursor: pointer;
+}
+
+.icoWrapper {
+    margin-top: 7px;
+}
+
+.icoWrapper2 {
+    display: flex;
+    justify-content: flex-start;
+}
+
+.cardSub {
+    background-color: #ffffff2e;
+    //border: 1px solid silver;
+    //border-radius: 4px;
+    padding: 7px;
+    margin-bottom: 17px;
+    position: relative;
+}
+
+.cardSub::before {
+    content: '';
+    position: absolute;
+    //dashboard must have position:relative
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ffff32;
+}
+
+.cardSub2 {
+    background-color: #ffffff2e;
+    //border: 1px solid #ffff32;
+    border-radius: 4px;
+    padding: 4px;
+    margin-bottom: 11px;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.subWrapper {
+    padding: 7px;
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.subWrapperBal {
+    padding-top: 11%;
+    padding-bottom: 11%;
+    width: 100%;
+}

@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { Dashboard, Menu, SearchBar, Stats, ZilPay } from '..'
+import { Dashboard, Menu, SearchBar, Stats, Syron, ZilPay } from '..'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -267,14 +267,7 @@ function Header() {
                             !modalNft &&
                             !modalTransfer &&
                             !modalNewDefi &&
-                            !modalDashboard && (
-                                <>
-                                    <div className={innerClassName}>
-                                        <SearchBar />
-                                    </div>
-                                    <Stats />
-                                </>
-                            )}
+                            !modalDashboard && <Syron />}
                     </div>
                 </div>
             ) : (
