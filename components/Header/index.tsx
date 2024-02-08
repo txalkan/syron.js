@@ -236,7 +236,7 @@ function Header() {
                 !modalTransfer &&
                 !modalNewMotions && (
                     <>
-                        <Menu />
+                        {/* <Menu /> */}
                         <Dashboard />
                     </>
                 )}
