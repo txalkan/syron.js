@@ -12,6 +12,7 @@ import isZil from '../../../src/hooks/isZil'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { updateNet } from '../../../src/store/network'
 import { useStore } from 'react-stores'
+import { signIn } from '@junobuild/core-peer'
 
 function Component() {
     const dispatch = useDispatch()
@@ -20,7 +21,7 @@ function Component() {
     const resolvedInfo = useStore($resolvedInfo)
     const isZil_ = isZil(resolvedInfo?.version)
 
-    const handleConnect = React.useCallback(async () => {
+    const handleConnectZilPay = React.useCallback(async () => {
         try {
             const zilpay = new ZilPayBase()
             const zp = await zilpay.zilpay()
@@ -81,8 +82,8 @@ function Component() {
                 marginTop: '10%',
             }}
         >
-            <div onClick={handleConnect} className={btnColor()}>
-                {t('CONNECT')}
+            <div onClick={async () => await signIn()} className={btnColor()}>
+                {t('Sign_In')}
             </div>
         </div>
     )

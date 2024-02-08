@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useStore } from 'effector-react'
 import Image from 'next/image'
@@ -22,6 +22,15 @@ import { UpdateIsLight } from '../../src/app/actions'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
 import zilpayHook from '../../src/hooks/zilpayHook'
+import { User, initJuno, signIn } from '@junobuild/core-peer'
+import { authSubscribe } from '@junobuild/core-peer'
+
+// Provide a default value appropriate for your AuthContext
+const defaultValue = {
+    // Define your default authentication state here
+}
+
+export const AuthContext = createContext(defaultValue)
 
 function Component() {
     const dispatch = useDispatch()
@@ -32,13 +41,21 @@ function Component() {
     const { t } = useTranslation()
     const { handleConnect } = zilpayHook()
 
-    const onConnect = () => {
-        if (loginInfo.zilAddr) {
-            updateModalDashboard(true)
-            updateModalNewSsi(false)
-        } else {
-            handleConnect()
+    const onSignIn = () => {
+        console.log('sign in')
+
+        async function internetIdentity() {
+            await signIn()
         }
+
+        internetIdentity()
+
+        // if (loginInfo.zilAddr) {
+        //     updateModalDashboard(true)
+        //     updateModalNewSsi(false)
+        // } else {
+        //     handleConnect()
+        // }
         // toast.info(t('Browsing on {{net}}', { net: net }), {
         //     position: 'bottom-right',
         //     autoClose: 2000,
@@ -64,63 +81,103 @@ function Component() {
         }
     }, [loginInfo.zilAddr])
 
+    const [user, setUser] = useState<User | null>(null)
+    useEffect(() => {
+        const sub = authSubscribe((user) => setUser(user))
+
+        return () => sub()
+    }, [])
+
     if (menuOn) {
         return null
     }
 
     return (
-        <div className={styles.wrapper}>
-            {loginInfo.isLight ? (
-                <div
-                    onClick={() => dispatch(UpdateIsLight(false))}
-                    className={styles.toggleDark}
-                >
-                    <Image width={30} src={sunIco} alt="toggle-ico" />
-                </div>
-            ) : (
-                <div
-                    onClick={() => dispatch(UpdateIsLight(true))}
-                    className={styles.toggleLight}
-                >
-                    <Image width={30} src={moonIco} alt="toggle-ico" />
-                </div>
-            )}
-            {loginInfo.loggedInAddress && loginInfo.zilAddr ? (
-                <>
-                    <div
-                        className={styles.wrapperIcon}
-                        onClick={() => {
-                            checkArConnect()
-                            onConnect()
-                        }}
-                    >
-                        <div className={styles.txtLoggedIn}>
-                            {t('LOGGED IN')}
-                        </div>
-                    </div>
-                    {/* {net === 'testnet' && <DashboardLabel />} */}
-                </>
-            ) : loginInfo.zilAddr ? (
-                <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <div className={styles.tooltip}>
-                        <div className={styles.txtConnected}>{t('Log in')}</div>
-                        <span className={styles.tooltiptext}>
+        <AuthContext.Provider value={{ user }}>
+            <div className={styles.wrapper}>
+                {user !== undefined && user !== null ? (
+                    <div>
+                        {loginInfo.isLight ? (
                             <div
-                                style={{
-                                    fontSize: '8px',
-                                }}
+                                onClick={() => dispatch(UpdateIsLight(false))}
+                                className={styles.toggleDark}
                             >
-                                {t('Log in for full functionality.')}
+                                <Image
+                                    width={30}
+                                    src={sunIco}
+                                    alt="toggle-ico"
+                                />
                             </div>
-                        </span>
+                        ) : (
+                            <div
+                                onClick={() => dispatch(UpdateIsLight(true))}
+                                className={styles.toggleLight}
+                            >
+                                <Image
+                                    width={30}
+                                    src={moonIco}
+                                    alt="toggle-ico"
+                                />
+                            </div>
+                        )}
+                        {/*
+                    {children}
+                    <Logout />
+                    */}
                     </div>
-                </div>
-            ) : (
-                <div className={styles.wrapperIcon} onClick={onConnect}>
-                    <div className={styles.txtConnect}>{t('CONNECT')}</div>
-                </div>
-            )}
-        </div>
+                ) : (
+                    <>
+                        {loginInfo.loggedInAddress && loginInfo.zilAddr ? (
+                            <>
+                                <div
+                                    className={styles.wrapperIcon}
+                                    onClick={() => {
+                                        checkArConnect()
+                                        onSignIn()
+                                    }}
+                                >
+                                    <div className={styles.txtLoggedIn}>
+                                        {t('LOGGED IN')}
+                                    </div>
+                                </div>
+                                {/* {net === 'testnet' && <DashboardLabel />} */}
+                            </>
+                        ) : loginInfo.zilAddr ? (
+                            <div
+                                className={styles.wrapperIcon}
+                                onClick={onSignIn}
+                            >
+                                <div className={styles.tooltip}>
+                                    <div className={styles.txtConnected}>
+                                        {t('Log in')}
+                                    </div>
+                                    <span className={styles.tooltiptext}>
+                                        <div
+                                            style={{
+                                                fontSize: '8px',
+                                            }}
+                                        >
+                                            {t(
+                                                'Log in for full functionality.'
+                                            )}
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className={styles.wrapperIcon}
+                                onClick={onSignIn}
+                            >
+                                <div className={styles.txtConnect}>
+                                    {t('Sign_In')}
+                                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
+        </AuthContext.Provider>
     )
 }
 
