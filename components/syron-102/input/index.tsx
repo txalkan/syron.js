@@ -33,6 +33,7 @@ import SwapIcon from '../../icons/swap'
 //@ssibrowser
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
+import icoBTC from '../../../src/assets/icons/bitcoin.png'
 
 import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
@@ -221,6 +222,8 @@ export const FormInput: React.FC<Prop> = ({
                                 src={
                                     token.symbol === 'ORDI'
                                         ? icoORDI
+                                        : token.symbol === 'BTC'
+                                        ? icoBTC
                                         : token.symbol === 'SU$D'
                                         ? icoSU$D
                                         : getIconURL(token.bech32)
