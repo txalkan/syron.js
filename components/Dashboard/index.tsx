@@ -22,7 +22,7 @@ import { UpdateIsLight } from '../../src/app/actions'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
 import zilpayHook from '../../src/hooks/zilpayHook'
-import { User, initJuno, signIn } from '@junobuild/core-peer'
+import { User, signIn } from '@junobuild/core-peer'
 import { authSubscribe } from '@junobuild/core-peer'
 
 // Provide a default value appropriate for your AuthContext

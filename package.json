@@ -18,7 +18,7 @@
         "s": "next build && prettier -w ."
     },
     "dependencies": {
-        "@junobuild/core-peer": "^0.0.10",
+        "@junobuild/core-peer": "^0.0.11",
         "@reduxjs/toolkit": "^1.6.0",
         "@testing-library/dom": "^8.11.2",
         "@testing-library/jest-dom": "^5.14.1",
