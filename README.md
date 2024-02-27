@@ -1,15 +1,15 @@
-This open-source code is for the TYRON Network's [web application](https://www.tyron.network). It is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+This open-source software is part of the Self-Sovereign Identity Protocol. It is a [Next.js](https://nextjs.org/) front-end application bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Getting Started
 
 ```bash
-yarn install
+npm i
 ```
 
 Run the development server:
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to run this app locally.
