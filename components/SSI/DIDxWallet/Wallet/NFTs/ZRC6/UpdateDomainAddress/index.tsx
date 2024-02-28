@@ -41,7 +41,7 @@ import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
-import fetch from '../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
@@ -114,7 +114,7 @@ function Component({ addrName }) {
         }
     }
 
-    const { getNftsWallet } = fetch()
+    const { getNftsWallet } = useFetch(resolvedInfo)
     const [loadingNftList, setLoadingNftList] = useState(false)
     const [tokenIds, setTokenIds] = useState(Array())
     const [tokenUris, setTokenUris] = useState(Array())

@@ -236,7 +236,7 @@ export var TokensModal: React.FC<Prop> = function ({
                                                 : getIconURL(token.meta.bech32)
                                         }
                                         alt={token.meta.symbol}
-                                        lazyRoot={lazyRoot}
+                                        lazyRoot={lazyRoot as unknown as string}
                                         height="35"
                                         width="35"
                                     />

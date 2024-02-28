@@ -13,18 +13,20 @@ import toastTheme from '../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import routerHook from '../../../../src/hooks/router'
-import fetch from '../../../../src/hooks/fetch'
+import useFetch from '../../../../src/hooks/fetch'
 import { toast } from 'react-toastify'
 import { useStore } from 'react-stores'
 import ThreeDots from '../../../Spinner/ThreeDots'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc, checkVersion } = fetch()
+    const { fetchDoc, checkVersion } = useFetch(resolvedInfo)
     const doc = effectorStore($doc)
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
-    const resolvedInfo = useStore($resolvedInfo)
+
     const resolvedDomain = resolvedInfo?.user_domain
     const resolvedSubdomain = resolvedInfo?.user_subdomain
     const domainNavigate =

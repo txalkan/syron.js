@@ -46,7 +46,7 @@ import toastTheme from '../../../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../../../Spinner/ThreeDots'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
-import fetch from '../../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 import {
@@ -56,6 +56,8 @@ import {
 import { ecoNfts } from '../../../../../../../../src/constants/mintDomainName'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const zcrypto = tyron.Util.default.Zcrypto()
@@ -64,8 +66,7 @@ function Component() {
     const { navigate } = routerHook()
     const { getSmartContract } = smartContract()
     const { connect } = useArConnect()
-    const { checkVersion } = fetch()
-    const resolvedInfo = useStore($resolvedInfo)
+    const { checkVersion } = useFetch(resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const donation = effectorStore($donation)
     const subdomain = effectorStore($subdomainInput)

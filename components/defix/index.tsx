@@ -21,26 +21,24 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { SwapPair } from '../../src/types/swap'
 import { SwapForm } from '../swap-form'
-import { AddFunds, Balances, ClaimWallet, SBTxWALLET, ZILxWALLET } from '..'
+import { AddFunds, Balances, ClaimWallet, SBTxWALLET } from '..'
 import { PoolOverview } from '../pool'
 import { useStore } from 'react-stores'
 import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
 import { $wallet } from '../../src/store/wallet'
 import { DragonDex } from '../../src/mixins/dex'
-import { useTranslation } from 'next-i18next'
+import useFetch from '../../src/hooks/fetch'
+
 type Prop = {
     startPair: SwapPair[]
 }
 
 const dex = new DragonDex()
 export const Defix: React.FC<Prop> = ({ startPair }) => {
-    const { t } = useTranslation()
     const [active, setActive] = useState('trade')
-    const isLight = useSelector((state: RootState) => state.modal.isLight)
 
     const toggleActive = (id: string) => {
         resetState()
@@ -64,9 +62,9 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
         }
     }
 
-    const { fetchDoc } = fetch()
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
+    const { fetchDoc } = useFetch(resolvedInfo)
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

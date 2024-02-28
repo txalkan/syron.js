@@ -5,7 +5,7 @@ import { $doc } from '../../../../src/store/did-doc'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $loading, $loadingDoc } from '../../../../src/store/loading'
-import fetch from '../../../../src/hooks/fetch'
+import useFetch from '../../../../src/hooks/fetch'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
@@ -20,6 +20,8 @@ import { $net } from '../../../../src/store/network'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
@@ -41,7 +43,6 @@ function Component() {
 
     console.log('DID DOC:', JSON.stringify(doc, null, 2))
     let exists = false
-    const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -57,7 +58,7 @@ function Component() {
             ? resolvedInfo.user_tld
             : ''
 
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch(resolvedInfo)
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text)

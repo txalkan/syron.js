@@ -427,44 +427,45 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         setConfirmModal(true)
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (Number(pair[0].value) > 0) {
             handleOnInput(pair[0].value)
         }
     }, [liquidity, tokensStore])
 
-    React.useEffect(() => {
-        async function checkZilPayConnection() {
-            await tokensMixin.zilpay
-                .zilpay()
-                .then(async (zilpay) => {
-                    if (!zilpay.wallet.isEnable) {
-                        await zilpay.wallet.connect()
-                        toast.info(
-                            `ZilPay connected: ${(loginInfo?.zilAddr.bech32).slice(
-                                0,
-                                11
-                            )}...`,
-                            {
-                                position: 'top-center',
-                                autoClose: 2222,
-                                hideProgressBar: false,
-                                closeOnClick: true,
-                                pauseOnHover: true,
-                                draggable: true,
-                                progress: undefined,
-                                toastId: 1,
-                                theme: toastTheme(isLight),
-                            }
-                        )
-                    }
-                })
-                .catch((error) => {
-                    console.error(error)
-                })
-        }
-        checkZilPayConnection()
-    }, [])
+    // @review (zilpay)
+    // useEffect(() => {
+    //     async function checkZilPayConnection() {
+    //         await tokensMixin.zilpay
+    //             .zilpay()
+    //             .then(async (zilpay) => {
+    //                 if (!zilpay.wallet.isEnable) {
+    //                     await zilpay.wallet.connect()
+    //                     toast.info(
+    //                         `ZilPay connected: ${(loginInfo?.zilAddr.bech32).slice(
+    //                             0,
+    //                             11
+    //                         )}...`,
+    //                         {
+    //                             position: 'top-center',
+    //                             autoClose: 2222,
+    //                             hideProgressBar: false,
+    //                             closeOnClick: true,
+    //                             pauseOnHover: true,
+    //                             draggable: true,
+    //                             progress: undefined,
+    //                             toastId: 1,
+    //                             theme: toastTheme(isLight),
+    //                         }
+    //                     )
+    //                 }
+    //             })
+    //             .catch((error) => {
+    //                 console.error(error)
+    //             })
+    //     }
+    //     checkZilPayConnection()
+    // }, [])
 
     return (
         <>

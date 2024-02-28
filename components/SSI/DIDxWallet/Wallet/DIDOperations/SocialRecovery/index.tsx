@@ -27,21 +27,23 @@ import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
-import fetch from '../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { checkUserExists, versionAbove58, checkVersion } = fetch()
+    const { checkUserExists, versionAbove58, checkVersion } =
+        useFetch(resolvedInfo)
 
     const dispatch = useDispatch()
     const arConnect = effectorStore($arconnect)
-    const resolvedInfo = useStore($resolvedInfo)
     const dkms = effectorStore($doc)?.dkms
     const donation = effectorStore($donation)
     const doc = effectorStore($doc)

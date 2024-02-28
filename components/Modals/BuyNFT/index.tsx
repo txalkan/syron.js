@@ -46,24 +46,26 @@ import TickIcoReg from '../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
-import * as fetch_ from '../../../src/hooks/fetch'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
 import { sendTelegramNotification } from '../../../src/telegram'
 import { optionPayment } from '../../../src/constants/mintDomainName'
 import { $net, updateNet } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
+import useFetch from '../../../src/hooks/fetch'
+
+const zcrypto = tyron.Util.default.Zcrypto()
 
 function Component() {
-    const zcrypto = tyron.Util.default.Zcrypto()
+    const resolvedInfo = useStore($resolvedInfo)
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { fetchWalletBalance } = fetch_.default()
+    const { fetchWalletBalance } = useFetch(resolvedInfo)
+
     const Router = useRouter()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const resolvedInfo = useStore($resolvedInfo)
     const resolvedTLD = resolvedInfo?.user_tld
     const resolvedDomain = resolvedInfo?.user_domain
     const donation = effectorStore($donation)
@@ -71,8 +73,12 @@ function Component() {
     const modalBuyNft = effectorStore($modalBuyNft)
     const txType = effectorStore($txType)
     const loginInfo = useSelector((state: RootState) => state.modal)
-    const loggedInDomain = loginInfo.loggedInDomain
+    const zil_addr =
+        loginInfo?.zilAddr !== null
+            ? loginInfo?.zilAddr.base16.toLowerCase()
+            : ''
 
+    const loggedInDomain = loginInfo.loggedInDomain
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const CloseIcon = isLight ? CloseIconBlack : CloseIconReg
@@ -176,10 +182,7 @@ function Component() {
             })
         }
     }
-    const zilpay_addr =
-        loginInfo?.zilAddr !== null
-            ? loginInfo?.zilAddr.base16.toLowerCase()
-            : ''
+
     const handleOnChangePayment = async (value: any) => {
         updateOriginatorAddress(null)
         updateDonation(null)
@@ -212,9 +215,7 @@ function Component() {
                     )
                     const freelist: Array<string> =
                         get_freelist!.result.free_list
-                    const is_free = freelist.filter(
-                        (val) => val === zilpay_addr
-                    )
+                    const is_free = freelist.filter((val) => val === zil_addr)
                     if (is_free.length === 0) {
                         throw new Error('You are not on the free list.')
                     }
@@ -232,8 +233,15 @@ function Component() {
                 }
                 const paymentOptions = async (id: string) => {
                     setLoadingBalance(true)
+
+                    const zilpay_addr =
+                        loginInfo?.zilAddr !== null
+                            ? loginInfo?.zilAddr.base16.toLowerCase()
+                            : ''
+
                     await fetchWalletBalance(
                         id,
+                        zilpay_addr,
                         loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {
@@ -574,6 +582,7 @@ function Component() {
                             alt="close-ico"
                             src={CloseIcon}
                             onClick={outerClose}
+                            layout="responsive"
                         />
                     </div>
                     {txType === 'AddFunds' &&

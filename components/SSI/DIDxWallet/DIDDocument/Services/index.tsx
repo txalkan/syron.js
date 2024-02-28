@@ -46,14 +46,16 @@ import { Spinner } from '../../../..'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
-import fetch from '../../../../../src/hooks/fetch'
+import useFetch from '../../../../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { t } = useTranslation()
     const { navigate } = routerHook()
     // const { connect } = useArConnect()
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch(resolvedInfo)
     const doc = effectorStore($doc)?.doc
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -61,7 +63,7 @@ function Component() {
         loginInfo?.zilAddr !== null
             ? loginInfo?.zilAddr.base16.toLowerCase()
             : ''
-    const resolvedInfo = useStore($resolvedInfo)
+
     const resolvedSubdomain =
         resolvedInfo?.user_subdomain! && resolvedInfo.user_subdomain
             ? resolvedInfo.user_subdomain

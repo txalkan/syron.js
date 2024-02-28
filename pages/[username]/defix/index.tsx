@@ -3,7 +3,7 @@ import { Defix, DomainName, Headline, Tydra } from '../../../components'
 import styles from '../../styles.module.scss'
 // import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import { GetServerSidePropsContext, GetStaticPaths, NextPage } from 'next/types'
-import React from 'react'
+import { useCallback, useEffect } from 'react'
 import { updateRate } from '../../../src/store/settings'
 import { ListedTokenResponse } from '../../../src/types/token'
 import { SwapPair } from '../../../src/types/swap'
@@ -18,10 +18,11 @@ import {
 import { $wallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
 //@ssibrowser
-import { useStore as effectorStore } from 'effector-react'
-import fetch from '../../../src/hooks/fetch'
-import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import useFetch from '../../../src/hooks/fetch'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { useRouter } from 'next/router'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+
 type Prop = {
     data: ListedTokenResponse
     pair: SwapPair[]
@@ -30,6 +31,9 @@ type Prop = {
 const dex = new DragonDex()
 const backend = new ZilPayBackend()
 export const PageSwap: NextPage<Prop> = (props) => {
+    const Router = useRouter()
+    const resolvedInfo = useStore($resolvedInfo)
+
     //const { t } = useTranslation(`swap`);
 
     const wallet = useStore($wallet)
@@ -42,7 +46,6 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
 
-    const { resolveUser } = fetch()
     const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')
@@ -50,21 +53,33 @@ export const PageSwap: NextPage<Prop> = (props) => {
         .replace('/id', '')
         .replace('/ru', '')
 
-    React.useEffect(() => {
+    const { resolveUser } = useFetch(resolvedInfo)
+    useEffect(() => {
         if (!path.includes('/getstarted')) {
-            resolveUser()
+            const fetch = async () => {
+                const res = await resolveUser()
+                    .then((res) => {
+                        Router.push(res)
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                        Router.push('/')
+                    })
+            }
+            fetch()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wallet])
+    }, [])
     //@zilpay
-    React.useEffect(() => {
+    useEffect(() => {
         if (props.data) {
             updateDexPools(props.data.pools)
             updateRate(props.data.rate)
             loadFromServer(props.data.tokens.list)
         }
     }, [props])
-    const handleUpdate = React.useCallback(async () => {
+
+    const handleUpdate = useCallback(async () => {
         if (typeof window !== 'undefined') {
             updateRate(props.data.rate)
             try {
@@ -76,7 +91,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
     }, [props])
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (wallet) {
             handleUpdate()
         }

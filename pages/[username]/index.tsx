@@ -14,12 +14,16 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import Tydra from '../../components/SSI/Tydra'
 import { useEffect } from 'react'
-import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 import { $wallet } from '../../src/store/wallet'
+import { $resolvedInfo } from '../../src/store/resolvedInfo'
+import { useRouter } from 'next/router'
 
 function Header() {
+    const Router = useRouter()
+    const resolvedInfo = useStore($resolvedInfo)
+
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
 
@@ -30,7 +34,6 @@ function Header() {
         },
     ]
 
-    const { resolveUser } = fetch()
     const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')
@@ -39,6 +42,8 @@ function Header() {
         .replace('/ru', '')
 
     const wallet = useStore($wallet)
+
+    const { resolveUser } = useFetch(resolvedInfo)
     useEffect(() => {
         if (!path.includes('/getstarted')) {
             // if (path.includes('did@') || path.includes('.did')) {
@@ -46,14 +51,27 @@ function Header() {
             //     setShow(true)
             // } else if (path.includes('@')) {
             console.log('wallet updated')
-            resolveUser()
+
+            const fetch = async () => {
+                const res = await resolveUser()
+                    .then((res) => {
+                        Router.push(res)
+                    })
+                    .catch((err) => {
+                        console.error(err)
+                        Router.push('/')
+                    })
+            }
+            fetch()
+
             // } else {
             //     fetchDoc()
             //     setShow(true)
             // }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wallet])
+    }, [])
+
     return (
         <Layout>
             <div className={styles.headlineWrapper}>

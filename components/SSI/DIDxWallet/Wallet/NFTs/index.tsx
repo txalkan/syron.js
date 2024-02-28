@@ -3,19 +3,19 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../src/hooks/router'
+import useRouterHook from '../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import fetch from '../../../../../src/hooks/fetch'
+import useFetch from '../../../../../src/hooks/fetch'
 import { ZRC6Gallery } from '../../../..'
 import { useStore } from 'react-stores'
 
 function Component() {
-    const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
+    const { t } = useTranslation()
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -27,13 +27,18 @@ function Component() {
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
-    const { navigate } = routerHook()
-    const { checkVersion } = fetch()
+    const { navigate } = useRouterHook()
+    const { checkVersion } = useFetch(resolvedInfo)
     const [loadingCard, setLoadingCard] = useState(false)
     const [loadingCard2, setLoadingCard2] = useState(false)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
-    const version = checkVersion(resolvedInfo?.version!)
+
+    const [version, setVersion] = useState(5)
+    useEffect(() => {
+        const ver = checkVersion(resolvedInfo?.version!)
+        setVersion(ver)
+    }, [resolvedDomain, resolvedSubdomain])
 
     return (
         <div>

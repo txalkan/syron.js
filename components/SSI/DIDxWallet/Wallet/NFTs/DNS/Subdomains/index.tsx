@@ -9,7 +9,7 @@ import { RootState } from '../../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
-import fetch from '../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../src/hooks/fetch'
 import {
     updateSubdomain,
     updateDomainLegend,
@@ -18,9 +18,10 @@ import { useStore } from 'react-stores'
 import { updateDomainAddr } from '../../../../../../../src/store/subdomainAddr'
 
 function Component() {
-    const { t } = useTranslation()
-    const { checkVersion } = fetch()
     const resolvedInfo = useStore($resolvedInfo)
+
+    const { t } = useTranslation()
+    const { checkVersion } = useFetch(resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain

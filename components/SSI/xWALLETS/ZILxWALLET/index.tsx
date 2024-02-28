@@ -7,7 +7,7 @@ import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
 import { $loading, $loadingTydra } from '../../../../src/store/loading'
 import { ClaimWallet, Spinner } from '../../..'
-import fetch from '../../../../src/hooks/fetch'
+import useFetch from '../../../../src/hooks/fetch'
 import controller from '../../../../src/hooks/isController'
 import { $isController } from '../../../../src/store/controller'
 import toastTheme from '../../../../src/hooks/toastTheme'
@@ -20,15 +20,15 @@ import { useStore as effectorStore } from 'effector-react'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch(resolvedInfo)
     const { checkPause } = wallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const loading = effectorStore($loading)
     const { isController } = controller()
-    const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -48,7 +48,7 @@ function Component() {
     const fetchPause = async () => {
         setIsLoading(true)
         try {
-            const paused = await checkPause()
+            const paused = await checkPause(resolvedInfo.addr!)
             setIsPaused(paused)
             setIsLoading(false)
             fetchDoc()
@@ -188,7 +188,7 @@ function Component() {
                             <div
                                 onClick={() => {
                                     setLoadingCard2(true)
-                                    //isController()
+
                                     const is_controller =
                                         $isController.getState()
                                     if (is_controller) {

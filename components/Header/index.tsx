@@ -31,7 +31,6 @@ import {
 } from '../../src/store/modal'
 import { updateOriginatorAddress } from '../../src/store/originatorAddress'
 import styles from './styles.module.scss'
-import fetch from '../../src/hooks/fetch'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
@@ -41,7 +40,6 @@ import { useStore } from 'react-stores'
 function Header() {
     const Router = useRouter()
     const { t } = useTranslation('common')
-    const { resolveUser } = fetch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const url = window.location.pathname
     const menuOn = effectorStore($menuOn)

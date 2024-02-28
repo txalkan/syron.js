@@ -20,14 +20,17 @@ import { useTranslation } from 'next-i18next'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
 import { operationKeyPair } from '../../../src/lib/dkms'
-import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
+import {
+    $resolvedInfo,
+    updateResolvedInfo,
+} from '../../../src/store/resolvedInfo'
 import { useRouter } from 'next/router'
 import { $net } from '../../../src/store/network'
 import { updateSmartWallet } from '../../../src/store/wallet'
@@ -35,8 +38,11 @@ import { useStore } from 'react-stores'
 import { $domainAddr, updateDomainAddr } from '../../../src/store/subdomainAddr'
 import { useEffect, useState } from 'react'
 
+const zcrypto = tyron.Util.default.Zcrypto()
+
 function Component() {
-    const zcrypto = tyron.Util.default.Zcrypto()
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { t } = useTranslation()
     const { connect } = useArConnect()
 
@@ -46,7 +52,7 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const loggedInDomain = loginInfo.loggedInDomain
     const loggedInVersion = loginInfo.loggedInVersion
-    const { checkVersion } = fetch()
+    const { checkVersion } = useFetch(resolvedInfo)
     const version = checkVersion(loggedInVersion)
 
     const modalNewDefi = effectorStore($modalNewDefi)

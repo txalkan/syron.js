@@ -40,9 +40,9 @@ import {
 import { updateLoginInfoZilpay } from '../../src/app/actions'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
-import routerHook from '../../src/hooks/router'
-import zilpayHook from '../../src/hooks/zilpayHook'
 import { $net, updateNet } from '../../src/store/network'
+import useZilpayHook from '../../src/hooks/zilpayHook'
+import useRouterHook from '../../src/hooks/router'
 
 let observer: any = null
 let observerNet: any = null
@@ -61,8 +61,9 @@ export const ZilPay: React.FC = () => {
     const dashboardState = useStore($dashboardState)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const { logOff } = routerHook()
-    const { handleConnect } = zilpayHook()
+
+    const { handleConnect } = useZilpayHook()
+    const { logOff } = useRouterHook()
 
     const hanldeObserverState = useCallback(
         (zp) => {

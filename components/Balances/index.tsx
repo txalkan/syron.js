@@ -42,7 +42,7 @@ import {
     WithdrawalModal,
 } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { $net } from '../../src/store/network'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
@@ -66,6 +66,8 @@ const dex = new DragonDex()
 const Big = toformat(_Big)
 Big.PE = 999
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const wallet = useStore($wallet)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
@@ -74,11 +76,11 @@ function Component() {
             : ''
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { checkVersion } = fetch()
+    const { checkVersion } = useFetch(resolvedInfo)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const resolvedInfo = useStore($resolvedInfo)
+
     const resolved_version = resolvedInfo?.version
     let batch_version = false
     let lp_token = false

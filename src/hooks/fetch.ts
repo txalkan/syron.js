@@ -7,7 +7,7 @@ import { updateDoc } from '../store/did-doc'
 import { $loading, updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
 import { updateModalBuyNft, updateShowSearchBar } from '../store/modal'
-import { $resolvedInfo, updateResolvedInfo } from '../store/resolvedInfo'
+import { $resolvedInfo, User, updateResolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import toastTheme from './toastTheme'
 import { useStore as effectorStore } from 'effector-react'
@@ -19,16 +19,23 @@ import { updateSmartWallet } from '../store/wallet'
 import { useStore } from 'react-stores'
 import { ecoNfts } from '../constants/mintDomainName'
 
-function fetch() {
-    const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const { t } = useTranslation()
+function useFetch(resolvedInfo: User) {
+    // const isLight = useSelector((state: RootState) => state.modal.isLight)
+    // const { t } = useTranslation()
+    // const loginInfo = useSelector((state: RootState) => state.modal)
+    // const zilpay_addr =
+    // loginInfo?.zilAddr !== null
+    //     ? loginInfo?.zilAddr.base16.toLowerCase()
+    //     : ''
+    // const resolvedInfo = useStore($resolvedInfo)
+    // const Router = useRouter()
+    // const loading = effectorStore($loading)
+
     const { getSmartContract } = smartContract()
     const zcrypto = tyron.Util.default.Zcrypto()
-    const loginInfo = useSelector((state: RootState) => state.modal)
+
     const net = $net.state.net as 'mainnet' | 'testnet'
-    const Router = useRouter()
-    const loading = effectorStore($loading)
-    const resolvedInfo = useStore($resolvedInfo)
+
     const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')
@@ -89,14 +96,16 @@ function fetch() {
     }
 
     const resolveUser = async () => {
-        updateShowSearchBar(false)
-        if (!loading) {
+        try {
+            updateShowSearchBar(false)
+            // if (!loading) {
             updateLoading(true)
             let _subdomain: string | undefined
             if (subdomain !== '') {
                 _subdomain = subdomain
             }
-            await tyron.SearchBarUtil.default
+
+            const res = await tyron.SearchBarUtil.default
                 .fetchAddr(net, tld, domain, _subdomain)
                 .then(async (addr) => {
                     try {
@@ -126,44 +135,30 @@ function fetch() {
                         }
                         updateLoading(false)
                         //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
-                        const version = version_.slice(0, 7)
-                        switch (version.toLowerCase()) {
+                        let r
+                        switch (version_.slice(0, 7).toLowerCase()) {
                             case 'defixwa':
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/defix`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/defix`
                                 break
                             case 'zilstak':
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/zil`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/zil`
                                 break
                             case '.stake-':
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/zil`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/zil`
                                 break
                             case 'zilxwal':
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/zil`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/zil`
                                 break
                             case 'vcxwall':
                                 //@review: xalkan, it should work with fetchDoc in the useEffect of each component when needed
                                 //@todo-x-check why was fetchDoc here?: because we need doc for TTTxWallet wallet interface(e.g ivms) can't get it when user access directly from url not searchbar
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/sbt`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/sbt`
                                 break
                             case 'sbtxwal':
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/sbt`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/sbt`
                                 break
                             case 'airxwal':
-                                Router.push(
-                                    `/${subdomainNavigate}${domain}.ssi/airx`
-                                )
+                                r = `/${subdomainNavigate}${domain}.ssi/airx`
                                 break
                             default:
                                 // @info: why this default?
@@ -178,14 +173,15 @@ function fetch() {
                                     didx[3] !== 'doc' &&
                                     resolvedInfo === null
                                 ) {
-                                    Router.push(
-                                        `/${subdomainNavigate}${domain}.ssi`
-                                    )
+                                    r = `/${subdomainNavigate}${domain}.ssi`
+                                } else {
+                                    r = `/${subdomainNavigate}${domain}.ssi`
                                 }
                         }
+                        return r
                     } catch (error) {
-                        Router.push(`/resolvedAddress`)
                         updateLoading(false)
+                        return `/resolvedAddress`
                     }
                 })
                 .catch(async (error) => {
@@ -196,12 +192,11 @@ function fetch() {
                         user_domain: domain,
                         user_subdomain: '',
                     })
-                    Router.push('/')
+                    // Router.push('/')
                     updateModalBuyNft(true)
                     toast.warning(
-                        t(
-                            'For your security, make sure you’re at tyron.network'
-                        ),
+                        // t('For your security, make sure you’re at tyron.network'),
+                        'For your security, make sure you’re at tyron.network',
                         {
                             position: 'top-center',
                             autoClose: 3000,
@@ -210,7 +205,7 @@ function fetch() {
                             pauseOnHover: true,
                             draggable: true,
                             progress: undefined,
-                            theme: toastTheme(isLight),
+                            // theme: toastTheme(isLight),
                             toastId: 4,
                         }
                     )
@@ -229,7 +224,14 @@ function fetch() {
                     //     .catch(() => {
                     //         Router.push(`/`)
                     //     })
+
+                    return '/'
                 })
+            // }
+
+            return res
+        } catch (error) {
+            return error
         }
     }
 
@@ -295,7 +297,7 @@ function fetch() {
             })
             .catch(() => {
                 res = false
-                toast.warn(`${this_domain} ${t('not found')}.`, {
+                toast.warn(`${this_domain} ${'not found'}.`, {
                     position: 'top-left',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -338,11 +340,12 @@ function fetch() {
         }
         return res
     }
-    const zilpay_addr =
-        loginInfo?.zilAddr !== null
-            ? loginInfo?.zilAddr.base16.toLowerCase()
-            : ''
-    const fetchWalletBalance = async (id: string, didxAddr?: string) => {
+
+    const fetchWalletBalance = async (
+        id: string,
+        zilpay_addr: string,
+        didxAddr?: string
+    ) => {
         let addr_ = resolvedInfo?.addr
         if (didxAddr) {
             addr_ = didxAddr
@@ -596,4 +599,4 @@ function fetch() {
     }
 }
 
-export default fetch
+export default useFetch

@@ -40,7 +40,7 @@ import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
 import wallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import Big from 'big.js'
@@ -53,18 +53,19 @@ interface InputType {
 }
 
 function Component(props: InputType) {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { type, token, reject } = props
 
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { checkBalance } = wallet()
-    const { checkVersion, fetchWalletBalance } = fetch()
+    const { checkVersion, fetchWalletBalance } = useFetch(resolvedInfo)
+
     const doc = effectorStore($doc)
     const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -145,7 +146,11 @@ function Component(props: InputType) {
     const paymentOptions = async (id_: string, inputAddr: string) => {
         try {
             const id = id_.toLowerCase()
-            await fetchWalletBalance(id, inputAddr.toLowerCase())
+            const zilpay_addr =
+                loginInfo?.zilAddr !== null
+                    ? loginInfo?.zilAddr.base16.toLowerCase()
+                    : ''
+            await fetchWalletBalance(id, zilpay_addr, inputAddr.toLowerCase())
                 .then(async (balances_) => {
                     // Get balance of the logged in address
                     const balance = balances_[0]
@@ -280,6 +285,7 @@ function Component(props: InputType) {
     }
 
     const handleSave = async () => {
+        const { checkBalance } = wallet()
         const isEnough = await checkBalance(currency, input, setLoadingInfoBal)
         if (input === 0) {
             toast.warn(t('The amount cannot be zero.'), {

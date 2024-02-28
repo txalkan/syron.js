@@ -20,7 +20,7 @@ import { useTranslation } from 'next-i18next'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
-import fetch from '../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
@@ -31,14 +31,15 @@ function Component({
     ids: string[]
     patches: tyron.DocumentModel.PatchModel[]
 }) {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch(resolvedInfo)
     const dispatch = useDispatch()
     const donation = effectorStore($donation)
-    const resolvedInfo = useStore($resolvedInfo)
     const arConnect = effectorStore($arconnect)
     const dkms = effectorStore($doc)?.dkms
     const isLight = useSelector((state: RootState) => state.modal.isLight)

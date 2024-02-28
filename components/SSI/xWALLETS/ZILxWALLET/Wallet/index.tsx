@@ -496,7 +496,7 @@ function StakeWallet() {
     const fetchPause = async () => {
         setLoading(true)
         try {
-            const paused = await checkPause()
+            const paused = await checkPause(resolvedInfo.addr!)
             setIsPaused(paused)
             setLoading(false)
         } catch {

@@ -9,15 +9,7 @@ import { $doc } from '../store/did-doc'
 import { updateIsController } from '../store/controller'
 import { useStore } from 'react-stores'
 
-//@review: asap
-function controller() {
-    const { t } = useTranslation()
-    const resolvedInfo = useStore($resolvedInfo)
-    // console.log('resolved_info', JSON.stringify(resolvedInfo))
-
-    const doc = effectorStore($doc)
-    // console.log('resolved_doc', JSON.stringify(doc))
-
+function useController() {
     const controller = effectorStore($doc)?.controller
     const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
 
@@ -62,4 +54,4 @@ function controller() {
     }
 }
 
-export default controller
+export default useController

@@ -20,14 +20,16 @@ import { useTranslation } from 'next-i18next'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import TickIcoReg from '../../../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../../../src/assets/icons/tick_purple.svg'
-import fetch from '../../../../../src/hooks/fetch'
+import useFetch from '../../../../../src/hooks/fetch'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { t } = useTranslation()
-    const { checkUserExists, versionAbove58 } = fetch()
+    const { checkUserExists, versionAbove58 } = useFetch(resolvedInfo)
     const dispatch = useDispatch()
     const _guardians = effectorStore($doc)?.guardians.length as number
 
@@ -35,7 +37,7 @@ function Component() {
     if (min_guardians < 3) {
         min_guardians = 3
     }
-    const resolvedInfo = useStore($resolvedInfo)
+
     const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'
 

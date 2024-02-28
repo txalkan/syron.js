@@ -41,18 +41,21 @@ import { useTranslation } from 'next-i18next'
 import routerHook from '../../src/hooks/router'
 import { RootState } from '../../src/app/reducers'
 import { useSelector } from 'react-redux'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 import ThreeDots from '../Spinner/ThreeDots'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { t } = useTranslation()
     const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch(resolvedInfo)
+
     const doc = effectorStore($doc)?.doc
     // const controller_ = useStore($doc)?.controller.toLowerCase()
     // const zilAddr = useSelector((state: RootState) => state.modal.zilAddr)
-    const resolvedInfo = useStore($resolvedInfo)
+
     const loading = effectorStore($loading)
     const loadingDoc = effectorStore($loadingDoc)
     const loadingTydra = effectorStore($loadingTydra)
@@ -220,6 +223,7 @@ function Component() {
                                                                         socialIco
                                                                     }
                                                                     alt="social-ico"
+                                                                    layout="responsive"
                                                                 />
                                                             </div>
                                                             {element[1][0].split(
@@ -375,6 +379,7 @@ function Component() {
                                                                                 socialIco
                                                                             }
                                                                             alt="social-ico"
+                                                                            layout="responsive"
                                                                         />
                                                                     </div>
                                                                 </div>

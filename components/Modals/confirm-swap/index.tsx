@@ -47,7 +47,7 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import { $doc } from '../../../src/store/did-doc'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { toast } from 'react-toastify'
 import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconS$I from '../../../src/assets/icons/SSI_dollar.svg'
@@ -103,7 +103,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
             : ''
     const controller_ = effectorStore($doc)?.controller!.toLowerCase()
 
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch(resolvedInfo)
     React.useEffect(() => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -673,7 +673,9 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                                               )
                                                     }
                                                     alt={pair[0].meta.symbol}
-                                                    lazyRoot={lazyRoot}
+                                                    lazyRoot={
+                                                        lazyRoot as unknown as string
+                                                    }
                                                     height="17"
                                                     width="17"
                                                 />
@@ -699,7 +701,9 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                                               )
                                                     }
                                                     alt={pair[1].meta.symbol}
-                                                    lazyRoot={lazyRoot}
+                                                    lazyRoot={
+                                                        lazyRoot as unknown as string
+                                                    }
                                                     height="17"
                                                     width="17"
                                                 />
@@ -728,7 +732,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                                   )
                                         }
                                         alt={pair[1].meta.symbol}
-                                        lazyRoot={lazyRoot}
+                                        lazyRoot={lazyRoot as unknown as string}
                                         height="17"
                                         width="17"
                                     />
@@ -768,7 +772,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
                                                   )
                                         }
                                         alt={pair[1].meta.symbol}
-                                        lazyRoot={lazyRoot}
+                                        lazyRoot={lazyRoot as unknown as string}
                                         height="17"
                                         width="17"
                                     />

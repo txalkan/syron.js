@@ -16,11 +16,11 @@ import { RootState } from '../../src/app/reducers'
 import { AddFunds, Balances, ClaimWallet } from '..'
 import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
 import { useStore } from 'react-stores'
 import { useTranslation } from 'next-i18next'
+import useFetch from '../../src/hooks/fetch'
 function Component() {
     const { t } = useTranslation()
     const [active, setActive] = useState('')
@@ -47,9 +47,9 @@ function Component() {
         }
     }
 
-    const { fetchDoc } = fetch()
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
+    const { fetchDoc } = useFetch(resolvedInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
         loginInfo?.zilAddr !== null

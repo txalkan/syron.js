@@ -47,8 +47,6 @@ import { ZilPayBase } from '../../ZilPay/zilpay-base'
 import { updateBuyInfo } from '../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import { updateLoading } from '../../../src/store/loading'
-// import { updateResolvedInfo } from '../../../src/store/resolvedInfo'
-import routerHook from '../../../src/hooks/router'
 import { Arrow } from '../..'
 import smartContract from '../../../src/utils/smartContract'
 import { $arconnect } from '../../../src/store/arconnect'
@@ -63,11 +61,12 @@ import iconTyron from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import iconDoms from '../../../src/assets/icons/ssi_icon_nfts.svg'
 import iconSubs from '../../../src/assets/icons/ssi_icon_nft-gallery.svg'
 import ThreeDots from '../../Spinner/ThreeDots'
+import useRouterHook from '../../../src/hooks/router'
 
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { connect, disconnect } = useArConnect()
-    const { navigate, logOff } = routerHook()
+    const { navigate, logOff } = useRouterHook()
     const { getSmartContract, getSmartContractInit } = smartContract()
     const dispatch = useDispatch()
     const Router = useRouter()

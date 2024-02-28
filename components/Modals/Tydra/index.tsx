@@ -37,7 +37,7 @@ import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
@@ -50,19 +50,21 @@ import { useStore } from 'react-stores'
 import TydraImg from '../../../src/assets/logos/MerXek.gif'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     // const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const { connect } = useArConnect()
     const arConnect = effectorStore($arconnect)
     const { getSmartContract } = smartContract()
     const { navigate } = routerHook()
-    const { checkVersion } = fetch()
+    const { checkVersion } = useFetch(resolvedInfo)
     const dispatch = useDispatch()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTydra = effectorStore($modalTydra)
-    const resolvedInfo = useStore($resolvedInfo)
+
     const donation = effectorStore($donation)
     const txName = effectorStore($txName)
     const modalTx = effectorStore($modalTx)

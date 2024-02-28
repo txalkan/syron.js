@@ -9,7 +9,7 @@ import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { ClaimWallet, Spinner } from '../..'
-import routerHook from '../../../src/hooks/router'
+import useRouterHook from '../../../src/hooks/router'
 import {
     $loading,
     $loadingDoc,
@@ -21,7 +21,7 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 // import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../Tydra'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 
 interface LayoutProps {
@@ -29,12 +29,15 @@ interface LayoutProps {
 }
 
 function Component(props: LayoutProps) {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
+
+    const { fetchDoc } = useFetch(resolvedInfo)
 
     const { children } = props
 
-    const { fetchDoc } = fetch()
     // @review: loading doc inside wallet & did doc && loading
     // const loadingDoc = useStore($loadingDoc)
     const loading = effectorStore($loading)
@@ -44,7 +47,7 @@ function Component(props: LayoutProps) {
             ? loginInfo?.zilAddr.base16.toLowerCase()
             : ''
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
-    const resolvedInfo = useStore($resolvedInfo)
+
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -71,6 +74,7 @@ function Component(props: LayoutProps) {
             setLoadingCard3(false)
             setLoadingTydra_(false)
         }, 2000)
+
         fetchDoc()
         return () => {
             setLoadingCard1(false)

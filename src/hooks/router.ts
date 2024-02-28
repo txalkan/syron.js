@@ -18,8 +18,9 @@ import { updateDashboardState, updateModalDashboard } from '../store/modal'
 import { updatePrev } from '../store/router'
 import toastTheme from './toastTheme'
 import useArConnect from './useArConnect'
+import { useCallback } from 'react'
 
-function routerHook() {
+function useRouterHook() {
     const Router = useRouter()
     const { t } = useTranslation()
     const { disconnect } = useArConnect()
@@ -35,11 +36,11 @@ function routerHook() {
     const logOff = () => {
         try {
             disconnect()
-            //removes wallets
+            // @dev remove wallets
             dispatch(updateLoginInfoZilpay(null!))
             dispatch(updateLoginInfoArAddress(null!))
 
-            //removes logged in info
+            // @dev remove login info
             dispatch(updateLoginInfoUsername(null!))
             dispatch(updateLoggedInVersion(null!))
             dispatch(updateHasDeFi(false))
@@ -75,4 +76,4 @@ function routerHook() {
     }
 }
 
-export default routerHook
+export default useRouterHook

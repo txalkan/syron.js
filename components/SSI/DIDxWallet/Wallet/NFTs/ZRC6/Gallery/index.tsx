@@ -13,7 +13,7 @@ import selectedCheckmarkReg from '../../../../../../../src/assets/icons/selected
 // import selectedCheckmarkPurple from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import arrowDown from '../../../../../../../src/assets/icons/arrow_down_white.svg'
 import arrowUp from '../../../../../../../src/assets/icons/arrow_up_white.svg'
-import fetch from '../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../src/hooks/fetch'
 import {
     updateNftModal,
     updateSelectedNft,
@@ -21,11 +21,14 @@ import {
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
 import { optionAddr } from '../../../../../../../src/constants/mintDomainName'
 import { useTranslation } from 'next-i18next'
+import { useStore } from 'react-stores'
+import { $resolvedInfo } from '../../../../../../../src/store/resolvedInfo'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const { getNftsWallet } = fetch()
+    const { getNftsWallet } = useFetch(resolvedInfo)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = isLight ? stylesLight : stylesDark

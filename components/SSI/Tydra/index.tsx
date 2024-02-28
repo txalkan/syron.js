@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react'
 import smartContract from '../../../src/utils/smartContract'
 import ThreeDots from '../../Spinner/ThreeDots'
 import { updateLoadingTydra } from '../../../src/store/loading'
-import * as fetch_ from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import Image from 'next/image'
@@ -17,12 +17,14 @@ interface Props {
 }
 
 function Component(props: Props) {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const { type } = props
     const { getSmartContract } = smartContract()
-    const { checkVersion } = fetch_.default()
-    const resolvedInfo = useStore($resolvedInfo)
+    const { checkVersion } = useFetch(resolvedInfo)
+
     const domain = resolvedInfo?.user_domain!
     const subdomain = resolvedInfo?.user_subdomain!
     const tld = resolvedInfo?.user_tld
@@ -238,6 +240,7 @@ function Component(props: Props) {
                         <Image
                             src={`data:image/png;base64,${tydra}`}
                             alt="tydra-img"
+                            layout="responsive"
                             width={333}
                             height={333}
                         />

@@ -28,15 +28,17 @@ import smartContract from '../../../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmark from '../../../../../../../../../src/assets/icons/selected_checkmark.svg'
-import * as fetch_ from '../../../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
 function Component() {
+    const resolvedInfo = useStore($resolvedInfo)
+
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const { getSmartContract } = smartContract()
-    const { getNftsWallet } = fetch_.default()
+    const { getNftsWallet } = useFetch(resolvedInfo)
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -45,7 +47,6 @@ function Component() {
         ? defaultCheckmarkDark
         : defaultCheckmarkLight
 
-    const resolvedInfo = useStore($resolvedInfo)
     const donation = effectorStore($donation)
     const resolvedDomain = resolvedInfo?.user_domain
 

@@ -13,12 +13,17 @@ import { GetStaticPaths } from 'next/types'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../src/app/reducers'
 import Tydra from '../../../components/SSI/Tydra'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useStore } from 'react-stores'
 import { $wallet } from '../../../src/store/wallet'
-import fetch from '../../../src/hooks/fetch'
+import { useRouter } from 'next/router'
+import { $resolvedInfo } from '../../../src/store/resolvedInfo'
+import useFetch from '../../../src/hooks/fetch'
 
 function Header() {
+    const Router = useRouter()
+    const resolvedInfo = useStore($resolvedInfo)
+
     //@review: loading tydra
     // const [loadingTydra_, setLoadingTydra_] = useState(true)
     const data = [
@@ -38,12 +43,23 @@ function Header() {
     // }, [])
 
     const wallet = useStore($wallet)
-    const { resolveUser } = fetch()
-    React.useEffect(() => {
+    const { resolveUser } = useFetch(resolvedInfo)
+    useEffect(() => {
         console.log('/didx: wallet updated')
-        resolveUser()
+
+        const fetch = async () => {
+            const res = await resolveUser()
+                .then((res) => {
+                    Router.push(res)
+                })
+                .catch((err) => {
+                    console.error(err)
+                    Router.push('/')
+                })
+        }
+        fetch()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wallet])
+    }, [])
     return (
         <Layout>
             <div className={styles.headlineWrapper}>

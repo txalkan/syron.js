@@ -4,14 +4,12 @@ import * as tyron from 'tyron'
 import { ZilPayBase } from '../../components/ZilPay/zilpay-base'
 import { RootState } from '../app/reducers'
 import { $originatorAddress } from '../store/originatorAddress'
-import { $resolvedInfo } from '../store/resolvedInfo'
 import smartContract from '../utils/smartContract'
 import { $net } from '../store/network'
-import { useStore } from 'react-stores'
 
-function wallet() {
+function useWallet() {
     const originator_address = effectorStore($originatorAddress)
-    const resolvedInfo = useStore($resolvedInfo)
+
     const { getSmartContract } = smartContract()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
@@ -93,12 +91,9 @@ function wallet() {
         }
     }
 
-    const checkPause = async () => {
+    const checkPause = async (addr: string) => {
         //@review field is called 'paused' for older versions
-        const res: any = await getSmartContract(
-            resolvedInfo?.addr!,
-            'is_paused'
-        )
+        const res: any = await getSmartContract(addr, 'is_paused')
         return res?.result?.is_paused.constructor === 'True'
     }
 
@@ -108,4 +103,4 @@ function wallet() {
     }
 }
 
-export default wallet
+export default useWallet

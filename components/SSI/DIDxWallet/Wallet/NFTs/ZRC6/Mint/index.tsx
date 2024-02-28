@@ -42,7 +42,6 @@ import selectedCheckmarkDark from '../../../../../../../src/assets/icons/selecte
 import selectedCheckmarkLight from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
-import * as fetch_ from '../../../../../../../src/hooks/fetch'
 import { $buyInfo, updateBuyInfo } from '../../../../../../../src/store/buyInfo'
 import {
     isValidUsername,
@@ -51,16 +50,18 @@ import {
 import { sendTelegramNotification } from '../../../../../../../src/telegram'
 import { $net } from '../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
+import useFetch from '../../../../../../../src/hooks/fetch'
+
+const zcrypto = tyron.Util.default.Zcrypto()
 
 function Component({ addrName }) {
+    const resolvedInfo = useStore($resolvedInfo)
     const net = $net.state.net as 'mainnet' | 'testnet'
-
-    const zcrypto = tyron.Util.default.Zcrypto()
     const { getSmartContract } = smartContract()
-    const { fetchLexica, fetchWalletBalance } = fetch_.default()
+    const { fetchLexica, fetchWalletBalance } = useFetch(resolvedInfo)
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const resolvedInfo = useStore($resolvedInfo)
+
     const donation = effectorStore($donation)
     const buyInfo = effectorStore($buyInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -515,8 +516,14 @@ function Component({ addrName }) {
                 // }
                 const paymentOptions = async (id: string) => {
                     setLoadingBalance(true)
+
+                    const zilpay_addr =
+                        loginInfo?.zilAddr !== null
+                            ? loginInfo?.zilAddr.base16.toLowerCase()
+                            : ''
                     await fetchWalletBalance(
                         id,
+                        zilpay_addr,
                         loginInfo.loggedInAddress.toLowerCase()
                     )
                         .then(async (balances) => {

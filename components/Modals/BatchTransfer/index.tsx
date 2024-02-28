@@ -40,24 +40,25 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import Big from 'big.js'
 Big.PE = 999
 
+const zcrypto = tyron.Util.default.Zcrypto()
+
 function Component() {
-    const zcrypto = tyron.Util.default.Zcrypto()
+    const resolvedInfo = useStore($resolvedInfo)
     const { t } = useTranslation()
     const net = $net.state.net as 'mainnet' | 'testnet'
     const { getSmartContract } = smartContract()
     //const { navigate } = routerHook() @review: navigate
-    const { fetchWalletBalance } = fetch()
+    const { fetchWalletBalance } = useFetch(resolvedInfo)
     const dispatch = useDispatch()
 
     const loginInfo = useSelector((state: RootState) => state.modal)
     const modalTransfer = effectorStore($modalTransfer)
-    const resolvedInfo = useStore($resolvedInfo)
     const donation = effectorStore($donation)
     const typeBatchTransfer = effectorStore($typeBatchTransfer)
     const originator_address = effectorStore($originatorAddress)
@@ -407,7 +408,17 @@ function Component() {
 
     const setPercentage = async (percentage, val, i) => {
         setLoadingPercentage(val.value)
-        const bal = await fetchWalletBalance(val.value.toLowerCase(), contract)
+
+        const zilpay_addr =
+            loginInfo?.zilAddr !== null
+                ? loginInfo?.zilAddr.base16.toLowerCase()
+                : ''
+
+        const bal = await fetchWalletBalance(
+            val.value.toLowerCase(),
+            zilpay_addr,
+            contract
+        )
         setSavedCurrency(false)
         updateDonation(null)
         inputCoin[i] = val.value + '@' + bal[0] * percentage
