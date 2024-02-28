@@ -21,19 +21,20 @@
 
 .txtConnected {
     font-size: 11px;
-    color: #dbe4eb;
+    color: #ffff32;
     margin-left: 10px;
     text-transform: uppercase;
-    border: 1px solid #dbe4eb;
-    border-radius: 5px;
+    // border: 1px solid #dbe4eb;
+    // border-radius: 5px;
     padding: 5px;
+    cursor: none;
 }
 
-.txtConnected:hover {
-    color: #dbe4eb;
-    border: 1px solid #fff;
-    background-color: rgba($color: #fff, $alpha: 0.1);
-}
+// .txtConnected:hover {
+//     color: #dbe4eb;
+//     border: 1px solid #fff;
+//     background-color: rgba($color: #fff, $alpha: 0.1);
+// }
 
 .txtLoggedIn {
     font-size: 11px;

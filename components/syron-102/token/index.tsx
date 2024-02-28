@@ -11,11 +11,13 @@ import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.sv
 //@ssibrowser
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
+import icoBTC from '../../../src/assets/icons/bitcoin.png'
+import { CryptoState } from '../../../src/types/vault'
 
 Big.PE = 999
 
 type Prop = {
-    token: TokenState
+    token: CryptoState
     onSelect?: () => void
 }
 
@@ -29,24 +31,18 @@ export const TokenInput: React.FC<Prop> = ({
                 <div className={styles.wrapper}>
                     <div
                         className={classNames(styles.dropdown)}
-                        onClick={onSelect}
+                        // onClick={onSelect}
                     >
                         <Image
-                            src={
-                                token.symbol === 'ORDI'
-                                    ? icoORDI
-                                    : token.symbol === 'SU$D'
-                                    ? icoSU$D
-                                    : getIconURL(token.bech32)
-                            }
+                            src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
                             alt="tokens-logo"
                             height="35"
                             width="35"
                         />
                         <div className={styles.symbol}>{token.symbol}</div>
-                        <div className={styles.arrowIco}>
+                        {/* <div className={styles.arrowIco}>
                             <Image alt="arrow-ico" src={ArrowDownReg} />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </div>

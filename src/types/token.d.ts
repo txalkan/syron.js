@@ -57,3 +57,9 @@ export interface TokenBalance {
     full_bal_zilpay: Big
     decimals: Number
 }
+
+export interface CyptoBalance {
+    id: string
+    balance: Big
+    decimals: Number
+}

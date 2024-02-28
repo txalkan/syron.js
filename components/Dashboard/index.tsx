@@ -1,6 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useStore } from 'effector-react'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
@@ -21,9 +20,15 @@ import { UpdateIsLight } from '../../src/app/actions'
 // import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
-import zilpayHook from '../../src/hooks/zilpayHook'
+import useZilpayHook from '../../src/hooks/zilpayHook'
 import { User, signIn } from '@junobuild/core-peer'
 import { authSubscribe } from '@junobuild/core-peer'
+import { AddressPurpose, BitcoinNetworkType, getAddress } from 'sats-connect'
+import { useStore } from 'react-stores'
+import {
+    $bitcoin_addresses,
+    updateBitcoinAddresses,
+} from '../../src/store/bitcoin-addresses'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -34,12 +39,12 @@ export const AuthContext = createContext(defaultValue)
 
 function Component() {
     const dispatch = useDispatch()
-    const { connect } = useArConnect()
+    // const { connect } = useArConnect()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
-    const menuOn = useStore($menuOn)
+
     const { t } = useTranslation()
-    const { handleConnect } = zilpayHook()
+    // const { handleConnect } = useZilpayHook()
 
     const onSignIn = () => {
         console.log('sign in')
@@ -69,17 +74,17 @@ function Component() {
         // })
     }
 
-    const checkArConnect = () => {
-        if (loginInfo.arAddr) {
-            connect()
-        }
-    }
+    // const checkArConnect = () => {
+    //     if (loginInfo.arAddr) {
+    //         connect()
+    //     }
+    // }
 
-    useEffect(() => {
-        if (loginInfo.zilAddr !== null) {
-            updateShowZilpay(false)
-        }
-    }, [loginInfo.zilAddr])
+    // useEffect(() => {
+    //     if (loginInfo.zilAddr !== null) {
+    //         updateShowZilpay(false)
+    //     }
+    // }, [loginInfo.zilAddr])
 
     const [user, setUser] = useState<User | null>(null)
     useEffect(() => {
@@ -88,9 +93,50 @@ function Component() {
         return () => sub()
     }, [])
 
-    if (menuOn) {
-        return null
+    // @dev (xverse)
+
+    const bitcoin_addresses = useStore($bitcoin_addresses)
+    const [network, setNetwork] = useState<
+        BitcoinNetworkType | BitcoinNetworkType.Testnet
+    >(BitcoinNetworkType.Testnet)
+
+    const onConnect = async () => {
+        try {
+            await getAddress({
+                payload: {
+                    purposes: [AddressPurpose.Payment, AddressPurpose.Ordinals],
+                    message: 'Syron U$D: ₿e Your ₿ank',
+                    network: {
+                        type: network,
+                    },
+                },
+                onFinish: (response) => {
+                    const paymentAddressItem = response.addresses.find(
+                        (address) => address.purpose === AddressPurpose.Payment
+                    )
+
+                    const ordinalsAddressItem = response.addresses.find(
+                        (address) => address.purpose === AddressPurpose.Ordinals
+                    )
+
+                    updateBitcoinAddresses({
+                        paymentsAddress: paymentAddressItem?.address!,
+                        paymentsPublicKey: paymentAddressItem?.publicKey!,
+                        ordinalsAddress: ordinalsAddressItem?.address!,
+                        ordinalsPublicKey: ordinalsAddressItem?.publicKey!,
+                    })
+                },
+                onCancel: () => alert('Request canceled'),
+            })
+        } catch (error) {
+            alert(error)
+        }
     }
+
+    // const menuOn = useStore($menuOn)
+    // if (menuOn) {
+    //     return null
+    // }
 
     return (
         <AuthContext.Provider value={{ user }}>
@@ -106,6 +152,7 @@ function Component() {
                                     width={30}
                                     src={sunIco}
                                     alt="toggle-ico"
+                                    layout="responsive"
                                 />
                             </div>
                         ) : (
@@ -117,6 +164,7 @@ function Component() {
                                     width={30}
                                     src={moonIco}
                                     alt="toggle-ico"
+                                    layout="responsive"
                                 />
                             </div>
                         )}
@@ -132,7 +180,7 @@ function Component() {
                                 <div
                                     className={styles.wrapperIcon}
                                     onClick={() => {
-                                        checkArConnect()
+                                        // checkArConnect() @review(zil-ar)
                                         onSignIn()
                                     }}
                                 >
@@ -165,14 +213,32 @@ function Component() {
                                 </div>
                             </div>
                         ) : (
-                            <div
-                                className={styles.wrapperIcon}
-                                onClick={onSignIn}
-                            >
-                                <div className={styles.txtConnect}>
-                                    {t('Sign_In')}
+                            <>
+                                {bitcoin_addresses == null ? (
+                                    <div
+                                        className={styles.wrapperIcon}
+                                        onClick={onConnect}
+                                    >
+                                        <div className={styles.txtConnect}>
+                                            {t('CONNECT')}
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className={styles.wrapperIcon}>
+                                        <div className={styles.txtConnected}>
+                                            {t('CONNECTED')}
+                                        </div>
+                                    </div>
+                                )}
+                                <div
+                                    className={styles.wrapperIcon}
+                                    onClick={onSignIn}
+                                >
+                                    <div className={styles.txtConnect}>
+                                        {t('Sign_In')}
+                                    </div>
                                 </div>
-                            </div>
+                            </>
                         )}
                     </>
                 )}
