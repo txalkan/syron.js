@@ -21,13 +21,14 @@ export const VaultOutput: React.FC<Prop> = ({ amount, token }) => {
                 <div className={styles.formActive}>
                     <div className={styles.content}>
                         <div className={styles.tokenDexRow}>
-                            <div className={styles.dummyIco2}>
+                            {/* <div className={styles.dummyIco2}>
                                 <Image
                                     src={tydradexSvg}
                                     alt="SSI Vault"
                                     layout="responsive"
                                 />
-                            </div>
+                            </div> */}
+                            {/* be your bank */}
                             <div className={styles.dexName}>₿e Your ₿ank</div>
                         </div>
                         <div className={styles.output}>

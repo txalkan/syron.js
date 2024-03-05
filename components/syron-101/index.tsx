@@ -99,12 +99,12 @@ function Component() {
                 >
                     {/* @review (translate) */}
                     <div className={styles.icoWrapper2}>
-                        <Image
+                        {/* <Image
                             src={icoDex}
                             alt="trade-ico"
                             height="44"
                             width="44"
-                        />
+                        /> */}
                         <div className={styles.titleX}>
                             Self-Sovereign Identity Vault
                         </div>

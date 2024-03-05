@@ -11,12 +11,12 @@ class MyDocument extends Document {
             <Html>
                 <Head>
                     <meta
-                        name="Tyron Network"
-                        content="TYRON open-source web application"
+                        name="Self-Sovereign Identity Protocol"
+                        content="SSI Protocol's open-source web application"
                     />
                     <link
                         rel="icon"
-                        href="/ssi_tyron.png"
+                        href="/syron/ssi_syronUSD_iso.png"
                         type="image/png"
                         sizes="16x16"
                     />
@@ -26,13 +26,22 @@ class MyDocument extends Document {
                         type="image/svg+xml"
                         sizes="40x40"
                     /> */}
-                    <meta name="title" content="Tyron Network" />
+                    <meta
+                        name="title"
+                        content="Self-Sovereign Identity Protocol"
+                    />
                     <meta
                         name="description"
-                        content="Tyron SSI is a self-sovereign identity (SSI) protocol to own & control digital identities and DeFi assets with account abstraction (AA)."
+                        content="₿e Your ₿ank: Use your bitcoin savings to mint SU$D without giving up control of your BTC"
                     />
-                    <meta property="og:image" content="/tyronssi.svg" />
-                    <meta property="og:title" content="Tyron Network" />
+                    <meta
+                        property="og:image"
+                        content="/syron/ssi_syronUSD_iso.svg"
+                    />
+                    <meta
+                        property="og:title"
+                        content="Self-Sovereign Identity Protocol"
+                    />
                 </Head>
                 <body>
                     <Main />

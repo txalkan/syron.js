@@ -156,16 +156,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .titleForm2 {
-    font-size: medium;
-    font-weight: bold;
-    display: flex;
-    justify-content: flex-start;
-    color: #dbe4eb;
-    // text-decoration: underline;
+    font-size: 14px;
     color: #ffff32;
-    text-transform: uppercase;
-    margin-left: 7px;
-    margin-right: 4px;
+    text-transform: capitalize;
+    margin-left: 2%;
+    @media only screen and (max-width: 767px) {
+        font-size: 12px;
+    }
 }
 
 .contentWrapper {
@@ -187,6 +184,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .icoWrapper {
     display: flex;
     align-items: center;
+    padding-right: 10px;
 }
 
 .settings {

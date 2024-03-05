@@ -59,7 +59,7 @@ function LayoutSearch(props: LayoutProps) {
             }}
         >
             <Head>
-                <title>TYRON</title>
+                <title>Syron</title>
             </Head>
             {/* <div id={bg} /> */}
             <div id="wrapper">
