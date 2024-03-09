@@ -7,13 +7,14 @@ Big.PE = 999
 function useICPHook() {
     const getVault = async (ssi: string, balance: number) => {
         try {
-            console.log('Satoshis: ', balance)
+            console.log('Satoshis', balance)
 
             if (balance != 0) {
                 const vault = await syron.get_btc_address({ ssi })
-                console.log('SSI Vault: ', vault)
+                console.log('Vault', vault)
 
                 updateSyronSSI({
+                    ssi_addr: ssi,
                     ssi_vault: vault,
                     ssi_balance: Big(balance),
                 })
@@ -30,7 +31,7 @@ function useICPHook() {
             const xr = await syron.get_xr()
             updateXR({ rate: Number(xr) })
 
-            console.log('Rate: ', xr)
+            console.log('Rate', xr)
         } catch (err) {
             console.error(err)
         }

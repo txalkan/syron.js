@@ -157,8 +157,8 @@ function Component() {
     const [connected, setConnected] = useState(false)
     const [accounts, setAccounts] = useState<string[]>([])
     const [publicKey, setPublicKey] = useState('')
-    const [address, setAddress] = useState('')
-    const [balance, setBalance] = useState({
+    const [_address, setAddress] = useState('')
+    const [_balance, setBalance] = useState({
         confirmed: 0,
         unconfirmed: 0,
         total: 0,
@@ -167,9 +167,9 @@ function Component() {
 
     const getBasicInfo = async () => {
         const unisat = (window as any).unisat
+
         const [address] = await unisat.getAccounts()
         console.log('SSI', address)
-
         setAddress(address)
 
         const publicKey = await unisat.getPublicKey()
@@ -181,15 +181,16 @@ function Component() {
         setBalance(balance)
 
         const network = await unisat.getNetwork()
+        console.log('Bitcoin', network)
         setNetwork(network)
     }
 
     useEffect(() => {
         async function update() {
-            await getVault(address, Number(balance.confirmed))
+            await getVault(_address, Number(_balance.confirmed))
         }
         update()
-    }, [address, balance])
+    }, [_address, _balance])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],

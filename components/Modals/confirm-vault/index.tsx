@@ -19,6 +19,7 @@ import { VaultPair } from '../../../src/types/vault'
 import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import { $xr } from '../../../src/store/xr'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -27,7 +28,7 @@ type Prop = {
     show: boolean
     pair: VaultPair[]
     direction: VaultDirection
-    onClose: () => void
+    // onClose: () => void
 }
 
 const tokensMixin = new TokensMixine()
@@ -37,7 +38,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     show,
     pair,
     direction,
-    onClose,
+    // onClose,
 }) {
     //@zilpay
     const wallet = useStore($bitcoin_addresses)
@@ -46,28 +47,28 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     const settings = useStore($settings)
     // const liquidity = useStore($liquidity)
 
-    const [loading, setLoading] = React.useState(true)
+    const [loading, setLoading] = React.useState(false)
     // const [isAllow, setIsAllow] = React.useState(false)
     // const [priceRevert, setPriceRevert] = React.useState(true)
 
-    const exact = React.useMemo(
-        () =>
-            BigInt(
-                Big(pair[0].value).mul(
-                    vault.toDecimals(pair[0].meta.decimals)!.round()
-                )
-            ),
-        [pair]
-    )
-    const limit = React.useMemo(
-        () =>
-            BigInt(
-                Big(pair[1].value).mul(
-                    vault.toDecimals(pair[1].meta.decimals)!.round()
-                )
-            ),
-        [pair]
-    )
+    // const exact = React.useMemo(
+    //     () =>
+    //         BigInt(
+    //             Big(pair[0].value).mul(
+    //                 vault.toDecimals(pair[0].meta.decimals)!.round()
+    //             )
+    //         ),
+    //     [pair]
+    // )
+    // const limit = React.useMemo(
+    //     () =>
+    //         BigInt(
+    //             Big(pair[1].value).mul(
+    //                 vault.toDecimals(pair[1].meta.decimals)!.round()
+    //             )
+    //         ),
+    //     [pair]
+    // )
 
     const expectedOutput = React.useMemo(() => {
         const [, limitToken] = pair
@@ -188,6 +189,11 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             //             output: '0',
             //         }
             // }
+            return {
+                impact: 0,
+                input: Big(exactInput),
+                output: Big(limitInput),
+            }
         } catch (err) {
             console.error(err)
             //return 0
@@ -205,14 +211,24 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
 
     const lazyRoot = React.useRef(null)
 
-    const hanldeOnSwap = React.useCallback(async () => {
+    const hanldeConfirm = React.useCallback(async () => {
         setLoading(true)
         try {
-            const zilpay = await tokensMixin.zilpay.zilpay()
+            toast.info('Coming soon', {
+                position: 'bottom-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId: 1,
+            })
+            // const zilpay = await tokensMixin.zilpay.zilpay()
 
-            if (!wallet || !zilpay.wallet.isEnable) {
-                await zilpay.wallet.connect()
-            }
+            // if (!wallet || !zilpay.wallet.isEnable) {
+            //     await zilpay.wallet.connect()
+            // }
 
             // switch (direction) {
             //     case VaultDirection.Mint:
@@ -244,7 +260,9 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         }
 
         setLoading(false)
-    }, [pair, limit, direction, wallet, onClose])
+    }, [pair, /*limit,*/ direction, wallet /*onClose*/])
+
+    const xr = useStore($xr)
 
     return (
         <>
@@ -257,14 +275,14 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                     <>
                                         <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
-                                                {pair[0].meta.symbol} LIQUIDITY
+                                                {pair[0].meta.name} price
                                             </div>
                                             <div className={styles.txtRow2}>
+                                                $
                                                 {Number(
-                                                    priceInfo!.input
-                                                ).toLocaleString()}{' '}
-                                                {/* {pair[0].meta.symbol} */}
-                                                <Image
+                                                    Big(xr!.rate).div(1e9)
+                                                ).toLocaleString()}
+                                                {/* <Image
                                                     src={
                                                         pair[0].meta.symbol ===
                                                         'BTC'
@@ -277,10 +295,18 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                                     }
                                                     height="17"
                                                     width="17"
-                                                />
+                                                /> */}
                                             </div>
                                         </div>
                                         <div className={styles.rowLiq}>
+                                            <div className={styles.txtRow}>
+                                                Collateralization ratio
+                                            </div>
+                                            <div className={styles.txtRow2}>
+                                                1.5
+                                            </div>
+                                        </div>
+                                        {/* <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
                                                 {pair[1].meta.symbol} LIQUIDITY
                                             </div>
@@ -288,7 +314,6 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                                 {Number(
                                                     priceInfo!.output
                                                 ).toLocaleString()}{' '}
-                                                {/* {pair[1].meta.symbol} */}
                                                 <Image
                                                     src={
                                                         pair[1].meta.symbol ===
@@ -304,17 +329,16 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                                     width="17"
                                                 />
                                             </div>
-                                        </div>
+                                        </div> */}
                                     </>
                                 )}
                             <br />
-                            <div className={styles.row}>
+                            {/* <div className={styles.row}>
                                 <div className={styles.txtRowEO}>
                                     EXPECTED OUTPUT
                                 </div>
                                 <div className={styles.txtRow2}>
                                     {expectedOutput}{' '}
-                                    {/* {pair[1].meta.symbol} */}
                                     <Image
                                         src={
                                             pair[1].meta.symbol === 'BTC'
@@ -327,8 +351,8 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                         width="17"
                                     />
                                 </div>
-                            </div>
-                            {priceInfo!.input !== '0' && (
+                            </div> */}
+                            {/* {priceInfo!.input !== '0' && (
                                 <div className={styles.row}>
                                     <div className={styles.txtRow}>
                                         PRICE IMPACT
@@ -337,16 +361,16 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                         {String(priceInfo!.impact)}%
                                     </div>
                                 </div>
-                            )}
+                            )} */}
                         </div>
-                        <div className={classNames(styles.column, 'muted')}>
+                        {/* <div className={classNames(styles.column, 'muted')}>
                             <div className={styles.row}>
                                 <div className={styles.txtRow}>SLIPPAGE</div>
                                 <div className={styles.txtRow2}>
                                     -{settings.slippage}%
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                     </div>
                     <div className={styles.btnWrapper}>
                         <div
@@ -360,7 +384,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             className={`button ${
                                 disabled ? 'disabled' : 'primary'
                             }`}
-                            onClick={hanldeOnSwap}
+                            onClick={hanldeConfirm}
                             // disabled={disabled}
                         >
                             {loading ? (
@@ -372,13 +396,13 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                 //   width={50}
                                 // />
                                 // <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
-                                'trade'
+                                'get su$d'
                             )}
                         </div>
                     </div>
-                    <div onClick={onClose} className={styles.cancel}>
+                    {/* <div onClick={onClose} className={styles.cancel}>
                         Cancel
-                    </div>
+                    </div> */}
                 </div>
             )}
         </>

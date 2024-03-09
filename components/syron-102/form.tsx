@@ -17,7 +17,6 @@ import Image from 'next/image'
 import { SSIVault } from '../../src/mixins/vault'
 import { ConfirmVaultModal } from '../Modals/confirm-vault'
 import { $xr } from '../../src/store/xr'
-import useICPHook from '../../src/hooks/useICP'
 
 type Prop = {
     startPair: VaultPair[]
@@ -176,31 +175,33 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                     </div>
                     <div style={{ width: '100%' }}>
                         {Number(amount) !== 0 && (
-                            <VaultOutput
-                                amount={amount}
-                                token={vault_pair[1].meta}
-                            />
-                        )}
-                        {confirmModal ? (
                             <>
+                                <VaultOutput
+                                    amount={amount}
+                                    token={vault_pair[1].meta}
+                                />
+
+                                {/* {confirmModal ? ( */}
+
                                 <ConfirmVaultModal
                                     show={confirmModal}
                                     pair={vault_pair}
                                     direction={direction}
-                                    onClose={() => {
-                                        setConfirmModal(false)
-                                    }}
+                                    // onClose={() => {
+                                    //     setConfirmModal(false)
+                                    // }}
                                 />
-                                <div className={styles.wrapperSettings}>
+                                {/* <div className={styles.wrapperSettings}>
                                     <span className={styles.settings}>
                                         settings
                                     </span>
                                     <SwapSettings
                                         onClick={() => setModal3(true)}
                                     />
-                                </div>
+                                </div> */}
                             </>
-                        ) : null}
+                            // ) : null}
+                        )}
                     </div>
                 </form>
             ) : null}
