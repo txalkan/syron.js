@@ -125,7 +125,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 //@ssibrowser
 .titleForm {
     text-transform: uppercase;
-    font-size: large;
+    font-size: 17px;
     font-weight: bold;
     color: #ffff32;
     padding-left: 11px;
@@ -175,7 +175,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     padding-left: 22px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     margin-top: 10px;
     margin-bottom: 22px;
@@ -185,6 +185,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     align-items: center;
     padding-right: 10px;
+    padding-left: 10px;
 }
 
 .settings {

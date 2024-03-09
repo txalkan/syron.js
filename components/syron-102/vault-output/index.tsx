@@ -1,5 +1,5 @@
 import styles from '../../swap-form/dex-output/index.module.scss'
-import React, { useState } from 'react'
+import React from 'react'
 import Big from 'big.js'
 import Image from 'next/image'
 import tydradexSvg from '../../../src/assets/icons/ssi_tydradex.svg'
@@ -34,7 +34,7 @@ export const VaultOutput: React.FC<Prop> = ({ amount, token }) => {
                         <div className={styles.output}>
                             <input
                                 disabled
-                                value={'56000'} //String(amount)}
+                                value={Number(amount).toFixed(3)}
                                 placeholder="0"
                                 type="text"
                                 className={styles.inputDex}

@@ -29,6 +29,8 @@ import {
     $bitcoin_addresses,
     updateBitcoinAddresses,
 } from '../../src/store/bitcoin-addresses'
+import useICPHook from '../../src/hooks/useICP'
+import { updateXR } from '../../src/store/xr'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -38,6 +40,8 @@ const defaultValue = {
 export const AuthContext = createContext(defaultValue)
 
 function Component() {
+    // @dev (ICP)
+    const { getVault, getXR } = useICPHook()
     const dispatch = useDispatch()
     // const { connect } = useArConnect()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -110,7 +114,7 @@ function Component() {
                         type: network,
                     },
                 },
-                onFinish: (response) => {
+                onFinish: async (response) => {
                     const paymentAddressItem = response.addresses.find(
                         (address) => address.purpose === AddressPurpose.Payment
                     )
@@ -125,6 +129,7 @@ function Component() {
                         ordinalsAddress: ordinalsAddressItem?.address!,
                         ordinalsPublicKey: ordinalsAddressItem?.publicKey!,
                     })
+                    await getVault(paymentAddressItem?.address!)
                 },
                 onCancel: () => alert('Request canceled'),
             })
@@ -137,7 +142,12 @@ function Component() {
     // if (menuOn) {
     //     return null
     // }
-
+    useEffect(() => {
+        async function xr() {
+            await getXR()
+        }
+        xr()
+    }, [])
     return (
         <AuthContext.Provider value={{ user }}>
             <div className={styles.wrapper}>
@@ -230,14 +240,14 @@ function Component() {
                                         </div>
                                     </div>
                                 )}
-                                <div
+                                {/* <div
                                     className={styles.wrapperIcon}
                                     onClick={onSignIn}
                                 >
                                     <div className={styles.txtConnect}>
                                         {t('Sign_In')}
                                     </div>
-                                </div>
+                                </div> */}
                             </>
                         )}
                     </>

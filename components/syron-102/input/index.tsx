@@ -1,7 +1,6 @@
 import * as tyron from 'tyron'
 import styles from './index.module.scss'
 import { useCallback, useState } from 'react'
-import Big from 'big.js'
 import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -10,14 +9,15 @@ import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
-import { SSIVault } from '../../../src/mixins/vault'
-
+import { useStore } from 'react-stores'
+import { $syron } from '../../../src/store/syron'
+import Big from 'big.js'
 Big.PE = 999
+const _0 = Big(0)
 
 type Prop = {
     token: CryptoState
     value: Big
-    balance: string
     disabled?: boolean
     noSwap?: boolean
     onInput?: (value: Big) => void
@@ -26,13 +26,11 @@ type Prop = {
     onSwap?: () => void
 }
 
-const vault = new SSIVault()
 const list = [25, 50, 75, 100]
 
 export const VaultInput: React.FC<Prop> = ({
     value,
     token,
-    balance,
     disabled = false,
     noSwap = false,
     onInput = () => null,
@@ -40,41 +38,35 @@ export const VaultInput: React.FC<Prop> = ({
     onMax = () => null,
     onSwap = () => {},
 }) => {
+    const syron = useStore($syron)
     const addr_name = token?.symbol.toLowerCase()
-    let balance_ = '0'
-    if (addr_name && balance) {
-        const _currency = tyron.Currency.default.tyron(addr_name)
-        balance_ = (Number(balance) / _currency.decimals).toFixed(2)
+    let balance = _0
+    let bal = _0
+    if (addr_name == 'btc') {
+        if (syron?.ssi_balance) balance = syron.ssi_balance
+        bal = balance!.div(Big(100000000))!
     }
+    // else {
+    //     const _currency = tyron.Currency.default.tyron(addr_name)
+    //     // bal = balance.div(Big(_currency.decimals))
+    // }
+
     const [selectedPercent, setSelectedPercent] = useState(0)
 
     const handlePercent = useCallback(
         async (n: number) => {
             if (balance) {
                 setSelectedPercent(n)
-                const percent = BigInt(n)
+                const percent = Big(n)
 
-                let _value = (BigInt(balance) * percent) / BigInt(100)
+                let _value = balance.mul(percent).div(Big(100))
 
-                //@review: gas paid by zlp wallet
-                // if (token.base16 === ZERO_ADDR) {
-                //     const gasPrice = Big(DEFAULT_GAS.gasPrice)
-                //     const li = gasLimit.mul(gasPrice)
-                //     const fee = BigInt(
-                //         li.mul(dex.toDecimals(6)).round(2).toString()
-                //     )
-                //     if (fee > value) {
-                //         value = BigInt(0)
-                //     } else {
-                //         value -= fee
-                //     }
-                // }
-
-                const decimals = vault.toDecimals(token.decimals)
-                onMax(Big(String(_value)).div(decimals)) //@review: decimals
+                //@review: decimals
+                // const decimals = token.decimals)
+                onMax(_value.div(Big(1e8)))
             }
         },
-        [balance, token, onMax]
+        [syron, token, onMax]
     )
 
     const handleOnInput = useCallback(
@@ -97,7 +89,10 @@ export const VaultInput: React.FC<Prop> = ({
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
                     <div className={styles.balanceTxt}>
-                        &nbsp;| Balance: {balance_} {token?.symbol}
+                        &nbsp;| Balance:{' '}
+                        {isNaN(Number(bal))
+                            ? 'Connect Wallet'
+                            : `${Number(bal)} ${token?.symbol}`}
                     </div>
                 </div>
                 <div>
@@ -133,11 +128,12 @@ export const VaultInput: React.FC<Prop> = ({
                     <div className={styles.container2}>
                         <input
                             className={styles.inputAmount}
-                            type="text"
+                            type="number"
                             placeholder="0"
                             onInput={handleOnInput}
-                            value={String(value)}
+                            value={Number(value)}
                             disabled={disabled}
+                            step={0.00000001}
                         />
                     </div>
                     {token && (
@@ -158,7 +154,8 @@ export const VaultInput: React.FC<Prop> = ({
                         </div>
                     )}
                 </div>
-                <div>
+                {/* @review (burn) */}
+                {/* <div>
                     {disabled ? null : (
                         <div className={styles.btnSwapWrapper}>
                             {!noSwap && (
@@ -168,7 +165,7 @@ export const VaultInput: React.FC<Prop> = ({
                             )}
                         </div>
                     )}
-                </div>
+                </div> */}
             </div>
         </label>
     )

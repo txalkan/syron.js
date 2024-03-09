@@ -126,16 +126,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
 //@ssibrowser
 .container2 {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
-    margin-top: 0px;
-    margin-bottom: 0px;
 }
 
 .formTxtInfoWrapper {
     display: flex;
     flex-direction: row;
+    padding-top: 4%;
+    padding-bottom: 4%;
 }
 
 .worthTxt {
@@ -147,13 +147,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .balanceTxt {
     text-transform: uppercase;
-    font-size: 10px;
-    color: white;
+    font-size: 14px;
+    color: #dbe4eb;
     letter-spacing: normal;
 }
 
 .inputAmount {
     border: 0px !important;
+    color: #000;
+    padding-left: 10px;
+    width: 100%;
 }
 
 .inputAmount:focus {
@@ -255,7 +258,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 
     .balanceTxt {
-        font-size: 8px;
+        font-size: 11px;
     }
 
     .btnSwapWrapper {
