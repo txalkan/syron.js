@@ -120,7 +120,7 @@ export const FormInput: React.FC<Prop> = ({
                     // }
 
                     const decimals = dex.toDecimals(token.decimals)
-                    onMax(Big(String(_value)).div(decimals)) //@review: decimals
+                    onMax(Big(String(_value)).div(decimals!)) //@review: decimals
                 }
             } else {
                 toast.error('Use your own defi@account.ssi', {

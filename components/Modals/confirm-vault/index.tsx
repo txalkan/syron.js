@@ -54,7 +54,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         () =>
             BigInt(
                 Big(pair[0].value).mul(
-                    vault.toDecimals(pair[0].meta.decimals).round()
+                    vault.toDecimals(pair[0].meta.decimals)!.round()
                 )
             ),
         [pair]
@@ -63,7 +63,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         () =>
             BigInt(
                 Big(pair[1].value).mul(
-                    vault.toDecimals(pair[1].meta.decimals).round()
+                    vault.toDecimals(pair[1].meta.decimals)!.round()
                 )
             ),
         [pair]

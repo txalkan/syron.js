@@ -51,8 +51,8 @@ export interface ListedTokenResponse {
 export interface TokenBalance {
     id: string
     base16: string
-    balance_xwallet: number
-    balance_zilpay: number
+    balance_xwallet: Big
+    balance_zilpay: Big
     full_bal_xwallet: Big
     full_bal_zilpay: Big
     decimals: Number

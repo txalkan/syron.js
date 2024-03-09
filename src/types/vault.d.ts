@@ -1,3 +1,5 @@
+import Big from 'big.js'
+
 export interface CryptoState {
     name: string
     symbol: string
@@ -5,6 +7,6 @@ export interface CryptoState {
 }
 
 export interface VaultPair {
-    value: string
+    value: Big
     meta: CryptoState
 }

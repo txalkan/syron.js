@@ -181,14 +181,17 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                 let min_contribution
                 let max_amount
                 if (isSSI) {
-                    min_contribution = base_amount.mul(token0Decimals).round()
-                    max_amount = limit_amount.mul(token1Decimals).round()
+                    min_contribution = base_amount.mul(token0Decimals!).round()
+                    max_amount = limit_amount.mul(token1Decimals!).round()
                 } else {
                     min_contribution = base_amount
                         .div(2)
-                        .mul(token0Decimals)
+                        .mul(token0Decimals!)
                         .round()
-                    max_amount = limit_amount.div(2).mul(token1Decimals).round()
+                    max_amount = limit_amount
+                        .div(2)
+                        .mul(token1Decimals!)
+                        .round()
                 }
                 console.log(
                     '@add_pool_preview min_contribution:',
@@ -491,7 +494,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                             {Number(price) > 0 ? (
                                 <div className={styles.price}>
                                     <p>Current price</p>
-                                    <h3>{price.toString()}</h3>
+                                    <h3>{price!.toString()}</h3>
                                     <p>
                                         {token0!.symbol} per {token1.symbol}
                                     </p>

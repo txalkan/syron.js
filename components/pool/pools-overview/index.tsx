@@ -163,7 +163,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 //@dev: S$I LP tokens
                 const decimales = dex.toDecimals(18)
                 const show_dao_balance = Big(dao_balance)
-                    .div(decimales)
+                    .div(decimales!)
                     .round(4)
 
                 //@zilpay

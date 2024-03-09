@@ -70,6 +70,7 @@ Big.PE = 999
 const dex = new DragonDex()
 const tokensMixin = new TokensMixine()
 const provider = new Blockchain()
+const _0 = Big(0)
 
 export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     // const { t } = useTranslation(`swap`)
@@ -94,10 +95,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     //@ssibrowser
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const [tydra, setTydra] = React.useState({
-        tydradex: '0',
-        dragondex: '0',
-        zilswap: '0',
-        aswap: '0',
+        tydradex: _0,
+        dragondex: _0,
+        zilswap: _0,
+        aswap: _0,
     })
 
     const [selectedDex, setSelectedDex] = React.useState('')
@@ -179,10 +180,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                 if (found0 && found1) {
                     let balances_ = [
                         {
-                            balance_xwallet: 0,
-                            balance_zilpay: 0,
-                            full_bal_xwallet: 0,
-                            full_bal_zilpay: 0,
+                            balance_xwallet: _0,
+                            balance_zilpay: _0,
+                            full_bal_xwallet: _0,
+                            full_bal_zilpay: _0,
                         },
                     ]
                     if (
@@ -193,7 +194,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             resolvedInfo?.addr!,
                             '_balance'
                         )
-                        const balance_xwallet = Number(balance!.result._balance)
+                        const balance_xwallet = Big(balance!.result._balance)
 
                         const zilpay = new ZilPayBase().zilpay
                         const zilPay = await zilpay()
@@ -202,9 +203,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         const bal_zilpay = await blockchain.getBalance(
                             zilpay_addr
                         )
-                        const balance_zilpay = Number(
-                            bal_zilpay.result!.balance
-                        )
+                        const balance_zilpay = Big(bal_zilpay.result!.balance)
 
                         if (pair[0].meta.symbol === 'ZIL') {
                             balances_[0] = {
@@ -217,10 +216,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             const tokenAddressObject1: TokenBalance = {
                                 id: pair[1].meta.symbol,
                                 base16: pair[1].meta.base16,
-                                balance_xwallet: 0,
-                                balance_zilpay: 0,
-                                full_bal_xwallet: 0,
-                                full_bal_zilpay: 0,
+                                balance_xwallet: _0,
+                                balance_zilpay: _0,
+                                full_bal_xwallet: _0,
+                                full_bal_zilpay: _0,
                                 decimals: 1e12,
                             }
                             const balance =
@@ -232,8 +231,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             balances_[1] = {
                                 balance_xwallet: balance[0].balance_xwallet,
                                 balance_zilpay: balance[0].balance_zilpay,
-                                full_bal_xwallet: balance[0].full_bal_xwallet,
-                                full_bal_zilpay: balance[0].full_bal_zilpay,
+                                full_bal_xwallet: Big(
+                                    balance[0].full_bal_xwallet
+                                ),
+                                full_bal_zilpay: Big(
+                                    balance[0].full_bal_zilpay
+                                ),
                             }
                         } else {
                             balances_[1] = {
@@ -245,10 +248,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             const tokenAddressObject0: TokenBalance = {
                                 id: pair[0].meta.symbol,
                                 base16: pair[0].meta.base16,
-                                balance_xwallet: 0,
-                                balance_zilpay: 0,
-                                full_bal_xwallet: 0,
-                                full_bal_zilpay: 0,
+                                balance_xwallet: _0,
+                                balance_zilpay: _0,
+                                full_bal_xwallet: _0,
+                                full_bal_zilpay: _0,
                                 decimals: 1e12,
                             }
                             const balance =
@@ -260,8 +263,12 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                             balances_[0] = {
                                 balance_xwallet: balance[0].balance_xwallet,
                                 balance_zilpay: balance[0].balance_zilpay,
-                                full_bal_xwallet: balance[0].full_bal_xwallet,
-                                full_bal_zilpay: balance[0].full_bal_zilpay,
+                                full_bal_xwallet: Big(
+                                    balance[0].full_bal_xwallet
+                                ),
+                                full_bal_zilpay: Big(
+                                    balance[0].full_bal_zilpay
+                                ),
                             }
                         }
                     } else {
@@ -270,10 +277,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         const tokenAddressObject0: TokenBalance = {
                             id: pair[0].meta.symbol,
                             base16: pair[0].meta.base16,
-                            balance_xwallet: 0,
-                            balance_zilpay: 0,
-                            full_bal_xwallet: 0,
-                            full_bal_zilpay: 0,
+                            balance_xwallet: _0,
+                            balance_zilpay: _0,
+                            full_bal_xwallet: _0,
+                            full_bal_zilpay: _0,
                             decimals: 1e12,
                         }
                         token_balances.push(tokenAddressObject0)
@@ -281,10 +288,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         const tokenAddressObject1: TokenBalance = {
                             id: pair[1].meta.symbol,
                             base16: pair[1].meta.base16,
-                            balance_xwallet: 0,
-                            balance_zilpay: 0,
-                            full_bal_xwallet: 0,
-                            full_bal_zilpay: 0,
+                            balance_xwallet: _0,
+                            balance_zilpay: _0,
+                            full_bal_xwallet: _0,
+                            full_bal_zilpay: _0,
                             decimals: 1e12,
                         }
                         token_balances.push(tokenAddressObject1)
@@ -347,10 +354,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         unLinkedPair[1].value = String(0)
         setPair(unLinkedPair)
         setTydra({
-            dragondex: '0',
-            tydradex: '0',
-            zilswap: '0',
-            aswap: '0',
+            dragondex: _0,
+            tydradex: _0,
+            zilswap: _0,
+            aswap: _0,
         })
     }, [pair])
 
@@ -399,10 +406,10 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             setModal1(false)
             // @ssibrowser: dex
             setTydra({
-                dragondex: '0',
-                tydradex: '0',
-                zilswap: '0',
-                aswap: '0',
+                dragondex: _0,
+                tydradex: _0,
+                zilswap: _0,
+                aswap: _0,
             })
         },
         [pair]
