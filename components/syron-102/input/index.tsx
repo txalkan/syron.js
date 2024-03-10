@@ -52,7 +52,7 @@ export const VaultInput: React.FC<Prop> = ({
         const dec = 1e8
         val = value_.div(dec)
 
-        if (syron?.ssi_balance) balance = syron.ssi_balance
+        if (syron?.btc_balance) balance = syron.btc_balance
         bal = balance.div(dec)
 
         if (xr != null) worth_ = bal.mul(xr.rate).div(1e9)

@@ -1,5 +1,6 @@
 export interface SyronSSI {
-    ssi_addr: string
+    btc_addr: string
     ssi_vault: string
-    ssi_balance: Big
+    btc_balance: Big
+    network: string
 }

@@ -9,7 +9,7 @@ export { idlFactory } from './basic_bitcoin_syron.did.js'
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
-export const canisterId = 'ehubr-iyaaa-aaaap-ab3sq-cai' //process.env.NEXT_CANISTER_ID_SYRON @review (mainnet)
+export const canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
 
 export const createActor = (canisterId, options = {}) => {
     const agent = options.agent || new HttpAgent({ ...options.agentOptions })

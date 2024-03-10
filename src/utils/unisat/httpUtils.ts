@@ -21,8 +21,7 @@ function createApi(baseURL: string) {
         },
     })
 
-    const apiKey =
-        '4ad07430391f145539b24bfe1bd2608e7e6a4748c055bfc6a024b4fed49198be' //process.env.NEXT_PUBLIC_API_UNISAT //localStorage.getItem('apiKey') || ''
+    const apiKey = process.env.NEXT_PUBLIC_API_UNISAT //localStorage.getItem('apiKey') || ''
 
     api.interceptors.request.use((config) => {
         if (!apiKey) {

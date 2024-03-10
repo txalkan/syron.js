@@ -55,8 +55,6 @@ export class SSIVault {
 
         const susd = input.mul(xr).mul(rate).div(1e31)
 
-        console.log(String(susd))
-
         // let decimales = this.toDecimals(limitToken.meta.decimals)
         // return {
         //     amount: Big(String(value)).div(decimales!).round(4),

@@ -5,7 +5,7 @@ import { updateXR } from '../store/xr'
 Big.PE = 999
 
 function useICPHook() {
-    const getVault = async (ssi: string, balance: number) => {
+    const getVault = async (ssi: string, balance: number, network: string) => {
         try {
             console.log('Satoshis', balance)
 
@@ -14,9 +14,10 @@ function useICPHook() {
                 console.log('Vault', vault)
 
                 updateSyronSSI({
-                    ssi_addr: ssi,
+                    btc_addr: ssi,
                     ssi_vault: vault,
-                    ssi_balance: Big(balance),
+                    btc_balance: Big(balance),
+                    network: network,
                 })
             }
 

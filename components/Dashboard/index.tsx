@@ -164,7 +164,7 @@ function Component() {
         unconfirmed: 0,
         total: 0,
     })
-    const [network, setNetwork] = useState('livenet')
+    const [network_, setNetwork] = useState('livenet')
 
     const getBasicInfo = async () => {
         const unisat = (window as any).unisat
@@ -191,10 +191,10 @@ function Component() {
 
     useEffect(() => {
         async function update() {
-            await getVault(address_, Number(balance_.confirmed))
+            await getVault(address_, Number(balance_.confirmed), network_)
         }
         update()
-    }, [address_, balance_])
+    }, [address_, balance_, network_])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],

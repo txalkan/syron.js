@@ -211,10 +211,14 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     const hanldeConfirm = React.useCallback(async () => {
         setLoading(true)
         try {
-            throw Error
+            if (syron?.network == 'livenet') throw Error
+
+            const collateral = Number(exactInput)
+            if (collateral <= 1000) throw Error
+
             const tick = 'SYRO'
             const amt = Number(limitInput.round(3))
-
+            console.log(amt)
             // const transfer = {
             //     p: 'brc-20',
             //     op: 'transfer',
@@ -234,16 +238,13 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             //     },
             // ]
 
-            console.log(syron!.ssi_vault)
-            // @review (ssi vault tiene q ser mainnet address)
-
-            const receiveAddress = syron?.ssi_vault! //'bc1pk082tvh2zlsmz9j97vc36tw2wgpmaek48q553s87ggcm35hcqrcsgf8kc6' // the receiver address
+            const receiveAddress = syron?.ssi_vault! // the receiver address
 
             // const inscriptionBalance = 333 // the balance in each inscription
             // const fileCount = 1 // the fileCount
             // const fileSize = 1000 // the total size of all files
             // const contentTypeSize = 100 // the size of contentType
-            const feeRate = 2 // the feeRate
+            const feeRate = 10 // the feeRate
             // const feeFileSize = 100 // the total size of first 25 files
             // const feeFileCount = 25 // do not change this
 
@@ -336,12 +337,16 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                 feeRate,
                 outputValue: 546,
                 devAddress: receiveAddress,
-                devFee: 1001, // minimum (api) 600 & min (syron) 1000
+                devFee: collateral, // minimum (api) 600
                 brc20Ticker: tick,
                 brc20Amount: String(amt),
             })
 
-            await unisat.sendBitcoin(order.payAddress, order.amount)
+            await unisat.sendBitcoin(
+                order.payAddress,
+                order.amount,
+                order.feeRate
+            )
 
             // const order = await api.orderInfo(orderId)
 
