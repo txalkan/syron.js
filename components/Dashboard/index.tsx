@@ -31,6 +31,7 @@ import {
 } from '../../src/store/bitcoin-addresses'
 import useICPHook from '../../src/hooks/useICP'
 import { updateXR } from '../../src/store/xr'
+import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -157,8 +158,8 @@ function Component() {
     const [connected, setConnected] = useState(false)
     const [accounts, setAccounts] = useState<string[]>([])
     const [publicKey, setPublicKey] = useState('')
-    const [_address, setAddress] = useState('')
-    const [_balance, setBalance] = useState({
+    const [address_, setAddress] = useState('')
+    const [balance_, setBalance] = useState({
         confirmed: 0,
         unconfirmed: 0,
         total: 0,
@@ -182,15 +183,18 @@ function Component() {
 
         const network = await unisat.getNetwork()
         console.log('Bitcoin', network)
+        if (network == UnisatNetworkType.livenet) {
+            await unisat.switchNetwork(UnisatNetworkType.testnet)
+        }
         setNetwork(network)
     }
 
     useEffect(() => {
         async function update() {
-            await getVault(_address, Number(_balance.confirmed))
+            await getVault(address_, Number(balance_.confirmed))
         }
         update()
-    }, [_address, _balance])
+    }, [address_, balance_])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],

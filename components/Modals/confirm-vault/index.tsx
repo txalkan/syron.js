@@ -20,6 +20,13 @@ import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import { $xr } from '../../../src/store/xr'
+import { $syron } from '../../../src/store/syron'
+import { api } from '../../../src/utils/unisat/api'
+import {
+    getStringByteCount,
+    stringToBase64,
+} from '../../../src/utils/unisat/utils'
+import { InscribeOrderData } from '../../../src/utils/unisat/api-types'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -31,20 +38,23 @@ type Prop = {
     // onClose: () => void
 }
 
-const tokensMixin = new TokensMixine()
 const vault = new SSIVault()
 
 export var ConfirmVaultModal: React.FC<Prop> = function ({
-    show,
     pair,
     direction,
     // onClose,
 }) {
-    //@zilpay
-    const wallet = useStore($bitcoin_addresses)
+    const unisat = (window as any).unisat
+    const syron = useStore($syron)
+
+    const [exactToken, limitToken] = pair
+    const exactInput = exactToken.value
+    const limitInput = limitToken.value
+
     // const common = useTranslation(`common`)
     // const swap = useTranslation(`swap`)
-    const settings = useStore($settings)
+    //const settings = useStore($settings)
     // const liquidity = useStore($liquidity)
 
     const [loading, setLoading] = React.useState(false)
@@ -78,152 +88,281 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
 
     const priceInfo = React.useMemo(() => {
         //const priceImpact = React.useMemo(() => {
-        const [exactToken, limitToken] = pair
-        const exactInput = Big(exactToken.value)
-        const limitInput = Big(limitToken.value)
         let price = Big(0)
         let x = String(0)
         let y = String(0)
         let baseReserve = Big(0)
         let tokensReserve = Big(0)
 
-        try {
-            console.log('SwapDirection:', direction)
+        console.log('Review direction:', direction)
 
-            // @review (syron)
-            // switch (direction) {
-            //     case SwapDirection.ZilToToken:
-            //         ;[x, y] = liquidity.pools[limitToken.meta.base16]
-            //         baseReserve = Big(String(x)).div(
-            //             dex.toDecimals(exactToken.meta.decimals)
-            //         )
-            //         tokensReserve = Big(String(y)).div(
-            //             dex.toDecimals(limitToken.meta.decimals)
-            //         )
-            //         price = baseReserve.div(tokensReserve)
-            //         console.log('CURRENT_PRICE', String(price))
-            //         return {
-            //             impact: dex.calcPriceImpact(
-            //                 exactInput,
-            //                 limitInput,
-            //                 price
-            //             ),
-            //             input: baseReserve.round(2),
-            //             output: tokensReserve.round(2),
-            //         }
-            //     case SwapDirection.TokenToZil:
-            //         ;[x, y] = liquidity.pools[exactToken.meta.base16]
-            //         baseReserve = Big(String(x)).div(
-            //             dex.toDecimals(limitToken.meta.decimals)
-            //         )
-            //         tokensReserve = Big(String(y)).div(
-            //             dex.toDecimals(exactToken.meta.decimals)
-            //         )
-            //         price = tokensReserve.div(baseReserve)
-            //         //return dex.calcPriceImpact(exactInput, limitInput, price)
-            //         return {
-            //             impact: dex.calcPriceImpact(
-            //                 exactInput,
-            //                 limitInput,
-            //                 price
-            //             ),
-            //             input: tokensReserve.round(2),
-            //             output: baseReserve.round(2),
-            //         }
-            //     case SwapDirection.TokenToTokens:
-            //         const [zilliqa] = $tokens.state.tokens
-            //         const [inputZils, inputTokens] =
-            //             liquidity.pools[exactToken.meta.base16]
-            //         const [outpuZils, outputTokens] =
-            //             liquidity.pools[limitToken.meta.base16]
+        // @review (syron)
+        // switch (direction) {
+        //     case SwapDirection.ZilToToken:
+        //         ;[x, y] = liquidity.pools[limitToken.meta.base16]
+        //         baseReserve = Big(String(x)).div(
+        //             dex.toDecimals(exactToken.meta.decimals)
+        //         )
+        //         tokensReserve = Big(String(y)).div(
+        //             dex.toDecimals(limitToken.meta.decimals)
+        //         )
+        //         price = baseReserve.div(tokensReserve)
+        //         console.log('CURRENT_PRICE', String(price))
+        //         return {
+        //             impact: dex.calcPriceImpact(
+        //                 exactInput,
+        //                 limitInput,
+        //                 price
+        //             ),
+        //             input: baseReserve.round(2),
+        //             output: tokensReserve.round(2),
+        //         }
+        //     case SwapDirection.TokenToZil:
+        //         ;[x, y] = liquidity.pools[exactToken.meta.base16]
+        //         baseReserve = Big(String(x)).div(
+        //             dex.toDecimals(limitToken.meta.decimals)
+        //         )
+        //         tokensReserve = Big(String(y)).div(
+        //             dex.toDecimals(exactToken.meta.decimals)
+        //         )
+        //         price = tokensReserve.div(baseReserve)
+        //         //return dex.calcPriceImpact(exactInput, limitInput, price)
+        //         return {
+        //             impact: dex.calcPriceImpact(
+        //                 exactInput,
+        //                 limitInput,
+        //                 price
+        //             ),
+        //             input: tokensReserve.round(2),
+        //             output: baseReserve.round(2),
+        //         }
+        //     case SwapDirection.TokenToTokens:
+        //         const [zilliqa] = $tokens.state.tokens
+        //         const [inputZils, inputTokens] =
+        //             liquidity.pools[exactToken.meta.base16]
+        //         const [outpuZils, outputTokens] =
+        //             liquidity.pools[limitToken.meta.base16]
 
-            //         const bigInputZils = Big(String(inputZils)).div(
-            //             dex.toDecimals(zilliqa.meta.decimals)
-            //         )
-            //         const bigInputTokens = Big(String(inputTokens)).div(
-            //             dex.toDecimals(exactToken.meta.decimals)
-            //         )
+        //         const bigInputZils = Big(String(inputZils)).div(
+        //             dex.toDecimals(zilliqa.meta.decimals)
+        //         )
+        //         const bigInputTokens = Big(String(inputTokens)).div(
+        //             dex.toDecimals(exactToken.meta.decimals)
+        //         )
 
-            //         const bigOutpuZils = Big(String(outpuZils)).div(
-            //             dex.toDecimals(zilliqa.meta.decimals)
-            //         )
-            //         const bigOutputTokens = Big(String(outputTokens)).div(
-            //             dex.toDecimals(limitToken.meta.decimals)
-            //         )
+        //         const bigOutpuZils = Big(String(outpuZils)).div(
+        //             dex.toDecimals(zilliqa.meta.decimals)
+        //         )
+        //         const bigOutputTokens = Big(String(outputTokens)).div(
+        //             dex.toDecimals(limitToken.meta.decimals)
+        //         )
 
-            //         const inputRate = bigInputTokens.div(bigInputZils)
-            //         const outpuRate = bigOutputTokens.div(bigOutpuZils)
-            //         price = inputRate.div(outpuRate)
+        //         const inputRate = bigInputTokens.div(bigInputZils)
+        //         const outpuRate = bigOutputTokens.div(bigOutpuZils)
+        //         price = inputRate.div(outpuRate)
 
-            //         //return dex.calcPriceImpact(exactInput, limitInput, price)
-            //         return {
-            //             impact: dex.calcPriceImpact(
-            //                 exactInput,
-            //                 limitInput,
-            //                 price
-            //             ),
-            //             input: 'coming soon',
-            //             output: 'coming soon',
-            //         }
-            //     case SwapDirection.DEFIxTokensForTokens:
-            //         ;[x, y] = liquidity.reserves['tyron_s$i']
-            //         baseReserve = Big(String(x)).div(dex.toDecimals(18))
-            //         tokensReserve = Big(String(y)).div(dex.toDecimals(12))
-            //         return {
-            //             impact: dex.calculatePriceImpact(
-            //                 exactToken,
-            //                 baseReserve,
-            //                 tokensReserve,
-            //                 exactInput,
-            //                 limitInput
-            //             ),
-            //             input: baseReserve.round(2),
-            //             output: tokensReserve.round(2),
-            //         }
+        //         //return dex.calcPriceImpact(exactInput, limitInput, price)
+        //         return {
+        //             impact: dex.calcPriceImpact(
+        //                 exactInput,
+        //                 limitInput,
+        //                 price
+        //             ),
+        //             input: 'coming soon',
+        //             output: 'coming soon',
+        //         }
+        //     case SwapDirection.DEFIxTokensForTokens:
+        //         ;[x, y] = liquidity.reserves['tyron_s$i']
+        //         baseReserve = Big(String(x)).div(dex.toDecimals(18))
+        //         tokensReserve = Big(String(y)).div(dex.toDecimals(12))
+        //         return {
+        //             impact: dex.calculatePriceImpact(
+        //                 exactToken,
+        //                 baseReserve,
+        //                 tokensReserve,
+        //                 exactInput,
+        //                 limitInput
+        //             ),
+        //             input: baseReserve.round(2),
+        //             output: tokensReserve.round(2),
+        //         }
 
-            //     default:
-            //         //return 0
-            //         return {
-            //             impact: 0,
-            //             input: '0',
-            //             output: '0',
-            //         }
-            // }
-            return {
-                impact: 0,
-                input: Big(exactInput),
-                output: Big(limitInput),
-            }
-        } catch (err) {
-            console.error(err)
-            //return 0
-            return {
-                impact: 0,
-                input: '0',
-                output: '0',
-            }
+        //     default:
+        //         //return 0
+        //         return {
+        //             impact: 0,
+        //             input: '0',
+        //             output: '0',
+        //         }
+        // }
+        return {
+            impact: 0,
+            input: Big(exactInput),
+            output: Big(limitInput),
         }
-    }, [direction, pair])
+    }, []) //direction, pair])
 
     const disabled = React.useMemo(() => {
         return loading || Big(priceInfo!.impact) > 10
     }, [priceInfo, loading])
 
-    const lazyRoot = React.useRef(null)
+    // const lazyRoot = React.useRef(null)
 
     const hanldeConfirm = React.useCallback(async () => {
         setLoading(true)
         try {
-            toast.info('Coming soon', {
-                position: 'bottom-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                toastId: 1,
+            throw Error
+            const tick = 'SYRO'
+            const amt = Number(limitInput.round(3))
+
+            // const transfer = {
+            //     p: 'brc-20',
+            //     op: 'transfer',
+            //     tick,
+            //     amt,
+            // }
+            // const text = JSON.stringify(transfer)
+            // console.log(text)
+
+            // const file_list = [
+            //     {
+            //         filename: text.slice(0, 512),
+            //         dataURL: `data:text/plain;charset=utf-8;base64,${stringToBase64(
+            //             text
+            //         )}`,
+            //         size: getStringByteCount(text),
+            //     },
+            // ]
+
+            console.log(syron!.ssi_vault)
+            // @review (ssi vault tiene q ser mainnet address)
+
+            const receiveAddress = syron?.ssi_vault! //'bc1pk082tvh2zlsmz9j97vc36tw2wgpmaek48q553s87ggcm35hcqrcsgf8kc6' // the receiver address
+
+            // const inscriptionBalance = 333 // the balance in each inscription
+            // const fileCount = 1 // the fileCount
+            // const fileSize = 1000 // the total size of all files
+            // const contentTypeSize = 100 // the size of contentType
+            const feeRate = 2 // the feeRate
+            // const feeFileSize = 100 // the total size of first 25 files
+            // const feeFileCount = 25 // do not change this
+
+            // const balance = inscriptionBalance * fileCount
+
+            // let addrSize = 25 + 1 // p2pkh
+            // if (
+            //     receiveAddress.indexOf('bc1q') == 0 ||
+            //     receiveAddress.indexOf('tb1q') == 0
+            // ) {
+            //     addrSize = 22 + 1
+            // } else if (
+            //     receiveAddress.indexOf('bc1p') == 0 ||
+            //     receiveAddress.indexOf('tb1p') == 0
+            // ) {
+            //     addrSize = 34 + 1
+            // } else if (
+            //     receiveAddress.indexOf('2') == 0 ||
+            //     receiveAddress.indexOf('3') == 0
+            // ) {
+            //     addrSize = 23 + 1
+            // }
+
+            // const baseSize = 88
+            // let networkFee = Math.ceil(
+            //     ((fileSize + contentTypeSize) / 4 +
+            //         (baseSize + 8 + addrSize + 8 + 23)) *
+            //         feeRate
+            // )
+            // if (fileCount > 1) {
+            //     networkFee = Math.ceil(
+            //         ((fileSize + contentTypeSize) / 4 +
+            //             (baseSize +
+            //                 8 +
+            //                 addrSize +
+            //                 (35 + 8) * (fileCount - 1) +
+            //                 8 +
+            //                 23 +
+            //                 (baseSize + 8 + addrSize + 0.5) *
+            //                     (fileCount - 1))) *
+            //             feeRate
+            //     )
+            // }
+            // let networkSatsByFeeCount = Math.ceil(
+            //     ((feeFileSize + contentTypeSize) / 4 +
+            //         (baseSize + 8 + addrSize + 8 + 23)) *
+            //         feeRate
+            // )
+            // if (fileCount > 1) {
+            //     networkSatsByFeeCount = Math.ceil(
+            //         ((feeFileSize +
+            //             contentTypeSize * (feeFileCount / fileCount)) /
+            //             4 +
+            //             (baseSize +
+            //                 8 +
+            //                 addrSize +
+            //                 (35 + 8) * (fileCount - 1) +
+            //                 8 +
+            //                 23 +
+            //                 (baseSize + 8 + addrSize + 0.5) *
+            //                     Math.min(fileCount - 1, feeFileCount - 1))) *
+            //             feeRate
+            //     )
+            // }
+
+            // const baseFee = 1999 * Math.min(fileCount, feeFileCount) // 1999 base fee for top 25 files
+            // const floatFee = Math.ceil(networkSatsByFeeCount * 0.0499) // 4.99% extra miner fee for top 25 transations
+            // const serviceFee = Math.floor(baseFee + floatFee)
+
+            // const total = balance + networkFee + serviceFee
+            // const truncatedTotal = Math.floor(total / 1000) * 1000 // truncate
+            // const _amount = truncatedTotal + devFee // add devFee at the end
+            // console.log('The final amount need to pay: ', _amount)
+            console.log(Number(Big(exactToken.value)))
+
+            // const { orderId } = await api.createOrder({
+            //     receiveAddress,
+            //     feeRate,
+            //     outputValue: 333,
+            //     files: file_list.map((item) => ({
+            //         dataURL: item.dataURL,
+            //         filename: item.filename,
+            //     })),
+            //     devAddress: receiveAddress,
+            //     devFee: 1111, //Number(Big(exactToken.value)),
+            // })
+
+            const order: InscribeOrderData = await api.createTransfer({
+                receiveAddress,
+                feeRate,
+                outputValue: 546,
+                devAddress: receiveAddress,
+                devFee: 1001, // minimum (api) 600 & min (syron) 1000
+                brc20Ticker: tick,
+                brc20Amount: String(amt),
             })
+
+            await unisat.sendBitcoin(order.payAddress, order.amount)
+
+            // const order = await api.orderInfo(orderId)
+
+            //console.log(JSON.stringify(order))
+
+            // try {
+            //     let { txid } = await unisat.sendInscription(
+            //         syron?.ssi_vault,
+            //         orderId,
+            //         { feeRate: feeRate }
+            //     )
+            //     console.log(
+            //         'send Inscription 204 to tb1q8h8s4zd9y0lkrx334aqnj4ykqs220ss7mjxzny',
+            //         { txid }
+            //     )
+            // } catch (e) {
+            //     console.log(e)
+            // }
+
+            // await unisat.inscribeTransfer(tick, amt)
+
             // const zilpay = await tokensMixin.zilpay.zilpay()
 
             // if (!wallet || !zilpay.wallet.isEnable) {
@@ -257,10 +396,20 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             // }
         } catch (err) {
             console.error(err)
+            toast.info('Coming soon', {
+                position: 'bottom-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId: 1,
+            })
         }
 
         setLoading(false)
-    }, [pair, /*limit,*/ direction, wallet /*onClose*/])
+    }, [pair, /*limit,*/ direction, syron /*onClose*/])
 
     const xr = useStore($xr)
 

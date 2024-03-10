@@ -1,6 +1,6 @@
 import * as tyron from 'tyron'
 import styles from './index.module.scss'
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
@@ -12,6 +12,7 @@ import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
 import { $syron } from '../../../src/store/syron'
 import Big from 'big.js'
+import { $xr } from '../../../src/store/xr'
 Big.PE = 999
 const _0 = Big(0)
 
@@ -29,9 +30,9 @@ type Prop = {
 const list = [25, 50, 75, 100]
 
 export const VaultInput: React.FC<Prop> = ({
-    value,
+    value: value_,
     token,
-    disabled = false,
+    disabled,
     noSwap = false,
     onInput = () => null,
     onSelect = () => null,
@@ -39,12 +40,22 @@ export const VaultInput: React.FC<Prop> = ({
     onSwap = () => {},
 }) => {
     const syron = useStore($syron)
+    const xr = useStore($xr)
+
     const addr_name = token?.symbol.toLowerCase()
     let balance = _0
     let bal = _0
+    let val = _0
+    let worth_ = _0
+
     if (addr_name == 'btc') {
+        const dec = 1e8
+        val = value_.div(dec)
+
         if (syron?.ssi_balance) balance = syron.ssi_balance
-        bal = balance!.div(Big(100000000))!
+        bal = balance.div(dec)
+
+        if (xr != null) worth_ = bal.mul(xr.rate).div(1e9)
     }
     // else {
     //     const _currency = tyron.Currency.default.tyron(addr_name)
@@ -59,11 +70,11 @@ export const VaultInput: React.FC<Prop> = ({
                 setSelectedPercent(n)
                 const percent = Big(n)
 
-                let _value = balance.mul(percent).div(Big(100))
+                let input = balance.mul(percent).div(100)
 
-                //@review: decimals
+                //@review (dec)
                 // const decimals = token.decimals)
-                onMax(_value.div(Big(1e8)))
+                onMax(input)
             }
         },
         [syron, token, onMax]
@@ -74,26 +85,42 @@ export const VaultInput: React.FC<Prop> = ({
             const target = event.target as HTMLInputElement
             try {
                 if (target.value) {
-                    onInput(Big(target.value))
+                    // @review (dec)
+                    const input = Big(target.value).mul(1e8)
+                    console.log(String(input))
+                    onInput(input)
                 } else {
                     onInput(Big(0))
                 }
-            } catch {
-                ////
+            } catch (err) {
+                console.error(err)
             }
         },
         [onInput]
     )
+
     return (
         <label>
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
-                    <div className={styles.balanceTxt}>
-                        &nbsp;| Balance:{' '}
-                        {isNaN(Number(bal))
-                            ? 'Connect Wallet'
-                            : `${Number(bal)} ${token?.symbol}`}
-                    </div>
+                    {xr == null ? (
+                        <div className={styles.balanceTxt}>
+                            &nbsp;| Loading...
+                        </div>
+                    ) : (
+                        <>
+                            <div className={styles.balanceTxt}>
+                                &nbsp;| Balance:{' '}
+                                {isNaN(Number(bal))
+                                    ? 'Connect Wallet'
+                                    : `${Number(bal)} ${token?.symbol}`}
+                            </div>
+                            <div className={styles.balanceTxt}>
+                                &nbsp;| Worth: $
+                                {Number(worth_).toLocaleString()}
+                            </div>
+                        </>
+                    )}
                 </div>
                 <div>
                     {disabled ? null : (
@@ -131,7 +158,7 @@ export const VaultInput: React.FC<Prop> = ({
                             type="number"
                             placeholder="0"
                             onInput={handleOnInput}
-                            value={Number(value)}
+                            value={Number(val)}
                             disabled={disabled}
                             step={0.00000001}
                         />

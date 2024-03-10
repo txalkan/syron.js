@@ -32,13 +32,6 @@ export const VaultOutput: React.FC<Prop> = ({ amount, token }) => {
                             <div className={styles.dexName}>₿e Your ₿ank</div>
                         </div>
                         <div className={styles.output}>
-                            <input
-                                disabled
-                                value={Number(amount).toFixed(3)}
-                                placeholder="0"
-                                type="text"
-                                className={styles.inputDex}
-                            />
                             <Image
                                 src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
                                 alt={token.symbol}
@@ -46,6 +39,13 @@ export const VaultOutput: React.FC<Prop> = ({ amount, token }) => {
                                 height="35"
                                 width="35"
                                 className={styles.symbol}
+                            />
+                            <input
+                                disabled
+                                value={Number(amount).toLocaleString()}
+                                placeholder="0"
+                                type="text"
+                                className={styles.inputDex}
                             />
                         </div>
                     </div>

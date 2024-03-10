@@ -44,9 +44,18 @@ export class SSIVault {
 
     public computeSU$D(pair: VaultPair[], xr: number) {
         const [exactToken, limitToken] = pair
-        const input = exactToken.value.mul(1e8)
+        const input = exactToken.value
 
-        const susd = input.div(1e8).mul(xr).div(1e9).mul(66).div(100) //@review (xrc) over-collateralization ratio (0.66)
+        const rate = Big(xr)
+        //.div(1e19)
+
+        //@review (xrc) over-collateralization ratio (0.66)
+        const ratio = Big(66)
+        //.div(1e2)
+
+        const susd = input.mul(xr).mul(rate).div(1e31)
+
+        console.log(String(susd))
 
         // let decimales = this.toDecimals(limitToken.meta.decimals)
         // return {

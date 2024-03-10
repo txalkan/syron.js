@@ -84,19 +84,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .dropdown {
     //ref:ssibrowser
-    padding-left: 20px;
-    // margin-top: 20px;
-    // margin-bottom: 20px;
     background-color: rgba($color: #dbe4eb, $alpha: 0.2);
 
-    cursor: pointer;
+    // cursor: pointer;
 
     @include flex-between-row;
 
     min-width: 150px;
     height: 3rem;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 22px;
+    padding-right: 22px;
 
     // @include border-radius(8px);
 

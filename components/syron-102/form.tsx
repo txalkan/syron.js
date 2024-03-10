@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styles from './index.module.scss'
 import Big from 'big.js'
 import { useStore } from 'react-stores'
@@ -66,18 +66,20 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
     const handleOnInput = React.useCallback(
         (value: Big) => {
             try {
-                setConfirmModal(false)
-                const unLinkedPair = JSON.parse(JSON.stringify(vault_pair))
-                unLinkedPair[0].value = value
-                // unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
-                //setPair(unLinkedPair)
-                //@ssibrowsers
+                if (xr != null) {
+                    setConfirmModal(false)
+                    const unLinkedPair = JSON.parse(JSON.stringify(vault_pair))
+                    unLinkedPair[0].value = value
+                    // unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
+                    //setPair(unLinkedPair)
+                    //@ssibrowsers
 
-                const amount = vault.computeSU$D(unLinkedPair, xr?.rate!)
-                unLinkedPair[1].value = amount
+                    const amount = vault.computeSU$D(unLinkedPair, xr.rate)
+                    unLinkedPair[1].value = amount
 
-                setPair(unLinkedPair)
-                setAmount(Big(amount))
+                    setPair(unLinkedPair)
+                    setAmount(Big(amount))
+                }
             } catch (error) {
                 console.error(error)
             }
@@ -111,11 +113,16 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
         setConfirmModal(true)
     }
 
-    React.useEffect(() => {
+    useEffect(() => {
         if (Number(vault_pair[0].value) > 0) {
             handleOnInput(vault_pair[0].value)
         }
     }, [tokensStore])
+
+    const [disabled, setDisabled] = React.useState(true)
+    useEffect(() => {
+        if (xr != null) setDisabled(false)
+    }, [xr])
 
     return (
         <>
@@ -150,8 +157,9 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                         </div>
 
                         <VaultInput
-                            value={Big(vault_pair[0].value)}
+                            value={vault_pair[0].value}
                             token={vault_pair[0].meta}
+                            disabled={disabled}
                             onSelect={() => setModal0(true)}
                             onInput={handleOnInput}
                             onMax={handleOnInput}
