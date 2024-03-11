@@ -64,7 +64,7 @@ function Component() {
                             height="44"
                             width="44"
                         /> */}
-                        <div className={styles.titleX}>Syron Vault</div>
+                        <div className={styles.titleX}>₿itcoin Vault</div>
                     </div>
                     <div className={styles.icoWrapper}>
                         <Image

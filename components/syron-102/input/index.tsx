@@ -27,7 +27,7 @@ type Prop = {
     onSwap?: () => void
 }
 
-const list = [25, 50, 75, 100]
+const list = [10, 30, 50, 70]
 
 export const VaultInput: React.FC<Prop> = ({
     value: value_,

@@ -46,7 +46,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     // onClose,
 }) {
     const unisat = (window as any).unisat
-    const syron = useStore($syron)
+    const tyron = useStore($syron)
 
     const [exactToken, limitToken] = pair
     const exactInput = exactToken.value
@@ -211,14 +211,19 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     const hanldeConfirm = React.useCallback(async () => {
         setLoading(true)
         try {
-            if (syron?.network == 'livenet') throw Error
+            throw Error('Coming soon!')
+            if (tyron?.network == 'livenet') throw Error('Use Bitcoin Testnet')
 
-            const collateral = Number(exactInput)
-            if (collateral <= 1000) throw Error
+            const collateral = Math.floor(Number(exactInput))
+            if (collateral <= 1000)
+                throw Error('BTC deposit is below the minimum')
 
             const tick = 'SYRO'
             const amt = Number(limitInput.round(3))
+
+            console.log(collateral)
             console.log(amt)
+
             // const transfer = {
             //     p: 'brc-20',
             //     op: 'transfer',
@@ -238,13 +243,13 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             //     },
             // ]
 
-            const receiveAddress = syron?.ssi_vault! // the receiver address
+            const receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER! // the receiver address
 
             // const inscriptionBalance = 333 // the balance in each inscription
             // const fileCount = 1 // the fileCount
             // const fileSize = 1000 // the total size of all files
             // const contentTypeSize = 100 // the size of contentType
-            const feeRate = 10 // the feeRate
+            const feeRate = 1 // the feeRate @review (mainnet)
             // const feeFileSize = 100 // the total size of first 25 files
             // const feeFileCount = 25 // do not change this
 
@@ -318,7 +323,6 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             // const truncatedTotal = Math.floor(total / 1000) * 1000 // truncate
             // const _amount = truncatedTotal + devFee // add devFee at the end
             // console.log('The final amount need to pay: ', _amount)
-            console.log(Number(Big(exactToken.value)))
 
             // const { orderId } = await api.createOrder({
             //     receiveAddress,
@@ -336,17 +340,23 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                 receiveAddress,
                 feeRate,
                 outputValue: 546,
-                devAddress: receiveAddress,
-                devFee: collateral, // minimum (api) 600
+                devAddress: tyron?.ssi_vault!,
+                devFee: collateral,
                 brc20Ticker: tick,
                 brc20Amount: String(amt),
             })
 
-            await unisat.sendBitcoin(
+            console.log(JSON.stringify(order))
+
+            const { txid } = await unisat.sendBitcoin(
                 order.payAddress,
                 order.amount,
                 order.feeRate
             )
+
+            console.log(txid)
+            console.log(order.amount)
+            console.log(order.orderId)
 
             // const order = await api.orderInfo(orderId)
 
@@ -401,20 +411,34 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             // }
         } catch (err) {
             console.error(err)
-            toast.info('Coming soon', {
-                position: 'bottom-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                toastId: 1,
-            })
+
+            if (err == 'Error: Coming soon!') {
+                toast.info('Coming soon!', {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 1,
+                })
+            } else {
+                toast.error(String(err), {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 2,
+                })
+            }
         }
 
         setLoading(false)
-    }, [pair, /*limit,*/ direction, syron /*onClose*/])
+    }, [pair, /*limit,*/ direction, tyron /*onClose*/])
 
     const xr = useStore($xr)
 

@@ -10,38 +10,19 @@ class MyDocument extends Document {
         return (
             <Html>
                 <Head>
-                    <meta
-                        name="Self-Sovereign Identity Protocol"
-                        content="SSI Protocol's open-source web application"
-                    />
                     <link
                         rel="icon"
-                        href="/syron/ssi_syronUSD_iso.png"
+                        href="/tyron/ssi_tyron.png"
                         type="image/png"
                         sizes="16x16"
                     />
-                    {/* <link
-                        rel="icon"
-                        href="/tyronssi.svg"
-                        type="image/svg+xml"
-                        sizes="40x40"
-                    /> */}
-                    <meta
-                        name="title"
-                        content="Self-Sovereign Identity Protocol"
-                    />
+                    <meta name="title" content="TYRON" />
                     <meta
                         name="description"
-                        content="₿e Your ₿ank: Use your bitcoin savings to mint SU$D without giving up control of your BTC"
+                        content="₿e Your ₿ank | Trustless stablecoin metaprotocol to increase your BTC capital efficiency on Bitcoin Layer 1"
                     />
-                    <meta
-                        property="og:image"
-                        content="/syron/ssi_syronUSD_iso.svg"
-                    />
-                    <meta
-                        property="og:title"
-                        content="Self-Sovereign Identity Protocol"
-                    />
+                    <meta property="og:image" content="/tyron/ssi_tyron.svg" />
+                    <meta property="og:title" content="TYRON" />
                 </Head>
                 <body>
                     <Main />

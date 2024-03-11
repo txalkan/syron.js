@@ -164,7 +164,7 @@ function Component() {
         unconfirmed: 0,
         total: 0,
     })
-    const [network_, setNetwork] = useState('livenet')
+    const [network_, setNetwork] = useState('testnet')
 
     const getBasicInfo = async () => {
         const unisat = (window as any).unisat
