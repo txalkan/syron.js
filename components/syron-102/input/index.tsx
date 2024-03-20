@@ -55,7 +55,7 @@ export const VaultInput: React.FC<Prop> = ({
         if (syron?.btc_balance) balance = syron.btc_balance
         bal = balance.div(dec)
 
-        if (xr != null) worth_ = bal.mul(xr.rate).div(1e9)
+        if (xr != null) worth_ = bal.mul(xr.rate)
     }
     // else {
     //     const _currency = tyron.Currency.default.tyron(addr_name)

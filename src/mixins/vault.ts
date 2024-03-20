@@ -47,13 +47,11 @@ export class SSIVault {
         const input = exactToken.value
 
         const rate = Big(xr)
-        //.div(1e19)
 
-        //@review (xrc) over-collateralization ratio (0.66)
-        const ratio = Big(66)
-        //.div(1e2)
+        //@review (xrc) over-collateralization ratio (1.5)
+        const ratio = Big(1.5)
 
-        const susd = input.mul(xr).mul(rate).div(1e31)
+        const susd = input.div(1e8).mul(rate).div(ratio)
 
         // let decimales = this.toDecimals(limitToken.meta.decimals)
         // return {

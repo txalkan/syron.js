@@ -32,6 +32,7 @@ import {
 import useICPHook from '../../src/hooks/useICP'
 import { updateXR } from '../../src/store/xr'
 import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
+import { useMempoolHook } from '../../src/hooks/useMempool'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -41,8 +42,9 @@ const defaultValue = {
 export const AuthContext = createContext(defaultValue)
 
 function Component() {
-    // @dev (ICP)
-    const { getVault, getXR } = useICPHook()
+    const { getVault } = useICPHook()
+    const { getXR } = useMempoolHook()
+
     const dispatch = useDispatch()
     // const { connect } = useArConnect()
     const loginInfo = useSelector((state: RootState) => state.modal)

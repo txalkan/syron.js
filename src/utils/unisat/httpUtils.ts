@@ -68,3 +68,51 @@ export const post = async (url: string, data?: any) => {
 
     return responseData.data
 }
+
+export async function coinGeckoApi() {
+    try {
+        const url =
+            'https://api.coingecko.com/api/v3/simple/price?ids=bitcoin?vs_currencies=usd'
+
+        const apiKey = process.env.NEXT_PUBLIC_COINGECKO
+        if (!apiKey) {
+            throw new Error('input apiKey and reload page')
+        }
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'x-cg-demo-api-key': `${apiKey}` },
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+        console.log(JSON.stringify(data, null, 2))
+
+        return data
+    } catch (error) {
+        console.error('CoinGecko API Error', error)
+    }
+}
+
+export async function mempoolPrice() {
+    try {
+        const url = 'https://mempool.space/api/v1/prices'
+
+        const response = await fetch(url, {
+            method: 'GET',
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        return data
+    } catch (error) {
+        console.error('Mempool API Error', error)
+    }
+}
