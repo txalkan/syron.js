@@ -18,7 +18,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .container {
     // padding: 1px;
-    padding-left: 17px;
+    // padding-left: 17px;
 
     & > button {
         width: 100%;
@@ -167,4 +167,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
     .txtRow {
         font-size: 12px;
     }
+}
+
+.vaultWrapper {
+    margin-top: 10%;
+    width: 100%;
+    background-color: #ffffff2e;
+    border: 1px solid #ffff32;
+    padding: 11px;
+    display: flex;
+    flex-direction: column;
+    text-align: left;
 }

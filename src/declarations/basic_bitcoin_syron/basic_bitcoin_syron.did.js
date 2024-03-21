@@ -41,6 +41,11 @@ export const idlFactory = ({ IDL }) => {
     const bitcoin_address = IDL.Text
     const satoshi = IDL.Nat64
     const millisatoshi_per_vbyte = IDL.Nat64
+    const MinterInfo = IDL.Record({
+        retrieve_btc_min_amount: IDL.Nat64,
+        min_confirmations: IDL.Nat32,
+        kyt_fee: IDL.Nat64,
+    })
     const block_hash = IDL.Vec(IDL.Nat8)
     const outpoint = IDL.Record({
         txid: IDL.Vec(IDL.Nat8),
@@ -72,6 +77,7 @@ export const idlFactory = ({ IDL }) => {
             utxo: Utxo,
         }),
         Checked: Utxo,
+        TransferInscription: Utxo,
     })
     const PendingUtxo = IDL.Record({
         confirmations: IDL.Nat32,
@@ -103,10 +109,16 @@ export const idlFactory = ({ IDL }) => {
             [IDL.Vec(millisatoshi_per_vbyte)],
             []
         ),
+        get_minter_info: IDL.Func([], [MinterInfo], ['query']),
         get_p2pkh_address: IDL.Func([], [bitcoin_address], []),
+        get_p2wpkh_address: IDL.Func([], [bitcoin_address], []),
         get_subaccount: IDL.Func([bitcoin_address], [IDL.Vec(IDL.Nat8)], []),
+        get_susd: IDL.Func(
+            [IDL.Record({ ssi: IDL.Text }), IDL.Text],
+            [IDL.Text],
+            []
+        ),
         get_utxos: IDL.Func([bitcoin_address], [get_utxos_response], []),
-        get_xr: IDL.Func([], [IDL.Nat64], []),
         send: IDL.Func(
             [
                 IDL.Record({
@@ -117,6 +129,7 @@ export const idlFactory = ({ IDL }) => {
             [transaction_id],
             []
         ),
+        test: IDL.Func([], [IDL.Vec(IDL.Text)], []),
         update_balance: IDL.Func(
             [
                 IDL.Record({
@@ -133,6 +146,7 @@ export const idlFactory = ({ IDL }) => {
             ],
             []
         ),
+        update_vault: IDL.Func([IDL.Record({ ssi: IDL.Text })], [IDL.Text], []),
     })
 }
 export const init = ({ IDL }) => {

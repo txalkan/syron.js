@@ -99,7 +99,7 @@ function TransactionStatus(props: ModalProps) {
                     ? t('TRANSACTION REJECTED BY THE USER')
                     : t('SIGN THE TRANSACTION TO SEND IT TO THE BLOCKCHAIN')}
             </h5>
-            {loading !== 'true' && loading !== 'rejected' && (
+            {loading !== 'true' && loading !== 'rejected' && txId && (
                 <h5 className={styles.txt}>
                     ID:{' '}
                     <a

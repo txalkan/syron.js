@@ -33,6 +33,7 @@ import useICPHook from '../../src/hooks/useICP'
 import { updateXR } from '../../src/store/xr'
 import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 import { useMempoolHook } from '../../src/hooks/useMempool'
+import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -42,6 +43,7 @@ const defaultValue = {
 export const AuthContext = createContext(defaultValue)
 
 function Component() {
+    const { updateWallet } = useBTCWalletHook()
     const { getVault } = useICPHook()
     const { getXR } = useMempoolHook()
 
@@ -193,6 +195,7 @@ function Component() {
 
     useEffect(() => {
         async function update() {
+            await updateWallet(address_, Number(balance_.confirmed), network_) //@review (mainnet) showcase unconfirmed too
             await getVault(address_, Number(balance_.confirmed), network_)
         }
         update()

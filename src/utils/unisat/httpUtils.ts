@@ -116,3 +116,26 @@ export async function mempoolPrice() {
         console.error('Mempool API Error', error)
     }
 }
+
+export async function mempoolTxId(address: string) {
+    try {
+        const url = `https://mempool.space/testnet/api/address/${address}/txs`
+
+        const response = await fetch(url, {
+            method: 'GET',
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+
+        const tx_id = data[0].txid
+        console.log(tx_id)
+
+        return tx_id
+    } catch (error) {
+        console.error('Mempool API Error', error)
+    }
+}

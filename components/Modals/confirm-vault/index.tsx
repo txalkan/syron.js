@@ -20,13 +20,22 @@ import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import { $xr } from '../../../src/store/xr'
-import { $syron } from '../../../src/store/syron'
+import { $btc_wallet, $syron } from '../../../src/store/syron'
 import { api } from '../../../src/utils/unisat/api'
 import {
     getStringByteCount,
     stringToBase64,
 } from '../../../src/utils/unisat/utils'
 import { InscribeOrderData } from '../../../src/utils/unisat/api-types'
+import useICPHook from '../../../src/hooks/useICP'
+import { useDispatch } from 'react-redux'
+import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
+import { mempoolTxId } from '../../../src/utils/unisat/httpUtils'
+import icoBalance from '../../../src/assets/icons/ssi_icon_balance.svg'
+import icoVault from '../../../src/assets/icons/ssi_icon_thunder.svg'
+import refreshIco from '../../../src/assets/icons/refresh.svg'
+import Spinner from '../../Spinner'
+import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -47,6 +56,11 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
 }) {
     const unisat = (window as any).unisat
     const tyron = useStore($syron)
+    const btc_wallet = useStore($btc_wallet)
+
+    const { updateWallet } = useBTCWalletHook()
+    const { getVault, getSUSD, updateVault } = useICPHook()
+    const dispatch = useDispatch()
 
     const [exactToken, limitToken] = pair
     const exactInput = exactToken.value
@@ -58,6 +72,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     // const liquidity = useStore($liquidity)
 
     const [loading, setLoading] = React.useState(false)
+
     // const [isAllow, setIsAllow] = React.useState(false)
     // const [priceRevert, setPriceRevert] = React.useState(true)
 
@@ -94,6 +109,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         let baseReserve = Big(0)
         let tokensReserve = Big(0)
 
+        //@review (asap)
         console.log('Review direction:', direction)
 
         // @review (syron)
@@ -206,23 +222,108 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         return loading || Big(priceInfo!.impact) > 10
     }, [priceInfo, loading])
 
-    // const lazyRoot = React.useRef(null)
+    const transaction_status = async (txId) => {
+        // @review (mainnet)
+        const url = `https://mempool.space/testnet/api/tx/${txId}/status`
+
+        while (true) {
+            try {
+                const response = await fetch(url, {
+                    method: 'GET',
+                })
+
+                if (!response.ok) {
+                    throw new Error(
+                        `API request failed with status ${response.status}`
+                    )
+                }
+
+                const data = await response.json()
+                console.log(JSON.stringify(data, null, 2))
+
+                if (!data.confirmed) {
+                    throw new Error(`Trying again`)
+                } else {
+                    return data
+                }
+            } catch (error) {
+                console.log(`Transaction status not confirmed. ${error}`)
+                await new Promise(
+                    (resolve) => setTimeout(resolve, 1 * 60 * 1000) // 1 min
+                )
+            }
+        }
+    }
+
+    const updateBalance = async () => {
+        const [address] = await unisat.getAccounts()
+        const balance = await unisat.getBalance()
+        const network = await unisat.getNetwork()
+        await updateWallet(address, Number(balance.confirmed), network)
+        await getVault(address, Number(balance.confirmed), network)
+        console.log('balance updated')
+    }
+
+    const mintStablecoin = async (tx_id) => {
+        console.log('TxId', tx_id)
+        await getSUSD(btc_wallet?.btc_addr!, tx_id)
+            .then(async (tx) => {
+                if (tx) {
+                    console.log('Get SU$D', tx)
+                    // dispatch(setTxStatusLoading('confirmed'))
+                }
+                await updateBalance()
+            })
+            .catch((err) => {
+                throw err
+            })
+    }
+
+    const updateVaultNow = async () => {
+        await updateVault(btc_wallet?.btc_addr!)
+            .then((tx) => {
+                if (tx) {
+                    console.log('Update Vault', tx)
+                }
+            })
+            .catch((err) => {
+                throw err
+            })
+    }
+
+    const updateBitcoinVault = async () => {
+        setLoading(true)
+        try {
+            await updateVaultNow().then(async (res) => await updateBalance())
+        } catch (error) {
+            console.error(error)
+        }
+        setLoading(false)
+    }
 
     const hanldeConfirm = React.useCallback(async () => {
         setLoading(true)
+
+        // @review (asap) transaction status modal not working - see dispatch(setTx
+        // dispatch(setTxStatusLoading('true'))
         try {
-            throw Error('Coming soon!')
-            if (tyron?.network == 'livenet') throw Error('Use Bitcoin Testnet')
+            // throw new Error('Coming soon!')
+            if (!btc_wallet?.btc_addr) {
+                throw new Error('Connect Wallet')
+            }
+
+            if (btc_wallet?.network == 'livenet')
+                throw new Error('Use Bitcoin Testnet')
 
             const collateral = Math.floor(Number(exactInput))
             if (collateral <= 1000)
-                throw Error('BTC deposit is below the minimum')
+                throw new Error('BTC deposit is below the minimum')
 
             const tick = 'SYRO'
             const amt = Number(limitInput.round(3))
 
-            console.log(collateral)
-            console.log(amt)
+            console.log('BTC Collateral', collateral)
+            console.log('Stablecoin Amount', amt)
 
             // const transfer = {
             //     p: 'brc-20',
@@ -336,6 +437,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             //     devFee: 1111, //Number(Big(exactToken.value)),
             // })
 
+            // @dev Transfer Inscription
             const order: InscribeOrderData = await api.createTransfer({
                 receiveAddress,
                 feeRate,
@@ -346,71 +448,40 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                 brc20Amount: String(amt),
             })
 
-            console.log(JSON.stringify(order))
-
-            const { txid } = await unisat.sendBitcoin(
-                order.payAddress,
-                order.amount,
-                order.feeRate
-            )
-
-            console.log(txid)
-            console.log(order.amount)
-            console.log(order.orderId)
-
+            console.log('Order', JSON.stringify(order, null, 2))
             // const order = await api.orderInfo(orderId)
+            // console.log('Order Value', order.amount)
+            // console.log('Order ID', order.orderId)
 
-            //console.log(JSON.stringify(order))
+            const pay_address = order.payAddress
 
-            // try {
-            //     let { txid } = await unisat.sendInscription(
-            //         syron?.ssi_vault,
-            //         orderId,
-            //         { feeRate: feeRate }
-            //     )
-            //     console.log(
-            //         'send Inscription 204 to tb1q8h8s4zd9y0lkrx334aqnj4ykqs220ss7mjxzny',
-            //         { txid }
-            //     )
-            // } catch (e) {
-            //     console.log(e)
-            // }
+            // @dev 1) Send Bitcoin transaction (#B1)
+            await unisat
+                .sendBitcoin(order.payAddress, order.amount, order.feeRate)
+                .then(async (txId) => {
+                    // dispatch(setTxId(txId))
+                    // dispatch(setTxStatusLoading('submitted'))
 
-            // await unisat.inscribeTransfer(tick, amt)
-
-            // const zilpay = await tokensMixin.zilpay.zilpay()
-
-            // if (!wallet || !zilpay.wallet.isEnable) {
-            //     await zilpay.wallet.connect()
-            // }
-
-            // switch (direction) {
-            //     case VaultDirection.Mint:
-            //         await vault.swapExactZILForTokens(
-            //             selectedDex,
-            //             exact,
-            //             limit,
-            //             pair[1].meta,
-            //             resolvedDomain,
-            //             zilpay_addr,
-            //             isDEFIx
-            //         )
-            //         setLoading(false)
-            //         onClose()
-            //         return
-            //     case VaultDirection.Burn:
-            //         await dex.swapExactTokensForZIL(
-            //             selectedDex,
-            //             exact,
-            //             limit,
-            //             pair[0].meta
-            //         )
-            //         setLoading(false)
-            //         onClose()
-            //         return
-            // }
+                    // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
+                    await transaction_status(txId).then(async (res) => {
+                        await api
+                            .orderInfo(order.orderId)
+                            .then((order_) => {
+                                const inscription_id =
+                                    order_.files[0].inscriptionId
+                                return inscription_id.slice(0, -2)
+                            })
+                            .then(
+                                // await mempoolTxId(pay_address).then(
+                                async (tx_id) => {
+                                    await mintStablecoin(tx_id)
+                                }
+                            )
+                    })
+                })
         } catch (err) {
             console.error(err)
+            // dispatch(setTxStatusLoading('rejected'))
 
             if (err == 'Error: Coming soon!') {
                 toast.info('Coming soon!', {
@@ -422,6 +493,20 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                     draggable: true,
                     progress: undefined,
                     toastId: 1,
+                })
+            } else if (
+                typeof err === 'object' &&
+                Object.keys(err!).length !== 0
+            ) {
+                toast.error('Request Rejected', {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 2,
                 })
             } else {
                 toast.error(String(err), {
@@ -458,7 +543,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                             <div className={styles.txtRow2}>
                                                 $
                                                 {Number(
-                                                    Big(xr!.rate).div(1e9)
+                                                    Big(xr!.rate)
                                                 ).toLocaleString()}
                                                 {/* <Image
                                                     src={
@@ -581,6 +666,101 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                     {/* <div onClick={onClose} className={styles.cancel}>
                         Cancel
                     </div> */}
+                    {tyron?.ssi_vault && (
+                        <div className={styles.vaultWrapper}>
+                            <p
+                                style={{
+                                    paddingLeft: '4px',
+                                    paddingTop: '4%',
+                                    textTransform: 'uppercase',
+                                    color: '#ffff32',
+                                }}
+                            >
+                                Your ₿itcoin Vault
+                                <span
+                                    onClick={updateBitcoinVault}
+                                    style={{
+                                        cursor: 'pointer',
+                                        paddingLeft: '8px',
+                                    }}
+                                >
+                                    {loading ? (
+                                        <Spinner />
+                                    ) : (
+                                        <Image
+                                            src={refreshIco}
+                                            alt="refresh-ico"
+                                            height="12"
+                                            width="12"
+                                        />
+                                    )}
+                                </span>
+                            </p>
+
+                            <p
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                }}
+                            >
+                                <Image
+                                    src={icoBalance}
+                                    alt={'BTC'}
+                                    height="17"
+                                    width="17"
+                                />
+                                <span
+                                    style={{
+                                        paddingLeft: '4px',
+                                        paddingRight: '8px',
+                                    }}
+                                >
+                                    Balance:{' '}
+                                    {Number(tyron?.vault_balance.div(1e8))}
+                                </span>
+                                <Image
+                                    src={icoBTC}
+                                    alt={'BTC'}
+                                    height="17"
+                                    width="17"
+                                />
+                            </p>
+                            <p
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <Image
+                                    src={icoVault}
+                                    alt={'BTC'}
+                                    height="17"
+                                    width="17"
+                                />
+                                <span style={{ paddingLeft: '4px' }}>
+                                    Address:
+                                    <span
+                                        onClick={() =>
+                                            window.open(
+                                                `https://mempool.space/testnet/address/${tyron?.ssi_vault}`
+                                            )
+                                        }
+                                        style={{
+                                            paddingLeft: '4px',
+                                            cursor: 'pointer',
+                                            textDecorationLine: 'underline',
+                                            textDecorationColor: '#ffff32',
+                                        }}
+                                    >
+                                        {tyron?.ssi_vault}
+                                    </span>
+                                </span>
+                            </p>
+                        </div>
+                    )}
                 </div>
             )}
         </>
