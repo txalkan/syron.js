@@ -125,6 +125,7 @@ type MinterArg = variant {
 
 // The result of an [update_balance] call.
 type UtxoStatus = variant {
+    TransferInscription: Utxo;
     // The minter ignored this UTXO because UTXO's value is too small to pay
     // the KYT fees. This state is final, retrying [update_balance] call will
     // have no effect on this UTXO.
@@ -173,8 +174,15 @@ type PendingUtxo = record {
     confirmations: nat32;
 };
 
+type MinterInfo = record {
+    min_confirmations : nat32;
+    retrieve_btc_min_amount : nat64;
+    kyt_fee : nat64;
+};
+
 service : (network, MinterArg) -> {
     "get_p2pkh_address": () -> (bitcoin_address);
+    "get_p2wpkh_address": () -> (bitcoin_address);
 
     "get_balance": (address: bitcoin_address) -> (satoshi);
 
@@ -205,7 +213,15 @@ service : (network, MinterArg) -> {
     //
     // * A BTC deposit was made to the bitcoin_address of the SSI Vault, which the
     //   [get_btc_address] endpoint returns.
-    update_balance : (record { owner: opt principal; subaccount : opt blob; ssi: text }) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
-    get_subaccount: ( ssi: bitcoin_address ) -> (blob);
-    get_xr: () -> (nat64);
+    "update_balance" : (record { owner: opt principal; subaccount : opt blob; ssi: text }) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
+    
+    "get_susd" : (record { ssi: text }, txid: text) -> (text);
+
+    "update_vault" : (record { ssi: text }) -> (text);
+    
+    "get_subaccount": ( ssi: bitcoin_address ) -> (blob);
+
+    "get_minter_info": () -> (MinterInfo) query;
+
+    "test" : () -> ( vec text);
 }

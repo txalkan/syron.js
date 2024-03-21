@@ -10,7 +10,7 @@ import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $syron } from '../../../src/store/syron'
+import { $btc_wallet, $syron } from '../../../src/store/syron'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 Big.PE = 999
@@ -40,6 +40,7 @@ export const VaultInput: React.FC<Prop> = ({
     onSwap = () => {},
 }) => {
     const syron = useStore($syron)
+    const btc_wallet = useStore($btc_wallet)
     const xr = useStore($xr)
 
     const addr_name = token?.symbol.toLowerCase()
@@ -52,7 +53,7 @@ export const VaultInput: React.FC<Prop> = ({
         const dec = 1e8
         val = value_.div(dec)
 
-        if (syron?.btc_balance) balance = syron.btc_balance
+        if (btc_wallet?.btc_balance) balance = btc_wallet.btc_balance
         bal = balance.div(dec)
 
         if (xr != null) worth_ = bal.mul(xr.rate)

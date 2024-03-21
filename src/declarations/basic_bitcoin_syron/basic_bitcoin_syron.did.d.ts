@@ -18,6 +18,11 @@ export interface InitArgs {
     susd_id: Principal
 }
 export type MinterArg = { Upgrade: [] | [UpgradeArgs] } | { Init: InitArgs }
+export interface MinterInfo {
+    retrieve_btc_min_amount: bigint
+    min_confirmations: number
+    kyt_fee: bigint
+}
 export type Mode =
     | { RestrictedTo: Array<Principal> }
     | { DepositsRestrictedTo: Array<Principal> }
@@ -65,6 +70,7 @@ export type UtxoStatus =
           }
       }
     | { Checked: Utxo }
+    | { TransferInscription: Utxo }
 export type bitcoin_address = string
 export type block_hash = Uint8Array | number[]
 export interface get_utxos_response {
@@ -90,10 +96,12 @@ export interface _SERVICE {
     get_balance: ActorMethod<[bitcoin_address], satoshi>
     get_btc_address: ActorMethod<[{ ssi: bitcoin_address }], bitcoin_address>
     get_current_fee_percentiles: ActorMethod<[], BigUint64Array | bigint[]>
+    get_minter_info: ActorMethod<[], MinterInfo>
     get_p2pkh_address: ActorMethod<[], bitcoin_address>
+    get_p2wpkh_address: ActorMethod<[], bitcoin_address>
     get_subaccount: ActorMethod<[bitcoin_address], Uint8Array | number[]>
+    get_susd: ActorMethod<[{ ssi: string }, string], string>
     get_utxos: ActorMethod<[bitcoin_address], get_utxos_response>
-    get_xr: ActorMethod<[], bigint>
     send: ActorMethod<
         [
             {
@@ -103,6 +111,7 @@ export interface _SERVICE {
         ],
         transaction_id
     >
+    test: ActorMethod<[], Array<string>>
     update_balance: ActorMethod<
         [
             {
@@ -113,6 +122,7 @@ export interface _SERVICE {
         ],
         { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
     >
+    update_vault: ActorMethod<[{ ssi: string }], string>
 }
 export declare const idlFactory: IDL.InterfaceFactory
 export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[]
