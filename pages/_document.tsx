@@ -12,8 +12,8 @@ class MyDocument extends Document {
                 <Head>
                     <link
                         rel="icon"
-                        href="/tyron/ssi_tyron.png"
-                        type="image/png"
+                        href="ssi_tyron.svg"
+                        type="image/svg+xml"
                         sizes="16x16"
                     />
                     <meta name="title" content="TYRON" />
@@ -21,7 +21,7 @@ class MyDocument extends Document {
                         name="description"
                         content="₿e Your ₿ank | Trustless stablecoin metaprotocol to increase your BTC capital efficiency on Bitcoin Layer 1"
                     />
-                    <meta property="og:image" content="/tyron/ssi_tyron.svg" />
+                    <meta property="og:image" content="ssi_tyron.png" />
                     <meta property="og:title" content="TYRON" />
                 </Head>
                 <body>

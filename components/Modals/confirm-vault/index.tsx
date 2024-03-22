@@ -493,6 +493,10 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                         await api
                             .orderInfo(order.orderId)
                             .then((order_) => {
+                                console.log(
+                                    'Order From OrderId',
+                                    JSON.stringify(order_, null, 2)
+                                )
                                 const inscription_id =
                                     order_.files[0].inscriptionId
                                 return inscription_id.slice(0, -2)
@@ -510,7 +514,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                 window.open(
                     `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
                 )
-            }, 2 * 60 * 1000)
+            }, 1 * 60 * 1000)
         } catch (err) {
             console.error(err)
             // dispatch(setTxStatusLoading('rejected'))

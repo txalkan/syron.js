@@ -88,7 +88,6 @@ export const VaultInput: React.FC<Prop> = ({
                 if (target.value) {
                     // @review (dec)
                     const input = Big(target.value).mul(1e8)
-                    console.log(String(input))
                     onInput(input)
                 } else {
                     onInput(Big(0))
