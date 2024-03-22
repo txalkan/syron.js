@@ -257,6 +257,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             toastId: 4,
                         }
                     )
+                    await updateBalance()
                     return data
                 }
             } catch (error) {
@@ -285,7 +286,6 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                     console.log('Get SU$D', tx)
                     // dispatch(setTxStatusLoading('confirmed'))
                 }
-                await updateBalance()
             })
             .catch((err) => {
                 throw err
