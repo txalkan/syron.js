@@ -100,6 +100,13 @@ export const VaultInput: React.FC<Prop> = ({
         [onInput]
     )
 
+    const formatValue = (val: Big) => {
+        if (val.eq(0)) {
+            return 0
+        }
+        return Number(val).toFixed(8)
+    }
+
     return (
         <label>
             <div className={classNames(styles.container)}>
@@ -159,7 +166,7 @@ export const VaultInput: React.FC<Prop> = ({
                             type="number"
                             placeholder="0"
                             onInput={handleOnInput}
-                            value={Number(val)}
+                            value={formatValue(val)}
                             disabled={disabled}
                             step={0.00000001}
                         />

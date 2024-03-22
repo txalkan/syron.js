@@ -244,6 +244,19 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                 if (!data.confirmed) {
                     throw new Error(`Trying again`)
                 } else {
+                    toast.info(
+                        'BTC deposit confirmed, now requesting stablecoins.',
+                        {
+                            position: 'bottom-center',
+                            autoClose: 2000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                            progress: undefined,
+                            toastId: 4,
+                        }
+                    )
                     return data
                 }
             } catch (error) {
@@ -302,6 +315,19 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     }
 
     const hanldeConfirm = React.useCallback(async () => {
+        toast.info(
+            'Your request will be processed on Bitcoin. It can take around 30 minutes to complete.',
+            {
+                position: 'bottom-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId: 5,
+            }
+        )
         setLoading(true)
 
         // @review (asap) transaction status modal not working - see dispatch(setTx
@@ -479,6 +505,9 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             )
                     })
                 })
+            window.open(
+                `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
+            )
         } catch (err) {
             console.error(err)
             // dispatch(setTxStatusLoading('rejected'))
@@ -517,7 +546,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    toastId: 2,
+                    toastId: 3,
                 })
             }
         }
@@ -538,7 +567,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                     <>
                                         <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
-                                                {pair[0].meta.name} price
+                                                {pair[0].meta.name} Price
                                             </div>
                                             <div className={styles.txtRow2}>
                                                 $
@@ -563,7 +592,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                         </div>
                                         <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
-                                                Collateralization ratio
+                                                Collateralization Ratio
                                             </div>
                                             <div className={styles.txtRow2}>
                                                 1.5
@@ -674,10 +703,11 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                     paddingTop: '4%',
                                     textTransform: 'uppercase',
                                     color: '#ffff32',
+                                    fontWeight: '900',
                                 }}
                             >
                                 Your ₿itcoin Vault
-                                <span
+                                {/* <span @review
                                     onClick={updateBitcoinVault}
                                     style={{
                                         cursor: 'pointer',
@@ -694,7 +724,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                             width="12"
                                         />
                                     )}
-                                </span>
+                                </span> */}
                             </p>
 
                             <p
