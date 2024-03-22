@@ -505,9 +505,12 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             )
                     })
                 })
-            window.open(
-                `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
-            )
+
+            setTimeout(() => {
+                window.open(
+                    `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
+                )
+            }, 2 * 60 * 1000)
         } catch (err) {
             console.error(err)
             // dispatch(setTxStatusLoading('rejected'))
