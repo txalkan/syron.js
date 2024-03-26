@@ -100,10 +100,21 @@ export const VaultInput: React.FC<Prop> = ({
     )
 
     const formatValue = (val: Big) => {
+        // Handle zero case
         if (val.eq(0)) {
             return 0
         }
-        return Number(val).toFixed(8)
+
+        // Convert to string and remove trailing zeros
+        const formattedValue = val.toString().replace(/0+$/, '')
+
+        // Limit decimal places to 8 (including the decimal point)
+        if (formattedValue.indexOf('.') !== -1) {
+            return formattedValue.slice(0, formattedValue.indexOf('.') + 9)
+        } else {
+            // No decimal point, return the value itself
+            return formattedValue
+        }
     }
 
     return (

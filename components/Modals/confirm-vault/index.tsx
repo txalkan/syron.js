@@ -314,20 +314,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         setLoading(false)
     }
 
-    const hanldeConfirm = React.useCallback(async () => {
-        toast.info(
-            'Your request will be processed on Bitcoin. It can take around 30 minutes to complete.',
-            {
-                position: 'bottom-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                toastId: 5,
-            }
-        )
+    const handleConfirm = React.useCallback(async () => {
         setLoading(true)
 
         // @review (asap) transaction status modal not working - see dispatch(setTx
@@ -345,6 +332,19 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             if (collateral <= 1000)
                 throw new Error('BTC deposit is below the minimum')
 
+            toast.info(
+                'Your request will be processed on Bitcoin. It can take around 30 minutes to complete.',
+                {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 5,
+                }
+            )
             const tick = 'SYRO'
             const amt = Number(limitInput.round(3))
 
@@ -683,18 +683,20 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             className={`button ${
                                 disabled ? 'disabled' : 'primary'
                             }`}
-                            onClick={hanldeConfirm}
+                            onClick={
+                                handleConfirm
+                                // @review (wallet) - else: connect wallet (see dashboard)
+                            }
                             // disabled={disabled}
                         >
                             {loading ? (
                                 <ThreeDots color="yellow" />
                             ) : (
-                                // <ThreeDots
-                                //   color="var(--button-color)"
-                                //   height={25}
-                                //   width={50}
-                                // />
-                                // <>{isAllow ? 'CONFIRM SWAP' : 'APPROVE'}</>
+                                // <>
+                                //     {btc_wallet != null
+                                //         ? 'get su$d'
+                                //         : 'connect wallet'}
+                                // </>
                                 'get su$d'
                             )}
                         </div>
