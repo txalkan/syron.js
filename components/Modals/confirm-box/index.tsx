@@ -49,7 +49,7 @@ type Prop = {
 
 const vault = new SSIVault()
 
-export var ConfirmVaultModal: React.FC<Prop> = function ({
+export var ConfirmBox: React.FC<Prop> = function ({
     pair,
     direction,
     // onClose,
@@ -59,7 +59,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     const btc_wallet = useStore($btc_wallet)
 
     const { updateWallet } = useBTCWalletHook()
-    const { getVault, getSUSD, updateVault } = useICPHook()
+    const { getBox, getSUSD, getSyron } = useICPHook()
     const dispatch = useDispatch()
 
     const [exactToken, limitToken] = pair
@@ -71,7 +71,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     //const settings = useStore($settings)
     // const liquidity = useStore($liquidity)
 
-    const [loading, setLoading] = React.useState(false)
+    const [loadingTxn, setLoading] = React.useState(false)
 
     // const [isAllow, setIsAllow] = React.useState(false)
     // const [priceRevert, setPriceRevert] = React.useState(true)
@@ -219,8 +219,8 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
     }, []) //direction, pair])
 
     const disabled = React.useMemo(() => {
-        return loading || Big(priceInfo!.impact) > 10
-    }, [priceInfo, loading])
+        return loadingTxn || Big(priceInfo!.impact) > 10 || tyron == null
+    }, [priceInfo, loadingTxn, tyron])
 
     const transaction_status = async (txId) => {
         // @review (mainnet)
@@ -274,16 +274,16 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
         await updateWallet(address, Number(balance.confirmed), network)
-        await getVault(address, Number(balance.confirmed), network)
+        await getBox(address, Number(balance.confirmed), network)
         console.log('balance updated')
     }
 
     const mintStablecoin = async (tx_id) => {
-        console.log('TxId', tx_id)
+        console.log('Deposit Transaction ID #2', tx_id)
         await getSUSD(btc_wallet?.btc_addr!, tx_id)
             .then(async (tx) => {
                 if (tx) {
-                    console.log('Get SU$D', tx)
+                    console.log('Get SU$D ICP ID', tx)
                     // dispatch(setTxStatusLoading('confirmed'))
                 }
             })
@@ -292,11 +292,11 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             })
     }
 
-    const updateVaultNow = async () => {
-        await updateVault(btc_wallet?.btc_addr!)
+    const getSyronNow = async () => {
+        await getSyron(btc_wallet?.btc_addr!)
             .then((tx) => {
                 if (tx) {
-                    console.log('Update Vault', tx)
+                    console.log('Get Syron ICP ID', tx)
                 }
             })
             .catch((err) => {
@@ -304,10 +304,10 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             })
     }
 
-    const updateBitcoinVault = async () => {
+    const updateBox = async () => {
         setLoading(true)
         try {
-            await updateVaultNow().then(async (res) => await updateBalance())
+            await getSyronNow().then(async (res) => await updateBalance())
         } catch (error) {
             console.error(error)
         }
@@ -468,7 +468,10 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                 receiveAddress,
                 feeRate,
                 outputValue: 546,
-                devAddress: tyron?.ssi_vault!,
+                devAddress:
+                    tyron == null
+                        ? 'tb1pduxfg234ckmc3mq5znzhhtgukg79c3emc9d42twafhdcgk5rgxcqxwpu35' //@review (mainnet)
+                        : tyron.ssi_box,
                 devFee: collateral,
                 brc20Ticker: tick,
                 brc20Amount: String(amt),
@@ -485,11 +488,14 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
             await unisat
                 .sendBitcoin(order.payAddress, order.amount, order.feeRate)
                 .then(async (txId) => {
+                    console.log('Deposit Transaction ID #1', txId)
                     // dispatch(setTxId(txId))
                     // dispatch(setTxStatusLoading('submitted'))
 
                     // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
-                    await transaction_status(txId).then(async (res) => {
+                    // @update using 0 confirmations on testnet
+                    // await transaction_status(txId).then(async (res) => {
+                    setTimeout(async () => {
                         await api
                             .orderInfo(order.orderId)
                             .then((order_) => {
@@ -504,17 +510,18 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             .then(
                                 // await mempoolTxId(pay_address).then(
                                 async (tx_id) => {
-                                    await mintStablecoin(tx_id)
+                                    setTimeout(async () => {
+                                        await mintStablecoin(tx_id)
+                                        window.open(
+                                            `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
+                                        )
+                                        setLoading(false)
+                                    }, 5 * 60 * 1000)
                                 }
                             )
-                    })
+                    }, 30000)
+                    // })
                 })
-
-            setTimeout(() => {
-                window.open(
-                    `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
-                )
-            }, 1 * 60 * 1000)
         } catch (err) {
             console.error(err)
             // dispatch(setTxStatusLoading('rejected'))
@@ -556,10 +563,9 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                     toastId: 3,
                 })
             }
+            setLoading(false)
         }
-
-        setLoading(false)
-    }, [pair, /*limit,*/ direction, tyron /*onClose*/])
+    }, [pair, /*limit,*/ direction /*onClose*/, tyron])
 
     const xr = useStore($xr)
 
@@ -599,10 +605,10 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                         </div>
                                         <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
-                                                Collateralization Ratio
+                                                Collateral Ratio
                                             </div>
                                             <div className={styles.txtRow2}>
-                                                1.5
+                                                1.5:1
                                             </div>
                                         </div>
                                         {/* <div className={styles.rowLiq}>
@@ -689,7 +695,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                             }
                             // disabled={disabled}
                         >
-                            {loading ? (
+                            {disabled ? (
                                 <ThreeDots color="yellow" />
                             ) : (
                                 // <>
@@ -697,14 +703,14 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                 //         ? 'get su$d'
                                 //         : 'connect wallet'}
                                 // </>
-                                'get su$d'
+                                'confirm'
                             )}
                         </div>
                     </div>
                     {/* <div onClick={onClose} className={styles.cancel}>
                         Cancel
                     </div> */}
-                    {tyron?.ssi_vault && (
+                    {tyron?.ssi_box && (
                         <div className={styles.vaultWrapper}>
                             <p
                                 style={{
@@ -715,7 +721,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                     fontWeight: '900',
                                 }}
                             >
-                                Your ₿itcoin Vault
+                                Your Safety Deposit ₿ox
                                 {/* <span @review
                                     onClick={updateBitcoinVault}
                                     style={{
@@ -755,7 +761,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                     }}
                                 >
                                     Balance:{' '}
-                                    {Number(tyron?.vault_balance.div(1e8))}
+                                    {Number(tyron?.box_balance.div(1e8))}
                                 </span>
                                 <Image
                                     src={icoBTC}
@@ -784,7 +790,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                     <span
                                         onClick={() =>
                                             window.open(
-                                                `https://mempool.space/testnet/address/${tyron?.ssi_vault}`
+                                                `https://mempool.space/testnet/address/${tyron?.ssi_box}`
                                             )
                                         }
                                         style={{
@@ -794,7 +800,7 @@ export var ConfirmVaultModal: React.FC<Prop> = function ({
                                             textDecorationColor: '#ffff32',
                                         }}
                                     >
-                                        {tyron?.ssi_vault}
+                                        {tyron?.ssi_box}
                                     </span>
                                 </span>
                             </p>

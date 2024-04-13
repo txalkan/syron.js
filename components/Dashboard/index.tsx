@@ -44,7 +44,7 @@ export const AuthContext = createContext(defaultValue)
 
 function Component() {
     const { updateWallet } = useBTCWalletHook()
-    const { getVault } = useICPHook()
+    const { getBox } = useICPHook()
     const { getXR } = useMempoolHook()
 
     const dispatch = useDispatch()
@@ -134,7 +134,7 @@ function Component() {
     //                     ordinalsAddress: ordinalsAddressItem?.address!,
     //                     ordinalsPublicKey: ordinalsAddressItem?.publicKey!,
     //                 })
-    //                 await getVault(paymentAddressItem?.address!)
+    //                 await getBox(paymentAddressItem?.address!)
     //             },
     //             onCancel: () => alert('Request canceled'),
     //         })
@@ -196,7 +196,7 @@ function Component() {
     useEffect(() => {
         async function update() {
             await updateWallet(address_, Number(balance_.confirmed), network_) //@review (mainnet) showcase unconfirmed too
-            await getVault(address_, Number(balance_.confirmed), network_)
+            await getBox(address_, Number(balance_.confirmed), network_)
         }
         update()
     }, [address_, balance_, network_])

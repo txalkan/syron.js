@@ -94,7 +94,7 @@ export interface utxo {
 }
 export interface _SERVICE {
     get_balance: ActorMethod<[bitcoin_address], satoshi>
-    get_btc_address: ActorMethod<[{ ssi: bitcoin_address }], bitcoin_address>
+    get_box_address: ActorMethod<[{ ssi: bitcoin_address }], bitcoin_address>
     get_current_fee_percentiles: ActorMethod<[], BigUint64Array | bigint[]>
     get_minter_info: ActorMethod<[], MinterInfo>
     get_p2pkh_address: ActorMethod<[], bitcoin_address>
@@ -122,7 +122,7 @@ export interface _SERVICE {
         ],
         { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
     >
-    update_vault: ActorMethod<[{ ssi: string }], string>
+    update_ssi: ActorMethod<[{ ssi: string }], string>
 }
 export declare const idlFactory: IDL.InterfaceFactory
 export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[]

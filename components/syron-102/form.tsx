@@ -5,7 +5,7 @@ import { useStore } from 'react-stores'
 import { SwapSettings } from './settings'
 import { VaultInput } from './input'
 import { TokenInput } from './token'
-import { VaultOutput } from './vault-output'
+import { TransactionOutput } from './txn-output'
 import { $tokens } from '../../src/store/tokens'
 import { VaultPair } from '../../src/types/vault'
 import { TokensModal } from '../Modals/tokens'
@@ -15,7 +15,7 @@ import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
 import Image from 'next/image'
 import { SSIVault } from '../../src/mixins/vault'
-import { ConfirmVaultModal } from '../Modals/confirm-vault'
+import { ConfirmBox } from '../Modals/confirm-box'
 import { $xr } from '../../src/store/xr'
 
 type Prop = {
@@ -153,7 +153,9 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 height="22"
                                 width="22"
                             />
-                            <div className={styles.titleForm2}>Deposit</div>
+                            <div className={styles.titleForm2}>
+                                Deposit Bitcoin
+                            </div>
                         </div>
 
                         <VaultInput
@@ -174,7 +176,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 height="22"
                                 width="22"
                             />
-                            <div className={styles.titleForm2}>To get</div>
+                            <div className={styles.titleForm2}>Get Syron</div>
                         </div>
                         <TokenInput
                             token={vault_pair[1].meta}
@@ -184,14 +186,14 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                     <div style={{ width: '100%' }}>
                         {Number(amount) !== 0 && (
                             <>
-                                <VaultOutput
+                                <TransactionOutput
                                     amount={amount}
                                     token={vault_pair[1].meta}
                                 />
 
                                 {/* {confirmModal ? ( */}
 
-                                <ConfirmVaultModal
+                                <ConfirmBox
                                     show={confirmModal}
                                     pair={vault_pair}
                                     direction={direction}

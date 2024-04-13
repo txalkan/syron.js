@@ -14,7 +14,7 @@ type Prop = {
     token: CryptoState
 }
 
-export const VaultOutput: React.FC<Prop> = ({ amount, token }) => {
+export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
     return (
         <div className={styles.container}>
             <div className={styles.formWrapper}>
@@ -29,7 +29,9 @@ export const VaultOutput: React.FC<Prop> = ({ amount, token }) => {
                                 />
                             </div> */}
                             {/* be your bank */}
-                            <div className={styles.dexName}>₿e Your ₿ank</div>
+                            <div className={styles.dexName}>
+                                Syron U$ Dollars
+                            </div>
                         </div>
                         <div className={styles.output}>
                             <Image

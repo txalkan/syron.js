@@ -181,8 +181,8 @@ type MinterInfo = record {
 };
 
 service : (network, MinterArg) -> {
-    "get_p2pkh_address": () -> (bitcoin_address);
-    "get_p2wpkh_address": () -> (bitcoin_address);
+    "get_p2pkh_address": () -> (bitcoin_address) query;
+    "get_p2wpkh_address": () -> (bitcoin_address) query;
 
     "get_balance": (address: bitcoin_address) -> (satoshi);
 
@@ -197,11 +197,7 @@ service : (network, MinterArg) -> {
 
     // Returns the bitcoin address to which the user should send BTC
     // to get SU$D using the [update_balance] endpoint.
-    //
-    // If the owner is not set, it defaults to the caller's principal.
-    "get_btc_address": (record {
-      /*owner: opt principal;
-      subaccount : opt blob;*/
+    "get_box_address": (record {
       ssi: bitcoin_address
     }) -> (bitcoin_address);
 
@@ -217,7 +213,7 @@ service : (network, MinterArg) -> {
     
     "get_susd" : (record { ssi: text }, txid: text) -> (text);
 
-    "update_vault" : (record { ssi: text }) -> (text);
+    "update_ssi" : (record { ssi: text }) -> (text);
     
     "get_subaccount": ( ssi: bitcoin_address ) -> (blob);
 

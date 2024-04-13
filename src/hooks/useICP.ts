@@ -1,4 +1,4 @@
-import { basic_bitcoin_syron as syron } from '../declarations/basic_bitcoin_syron'
+import { basic_bitcoin_syron as syron } from '../declarations/basic_bitcoin_tyron'
 import { updateSyronSSI } from '../store/syron'
 import Big from 'big.js'
 import { updateXR } from '../store/xr'
@@ -6,19 +6,19 @@ import { updateXR } from '../store/xr'
 Big.PE = 999
 
 function useICPHook() {
-    const getVault = async (ssi: string, balance: number, network: string) => {
+    const getBox = async (ssi: string, balance: number, network: string) => {
         try {
             console.log('Satoshis', balance)
 
             if (balance != 0) {
-                const vault = await syron.get_btc_address({ ssi })
-                console.log('Vault', vault)
+                const box = await syron.get_box_address({ ssi })
+                console.log('Safety Deposit Box', box)
 
-                const vault_balance = await syron.get_balance(vault)
+                const box_balance = await syron.get_balance(box)
 
                 updateSyronSSI({
-                    ssi_vault: vault,
-                    vault_balance: Big(Number(vault_balance)),
+                    ssi_box: box,
+                    box_balance: Big(Number(box_balance)),
                 })
             }
         } catch (err) {
@@ -46,19 +46,19 @@ function useICPHook() {
         }
     }
 
-    const updateVault = async (ssi: string) => {
+    const getSyron = async (ssi: string) => {
         try {
-            const txId = await syron.update_vault({ ssi })
+            const txId = await syron.update_ssi({ ssi })
             return txId
         } catch (err) {
-            console.error('useICP_updateVault', err)
+            console.error('useICP_updateSSI', err)
         }
     }
 
     return {
-        getVault,
+        getBox,
         getSUSD,
-        updateVault,
+        getSyron,
     }
 }
 

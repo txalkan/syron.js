@@ -99,7 +99,7 @@ export const idlFactory = ({ IDL }) => {
     })
     return IDL.Service({
         get_balance: IDL.Func([bitcoin_address], [satoshi], []),
-        get_btc_address: IDL.Func(
+        get_box_address: IDL.Func(
             [IDL.Record({ ssi: bitcoin_address })],
             [bitcoin_address],
             []
@@ -110,8 +110,8 @@ export const idlFactory = ({ IDL }) => {
             []
         ),
         get_minter_info: IDL.Func([], [MinterInfo], ['query']),
-        get_p2pkh_address: IDL.Func([], [bitcoin_address], []),
-        get_p2wpkh_address: IDL.Func([], [bitcoin_address], []),
+        get_p2pkh_address: IDL.Func([], [bitcoin_address], ['query']),
+        get_p2wpkh_address: IDL.Func([], [bitcoin_address], ['query']),
         get_subaccount: IDL.Func([bitcoin_address], [IDL.Vec(IDL.Nat8)], []),
         get_susd: IDL.Func(
             [IDL.Record({ ssi: IDL.Text }), IDL.Text],
@@ -146,7 +146,7 @@ export const idlFactory = ({ IDL }) => {
             ],
             []
         ),
-        update_vault: IDL.Func([IDL.Record({ ssi: IDL.Text })], [IDL.Text], []),
+        update_ssi: IDL.Func([IDL.Record({ ssi: IDL.Text })], [IDL.Text], []),
     })
 }
 export const init = ({ IDL }) => {
