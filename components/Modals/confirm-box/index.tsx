@@ -376,7 +376,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // const fileCount = 1 // the fileCount
             // const fileSize = 1000 // the total size of all files
             // const contentTypeSize = 100 // the size of contentType
-            const feeRate = 1 // the feeRate @review (mainnet)
+            const feeRate = 20 // the feeRate @review (mainnet)
             // const feeFileSize = 100 // the total size of first 25 files
             // const feeFileCount = 25 // do not change this
 
@@ -482,8 +482,6 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // console.log('Order Value', order.amount)
             // console.log('Order ID', order.orderId)
 
-            const pay_address = order.payAddress
-
             // @dev 1) Send Bitcoin transaction (#B1)
             await unisat
                 .sendBitcoin(order.payAddress, order.amount, order.feeRate)
@@ -493,34 +491,34 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     // dispatch(setTxStatusLoading('submitted'))
 
                     // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
-                    // @update using 0 confirmations on testnet
-                    // await transaction_status(txId).then(async (res) => {
-                    setTimeout(async () => {
-                        await api
-                            .orderInfo(order.orderId)
-                            .then((order_) => {
-                                console.log(
-                                    'Order From OrderId',
-                                    JSON.stringify(order_, null, 2)
+
+                    await transaction_status(txId).then(async (res) => {
+                        setTimeout(async () => {
+                            await api
+                                .orderInfo(order.orderId)
+                                .then((order_) => {
+                                    console.log(
+                                        'Order From OrderId',
+                                        JSON.stringify(order_, null, 2)
+                                    )
+                                    const inscription_id =
+                                        order_.files[0].inscriptionId
+                                    return inscription_id.slice(0, -2)
+                                })
+                                .then(
+                                    // await mempoolTxId(order.payAddress).then(
+                                    async (tx_id) => {
+                                        setTimeout(async () => {
+                                            await mintStablecoin(tx_id)
+                                            window.open(
+                                                `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
+                                            )
+                                            setLoading(false)
+                                        }, 5 * 60 * 1000)
+                                    }
                                 )
-                                const inscription_id =
-                                    order_.files[0].inscriptionId
-                                return inscription_id.slice(0, -2)
-                            })
-                            .then(
-                                // await mempoolTxId(pay_address).then(
-                                async (tx_id) => {
-                                    setTimeout(async () => {
-                                        await mintStablecoin(tx_id)
-                                        window.open(
-                                            `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
-                                        )
-                                        setLoading(false)
-                                    }, 5 * 60 * 1000)
-                                }
-                            )
-                    }, 30000)
-                    // })
+                        }, 30000)
+                    })
                 })
         } catch (err) {
             console.error(err)
@@ -685,6 +683,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 justifyContent: 'center',
                                 alignItems: 'center',
                                 marginTop: '1rem',
+                                cursor: 'pointer',
                             }}
                             className={`button ${
                                 disabled ? 'disabled' : 'primary'
