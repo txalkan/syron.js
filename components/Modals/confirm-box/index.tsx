@@ -320,7 +320,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
-            // throw new Error('Coming soon!')
+            throw new Error('Coming soon!')
             if (!btc_wallet?.btc_addr) {
                 throw new Error('Connect Wallet')
             }
@@ -463,15 +463,19 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     devFee: 1111, //Number(Big(exactToken.value)),
             // })
 
+            let box_addr =
+                'tb1pduxfg234ckmc3mq5znzhhtgukg79c3emc9d42twafhdcgk5rgxcqxwpu35' //@review (mainnet)
+
+            if (tyron !== null) {
+                box_addr = tyron?.ssi_box!
+            }
+
             // @dev Transfer Inscription
             const order: InscribeOrderData = await api.createTransfer({
                 receiveAddress,
                 feeRate,
                 outputValue: 546,
-                devAddress:
-                    tyron == null
-                        ? 'tb1pduxfg234ckmc3mq5znzhhtgukg79c3emc9d42twafhdcgk5rgxcqxwpu35' //@review (mainnet)
-                        : tyron.ssi_box,
+                devAddress: box_addr,
                 devFee: collateral,
                 brc20Ticker: tick,
                 brc20Amount: String(amt),
@@ -493,31 +497,27 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
 
                     await transaction_status(txId).then(async (res) => {
-                        setTimeout(async () => {
-                            await api
-                                .orderInfo(order.orderId)
-                                .then((order_) => {
-                                    console.log(
-                                        'Order From OrderId',
-                                        JSON.stringify(order_, null, 2)
-                                    )
-                                    const inscription_id =
-                                        order_.files[0].inscriptionId
-                                    return inscription_id.slice(0, -2)
-                                })
-                                .then(
-                                    // await mempoolTxId(order.payAddress).then(
-                                    async (tx_id) => {
-                                        setTimeout(async () => {
-                                            await mintStablecoin(tx_id)
-                                            window.open(
-                                                `https://testnet.unisat.io/brc20?q=${btc_wallet.btc_addr}&tick=SYRO`
-                                            )
-                                            setLoading(false)
-                                        }, 5 * 60 * 1000)
-                                    }
+                        await api
+                            .orderInfo(order.orderId)
+                            .then((order_) => {
+                                console.log(
+                                    'Order From OrderId',
+                                    JSON.stringify(order_, null, 2)
                                 )
-                        }, 30000)
+                                const inscription_id =
+                                    order_.files[0].inscriptionId
+                                return inscription_id.slice(0, -2)
+                            })
+                            .then(
+                                // await mempoolTxId(order.payAddress).then(
+                                async (tx_id) => {
+                                    await mintStablecoin(tx_id)
+                                    window.open(
+                                        `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
+                                    )
+                                    setLoading(false)
+                                }
+                            )
                     })
                 })
         } catch (err) {
