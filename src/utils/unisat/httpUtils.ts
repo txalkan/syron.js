@@ -139,3 +139,39 @@ export async function mempoolTxId(address: string) {
         console.error('Mempool API Error', error)
     }
 }
+
+export async function mempoolFeeRate() {
+    try {
+        const url =
+            'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h'
+
+        const response = await fetch(url, {
+            method: 'GET',
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+        console.log(JSON.stringify(data, null, 2))
+
+        // Extract gas fees for the 90th percentile from the last 3 blocks
+        const lastBlocks = data.slice(-20)
+        const percentiles = lastBlocks
+            .map((block: { avgFee_75 }) => {
+                const fee = block.avgFee_75
+                return fee === 0 ? undefined : fee // Exclude zero values
+            })
+            .filter((value) => value !== undefined) as number[] // Filter out undefined values
+
+        console.log(JSON.stringify(percentiles))
+        // Calculate the average
+        const sum = percentiles.reduce((acc, value) => acc + value, 0)
+        const average = Math.ceil(sum / percentiles.length)
+
+        return average
+    } catch (error) {
+        console.error('Mempool API Error', error)
+    }
+}

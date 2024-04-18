@@ -30,7 +30,10 @@ import { InscribeOrderData } from '../../../src/utils/unisat/api-types'
 import useICPHook from '../../../src/hooks/useICP'
 import { useDispatch } from 'react-redux'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
-import { mempoolTxId } from '../../../src/utils/unisat/httpUtils'
+import {
+    mempoolTxId,
+    mempoolFeeRate,
+} from '../../../src/utils/unisat/httpUtils'
 import icoBalance from '../../../src/assets/icons/ssi_icon_balance.svg'
 import icoVault from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import refreshIco from '../../../src/assets/icons/refresh.svg'
@@ -320,7 +323,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
-            throw new Error('Coming soon!')
+            // throw new Error('Coming soon!')
             if (!btc_wallet?.btc_addr) {
                 throw new Error('Connect Wallet')
             }
@@ -376,7 +379,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // const fileCount = 1 // the fileCount
             // const fileSize = 1000 // the total size of all files
             // const contentTypeSize = 100 // the size of contentType
-            const feeRate = 20 // the feeRate @review (mainnet)
+
+            // @dev The transaction fee rate in sat/vB @review (mainnet)
+            let feeRate = await mempoolFeeRate()
+            console.log('Fee Rate', feeRate)
+
+            if (!feeRate) {
+                feeRate = 20
+            }
+
             // const feeFileSize = 100 // the total size of first 25 files
             // const feeFileCount = 25 // do not change this
 
@@ -576,7 +587,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             {priceInfo!.input !== '0' &&
                                 priceInfo!.output !== '0' && (
                                     <>
-                                        <div className={styles.rowLiq}>
+                                        {/* <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
                                                 {pair[0].meta.name} Price
                                             </div>
@@ -585,22 +596,8 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                                 {Number(
                                                     Big(xr!.rate)
                                                 ).toLocaleString()}
-                                                {/* <Image
-                                                    src={
-                                                        pair[0].meta.symbol ===
-                                                        'BTC'
-                                                            ? icoBTC
-                                                            : icoSU$D
-                                                    }
-                                                    alt={pair[0].meta.symbol}
-                                                    lazyRoot={
-                                                        lazyRoot as unknown as string
-                                                    }
-                                                    height="17"
-                                                    width="17"
-                                                /> */}
                                             </div>
-                                        </div>
+                                        </div> */}
                                         <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
                                                 Collateral Ratio

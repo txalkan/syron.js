@@ -128,7 +128,11 @@ export const VaultInput: React.FC<Prop> = ({
                     ) : (
                         <>
                             <div className={styles.balanceTxt}>
-                                &nbsp;| Balance:{' '}
+                                &nbsp;| price of 1 BTC: $
+                                {Number(Big(xr!.rate)).toLocaleString()}
+                            </div>
+                            <div className={styles.balanceTxt}>
+                                &nbsp;| your balance:{' '}
                                 {isNaN(Number(bal))
                                     ? 'Connect Wallet'
                                     : `${Number(bal)} ${token?.symbol}`}
