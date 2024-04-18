@@ -16,7 +16,7 @@ import Tydra from '../../../components/SSI/Tydra'
 import React from 'react'
 import { useStore } from 'react-stores'
 import { $wallet } from '../../../src/store/wallet'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 
 function Header() {
     //@review: loading tydra
@@ -38,7 +38,7 @@ function Header() {
     // }, [])
 
     const wallet = useStore($wallet)
-    const { resolveUser } = fetch()
+    const { resolveUser } = useFetch()
     React.useEffect(() => {
         console.log('/didx: wallet updated')
         resolveUser()

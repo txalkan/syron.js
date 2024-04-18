@@ -39,7 +39,7 @@ import {
 import { DragonDex } from '../../../src/mixins/dex'
 import { $settings } from '../../../src/store/settings'
 // @ssibrowser
-import routerHook from '../../../src/hooks/router'
+import useRouterHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { $wallet } from '../../../src/store/wallet'
 import { updateDex } from '../../../src/store/dex'
@@ -60,7 +60,7 @@ type Prop = {
 const dex = new DragonDex()
 export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     // const pool = useTranslation(`pool`)
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const wallet = useStore($wallet)
     // const liquidity = useStore($liquidity)
     const tokensStore = useStore($tokens)

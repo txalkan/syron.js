@@ -25,7 +25,7 @@ import Spinner from '../../Spinner'
 import { AddFunds, Donate, SearchBarWallet, Selector } from '../..'
 import { useTranslation } from 'next-i18next'
 import smartContract from '../../../src/utils/smartContract'
-import routerHook from '../../../src/hooks/router'
+import useRouterHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import Tydra from '../../../src/assets/logos/merxek.json'
 import arweave from '../../../src/config/arweave'
@@ -37,7 +37,7 @@ import CloseIcoBlack from '../../../src/assets/icons/ic_cross_black.svg'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { updateOriginatorAddress } from '../../../src/store/originatorAddress'
@@ -55,8 +55,8 @@ function Component() {
     const { connect } = useArConnect()
     const arConnect = effectorStore($arconnect)
     const { getSmartContract } = smartContract()
-    const { navigate } = routerHook()
-    const { checkVersion } = fetch()
+    const { navigate } = useRouterHook()
+    const { checkVersion } = useFetch()
     const dispatch = useDispatch()
     const net = $net.state.net as 'mainnet' | 'testnet'
 

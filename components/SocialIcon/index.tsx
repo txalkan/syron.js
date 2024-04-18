@@ -44,23 +44,23 @@ function Component({ type }) {
                     >
                         <Image src={telegramIco} alt="soc-ico" />
                     </div>
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open('https://github.com/tyroncoop')
                         }
                         className={styles.ico}
                     >
                         <Image src={githubIco} alt="soc-ico" />
-                    </div>
-                    <div
+                    </div> */}
+                    {/* <div
                         onClick={() =>
                             window.open('https://twitter.com/ssiprotocol')
                         }
                         className={styles.ico}
                     >
                         <Image src={twitterIco} alt="soc-ico" />
-                    </div>
-                    <div
+                    </div> */}
+                    {/* <div
                         onClick={() =>
                             window.open(
                                 'https://www.instagram.com/ssiprotocol/'
@@ -69,7 +69,7 @@ function Component({ type }) {
                         className={styles.ico}
                     >
                         <Image src={instagramIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     {/* <div
                         onClick={() =>
                             window.open('https://discord.com/invite/7HSvNDJEWm')
@@ -86,7 +86,7 @@ function Component({ type }) {
                     >
                         <Image src={tiktokIco} alt="soc-ico" />
                     </div> */}
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open(
                                 'https://www.linkedin.com/company/tyronssi/'
@@ -95,7 +95,7 @@ function Component({ type }) {
                         className={styles.ico}
                     >
                         <Image src={linkedinIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                 </div>
             </div>
         )
@@ -103,22 +103,22 @@ function Component({ type }) {
         return (
             <div className={styles.container2}>
                 <div className={styles.icoWrapper}>
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open('https://github.com/tyroncoop')
                         }
                         className={styles.ico2}
                     >
                         <Image src={githubIco} alt="soc-ico" />
-                    </div>
-                    <div
+                    </div> */}
+                    {/* <div
                         onClick={() =>
                             window.open('https://twitter.com/ssiprotocol')
                         }
                         className={styles.ico}
                     >
                         <Image src={twitterIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     {/* <div
                         onClick={() =>
                             window.open('https://discord.com/invite/7HSvNDJEWm')
@@ -135,7 +135,7 @@ function Component({ type }) {
                     >
                         <Image src={tiktokIco} alt="soc-ico" />
                     </div> */}
-                    <div
+                    {/* <div
                         onClick={() =>
                             window.open(
                                 'https://www.linkedin.com/company/tyronssi/'
@@ -144,8 +144,8 @@ function Component({ type }) {
                         className={styles.ico2}
                     >
                         <Image src={linkedinIco} alt="soc-ico" />
-                    </div>
-                    <div
+                    </div> */}
+                    {/* <div
                         onClick={() =>
                             window.open(
                                 'https://www.instagram.com/ssiprotocol/'
@@ -154,7 +154,7 @@ function Component({ type }) {
                         className={styles.ico2}
                     >
                         <Image src={instagramIco} alt="soc-ico" />
-                    </div>
+                    </div> */}
                     <div
                         onClick={() => window.open('https://t.me/ssiprotocol')}
                         className={styles.ico}

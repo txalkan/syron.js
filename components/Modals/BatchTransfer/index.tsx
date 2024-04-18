@@ -40,7 +40,7 @@ import {
     $originatorAddress,
     updateOriginatorAddress,
 } from '../../../src/store/originatorAddress'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import Big from 'big.js'
@@ -52,7 +52,7 @@ function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
     const { getSmartContract } = smartContract()
     //const { navigate } = routerHook() @review: navigate
-    const { fetchWalletBalance } = fetch()
+    const { fetchWalletBalance } = useFetch()
     const dispatch = useDispatch()
 
     const loginInfo = useSelector((state: RootState) => state.modal)

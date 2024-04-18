@@ -2,18 +2,18 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../src/hooks/router'
+import useRouterHook from '../../../../src/hooks/router'
 import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
 import { $loading, $loadingTydra } from '../../../../src/store/loading'
 import { ClaimWallet, Spinner } from '../../..'
-import fetch from '../../../../src/hooks/fetch'
-import controller from '../../../../src/hooks/isController'
+import useFetch from '../../../../src/hooks/fetch'
+import useController from '../../../../src/hooks/isController'
 import { $isController } from '../../../../src/store/controller'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
-import wallet from '../../../../src/hooks/wallet'
+import useWallet from '../../../../src/hooks/wallet'
 import Tydra from '../../Tydra'
 import ThreeDots from '../../../Spinner/ThreeDots'
 import { useStore as effectorStore } from 'effector-react'
@@ -21,13 +21,13 @@ import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
-    const { navigate } = routerHook()
-    const { fetchDoc } = fetch()
-    const { checkPause } = wallet()
+    const { navigate } = useRouterHook()
+    const { fetchDoc } = useFetch()
+    const { checkPause } = useWallet()
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const styles = isLight ? stylesLight : stylesDark
     const loading = effectorStore($loading)
-    const { isController } = controller()
+    const { isController } = useController()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

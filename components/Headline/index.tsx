@@ -16,7 +16,7 @@ import rightDarkLight from '../../src/assets/icons/arrow_right_dark_light.svg'
 import leftChrome from '../../src/assets/icons/arrow_left_chrome.svg'
 import { useTranslation } from 'next-i18next'
 import { $prev, updatePrev } from '../../src/store/router'
-import routerHook from '../../src/hooks/router'
+import useRouterHook from '../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import { $modalTxMinimized, updateShowSearchBar } from '../../src/store/modal'
@@ -30,7 +30,7 @@ function Component({ data }) {
     const loadingDoc = effectorStore($loadingDoc)
     const prev = effectorStore($prev)
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const path = window.location.pathname
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =

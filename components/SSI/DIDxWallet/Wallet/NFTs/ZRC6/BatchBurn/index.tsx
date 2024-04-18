@@ -24,7 +24,7 @@ import defaultCheckmarkLight from '../../../../../../../src/assets/icons/default
 import defaultCheckmarkDark from '../../../../../../../src/assets/icons/default_checkmark_black.svg'
 import selectedCheckmarkDark from '../../../../../../../src/assets/icons/selected_checkmark.svg'
 import selectedCheckmarkLight from '../../../../../../../src/assets/icons/selected_checkmark_purple.svg'
-import fetch from '../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../src/hooks/fetch'
 import AddIconBlack from '../../../../../../../src/assets/icons/add_icon_black.svg'
 import AddIconReg from '../../../../../../../src/assets/icons/add_icon.svg'
 import { $net } from '../../../../../../../src/store/network'
@@ -33,7 +33,7 @@ import { useStore } from 'react-stores'
 function Component({ addrName }) {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const { getNftsWallet } = fetch()
+    const { getNftsWallet } = useFetch()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const donation = effectorStore($donation)

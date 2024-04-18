@@ -9,7 +9,7 @@ import smartContract from '../utils/smartContract'
 import { $net } from '../store/network'
 import { useStore } from 'react-stores'
 
-function wallet() {
+function useWallet() {
     const originator_address = effectorStore($originatorAddress)
     const resolvedInfo = useStore($resolvedInfo)
     const { getSmartContract } = smartContract()
@@ -108,4 +108,4 @@ function wallet() {
     }
 }
 
-export default wallet
+export default useWallet

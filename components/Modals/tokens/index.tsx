@@ -75,7 +75,7 @@ export var TokensModal: React.FC<Prop> = function ({
     // console.log('tyrondex:', JSON.stringify(tokensStore))
 
     const inputRef = React.useRef<HTMLInputElement | null>(null)
-    const lazyRoot = React.useRef(null)
+    const lazyRoot = React.useRef(null) as unknown as string
 
     // const [isImport, setImport] = React.useState(false)
     // const [loading, setLoading] = React.useState(false)

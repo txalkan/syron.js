@@ -3,7 +3,7 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $resolvedInfo } from '../../../../../../src/store/resolvedInfo'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
+import useRouterHook from '../../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../../src/app/reducers'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
@@ -28,7 +28,7 @@ function Component() {
     const subdomainNavigate =
         resolvedSubdomain !== '' ? resolvedSubdomain + '@' : ''
 
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const [hideTransfer, setHideTransfer] = useState(true)
     const [showDIDDomain, setShowDIDDomain] = useState(false)
     const [showManageNFT, setShowManageNFT] = useState(false)

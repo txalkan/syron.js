@@ -19,7 +19,7 @@ import { updatePrev } from '../store/router'
 import toastTheme from './toastTheme'
 import useArConnect from './useArConnect'
 
-function routerHook() {
+function useRouterHook() {
     const Router = useRouter()
     const { t } = useTranslation()
     const { disconnect } = useArConnect()
@@ -75,4 +75,4 @@ function routerHook() {
     }
 }
 
-export default routerHook
+export default useRouterHook

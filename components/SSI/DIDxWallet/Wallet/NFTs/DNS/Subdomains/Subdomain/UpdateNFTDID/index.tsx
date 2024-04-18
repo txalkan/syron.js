@@ -23,7 +23,7 @@ import {
 } from '../../../../../../../../../src/store/donation'
 import { RootState } from '../../../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../../../../src/hooks/router'
+import useRouterHook from '../../../../../../../../../src/hooks/router'
 import smartContract from '../../../../../../../../../src/utils/smartContract'
 import defaultCheckmarkLight from '../../../../../../../../../src/assets/icons/default_checkmark.svg'
 import defaultCheckmarkDark from '../../../../../../../../../src/assets/icons/default_checkmark_black.svg'

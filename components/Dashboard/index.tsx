@@ -21,7 +21,7 @@ import { UpdateIsLight } from '../../src/app/actions'
 // import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
 import useArConnect from '../../src/hooks/useArConnect'
-import zilpayHook from '../../src/hooks/zilpayHook'
+import useZilpayHook from '../../src/hooks/zilpayHook'
 
 function Component() {
     const dispatch = useDispatch()
@@ -30,7 +30,7 @@ function Component() {
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const menuOn = useStore($menuOn)
     const { t } = useTranslation()
-    const { handleConnect } = zilpayHook()
+    const { handleConnect } = useZilpayHook()
 
     const onConnect = () => {
         if (loginInfo.zilAddr) {

@@ -9,7 +9,7 @@ import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import { ClaimWallet, Spinner } from '../..'
-import routerHook from '../../../src/hooks/router'
+import useRouterHook from '../../../src/hooks/router'
 import {
     $loading,
     $loadingDoc,
@@ -21,7 +21,7 @@ import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 // import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../Tydra'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 
 interface LayoutProps {
@@ -30,11 +30,11 @@ interface LayoutProps {
 
 function Component(props: LayoutProps) {
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
 
     const { children } = props
 
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch()
     // @review: loading doc inside wallet & did doc && loading
     // const loadingDoc = useStore($loadingDoc)
     const loading = effectorStore($loading)

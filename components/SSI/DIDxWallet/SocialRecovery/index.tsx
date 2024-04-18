@@ -12,16 +12,16 @@ import { RootState } from '../../../../src/app/reducers'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
-import routerHook from '../../../../src/hooks/router'
-import fetch from '../../../../src/hooks/fetch'
+import useRouterHook from '../../../../src/hooks/router'
+import useFetch from '../../../../src/hooks/fetch'
 import { toast } from 'react-toastify'
 import { useStore } from 'react-stores'
 import ThreeDots from '../../../Spinner/ThreeDots'
 
 function Component() {
     const { t } = useTranslation()
-    const { navigate } = routerHook()
-    const { fetchDoc, checkVersion } = fetch()
+    const { navigate } = useRouterHook()
+    const { fetchDoc, checkVersion } = useFetch()
     const doc = effectorStore($doc)
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)

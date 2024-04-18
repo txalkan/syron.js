@@ -31,7 +31,7 @@ import selectedCheckmarkLight from '../../../../../../../src/assets/icons/select
 import { toast } from 'react-toastify'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
-import fetch from '../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
@@ -75,7 +75,7 @@ function Component({ addrName }) {
         }
     }
 
-    const { getNftsWallet } = fetch()
+    const { getNftsWallet } = useFetch()
     const [loadingNftList, setLoadingNftList] = useState(false)
     const [tokenIds, setTokenIds] = useState(Array())
     const checkTokenId = async () => {

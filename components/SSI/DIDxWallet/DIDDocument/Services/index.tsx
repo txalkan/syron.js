@@ -41,19 +41,19 @@ import addIco from '../../../../../src/assets/icons/add_icon.svg'
 import ArrowReg from '../../../../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../../../../src/assets/icons/right_down_black.svg'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../src/hooks/router'
+import useRouterHook from '../../../../../src/hooks/router'
 import { Spinner } from '../../../..'
 import { RootState } from '../../../../../src/app/reducers'
 import { useSelector } from 'react-redux'
 import useArConnect from '../../../../../src/hooks/useArConnect'
-import fetch from '../../../../../src/hooks/fetch'
+import useFetch from '../../../../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     // const { connect } = useArConnect()
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch()
     const doc = effectorStore($doc)?.doc
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const loginInfo = useSelector((state: RootState) => state.modal)

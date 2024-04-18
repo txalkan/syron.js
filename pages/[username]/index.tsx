@@ -15,7 +15,7 @@ import { RootState } from '../../src/app/reducers'
 import Tydra from '../../components/SSI/Tydra'
 import { useEffect } from 'react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { useStore } from 'react-stores'
 import { $wallet } from '../../src/store/wallet'
 
@@ -30,7 +30,7 @@ function Header() {
         },
     ]
 
-    const { resolveUser } = fetch()
+    const { resolveUser } = useFetch()
     const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')

@@ -3,13 +3,13 @@ This open-source code is for the TYRON Network's [web application](https://www.t
 ## Getting Started
 
 ```bash
-yarn install
+npm i
 ```
 
 Run the development server:
 
 ```bash
-yarn dev
+npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to run this app locally.

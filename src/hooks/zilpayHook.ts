@@ -10,7 +10,7 @@ import { $dashboardState, updateDashboardState } from '../store/modal'
 import toastTheme from './toastTheme'
 import { updateNet } from '../store/network'
 
-function zilpayHook() {
+function useZilpayHook() {
     const dispatch = useDispatch()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
@@ -64,4 +64,4 @@ function zilpayHook() {
     }
 }
 
-export default zilpayHook
+export default useZilpayHook

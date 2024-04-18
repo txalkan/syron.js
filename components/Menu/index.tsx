@@ -17,7 +17,7 @@ import { Selector, SocialIcon, TransactionStatusMinimized } from '..'
 import { useTranslation } from 'next-i18next'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import routerHook from '../../src/hooks/router'
+import useRouterHook from '../../src/hooks/router'
 import { UpdateLang } from '../../src/app/actions'
 // import { toast } from 'react-toastify'
 // import toastTheme from '../../src/hooks/toastTheme'
@@ -302,7 +302,7 @@ function Component() {
                                         </>
                                     )
                                 )} */}
-                                    <h4
+                                    {/* <h4
                                         style={{ textTransform: 'lowercase' }}
                                         onClick={() =>
                                             window.open(
@@ -312,7 +312,7 @@ function Component() {
                                         className={styles.menuItemText}
                                     >
                                         ssiprotocol.com&#x2197;
-                                    </h4>
+                                    </h4> */}
                                     <h4
                                         style={{ textTransform: 'lowercase' }}
                                         onClick={() =>
@@ -322,7 +322,7 @@ function Component() {
                                     >
                                         tyron.io&#x2197;
                                     </h4>
-                                    <h4
+                                    {/* <h4
                                         onClick={() =>
                                             window.open(
                                                 'https://ssiprotocol.notion.site/TYRON-Whitepaper-5ca16fc254b343fb90cfeb725cbfa2c3'
@@ -331,7 +331,7 @@ function Component() {
                                         className={styles.menuItemText}
                                     >
                                         {t('WHITEPAPER')}&#x2197;
-                                    </h4>
+                                    </h4> */}
                                     <h4
                                         onClick={() =>
                                             window.open(

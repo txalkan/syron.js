@@ -26,7 +26,7 @@ import { RootState } from '../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
 import TickIco from '../../../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../../../src/hooks/toastTheme'
-import routerHook from '../../../../../../../src/hooks/router'
+import useRouterHook from '../../../../../../../src/hooks/router'
 import ThreeDots from '../../../../../../Spinner/ThreeDots'
 import InfoIconReg from '../../../../../../../src/assets/icons/warning.svg'
 import InfoIconPurple from '../../../../../../../src/assets/icons/warning_purple.svg'
@@ -38,7 +38,7 @@ import { useStore } from 'react-stores'
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const { t } = useTranslation()
     const dispatch = useDispatch()
     const isLight = useSelector((state: RootState) => state.modal.isLight)

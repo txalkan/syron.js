@@ -26,7 +26,7 @@ import { RootState } from '../../../../../src/app/reducers'
 import { updateBuyInfo } from '../../../../../src/store/buyInfo'
 import { useTranslation } from 'next-i18next'
 import Selector from '../../../../Selector'
-import routerHook from '../../../../../src/hooks/router'
+import useRouterHook from '../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import TickIco from '../../../../../src/assets/icons/tick.svg'
 import toastTheme from '../../../../../src/hooks/toastTheme'
@@ -40,7 +40,7 @@ function Component() {
 
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const resolvedInfo = useStore($resolvedInfo)
     const arConnect = effectorStore($arconnect)
 

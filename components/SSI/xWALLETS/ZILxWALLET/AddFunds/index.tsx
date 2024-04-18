@@ -31,14 +31,14 @@ import TickIco from '../../../../../src/assets/icons/tick_blue.svg'
 import { $resolvedInfo } from '../../../../../src/store/resolvedInfo'
 import React from 'react'
 import toastTheme from '../../../../../src/hooks/toastTheme'
-import wallet from '../../../../../src/hooks/wallet'
+import useWallet from '../../../../../src/hooks/wallet'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
 function StakeAddFunds() {
     const { t } = useTranslation()
-    const { checkBalance } = wallet()
+    const { checkBalance } = useWallet()
     const dispatch = useDispatch()
     const originator = effectorStore($originatorAddress)
     const donation = effectorStore($donation)

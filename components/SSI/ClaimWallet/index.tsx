@@ -59,7 +59,7 @@ function Component({ title }) {
                     })
                 } else {
                     const addrPendingUsername =
-                        await tyron.SearchBarUtil.default.fetchDomainAddr(
+                        await tyron.SearchBarUtil.default.fetchAddr(
                             net,
                             'did',
                             pending_domain

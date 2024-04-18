@@ -19,7 +19,7 @@ import { $wallet } from '../../../src/store/wallet'
 import { useStore } from 'react-stores'
 //@ssibrowser
 import { useStore as effectorStore } from 'effector-react'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 type Prop = {
@@ -42,7 +42,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         },
     ]
 
-    const { resolveUser } = fetch()
+    const { resolveUser } = useFetch()
     const path = decodeURI(window.location.pathname)
         .toLowerCase()
         .replace('/es', '')

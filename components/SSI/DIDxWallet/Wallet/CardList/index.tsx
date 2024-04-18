@@ -3,22 +3,22 @@ import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import useArConnect from '../../../../../src/hooks/useArConnect'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../src/hooks/router'
+import useRouterHook from '../../../../../src/hooks/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../../src/app/reducers'
 import { $arconnect } from '../../../../../src/store/arconnect'
 import { useState } from 'react'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import DeployTydra from '../../../DeployTydra'
-import fetch from '../../../../../src/hooks/fetch'
+import useFetch from '../../../../../src/hooks/fetch'
 import { NFT } from '../../../..'
 import { useStore } from 'react-stores'
 
 export default function CardList() {
     const { t } = useTranslation()
     const { connect } = useArConnect()
-    const { navigate } = routerHook()
-    const { checkVersion } = fetch()
+    const { navigate } = useRouterHook()
+    const { checkVersion } = useFetch()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain

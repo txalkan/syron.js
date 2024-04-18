@@ -10,7 +10,7 @@ import { updateIsController } from '../store/controller'
 import { useStore } from 'react-stores'
 
 //@review: asap
-function controller() {
+function useController() {
     const { t } = useTranslation()
     const resolvedInfo = useStore($resolvedInfo)
     // console.log('resolved_info', JSON.stringify(resolvedInfo))
@@ -62,4 +62,4 @@ function controller() {
     }
 }
 
-export default controller
+export default useController

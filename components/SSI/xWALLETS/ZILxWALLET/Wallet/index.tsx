@@ -49,7 +49,7 @@ import DelegatorSwap from './DelegatorSwap'
 import DashboardStake from './Dashboard'
 import toastTheme from '../../../../../src/hooks/toastTheme'
 import Pause from '../../../Pause'
-import wallet from '../../../../../src/hooks/wallet'
+import useWallet from '../../../../../src/hooks/wallet'
 import TransferOwnership from '../../../TransferOwnership'
 import ThreeDots from '../../../../Spinner/ThreeDots'
 import { $net } from '../../../../../src/store/network'
@@ -59,7 +59,7 @@ import { useStore } from 'react-stores'
 function StakeWallet() {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { checkPause } = wallet()
+    const { checkPause } = useWallet()
     const dispatch = useDispatch()
     const resolvedInfo = useStore($resolvedInfo)
     const extraZil = effectorStore($extraZil)

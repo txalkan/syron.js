@@ -5,7 +5,7 @@ import { $doc } from '../../../../src/store/did-doc'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { $loading, $loadingDoc } from '../../../../src/store/loading'
-import fetch from '../../../../src/hooks/fetch'
+import useFetch from '../../../../src/hooks/fetch'
 import { useTranslation } from 'next-i18next'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../../../src/app/reducers'
@@ -13,7 +13,7 @@ import { toast } from 'react-toastify'
 import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { Spinner } from '../../..'
 import toastTheme from '../../../../src/hooks/toastTheme'
-import routerHook from '../../../../src/hooks/router'
+import useRouterHook from '../../../../src/hooks/router'
 import useArConnect from '../../../../src/hooks/useArConnect'
 import { $arconnect } from '../../../../src/store/arconnect'
 import { $net } from '../../../../src/store/network'
@@ -22,7 +22,7 @@ import { useStore } from 'react-stores'
 function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const { connect } = useArConnect()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
@@ -57,7 +57,7 @@ function Component() {
             ? resolvedInfo.user_tld
             : ''
 
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch()
 
     const copyToClipboard = (text) => {
         navigator.clipboard.writeText(text)

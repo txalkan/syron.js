@@ -26,7 +26,7 @@ import { PoolOverview } from '../pool'
 import { useStore } from 'react-stores'
 import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
 import { $wallet } from '../../src/store/wallet'
@@ -64,7 +64,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
         }
     }
 
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch()
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
 

@@ -35,7 +35,7 @@ import {
 } from '../../../../../../../../src/app/actions'
 import { RootState } from '../../../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../../../src/hooks/router'
+import useRouterHook from '../../../../../../../../src/hooks/router'
 import TickIco from '../../../../../../../../src/assets/icons/tick.svg'
 import CloseIcoReg from '../../../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../../../src/assets/icons/ic_cross_black.svg'
@@ -46,7 +46,7 @@ import toastTheme from '../../../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../../../src/hooks/useArConnect'
 import ThreeDots from '../../../../../../../Spinner/ThreeDots'
 import { TransitionParams } from 'tyron/dist/blockchain/tyronzil'
-import fetch from '../../../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 import {
@@ -61,10 +61,10 @@ function Component() {
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
     const dispatch = useDispatch()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const { getSmartContract } = smartContract()
     const { connect } = useArConnect()
-    const { checkVersion } = fetch()
+    const { checkVersion } = useFetch()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain = resolvedInfo?.user_domain
     const donation = effectorStore($donation)

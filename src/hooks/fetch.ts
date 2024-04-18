@@ -19,7 +19,7 @@ import { updateSmartWallet } from '../store/wallet'
 import { useStore } from 'react-stores'
 import { ecoNfts } from '../constants/mintDomainName'
 
-function fetch() {
+function useFetch() {
     const isLight = useSelector((state: RootState) => state.modal.isLight)
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
@@ -596,4 +596,4 @@ function fetch() {
     }
 }
 
-export default fetch
+export default useFetch

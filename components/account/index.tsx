@@ -16,7 +16,7 @@ import { RootState } from '../../src/app/reducers'
 import { AddFunds, Balances, ClaimWallet } from '..'
 import { useStore as effectorStore } from 'effector-react'
 import { $resolvedInfo } from '../../src/store/resolvedInfo'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { $doc } from '../../src/store/did-doc'
 import { $net } from '../../src/store/network'
 import { useStore } from 'react-stores'
@@ -47,7 +47,7 @@ function Component() {
         }
     }
 
-    const { fetchDoc } = fetch()
+    const { fetchDoc } = useFetch()
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
     const loginInfo = useSelector((state: RootState) => state.modal)

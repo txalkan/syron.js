@@ -15,7 +15,7 @@ import {
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
+import useRouterHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import ThreeDots from '../../../../../Spinner/ThreeDots'
@@ -30,7 +30,7 @@ function Component({
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const { t } = useTranslation()
-    const { navigate } = routerHook()
+    const { navigate } = useRouterHook()
     const dispatch = useDispatch()
     const donation = effectorStore($donation)
     const resolvedInfo = useStore($resolvedInfo)

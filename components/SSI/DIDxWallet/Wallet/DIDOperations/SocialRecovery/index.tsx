@@ -19,7 +19,7 @@ import {
 import { setTxStatusLoading, setTxId } from '../../../../../../src/app/actions'
 import { RootState } from '../../../../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../../../src/hooks/router'
+import useRouterHook from '../../../../../../src/hooks/router'
 import { $arconnect } from '../../../../../../src/store/arconnect'
 import TickIcoReg from '../../../../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../../../../src/assets/icons/tick_purple.svg'
@@ -27,7 +27,7 @@ import CloseIcoReg from '../../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../../src/assets/icons/ic_cross_black.svg'
 import toastTheme from '../../../../../../src/hooks/toastTheme'
 import useArConnect from '../../../../../../src/hooks/useArConnect'
-import fetch from '../../../../../../src/hooks/fetch'
+import useFetch from '../../../../../../src/hooks/fetch'
 import { $net } from '../../../../../../src/store/network'
 import { useStore } from 'react-stores'
 
@@ -36,8 +36,8 @@ function Component() {
 
     const zcrypto = tyron.Util.default.Zcrypto()
     const { t } = useTranslation()
-    const { navigate } = routerHook()
-    const { checkUserExists, versionAbove58, checkVersion } = fetch()
+    const { navigate } = useRouterHook()
+    const { checkUserExists, versionAbove58, checkVersion } = useFetch()
 
     const dispatch = useDispatch()
     const arConnect = effectorStore($arconnect)

@@ -38,9 +38,9 @@ import smartContract from '../../../src/utils/smartContract'
 import TickIcoYellow from '../../../src/assets/icons/tick.svg'
 import TickIcoPurple from '../../../src/assets/icons/tick_purple.svg'
 import toastTheme from '../../../src/hooks/toastTheme'
-import wallet from '../../../src/hooks/wallet'
+import useWallet from '../../../src/hooks/wallet'
 import ThreeDots from '../../Spinner/ThreeDots'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $net } from '../../../src/store/network'
 import { useStore } from 'react-stores'
 import Big from 'big.js'
@@ -58,8 +58,8 @@ function Component(props: InputType) {
     const dispatch = useDispatch()
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { checkBalance } = wallet()
-    const { checkVersion, fetchWalletBalance } = fetch()
+    const { checkBalance } = useWallet()
+    const { checkVersion, fetchWalletBalance } = useFetch()
     const doc = effectorStore($doc)
     const donation = effectorStore($donation)
     const net = $net.state.net as 'mainnet' | 'testnet'

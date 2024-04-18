@@ -366,7 +366,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
 
     //@mainnet-dex
     //@ssibrowser
-    const lazyRoot = React.useRef(null)
+    const lazyRoot = React.useRef(null) as unknown as string
 
     const hanldeOnSwap = React.useCallback(async () => {
         setLoading(true)

@@ -42,7 +42,7 @@ import {
     WithdrawalModal,
 } from '..'
 import toastTheme from '../../src/hooks/toastTheme'
-import fetch from '../../src/hooks/fetch'
+import useFetch from '../../src/hooks/fetch'
 import { $net } from '../../src/store/network'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
 import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
@@ -74,7 +74,7 @@ function Component() {
             : ''
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { checkVersion } = fetch()
+    const { checkVersion } = useFetch()
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const isLight = useSelector((state: RootState) => state.modal.isLight)

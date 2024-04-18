@@ -20,7 +20,7 @@ import { useTranslation } from 'next-i18next'
 import { $donation, updateDonation } from '../../../src/store/donation'
 import { toast } from 'react-toastify'
 import toastTheme from '../../../src/hooks/toastTheme'
-import fetch from '../../../src/hooks/fetch'
+import useFetch from '../../../src/hooks/fetch'
 import { $arconnect } from '../../../src/store/arconnect'
 import useArConnect from '../../../src/hooks/useArConnect'
 import { ZilPayBase } from '../../ZilPay/zilpay-base'
@@ -46,7 +46,7 @@ function Component() {
     const loginInfo = useSelector((state: RootState) => state.modal)
     const loggedInDomain = loginInfo.loggedInDomain
     const loggedInVersion = loginInfo.loggedInVersion
-    const { checkVersion } = fetch()
+    const { checkVersion } = useFetch()
     const version = checkVersion(loggedInVersion)
 
     const modalNewDefi = effectorStore($modalNewDefi)

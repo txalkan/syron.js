@@ -152,7 +152,7 @@ function Component() {
                     width="25"
                 />
             </div>
-            <div className={styles.subtitle}>Total Value Locked (TVL)</div>
+            <div className={styles.subtitle}>Total Value Locked</div>
             <div className={styles.subtitle2}>
                 {Number(total_tvl).toLocaleString()} SGD
             </div>
@@ -170,7 +170,7 @@ function Component() {
                 <span>{Number(s$i_tvl).toLocaleString()}</span>
                 <Image src={iconSSI} alt="s$i-icon" height="25" width="25" />
             </div>
-            <div className={styles.subtitle2}>TVL-to-Supply Ratio</div>
+            {/* <div className={styles.subtitle2}>TVL-to-Supply Ratio</div>
             <div className={styles.rowRate}>
                 <Image
                     src={iconTYRON}
@@ -185,7 +185,7 @@ function Component() {
                 <Image src={iconSSI} alt="s$i-icon" height="25" width="25" />
                 <span></span>
                 <span>{s$i_tvl_supply.toFixed(1)} %</span>
-            </div>
+            </div> */}
         </div>
     )
 }

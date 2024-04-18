@@ -17,7 +17,7 @@ import smartContract from '../../../../../src/utils/smartContract'
 import CloseIcoReg from '../../../../../src/assets/icons/ic_cross.svg'
 import CloseIcoBlack from '../../../../../src/assets/icons/ic_cross_black.svg'
 import { updateDonation } from '../../../../../src/store/donation'
-import wallet from '../../../../../src/hooks/wallet'
+import useWallet from '../../../../../src/hooks/wallet'
 import { $net } from '../../../../../src/store/network'
 import { useStore } from 'react-stores'
 import ThreeDots from '../../../../Spinner/ThreeDots'
@@ -25,7 +25,7 @@ import ThreeDots from '../../../../Spinner/ThreeDots'
 function Component({ type }) {
     const { t } = useTranslation()
     const { getSmartContract } = smartContract()
-    const { checkPause } = wallet()
+    const { checkPause } = useWallet()
 
     const resolvedInfo = useStore($resolvedInfo)
     const isLight = useSelector((state: RootState) => state.modal.isLight)

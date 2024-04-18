@@ -8,12 +8,12 @@ import { $resolvedInfo } from '../../../../src/store/resolvedInfo'
 import { RootState } from '../../../../src/app/reducers'
 import toastTheme from '../../../../src/hooks/toastTheme'
 import { useTranslation } from 'next-i18next'
-import routerHook from '../../../../src/hooks/router'
+import useRouterHook from '../../../../src/hooks/router'
 import { $isController } from '../../../../src/store/controller'
-import controller from '../../../../src/hooks/isController'
+import useController from '../../../../src/hooks/isController'
 import { $loading, $loadingTydra } from '../../../../src/store/loading'
 import Spinner from '../../../Spinner'
-import fetch from '../../../../src/hooks/fetch'
+import useFetch from '../../../../src/hooks/fetch'
 import { ClaimWallet } from '../../..'
 // import Tydra from '../../Tydra'
 import ThreeDots from '../../../Spinner/ThreeDots'
@@ -21,9 +21,9 @@ import { useStore } from 'react-stores'
 
 function Component() {
     const { t } = useTranslation()
-    const { navigate } = routerHook()
-    const { isController } = controller()
-    const { fetchDoc } = fetch()
+    const { navigate } = useRouterHook()
+    const { isController } = useController()
+    const { fetchDoc } = useFetch()
     const resolvedInfo = useStore($resolvedInfo)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
