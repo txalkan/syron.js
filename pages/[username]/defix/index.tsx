@@ -130,7 +130,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
     //@ssibrowser
     // @review: asap dex
-    const pools = {
+    const ref_pools = {
         //@S$I
         '0xf0cb60c75a3d075969e35bf6749bb3f58e484c72': [
             '62814772743218038',
@@ -187,7 +187,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const zlp_tokens = zlp_data.tokens.list
     const zlp_pools = zlp_data.pools
     const ssi_tokens = [s$i_tokenState, tyron_tokenState, ...zlp_tokens]
-    const ssi_pools = { ...pools, ...zlp_pools }
+    const ssi_pools = { ...ref_pools, ...zlp_pools }
     updateDexPools(ssi_pools)
     updateRate(data.rate)
     loadFromServer(ssi_tokens)

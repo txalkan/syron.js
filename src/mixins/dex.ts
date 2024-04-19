@@ -486,7 +486,7 @@ export class DragonDex {
                     console.error('TYRON to S$I:', error)
                 }
             } else if (exactToken.meta.symbol === 'XSGD') {
-                tydra_dex = Big(exact).mul(1e12)
+                tydra_dex = BigInt(Big(Number(exact)).mul(1e12).toString())
             } else if (exactToken.meta.symbol === 'ZIL') {
                 try {
                     //@dex zilswap is the default intermediate dex
@@ -507,7 +507,7 @@ export class DragonDex {
             exactToken.meta.symbol === 'S$I' &&
             limitToken.meta.symbol === 'XSGD'
         ) {
-            tydra_dex = Big(exact).div(1e12)
+            tydra_dex = BigInt(Big(Number(exact)).div(1e12).toString())
         } else {
             if (
                 //@dev: SwapExactZILForTokens
@@ -570,10 +570,10 @@ export class DragonDex {
 
         //@review: dex
         return {
-            dragondex: Big(String(value)).div(decimales).round(4),
-            tydradex: Big(String(tydra_dex)).div(decimales).round(4),
-            zilswap: Big(String(zilswap_dex)).div(decimales).round(4),
-            aswap: Big(String(aswap_dex)).div(decimales).round(4),
+            dragondex: Big(String(value)).div(decimales!).round(4),
+            tydradex: Big(String(tydra_dex)).div(decimales!).round(4),
+            zilswap: Big(String(zilswap_dex)).div(decimales!).round(4),
+            aswap: Big(String(aswap_dex)).div(decimales!).round(4),
         }
     }
 
@@ -631,14 +631,14 @@ export class DragonDex {
             const cashback = token.base16 !== this.rewarded
             const decimals = this.toDecimals(token.decimals)
             const zilDecimails = this.toDecimals(this.tokens[0].meta.decimals)
-            const qa = amount.mul(decimals).round().toString()
+            const qa = amount.mul(decimals!).round().toString()
             const zils = this._tokensToZil(
                 BigInt(qa),
                 this.pools[token.base16],
                 cashback
             )
 
-            return Big(String(zils)).div(zilDecimails)
+            return Big(String(zils)).div(zilDecimails!)
         } catch {
             return Big(0)
         }
@@ -818,10 +818,10 @@ export class DragonDex {
         // })
 
         const amount = Big(String(exact))
-            .div(this.toDecimals(this.tokens[0].meta.decimals))
+            .div(this.toDecimals(this.tokens[0].meta.decimals)!)
             .toString()
         const limitAmount = Big(String(limit))
-            .div(this.toDecimals(token.decimals))
+            .div(this.toDecimals(token.decimals)!)
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
@@ -959,10 +959,10 @@ export class DragonDex {
         )
 
         const amount = Big(String(exact))
-            .div(this.toDecimals(token.decimals))
+            .div(this.toDecimals(token.decimals)!)
             .toString()
         const limitAmount = Big(String(limit))
-            .div(this.toDecimals(this.tokens[0].meta.decimals))
+            .div(this.toDecimals(this.tokens[0].meta.decimals)!)
             .toString()
         addTransactions({
             timestamp: new Date().getTime(),
@@ -1033,12 +1033,12 @@ export class DragonDex {
 
         const amount = formatNumber(
             Big(String(exact))
-                .div(this.toDecimals(inputToken.decimals))
+                .div(this.toDecimals(inputToken.decimals)!)
                 .toString()
         )
         const receivedAmount = formatNumber(
             Big(String(limit))
-                .div(this.toDecimals(outputToken.decimals))
+                .div(this.toDecimals(outputToken.decimals)!)
                 .toString()
         )
         addTransactions({
@@ -1129,12 +1129,12 @@ export class DragonDex {
 
         const amount = formatNumber(
             Big(String(exact))
-                .div(this.toDecimals(inputToken.decimals))
+                .div(this.toDecimals(inputToken.decimals)!)
                 .toString()
         )
         const receivedAmount = formatNumber(
             Big(String(limit))
-                .div(this.toDecimals(outputToken.decimals))
+                .div(this.toDecimals(outputToken.decimals)!)
                 .toString()
         )
         addTransactions({
@@ -1560,7 +1560,7 @@ export class DragonDex {
         const { blocks } = $settings.state
 
         //const maxExchangeRateChange = BigInt($settings.state.slippage * 100)
-        const maxTokenAmount = BigInt(max_token)
+        const maxTokenAmount = BigInt(Number(max_token))
         // created
         //     ? (BigInt(amount.toString()) *
         //         (DragonDex.FEE_DEMON + maxExchangeRateChange)) /
@@ -1975,9 +1975,9 @@ export class DragonDex {
         )
         const ssi_decimals = this.toDecimals(18)
         const decimals = dex === 'tydradex' ? ssi_decimals : zil_decimals
-        const baseReserve = Big(String(pool[0])).div(decimals)
+        const baseReserve = Big(String(pool[0])).div(decimals!)
         const pairReserve = Big(String(pool[1])).div(
-            this.toDecimals(token.decimals)
+            this.toDecimals(token.decimals)!
         )
         const rate = baseReserve.div(pairReserve)
         return amount.mul(rate)
@@ -2321,12 +2321,12 @@ export class DragonDex {
                 ? _zero
                 : Big(
                       user_shares
-                          .div(total_supply)
+                          .div(Big(Number(total_supply)))
                           .mul(current_dao_balance)
                           .round(0)
                   )
         lpt_balance['tyron_s$i'] =
-            shares_supply !== '0' ? BigInt(user_bal) : _zero
+            shares_supply !== '0' ? BigInt(Number(user_bal)) : _zero
 
         console.log('SSI_DAOSHARES_:', String(user_shares))
         console.log('DAO_BALANCE:', dao_balance)
@@ -2375,7 +2375,7 @@ export class DragonDex {
 
     private _valueToBigInt(amount: string, token: TokenState) {
         return BigInt(
-            Big(amount).mul(this.toDecimals(token.decimals)).round().toString()
+            Big(amount).mul(this.toDecimals(token.decimals)!).round().toString()
         )
     }
 

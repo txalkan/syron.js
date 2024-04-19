@@ -37,6 +37,8 @@ import { ZERO_ADDR } from '../config/const'
 import { $net } from '../store/network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
+import Big from 'big.js'
+Big.PE = 999
 
 type Params = string[] | number[] | (string | string[] | number[])[]
 
@@ -613,8 +615,8 @@ export class Blockchain {
 
             const _currency = tyron.Currency.default.tyron(tokens[index].id)
 
-            const balx_ = Number((balx / _currency.decimals).toFixed(4))
-            const balz_ = Number((balz / _currency.decimals).toFixed(4))
+            const balx_ = Big((balx / _currency.decimals).toFixed(4))
+            const balz_ = Big((balz / _currency.decimals).toFixed(4))
 
             tokens[index].balance_xwallet = balx_
             tokens[index].balance_zilpay = balz_

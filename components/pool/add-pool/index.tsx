@@ -279,7 +279,7 @@ export function AddPoolForm() {
         try {
             const base_decimals = dex.toDecimals(token_base.decimals)
             const balance = Number(balance_base)
-            const input = Number(base_amount.mul(base_decimals))
+            const input = Number(base_amount.mul(base_decimals!))
             console.log('BASE_BALANCE:', balance, input)
 
             if (balance < input) {
@@ -434,7 +434,7 @@ export function AddPoolForm() {
                             } else if (
                                 !balance_pair ||
                                 Number(balance_pair) <
-                                    Number(pair_amount.mul(decimals))
+                                    Number(pair_amount.mul(decimals!))
                             ) {
                                 toast.error(t('Insufficient balance.'), {
                                     position: 'top-center',

@@ -82,7 +82,7 @@ function Component() {
                         active === 'account' ? styles.cardActive : styles.card
                     }
                 >
-                    {/* @review: majin translates */}
+                    {/* @review translates */}
                     <div className={styles.icoWrapper2}>
                         <Image src={icoZap} alt="zap-ico" />
                         <div className={styles.titleX}>DIDxWALLET</div>
@@ -115,7 +115,7 @@ function Component() {
                                                     : styles.card2
                                             }
                                         >
-                                            {/* @review: majin translates */}
+                                            {/* @review: translates */}
                                             <div className={styles.icoWrapper2}>
                                                 <Image
                                                     src={icoReceive}

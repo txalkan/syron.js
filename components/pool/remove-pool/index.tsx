@@ -153,8 +153,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 //     0
                 // )
 
-                let percent = Number(range)
-                percent = Big(percent)
+                const percent = Big(Number(range))
 
                 const amount = Big(
                     Big(el.balance).mul(percent).div(cien).round(0)
@@ -203,8 +202,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
     const hanldeRangeDAO = React.useCallback(
         (range: number | number[]) => {
             try {
-                let percent = Number(range)
-                percent = Big(percent)
+                const percent = Big(Number(range))
 
                 const dao_amount = Big(el.daobalance)
                     .mul(percent)
@@ -294,7 +292,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                                             token_amt.div(
                                                 dex.toDecimals(
                                                     el.token.decimals
-                                                )
+                                                )!
                                             )
                                         )
                                     )}
@@ -318,7 +316,9 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                                     {formatNumber(
                                         Number(
                                             amt.div(
-                                                dex.toDecimals(el.base.decimals)
+                                                dex.toDecimals(
+                                                    el.base.decimals
+                                                )!
                                             )
                                         )
                                     )}
@@ -382,7 +382,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                                                 .div(
                                                     dex.toDecimals(
                                                         el.base.decimals
-                                                    )
+                                                    )!
                                                 )
                                                 .round(4)
                                         )

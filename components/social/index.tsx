@@ -92,7 +92,7 @@ function Component() {
                                             : styles.card2
                                     }
                                 >
-                                    {/* @review: majin translates */}
+                                    {/* @review: translates */}
                                     <div className={styles.icoWrapper2}>
                                         <Image src={icoTree} alt="tree-ico" />
                                         <div className={styles.title2}>

@@ -102,7 +102,7 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                         active === 'trade' ? styles.cardActive : styles.card
                     }
                 >
-                    {/* @review: majin translates */}
+                    {/* @review: translates */}
                     <div className={styles.icoWrapper2}>
                         <Image
                             src={icoDex}
@@ -176,7 +176,6 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
                                                         : styles.card2
                                                 }
                                             >
-                                                {/* @review: majin translates */}
                                                 <div
                                                     className={
                                                         styles.icoWrapper2
