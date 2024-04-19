@@ -285,7 +285,6 @@ function Component() {
                     const tokenAddressObject: TokenBalance = {
                         id: id_,
                         base16: token_addr,
-                        balance_xwallet: 0,
                         balance_xwallet: _0,
                         balance_zilpay: _0,
                         full_bal_xwallet: _0,
