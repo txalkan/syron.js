@@ -65,6 +65,8 @@ const provider = new Blockchain()
 const dex = new DragonDex()
 const Big = toformat(_Big)
 Big.PE = 999
+const _0 = Big(0)
+
 function Component() {
     const wallet = useStore($wallet)
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -284,9 +286,10 @@ function Component() {
                         id: id_,
                         base16: token_addr,
                         balance_xwallet: 0,
-                        balance_zilpay: 0,
-                        full_bal_xwallet: 0,
-                        full_bal_zilpay: 0,
+                        balance_xwallet: _0,
+                        balance_zilpay: _0,
+                        full_bal_xwallet: _0,
+                        full_bal_zilpay: _0,
                         decimals: 1e18,
                     }
                     token_balances.push(tokenAddressObject)

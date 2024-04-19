@@ -128,7 +128,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         () =>
             BigInt(
                 Big(pair[0].value).mul(
-                    dex.toDecimals(pair[0].meta.decimals).round()
+                    dex.toDecimals(pair[0].meta.decimals)!.round()
                 )
             ),
         [pair]
@@ -137,7 +137,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         () =>
             BigInt(
                 Big(pair[1].value).mul(
-                    dex.toDecimals(pair[1].meta.decimals).round()
+                    dex.toDecimals(pair[1].meta.decimals)!.round()
                 )
             ),
         [pair]

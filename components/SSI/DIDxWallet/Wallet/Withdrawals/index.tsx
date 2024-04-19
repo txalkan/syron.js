@@ -33,6 +33,7 @@ import { $net } from '../../../../../src/store/network'
 import { useStore } from 'react-stores'
 import Big from 'big.js'
 Big.PE = 999
+const _0 = Big(0)
 
 function Component() {
     const net = $net.state.net as 'mainnet' | 'testnet'
@@ -211,14 +212,14 @@ function Component() {
     }
 
     const handlePercentage = (percentage) => {
-        let input = 0
+        let input = _0
         if (source === 'zilpay') {
             input = Big(currencyBal[3]).mul(Big(percentage))
         } else {
             //@dev: xwallet
             input = Big(currencyBal[2]).mul(Big(percentage))
         }
-        if (input !== 0) {
+        if (input !== _0) {
             setManualInput(false)
             setTransferInput(input)
             setShowTransferInput(
@@ -330,7 +331,7 @@ function Component() {
                 )
 
                 const txID = _currency.txID
-                let amount = _currency.amount
+                let amount = Big(_currency.amount)
                 if (!manualInput) {
                     amount = Big(transferInput)
                     console.log('_AMOUNT_PERCENTAGE', String(amount))

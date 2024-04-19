@@ -39,7 +39,7 @@ import {
 import { DragonDex } from '../../../src/mixins/dex'
 import { $settings } from '../../../src/store/settings'
 // @ssibrowser
-import useRouterHook from '../../../src/hooks/router'
+import routerHook from '../../../src/hooks/router'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { $wallet } from '../../../src/store/wallet'
 import { updateDex } from '../../../src/store/dex'
@@ -60,7 +60,7 @@ type Prop = {
 const dex = new DragonDex()
 export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     // const pool = useTranslation(`pool`)
-    const { navigate } = useRouterHook()
+    const { navigate } = routerHook()
     const wallet = useStore($wallet)
     // const liquidity = useStore($liquidity)
     const tokensStore = useStore($tokens)
@@ -163,7 +163,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
                 //@dev: S$I LP tokens
                 const decimales = dex.toDecimals(18)
                 const show_dao_balance = Big(dao_balance)
-                    .div(decimales)
+                    .div(decimales!)
                     .round(4)
 
                 //@zilpay
@@ -283,7 +283,7 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
     //     return tokens
     // }, [wallet, dragondex_liquidity, tokensStore, settings])
 
-    // @review: majin translates
+    // @review: translates
     return (
         <>
             {/* <div className={styles.container}>
