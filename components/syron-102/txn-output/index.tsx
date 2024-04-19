@@ -29,9 +29,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                                 />
                             </div> */}
                             {/* be your bank */}
-                            <div className={styles.dexName}>
-                                Syron U$ Dollars
-                            </div>
+                            <div className={styles.dexName}>Receive Syron</div>
                         </div>
                         <div className={styles.output}>
                             <Image

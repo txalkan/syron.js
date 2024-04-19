@@ -105,19 +105,19 @@ If you have any questions, comments or interest in pursuing any other use cases,
     //dashboard must have position:relative
     top: 0;
     // left: 0;
-    right: 0;
+    left: 0;
     height: 100%;
     width: 1px;
-    background-color: #ffffff2e;
+    background-color: #dbe4eb;
 }
 
+$font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtRow {
-    font-size: 15px;
-    font-weight: 900;
-    // text-transform: uppercase;
-    text-align: right;
-    color: #dbe4eb;
-    // text-decoration: underline;
+    font-size: 22px;
+    text-align: left;
+    padding-left: 4%;
+    color: #000;
+    font-family: $font-anonymous-pro;
 }
 
 .txtRowEO {
@@ -140,8 +140,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .txtRow2 {
     font-size: 15px;
     text-transform: uppercase;
-    text-align: right;
-    color: #dbe4eb;
+    text-align: left;
+    padding-left: 4%;
+    color: #000;
+    font-family: 'Fragment Mono', monospace;
 }
 
 .cancel {
@@ -156,7 +158,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 @media only screen and (max-width: 350px) {
     .txtRow {
-        font-size: 10px;
+        font-size: 14px;
     }
 
     .txtRow2 {
@@ -166,17 +168,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 @media only screen and (max-width: 767px) and (min-width: 351px) {
     .txtRow {
-        font-size: 12px;
+        font-size: 17px;
     }
-}
-
-.vaultWrapper {
-    margin-top: 10%;
-    width: 100%;
-    background-color: #ffffff2e;
-    border: 1px solid #ffff32;
-    padding: 11px;
-    display: flex;
-    flex-direction: column;
-    text-align: left;
 }

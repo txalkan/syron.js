@@ -154,7 +154,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 width="22"
                             />
                             <div className={styles.titleForm2}>
-                                Deposit Bitcoin
+                                Deposit bitcoin
                             </div>
                         </div>
 
@@ -176,7 +176,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 height="22"
                                 width="22"
                             />
-                            <div className={styles.titleForm2}>Get Syron</div>
+                            {/* <div className={styles.titleForm2}>Get Syron</div> */}
                         </div>
                         <TokenInput
                             token={vault_pair[1].meta}

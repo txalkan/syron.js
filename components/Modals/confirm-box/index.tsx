@@ -17,7 +17,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import { $bitcoin_addresses } from '../../../src/store/bitcoin-addresses'
 import { VaultPair } from '../../../src/types/vault'
 import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
-import icoBTC from '../../../src/assets/icons/bitcoin.png'
+
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import { $xr } from '../../../src/store/xr'
 import { $btc_wallet, $syron } from '../../../src/store/syron'
@@ -34,8 +34,6 @@ import {
     mempoolTxId,
     mempoolFeeRate,
 } from '../../../src/utils/unisat/httpUtils'
-import icoBalance from '../../../src/assets/icons/ssi_icon_balance.svg'
-import icoVault from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
 import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'
@@ -247,19 +245,16 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 if (!data.confirmed) {
                     throw new Error(`Trying again`)
                 } else {
-                    toast.info(
-                        'BTC deposit confirmed, now requesting stablecoins.',
-                        {
-                            position: 'bottom-center',
-                            autoClose: 2000,
-                            hideProgressBar: false,
-                            closeOnClick: true,
-                            pauseOnHover: true,
-                            draggable: true,
-                            progress: undefined,
-                            toastId: 4,
-                        }
-                    )
+                    toast.info('BTC deposit confirmed', {
+                        position: 'bottom-center',
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                        toastId: 4,
+                    })
                     await updateBalance()
                     return data
                 }
@@ -336,7 +331,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 throw new Error('BTC deposit is below the minimum')
 
             toast.info(
-                'Your request will be processed on Bitcoin. It can take around 30 minutes to complete.',
+                'Your Bitcoin transaction can take around 30 minutes to complete.',
                 {
                     position: 'bottom-center',
                     autoClose: 2000,
@@ -381,7 +376,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // const contentTypeSize = 100 // the size of contentType
 
             // @dev The transaction fee rate in sat/vB @review (mainnet)
-            let feeRate = await mempoolFeeRate()
+            let feeRate = 20 //await mempoolFeeRate()
             console.log('Fee Rate', feeRate)
 
             if (!feeRate) {
@@ -602,7 +597,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                             <div className={styles.txtRow}>
                                                 Collateral Ratio
                                             </div>
-                                            <div className={styles.txtRow2}>
+                                            <div className={styles.txtRow}>
                                                 1.5:1
                                             </div>
                                         </div>
@@ -706,102 +701,6 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     {/* <div onClick={onClose} className={styles.cancel}>
                         Cancel
                     </div> */}
-                    {tyron?.ssi_box && (
-                        <div className={styles.vaultWrapper}>
-                            <p
-                                style={{
-                                    paddingLeft: '4px',
-                                    paddingTop: '4%',
-                                    textTransform: 'uppercase',
-                                    color: '#ffff32',
-                                    fontWeight: '900',
-                                }}
-                            >
-                                Your Safety Deposit ₿ox
-                                {/* <span @review
-                                    onClick={updateBitcoinVault}
-                                    style={{
-                                        cursor: 'pointer',
-                                        paddingLeft: '8px',
-                                    }}
-                                >
-                                    {loading ? (
-                                        <Spinner />
-                                    ) : (
-                                        <Image
-                                            src={refreshIco}
-                                            alt="refresh-ico"
-                                            height="12"
-                                            width="12"
-                                        />
-                                    )}
-                                </span> */}
-                            </p>
-
-                            <p
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <Image
-                                    src={icoBalance}
-                                    alt={'BTC'}
-                                    height="17"
-                                    width="17"
-                                />
-                                <span
-                                    style={{
-                                        paddingLeft: '4px',
-                                        paddingRight: '8px',
-                                    }}
-                                >
-                                    Balance:{' '}
-                                    {Number(tyron?.box_balance.div(1e8))}
-                                </span>
-                                <Image
-                                    src={icoBTC}
-                                    alt={'BTC'}
-                                    height="17"
-                                    width="17"
-                                />
-                            </p>
-                            <p
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Image
-                                    src={icoVault}
-                                    alt={'BTC'}
-                                    height="17"
-                                    width="17"
-                                />
-                                <span style={{ paddingLeft: '4px' }}>
-                                    Address:
-                                    <span
-                                        onClick={() =>
-                                            window.open(
-                                                `https://mempool.space/testnet/address/${tyron?.ssi_box}`
-                                            )
-                                        }
-                                        style={{
-                                            paddingLeft: '4px',
-                                            cursor: 'pointer',
-                                            textDecorationLine: 'underline',
-                                            textDecorationColor: '#ffff32',
-                                        }}
-                                    >
-                                        {tyron?.ssi_box}
-                                    </span>
-                                </span>
-                            </p>
-                        </div>
-                    )}
                 </div>
             )}
         </>

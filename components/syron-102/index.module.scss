@@ -156,12 +156,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .titleForm2 {
-    font-size: 14px;
+    font-family: 'Fragment Mono', monospace;
+    font-size: 22px;
     color: #ffff32;
-    text-transform: capitalize;
     margin-left: 2%;
     @media only screen and (max-width: 767px) {
-        font-size: 12px;
+        font-size: 17px;
     }
 }
 

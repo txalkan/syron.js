@@ -122,22 +122,20 @@ export const VaultInput: React.FC<Prop> = ({
             <div className={classNames(styles.container)}>
                 <div className={styles.formTxtInfoWrapper}>
                     {xr == null ? (
-                        <div className={styles.balanceTxt}>
-                            &nbsp;| Loading...
-                        </div>
+                        <div className={styles.info}>&nbsp;| Loading...</div>
                     ) : (
                         <>
-                            <div className={styles.balanceTxt}>
+                            <div className={styles.info}>
                                 &nbsp;| price of 1 BTC: $
                                 {Number(Big(xr!.rate)).toLocaleString()}
                             </div>
-                            <div className={styles.balanceTxt}>
-                                &nbsp;| your balance:{' '}
+                            <div className={styles.info}>
+                                &nbsp;| balance:{' '}
                                 {isNaN(Number(bal))
                                     ? 'Connect Wallet'
                                     : `${Number(bal)} ${token?.symbol}`}
                             </div>
-                            <div className={styles.balanceTxt}>
+                            <div className={styles.info}>
                                 &nbsp;| Worth: $
                                 {Number(worth_).toLocaleString()}
                             </div>

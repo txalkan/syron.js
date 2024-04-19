@@ -135,10 +135,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
     padding-bottom: 4%;
 }
 
-.balanceTxt {
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+.info {
+    font-family: $font-anonymous-pro;
     text-transform: uppercase;
-    font-size: 14px;
-    color: #dbe4eb;
+    font-size: 22px;
+    color: #000;
     letter-spacing: normal;
 }
 
@@ -243,8 +245,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
         width: 100%;
     }
 
-    .balanceTxt {
-        font-size: 11px;
+    .info {
+        font-size: 17px;
     }
 
     .btnSwapWrapper {
