@@ -1,12 +1,12 @@
 {
     "name": "ssibrowser",
     "private": true,
-    "description": "Tyron Self-Sovereign Identity Protocol web application",
+    "description": "Tyron's web application",
     "version": "2.10.0",
-    "homepage": "https://tyron.network",
+    "homepage": "https://tyron.io",
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/tyroncoop/ssibrowser.git"
+        "url": "git+https://github.com/tyrondao/ssibrowser.git"
     },
     "author": "Tyron Pungtas and its affiliates",
     "scripts": {
