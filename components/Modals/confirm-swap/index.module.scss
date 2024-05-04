@@ -113,11 +113,19 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 $font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtRow {
-    font-size: 22px;
+    font-size: 12px;
     text-align: left;
     padding-left: 4%;
     color: #000;
     font-family: $font-anonymous-pro;
+
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
 }
 
 .txtRowEO {
@@ -138,12 +146,20 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .txtRow2 {
-    font-size: 15px;
+    font-size: 10px;
     text-transform: uppercase;
     text-align: left;
     padding-left: 4%;
     color: #000;
     font-family: 'Fragment Mono', monospace;
+
+    @media only screen and (min-width: 320px) {
+        font-size: 12px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 14px;
+    }
 }
 
 .cancel {
@@ -154,20 +170,4 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     justify-content: center;
     cursor: pointer;
     text-transform: uppercase;
-}
-
-@media only screen and (max-width: 350px) {
-    .txtRow {
-        font-size: 14px;
-    }
-
-    .txtRow2 {
-        font-size: 11px;
-    }
-}
-
-@media only screen and (max-width: 767px) and (min-width: 351px) {
-    .txtRow {
-        font-size: 17px;
-    }
 }
