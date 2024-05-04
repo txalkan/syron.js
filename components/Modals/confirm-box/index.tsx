@@ -33,6 +33,7 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import {
     mempoolTxId,
     mempoolFeeRate,
+    bisCheckInscription,
 } from '../../../src/utils/unisat/httpUtils'
 import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
@@ -247,7 +248,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 } else {
                     toast.info('BTC deposit confirmed', {
                         position: 'bottom-center',
-                        autoClose: 3000,
+                        autoClose: 4000,
                         hideProgressBar: false,
                         closeOnClick: true,
                         pauseOnHover: true,
@@ -376,7 +377,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // const contentTypeSize = 100 // the size of contentType
 
             // @dev The transaction fee rate in sat/vB @review (mainnet)
-            let feeRate = 20 //await mempoolFeeRate()
+            let feeRate = await mempoolFeeRate()
             console.log('Fee Rate', feeRate)
 
             if (!feeRate) {
@@ -505,13 +506,17 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     await transaction_status(txId).then(async (res) => {
                         await api
                             .orderInfo(order.orderId)
-                            .then((order_) => {
+                            .then(async (order_) => {
                                 console.log(
                                     'Order From OrderId',
                                     JSON.stringify(order_, null, 2)
                                 )
                                 const inscription_id =
                                     order_.files[0].inscriptionId
+
+                                // @dev Double-check inscription using BIS API
+                                await bisCheckInscription(inscription_id)
+
                                 return inscription_id.slice(0, -2)
                             })
                             .then(
@@ -527,7 +532,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     })
                 })
         } catch (err) {
-            console.error(err)
+            console.error('handleConfirm', err)
             // dispatch(setTxStatusLoading('rejected'))
 
             if (err == 'Error: Coming soon!') {

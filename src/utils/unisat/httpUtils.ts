@@ -93,7 +93,8 @@ export async function coinGeckoApi() {
 
         return data
     } catch (error) {
-        console.error('CoinGecko API Error', error)
+        console.error('CoinGecko Error:', error)
+        checkError(error)
     }
 }
 
@@ -113,7 +114,8 @@ export async function mempoolPrice() {
 
         return data
     } catch (error) {
-        console.error('Mempool API Error', error)
+        console.error('Mempool Error:', error)
+        checkError(error)
     }
 }
 
@@ -136,7 +138,8 @@ export async function mempoolTxId(address: string) {
 
         return tx_id
     } catch (error) {
-        console.error('Mempool API Error', error)
+        console.error('Mempool Error:', error)
+        checkError(error)
     }
 }
 
@@ -156,11 +159,11 @@ export async function mempoolFeeRate() {
         const data = await response.json()
         console.log(JSON.stringify(data, null, 2))
 
-        // Extract gas fees for the 90th percentile from the last 3 blocks
-        const lastBlocks = data.slice(-20)
+        // Extract gas fees for the 50th percentile from the last 60 blocks
+        const lastBlocks = data.slice(-60)
         const percentiles = lastBlocks
-            .map((block: { avgFee_75 }) => {
-                const fee = block.avgFee_75
+            .map((block: { avgFee_50 }) => {
+                const fee = block.avgFee_50
                 return fee === 0 ? undefined : fee // Exclude zero values
             })
             .filter((value) => value !== undefined) as number[] // Filter out undefined values
@@ -172,6 +175,46 @@ export async function mempoolFeeRate() {
 
         return average
     } catch (error) {
-        console.error('Mempool API Error', error)
+        console.error('Mempool Error:', error)
+        checkError(error)
+    }
+}
+
+export async function bisCheckInscription(id: string) {
+    try {
+        const url = `https://testnet.api.bestinslot.xyz/v3/inscription/single_info_id?inscription_id=${id}`
+
+        const apiKey = process.env.NEXT_PUBLIC_API_BIS
+        if (!apiKey) {
+            throw new Error('input apiKey and reload page')
+        }
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                'x-api-key': `${apiKey}`,
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+        console.log(JSON.stringify(data, null, 2))
+
+        return data
+    } catch (error) {
+        console.error('BIS Error:', error)
+        checkError(error)
+    }
+}
+
+// create a reusable function to check the erorr instance
+function checkError(error: any) {
+    if (error instanceof Error) {
+        throw new Error('API Error:' + error.message)
+    } else {
+        throw new Error('API error:' + error)
     }
 }
