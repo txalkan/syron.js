@@ -2,7 +2,7 @@
     "name": "ssibrowser",
     "private": true,
     "description": "Tyron's web application",
-    "version": "2.10.0",
+    "version": "3.0.0",
     "homepage": "https://tyron.io",
     "repository": {
         "type": "git",
