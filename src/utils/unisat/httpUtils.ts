@@ -12,7 +12,7 @@ export function setApiNetwork(type: UnisatNetworkType) {
     network = type
 }
 
-function createApi(baseURL: string) {
+function unisatCreateApi(baseURL: string) {
     const api = axios.create({
         baseURL,
         timeout: 10000,
@@ -33,15 +33,16 @@ function createApi(baseURL: string) {
     return api
 }
 
-const mainnetApi = createApi('https://open-api.unisat.io')
-const testnetApi = createApi('https://open-api-testnet.unisat.io')
+const mainnetApi = unisatCreateApi('https://open-api.unisat.io')
+const testnetApi = unisatCreateApi('https://open-api-testnet.unisat.io')
 
 function getApi() {
     return network === UnisatNetworkType.testnet ? testnetApi : mainnetApi
 }
 
-export const get = async (url: string, params?: any) => {
+export const getUniSat = async (url: string, params?: any) => {
     const res = await getApi().get(url, { params })
+
     if (res.status !== 200) {
         throw new Error(res.statusText)
     }
@@ -51,10 +52,73 @@ export const get = async (url: string, params?: any) => {
     if (responseData.code !== 0) {
         throw new Error(responseData.msg)
     }
+
+    console.log(JSON.stringify(responseData.data, null, 2))
+    // e.g.
+    // {
+    //     "utxo": {
+    //       "txid": "4b3f67dc18d10581edb237a1de3035a455cea2bf5d674babc1c2fb3c50385c44",
+    //       "vout": 0,
+    //       "satoshi": 546,
+    //       "scriptType": "0014",
+    //       "scriptPk": "0014d95aafa329fe17cb8086f381409953f9406645b4",
+    //       "codeType": 7,
+    //       "address": "tb1qm9d2lgeflctuhqyx7wq5px2nl9qxv3d58sqgm9",
+    //       "height": 2811443,
+    //       "idx": 2173,
+    //       "isOpInRBF": false,
+    //       "isSpent": false,
+    //       "inscriptions": [
+    //         {
+    //           "inscriptionNumber": 48107204,
+    //           "inscriptionId": "4b3f67dc18d10581edb237a1de3035a455cea2bf5d674babc1c2fb3c50385c44i0",
+    //           "offset": 0,
+    //           "moved": false,
+    //           "sequence": 0,
+    //           "isCursed": false,
+    //           "isVindicate": false,
+    //           "isBRC20": true
+    //         }
+    //       ]
+    //     },
+    //     "address": "tb1qm9d2lgeflctuhqyx7wq5px2nl9qxv3d58sqgm9",
+    //     "offset": 0,
+    //     "inscriptionIndex": 0,
+    //     "inscriptionNumber": 48107204,
+    //     "inscriptionId": "4b3f67dc18d10581edb237a1de3035a455cea2bf5d674babc1c2fb3c50385c44i0",
+    //     "hasPointer": false,
+    //     "hasParent": false,
+    //     "hasDeligate": false,
+    //     "hasMetaProtocal": false,
+    //     "hasMetadata": false,
+    //     "hasContentEncoding": false,
+    //     "pointer": 0,
+    //     "parent": "",
+    //     "deligate": "",
+    //     "metaprotocol": "",
+    //     "metadata": "",
+    //     "contentEncoding": "",
+    //     "contentType": "text/plain;charset=utf-8",
+    //     "contentLength": 58,
+    //     "contentBody": "",
+    //     "height": 2811443,
+    //     "timestamp": 1714855908,
+    //     "inSatoshi": 7675,
+    //     "outSatoshi": 3837,
+    //     "brc20": {
+    //       "op": "transfer",
+    //       "tick": "SYRO",
+    //       "lim": "100000000000",
+    //       "amt": "0.469",
+    //       "decimal": "18"
+    //     },
+    //     "detail": null
+    // }
+
     return responseData.data
 }
 
-export const post = async (url: string, data?: any) => {
+export const postUniSat = async (url: string, data?: any) => {
     const res = await getApi().post(url, data)
     if (res.status !== 200) {
         throw new Error(res.statusText)
@@ -68,6 +132,8 @@ export const post = async (url: string, data?: any) => {
 
     return responseData.data
 }
+
+// @dev CoinGecko API
 
 export async function coinGeckoApi() {
     try {
@@ -98,6 +164,8 @@ export async function coinGeckoApi() {
     }
 }
 
+// @dev Mempool API
+
 export async function mempoolPrice() {
     try {
         const url = 'https://mempool.space/api/v1/prices'
@@ -111,7 +179,6 @@ export async function mempoolPrice() {
         }
 
         const data = await response.json()
-
         return data
     } catch (error) {
         console.error('Mempool Error:', error)
@@ -180,6 +247,8 @@ export async function mempoolFeeRate() {
     }
 }
 
+// @dev Best In Slot API
+
 export async function bisCheckInscription(id: string) {
     try {
         const url = `https://testnet.api.bestinslot.xyz/v3/inscription/single_info_id?inscription_id=${id}`
@@ -204,6 +273,51 @@ export async function bisCheckInscription(id: string) {
         console.log(JSON.stringify(data, null, 2))
 
         return data
+    } catch (error) {
+        console.error('BIS Error:', error)
+        checkError(error)
+    }
+}
+
+function bisCreateApi(baseURL: string) {
+    const apiKey = process.env.NEXT_PUBLIC_API_BIS
+
+    const api = axios.create({
+        baseURL,
+        timeout: 10000,
+        headers: {
+            'x-api-key': `${apiKey}`,
+        },
+    })
+
+    api.interceptors.request.use((config) => {
+        if (!apiKey) {
+            throw new Error('input apiKey and reload page')
+        }
+        config.headers.Authorization = `Bearer ${apiKey}`
+        return config
+    })
+    return api
+}
+
+const bis = bisCreateApi('https://testnet.api.bestinslot.xyz/v3/')
+
+export async function bisApi(url: string) {
+    try {
+        const res = await bis.get(url)
+
+        if (res.status !== 200) {
+            throw new Error(res.statusText)
+        }
+
+        const responseData = res.data
+
+        if (responseData.code !== 0) {
+            throw new Error(responseData.msg)
+        }
+
+        console.log(JSON.stringify(responseData.data, null, 2))
+        return responseData.data
     } catch (error) {
         console.error('BIS Error:', error)
         checkError(error)

@@ -21,7 +21,7 @@ import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import { $xr } from '../../../src/store/xr'
 import { $btc_wallet, $syron } from '../../../src/store/syron'
-import { api } from '../../../src/utils/unisat/api'
+import { unisatApi } from '../../../src/utils/unisat/api'
 import {
     getStringByteCount,
     stringToBase64,
@@ -319,7 +319,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
-            // throw new Error('Coming soon!')
+            throw new Error('Coming soon!')
             if (!btc_wallet?.btc_addr) {
                 throw new Error('Connect Wallet')
             }
@@ -478,9 +478,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
             }
 
             // @dev Transfer Inscription
-            const order: InscribeOrderData = await api.createTransfer({
+            const order: InscribeOrderData = await unisatApi.createTransfer({
                 receiveAddress,
-                feeRate,
+                feeRate: feeRate || 1, // Assign a default value of 1 if feeRate is undefined
                 outputValue: 546,
                 devAddress: box_addr,
                 devFee: collateral,
@@ -504,7 +504,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
 
                     await transaction_status(txId).then(async (res) => {
-                        await api
+                        await unisatApi
                             .orderInfo(order.orderId)
                             .then(async (order_) => {
                                 console.log(
@@ -514,8 +514,8 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 const inscription_id =
                                     order_.files[0].inscriptionId
 
-                                // @dev Double-check inscription using BIS API
-                                await bisCheckInscription(inscription_id)
+                                // @dev Double-check inscription using indexer
+                                // await bisCheckInscription(inscription_id)
 
                                 return inscription_id.slice(0, -2)
                             })
