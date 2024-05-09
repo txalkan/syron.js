@@ -33,7 +33,6 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import {
     mempoolTxId,
     mempoolFeeRate,
-    bisCheckInscription,
 } from '../../../src/utils/unisat/httpUtils'
 import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
@@ -319,6 +318,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
+            // @pause
             throw new Error('Coming soon!')
             if (!btc_wallet?.btc_addr) {
                 throw new Error('Connect Wallet')
@@ -514,8 +514,17 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 const inscription_id =
                                     order_.files[0].inscriptionId
 
-                                // @dev Double-check inscription using indexer
-                                // await bisCheckInscription(inscription_id)
+                                // @dev Double-check inscription using indexer @todo
+                                await fetch(
+                                    `/api/get-unisat-inscription-info?id=${inscription_id}`
+                                )
+                                    .then((response) => response.json())
+                                    .then((data) =>
+                                        console.log(
+                                            JSON.stringify(data, null, 2)
+                                        )
+                                    )
+                                    .catch((error) => console.error(error))
 
                                 return inscription_id.slice(0, -2)
                             })

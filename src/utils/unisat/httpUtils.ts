@@ -42,6 +42,7 @@ function getApi() {
 
 export const getUniSat = async (url: string, params?: any) => {
     const res = await getApi().get(url, { params })
+    // console.log(JSON.stringify(res, null, 2))
 
     if (res.status !== 200) {
         throw new Error(res.statusText)
@@ -53,7 +54,7 @@ export const getUniSat = async (url: string, params?: any) => {
         throw new Error(responseData.msg)
     }
 
-    console.log(JSON.stringify(responseData.data, null, 2))
+    // console.log(JSON.stringify(responseData.data, null, 2))
     // e.g.
     // {
     //     "utxo": {
@@ -131,6 +132,36 @@ export const postUniSat = async (url: string, data?: any) => {
     }
 
     return responseData.data
+}
+
+export async function unisatInscriptionInfo(id: string) {
+    try {
+        const url = `https://open-api-testnet.unisat.io/v1/indexer/inscription/info/${id}`
+
+        const apiKey = process.env.NEXT_PUBLIC_API_UNISAT
+        if (!apiKey) {
+            throw new Error('input apiKey and reload page')
+        }
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+        console.log(JSON.stringify(data, null, 2))
+
+        return data
+    } catch (error) {
+        console.error('UniSat Error:', error)
+        checkError(error)
+    }
 }
 
 // @dev CoinGecko API
@@ -249,7 +280,7 @@ export async function mempoolFeeRate() {
 
 // @dev Best In Slot API
 
-export async function bisCheckInscription(id: string) {
+export async function bisInscriptionInfo(id: string) {
     try {
         const url = `https://testnet.api.bestinslot.xyz/v3/inscription/single_info_id?inscription_id=${id}`
 
