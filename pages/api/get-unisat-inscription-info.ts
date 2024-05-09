@@ -1,6 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
+import nextCors from 'nextjs-cors'
 
 type Data = {
     data?: any
@@ -14,6 +15,15 @@ export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<Data>
 ) {
+    // @dev Run the cors middleware
+    // nextjs-cors uses the cors package, so we can pass the same options.
+    await nextCors(req, res, {
+        // Options here
+        origin: '*', // Or the specific origin you want to give access to,
+        methods: ['GET'], //, 'POST', 'PUT', 'DELETE'],
+        optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+    })
+
     const { id } = req.query
 
     if (!id || Array.isArray(id)) {

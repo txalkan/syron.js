@@ -318,6 +318,13 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
+            // const inscription_id =
+            //     'c822a02427a096824059a03f4ea5c87d64c7c083d214a302fe924a7ff39e963ci0'
+            // await fetch(`/api/get-unisat-inscription-info?id=${inscription_id}`)
+            //     .then((response) => response.json())
+            //     .then((data) => console.log(JSON.stringify(data, null, 2)))
+            //     .catch((error) => console.error(error))
+
             // @pause
             throw new Error('Coming soon!')
             if (!btc_wallet?.btc_addr) {
