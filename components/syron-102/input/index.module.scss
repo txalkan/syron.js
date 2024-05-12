@@ -21,7 +21,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     border: 1px solid transparent;
     // max-width: 430px;
     width: 100%;
-    @include border-radius(16px);
+    @include border-radius(17px);
 
     padding-top: 10px;
     // padding-left: 16px;
@@ -55,34 +55,33 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 1px solid #dbe4eb;
-    margin-top: 5px;
-    // @include flex-between-row;
+    border: 1px solid #a9a9a9;
+    border-radius: 22px;
+    width: 100%;
 
-    // & > input {
-    //     font-size: 28px;
-    //     font-weight: 500;
-    //     width: 58%;
+    height: 30px;
+    @media only screen and (min-width: 320px) {
+        height: 33px;
+    }
 
-    //     max-width: 400px;
-    //     height: 38px;
+    @media only screen and (min-width: 768px) {
+        height: 39px;
+    }
+}
 
-    //     text-overflow: ellipsis;
-    //     white-space: nowrap;
-    //     overflow: hidden;
+.tokenImage {
+    height: 30px;
+    width: 30px;
 
-    //     &:focus {
-    //         outline: none;
-    //     }
+    @media only screen and (min-width: 320px) {
+        height: 33px;
+        width: 33px;
+    }
 
-    //     &:disabled {
-    //         pointer-events: none;
-    //     }
-
-    //     @media (max-width: 500px) {
-    //         font-size: 20px;
-    //     }
-    // }
+    @media only screen and (min-width: 768px) {
+        height: 39px;
+        width: 39px;
+    }
 }
 
 .dropdown {
@@ -95,8 +94,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     min-width: 150px;
     height: 3rem;
-    padding-left: 22px;
-    padding-right: 22px;
 
     // @include border-radius(8px);
 
@@ -119,14 +116,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-//@ssibrowser
-.container2 {
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    width: 100%;
-}
-
 .formTxtInfoWrapper {
     display: flex;
     flex-direction: column;
@@ -137,6 +126,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 $font-anonymous-pro: 'Anonymous Pro', monospace;
 .info {
+    margin-left: 9%;
     font-family: $font-anonymous-pro;
     text-transform: uppercase;
     font-size: 12px;
@@ -144,6 +134,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     letter-spacing: normal;
 
     @media only screen and (min-width: 320px) {
+        // @design-mobile
         font-size: 14px;
     }
 
@@ -152,49 +143,93 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
-.inputAmount {
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+.inputAmt {
     border: 0px !important;
-    color: #000;
-    padding-left: 10px;
+    color: #000 !important;
+    padding-left: 9% !important;
     width: 100%;
+    background-color: transparent;
+
+    font-size: 14px;
+    font-family: $font-anonymous-pro;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 17px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
+    }
 }
 
-.inputAmount:focus {
+.inputAmt:focus {
     box-shadow: none !important;
 }
 
+$font-anonymous-pro: 'Anonymous Pro', monospace;
 .percent {
-    border: 1px solid #dbe4eb;
-    border-radius: 5px;
+    background-color: #a238ff;
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+    border-radius: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 60px;
     height: 30px;
     margin-right: 10px;
+    padding: 6px;
     cursor: pointer;
+
+    //@design-text
+    font-family: $font-anonymous-pro;
+    color: #f8f8f8; // @design chrome #dbe4eb;
+    font-size: 12px;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
 }
 
-.percentTxt {
-    color: #dbe4eb;
-    font-size: 14px;
+.percent:hover {
+    background-color: #f8f8f8;
+    border: 1px solid #a238ff;
+    color: #000;
 }
 
+$font-anonymous-pro: 'Anonymous Pro', monospace;
 .percentActive {
-    border: 1px solid #ffff32;
-    border-radius: 5px;
+    background-color: #f8f8f8;
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+    border: 1px solid #a238ff;
+    border-radius: 22px;
     display: flex;
     align-items: center;
     justify-content: center;
     width: 60px;
     height: 30px;
     margin-right: 10px;
-    cursor: pointer;
-}
+    padding: 6px;
 
-.percentTxtActive {
-    color: #ffff32;
-    font-size: 14px;
+    //@design-text
+    font-family: $font-anonymous-pro;
+    color: #000; // @design chrome #dbe4eb;
+    font-size: 12px;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
 }
 
 .btnSwapWrapper {
@@ -243,11 +278,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
         border-radius: 15px;
     }
 
-    .wrapper {
-        //@ref ssibrowser
-        flex-direction: column;
-    }
-
     .dropdown {
         //@ref ssibrowser
         width: 100%;
@@ -264,4 +294,61 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     text-transform: none;
     font-size: small;
     margin: 7px;
+}
+
+.flexContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin-top: 11px;
+}
+
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+.tokenInfo {
+    font-family: $font-anonymous-pro;
+    width: 40%;
+    text-align: left;
+    padding-left: 2%;
+
+    color: #6e6e6e;
+    letter-spacing: normal;
+    font-size: 12px;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
+}
+
+.img {
+    // MAKE TRANSPARENT
+    opacity: 0;
+    margin-right: 3%;
+    height: 18px;
+    width: 18px;
+
+    @media only screen and (min-width: 320px) {
+        height: 28px;
+        width: 28px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        height: 33px;
+        width: 33px;
+    }
+}
+
+.inputWrapper {
+    display: flex;
+    flex-direction: row;
+}
+
+.inputContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }

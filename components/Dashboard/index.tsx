@@ -332,54 +332,61 @@ function Component() {
                             </div>
                         ) : (
                             <>
-                                {!connected ? (
-                                    <>
-                                        {!unisatInstalled ? (
-                                            <div
-                                                className={styles.wrapperIcon}
-                                                onClick={() => {
-                                                    window.open(
-                                                        'https://unisat.io',
-                                                        '_blank'
-                                                    )
-                                                }}
-                                            >
+                                {
+                                    !connected ? (
+                                        <>
+                                            {!unisatInstalled ? (
                                                 <div
                                                     className={
-                                                        styles.txtConnect
+                                                        styles.wrapperIcon
                                                     }
+                                                    onClick={() => {
+                                                        window.open(
+                                                            'https://unisat.io',
+                                                            '_blank'
+                                                        )
+                                                    }}
                                                 >
-                                                    {t('Install Unisat')}
+                                                    <div
+                                                        className={
+                                                            styles.txtConnect
+                                                        }
+                                                    >
+                                                        {t('Install UniSat')}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        ) : (
-                                            <div
-                                                className={styles.wrapperIcon}
-                                                onClick={async () => {
-                                                    const result =
-                                                        await unisat.requestAccounts()
-                                                    handleAccountsChanged(
-                                                        result
-                                                    )
-                                                }}
-                                            >
+                                            ) : (
                                                 <div
                                                     className={
-                                                        styles.txtConnect
+                                                        styles.wrapperIcon
                                                     }
+                                                    onClick={async () => {
+                                                        const result =
+                                                            await unisat.requestAccounts()
+                                                        handleAccountsChanged(
+                                                            result
+                                                        )
+                                                    }}
                                                 >
-                                                    {t('CONNECT')}
+                                                    <div
+                                                        className={
+                                                            styles.txtConnect
+                                                        }
+                                                    >
+                                                        {t('CONNECT')}
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        )}
-                                    </>
-                                ) : (
-                                    <div className={styles.wrapperIcon}>
-                                        <div className={styles.txtConnected}>
-                                            {t('CONNECTED')}
-                                        </div>
-                                    </div>
-                                )}
+                                            )}
+                                        </>
+                                    ) : null
+                                    // (
+                                    //     <div className={styles.wrapperIcon}>
+                                    //         <div className={styles.txtConnected}>
+                                    //             {t('CONNECTED')}
+                                    //         </div>
+                                    //     </div>
+                                    // )
+                                }
                                 {/* <div
                                     className={styles.wrapperIcon}
                                     onClick={onSignIn}

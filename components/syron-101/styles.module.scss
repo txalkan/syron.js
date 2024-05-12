@@ -28,7 +28,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 .titleX {
     font-family: $font-anonymous-pro;
     font-size: 25px;
-    color: #dbe4eb;
+    color: #ffff32;
     text-transform: uppercase;
     padding-left: 10px;
     padding-top: 7px;
@@ -59,13 +59,14 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #ffffff2e;
+    background-color: #a238ff; // @design #420085; #ffffff2e;
     //border-radius: 4px;
     margin-top: 17px;
     margin-bottom: 2px;
     cursor: pointer;
     //border: 1px solid silver;
     position: relative;
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
 }
 
 .cardActive::before {
@@ -128,18 +129,17 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .cardSub {
-    background-color: #ffffff2e;
-    //border: 1px solid silver;
+    position: relative;
+    background-color: rgba(248, 248, 248, 0.9); // @design #F8F8F8
     //border-radius: 4px;
     padding: 7px;
     margin-bottom: 17px;
-    position: relative;
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
 }
 
 .cardSub::before {
-    content: '';
     position: absolute;
-    //dashboard must have position:relative
+    content: '';
     top: 0;
     left: 0;
     height: 100%;

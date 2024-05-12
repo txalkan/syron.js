@@ -63,14 +63,14 @@ function Component() {
                     }
                 >
                     <div className={styles.icoWrapper2}>
-                        <div className={styles.titleX}>Be Your Own ₿ank</div>
+                        <div className={styles.titleX}>ᛞ Be Your Own ₿ank</div>
                     </div>
-                    <div className={styles.icoWrapper}>
+                    {/* <div className={styles.icoWrapper}>
                         <Image
                             src={active === 'syron' ? icoUp : icoDown}
                             alt="toggle-ico"
                         />
-                    </div>
+                    </div> */}
                 </div>
                 {active === 'syron' && (
                     <div className={styles.cardSub}>

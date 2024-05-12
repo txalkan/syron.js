@@ -3,7 +3,7 @@ import styles from './index.module.scss'
 import Big from 'big.js'
 import { useStore } from 'react-stores'
 import { SwapSettings } from './settings'
-import { VaultInput } from './input'
+import { BoxInput } from './input'
 import { TokenInput } from './token'
 import { TransactionOutput } from './txn-output'
 import { $tokens } from '../../src/store/tokens'
@@ -12,7 +12,7 @@ import { TokensModal } from '../Modals/tokens'
 import { TokenBalance, TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
-import icoSend from '../../src/assets/icons/ssi_icon_send.svg'
+import icoSend from '../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 import Image from 'next/image'
 import { SSIVault } from '../../src/mixins/vault'
 import { ConfirmBox } from '../Modals/confirm-box'
@@ -150,15 +150,14 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                             <Image
                                 src={icoSend}
                                 alt="deposit-icon"
-                                height="22"
-                                width="22"
+                                className={styles.img}
                             />
                             <div className={styles.titleForm2}>
-                                Deposit bitcoin
+                                Deposit Bitcoin
                             </div>
                         </div>
 
-                        <VaultInput
+                        <BoxInput
                             value={vault_pair[0].value}
                             token={vault_pair[0].meta}
                             disabled={disabled}
@@ -168,7 +167,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                             onSwap={handleForm}
                         />
                     </div>
-                    <div className={styles.contentWrapper2}>
+                    {/* <div className={styles.contentWrapper2}>
                         <div className={styles.icoWrapper}>
                             <Image
                                 src={icoReceive}
@@ -176,42 +175,26 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 height="22"
                                 width="22"
                             />
-                            {/* <div className={styles.titleForm2}>Get Syron</div> */}
+                            <div className={styles.titleForm2}>Get Syron</div>
                         </div>
                         <TokenInput
                             token={vault_pair[1].meta}
                             onSelect={() => setModal1(true)}
                         />
-                    </div>
+                    </div> */}
                     <div style={{ width: '100%' }}>
-                        {Number(amount) !== 0 && (
-                            <>
-                                <TransactionOutput
-                                    amount={amount}
-                                    token={vault_pair[1].meta}
-                                />
-
-                                {/* {confirmModal ? ( */}
-
-                                <ConfirmBox
-                                    show={confirmModal}
-                                    pair={vault_pair}
-                                    direction={direction}
-                                    // onClose={() => {
-                                    //     setConfirmModal(false)
-                                    // }}
-                                />
-                                {/* <div className={styles.wrapperSettings}>
-                                    <span className={styles.settings}>
-                                        settings
-                                    </span>
-                                    <SwapSettings
-                                        onClick={() => setModal3(true)}
-                                    />
-                                </div> */}
-                            </>
-                            // ) : null}
-                        )}
+                        <TransactionOutput
+                            amount={amount}
+                            token={vault_pair[1].meta}
+                        />
+                        <ConfirmBox
+                            show={confirmModal}
+                            pair={vault_pair}
+                            direction={direction}
+                            // onClose={() => {
+                            //     setConfirmModal(false)
+                            // }}
+                        />
                     </div>
                 </form>
             ) : null}

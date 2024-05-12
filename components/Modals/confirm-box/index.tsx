@@ -1,4 +1,4 @@
-import styles from '../confirm-swap/index.module.scss'
+import styles from './index.module.scss'
 import _Big from 'big.js'
 import classNames from 'classnames'
 import { useStore } from 'react-stores'
@@ -614,13 +614,8 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                                 ).toLocaleString()}
                                             </div>
                                         </div> */}
-                                        <div className={styles.rowLiq}>
-                                            <div className={styles.txtRow}>
-                                                Collateral Ratio
-                                            </div>
-                                            <div className={styles.txtRow}>
-                                                1.5:1
-                                            </div>
+                                        <div className={styles.txtRow}>
+                                            | Collateral Ratio = 1.5:1
                                         </div>
                                         {/* <div className={styles.rowLiq}>
                                             <div className={styles.txtRow}>
@@ -688,36 +683,42 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             </div>
                         </div> */}
                     </div>
-                    <div className={styles.btnWrapper}>
-                        <div
-                            style={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginTop: '1rem',
-                                cursor: 'pointer',
-                            }}
-                            className={`button ${
-                                disabled ? 'disabled' : 'primary'
-                            }`}
-                            onClick={
-                                handleConfirm
-                                // @review (wallet) - else: connect wallet (see dashboard)
-                            }
-                            // disabled={disabled}
-                        >
-                            {disabled ? (
-                                <ThreeDots color="yellow" />
-                            ) : (
-                                // <>
-                                //     {btc_wallet != null
-                                //         ? 'get su$d'
-                                //         : 'connect wallet'}
-                                // </>
-                                'confirm'
-                            )}
-                        </div>
+                    <div
+                        style={{
+                            width: '100%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            marginTop: '1rem',
+                            cursor: 'pointer',
+                            border: '1px solid #ffff32',
+                            borderRadius: '14px',
+                            backgroundColor: '#a238ff',
+                            // @design-shadow-3d
+                            backgroundImage:
+                                'linear-gradient(to right, #a238ff, #7a28ff)', // Added gradient background
+                            boxShadow:
+                                '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
+                        }}
+                        className={`button ${
+                            disabled ? 'disabled' : 'primary'
+                        }`}
+                        onClick={
+                            handleConfirm
+                            // @review (wallet) - else: connect wallet (see dashboard)
+                        }
+                        // disabled={disabled}
+                    >
+                        {disabled ? (
+                            <ThreeDots color="yellow" />
+                        ) : (
+                            // <>
+                            //     {btc_wallet != null
+                            //         ? 'get su$d'
+                            //         : 'connect wallet'}
+                            // </>
+                            <div className={styles.txt}>continue</div>
+                        )}
                     </div>
                     {/* <div onClick={onClose} className={styles.cancel}>
                         Cancel

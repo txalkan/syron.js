@@ -76,16 +76,6 @@
     left: 0%;
 }
 
-.tyronLg {
-    cursor: pointer;
-    margin-top: 33%;
-
-    @media only screen and (max-width: 576px) {
-        margin-top: 22%;
-        width: 90px;
-    }
-}
-
 .dummy {
     display: flex;
     width: 170px;

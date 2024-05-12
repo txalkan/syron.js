@@ -1,7 +1,8 @@
-import stylesDark from '../../styles/css/Footer.module.css'
-import stylesLight from '../../styles/css/FooterLight.module.css'
+import styles from './styles.module.scss'
+// import stylesDark from '../../styles/css/Footer.module.css'
+// import stylesLight from '../../styles/css/FooterLight.module.css'
 import Image from 'next/image'
-import TyronLogo from '../../src/assets/logos/tyron_logo.svg'
+import TyronLogo from '../../src/assets/logos/tyron_black_circle_horizontal.png'
 // import upDown from '../../src/assets/icons/up_down_arrow.svg'
 // import { useState } from 'react'
 import { RootState } from '../../src/app/reducers'
@@ -26,7 +27,7 @@ function Footer() {
     // const dispatch = useDispatch()
     // const language = useSelector((state: RootState) => state.modal.lang)
     const isLight = useSelector((state: RootState) => state.modal.isLight)
-    const styles = isLight ? stylesLight : stylesDark
+    // const styles = isLight ? stylesLight : stylesDark
 
     const menuOn = useStore($menuOn)
     const modalDashboard = useStore($modalDashboard)
@@ -156,10 +157,7 @@ function Footer() {
                 </div> */}
             <div
                 onClick={() => {
-                    // @info why the router here does not work? URL update but UI not: because when we're pushing to the
-                    // same page e.g /ilhamb to /ssiprotocol it'll not trigger useeffect (but if from ilhamb/didx to /ssiprotocol this is works)
-                    // Router.push('/ssiprotocol/tree')
-                    window.open('http://tyron.network/ssiprotocol', '_self')
+                    window.open('http://tyron.io', '_self')
                 }}
                 className={styles.tyronLg}
             >
@@ -167,8 +165,7 @@ function Footer() {
                     priority={true}
                     src={TyronLogo}
                     alt="tyron-logo"
-                    width="120"
-                    height="40"
+                    className={styles.tyronImg}
                 />
             </div>
             {/* <div className={styles.dummy} />

@@ -1,0 +1,231 @@
+@import '../../../styles/scss/mixins.scss';
+@import url('https://fonts.googleapis.com/css2?family=Fragment+Mono:ital@0;1&display=swap');
+
+.output {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 22px;
+    background-color: #a9a9a9;
+    width: 100%;
+
+    height: 30px;
+
+    @media only screen and (min-width: 320px) {
+        height: 33px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        height: 39px;
+    }
+}
+
+.container {
+    width: 100%;
+}
+
+.wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-top: 11px;
+    margin-bottom: 18px;
+}
+
+.formInactive {
+    width: 100%;
+    border: 1px solid #fff;
+    padding: 11px;
+    cursor: pointer;
+}
+
+.txtOpActive {
+    font-size: small;
+    text-transform: uppercase;
+    color: #ffff32;
+    transform: rotate(90deg);
+    margin-left: -11px;
+}
+
+.txtOp {
+    font-size: 14px;
+    color: #fff;
+    transform: rotate(270deg);
+    margin-left: -15px;
+}
+
+.btnSwap {
+    width: 40px;
+    height: 40px;
+    border-radius: 20px;
+    background-color: #000;
+    border: 1px solid #ffff32;
+    margin-right: 5px;
+}
+
+.dummyIco {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    align-items: center;
+    display: flex;
+}
+
+.dummyIco2 {
+    width: 40px;
+    height: 40px;
+    align-items: center;
+    display: flex;
+}
+
+.dummyIcoOthers {
+    width: 15px;
+    height: 15px;
+    margin-right: 5px;
+}
+
+.tyronIcoRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.tokenDexRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.contentLeft {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    width: 30%;
+}
+
+$font-anonymous-pro: 'Anonymous Pro', monospace;
+.outputAmt {
+    font-family: $font-anonymous-pro;
+
+    font-size: 14px;
+    color: #a238ff !important;
+    border: none !important;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 17px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
+    }
+}
+
+.btnSubmitSwap {
+    background-color: #ffff32;
+    border: 1px solid silver;
+    border-radius: 7px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 125px;
+    height: 45px;
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+// @media only screen and (max-width: 550px) {
+//     .outputAmt {
+//         width: 120px !important;
+//     }
+
+//     .content {
+//         display: flex;
+//         flex-direction: column;
+//         align-items: center;
+//     }
+// }
+
+@media only screen and (max-width: 767px) {
+    .tokenDexRow {
+        margin-top: 7px;
+        margin-bottom: 13px;
+    }
+
+    .btnSubmitSwapTxt,
+    .btnSubmitSwapTxtInactive {
+        font-size: 10px;
+    }
+}
+
+//@ssibrowser
+
+.dexName {
+    font-family: 'Fragment Mono', monospace;
+    padding: 11px;
+    font-size: 17px;
+    @media only screen and (max-width: 767px) {
+        font-size: 14px;
+    }
+}
+
+.outputContainer {
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+//@design-size
+.tokenImage {
+    height: 30px;
+    width: 30px;
+
+    @media only screen and (min-width: 320px) {
+        height: 33px;
+        width: 33px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        height: 39px;
+        width: 39px;
+    }
+}
+
+$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
+.tokenInfo {
+    font-family: $font-anonymous-pro;
+    width: 40%;
+    text-align: left;
+    padding-left: 2%;
+
+    color: #6e6e6e;
+    letter-spacing: normal;
+    font-size: 12px;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
+}
+
+.img {
+    transform: rotate(270deg);
+
+    margin-right: 3%;
+    height: 18px;
+    width: 18px;
+
+    @media only screen and (min-width: 320px) {
+        height: 28px;
+        width: 28px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        height: 33px;
+        width: 33px;
+    }
+}

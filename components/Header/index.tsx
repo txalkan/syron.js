@@ -3,7 +3,7 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { Dashboard, Menu, SearchBar, Stats, Syron, ZilPay } from '..'
+import { Dashboard, Footer, Menu, SearchBar, Stats, Syron, ZilPay } from '..'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -233,10 +233,11 @@ function Header() {
                 !modalInvestor &&
                 !modalTransfer &&
                 !modalNewMotions && (
-                    <>
+                    <div className={styles.header}>
                         {/* <Menu /> */}
+                        <Footer />
                         <Dashboard />
-                    </>
+                    </div>
                 )}
             <ToastContainer
                 className={styles.containerToast}

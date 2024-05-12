@@ -23,3 +23,26 @@
         margin-top: 15px;
     }
 }
+
+.header {
+    background-color: rgba(248, 248, 248, 0.6);
+    backdrop-filter: blur(9px);
+
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+
+    z-index: 1000;
+    position: fixed;
+    width: 100% !important;
+    top: 0;
+    left: 0; /* Add this line to cover the full width */
+
+    //@mobile
+    height: 70px;
+    @media only screen and (min-width: 320px) {
+        height: 90px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        height: 110px;
+    }
+}

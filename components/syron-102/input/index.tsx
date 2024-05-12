@@ -13,6 +13,8 @@ import { useStore } from 'react-stores'
 import { $btc_wallet, $syron } from '../../../src/store/syron'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
+import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
+
 Big.PE = 999
 const _0 = Big(0)
 
@@ -29,7 +31,7 @@ type Prop = {
 
 const list = [10, 30, 50, 70]
 
-export const VaultInput: React.FC<Prop> = ({
+export const BoxInput: React.FC<Prop> = ({
     value: value_,
     token,
     disabled,
@@ -86,14 +88,13 @@ export const VaultInput: React.FC<Prop> = ({
             const target = event.target as HTMLInputElement
             try {
                 if (target.value) {
-                    // @review (dec)
                     const input = Big(target.value).mul(1e8)
                     onInput(input)
                 } else {
                     onInput(Big(0))
                 }
             } catch (err) {
-                console.error(err)
+                console.error('HandleOnInput', err)
             }
         },
         [onInput]
@@ -108,7 +109,7 @@ export const VaultInput: React.FC<Prop> = ({
         // Convert to string and remove trailing zeros
         const formattedValue = val.toString().replace(/0+$/, '')
 
-        // Limit decimal places to 8 (including the decimal point)
+        // Limit decimal places to 8
         if (formattedValue.indexOf('.') !== -1) {
             return formattedValue.slice(0, formattedValue.indexOf('.') + 9)
         } else {
@@ -126,80 +127,115 @@ export const VaultInput: React.FC<Prop> = ({
                     ) : (
                         <>
                             <div className={styles.info}>
-                                &nbsp;| price of 1 BTC: $
-                                {Number(Big(xr!.rate)).toLocaleString()}
+                                {/* &nbsp; */}| price of 1 BTC: $
+                                {Number(Big(xr!.rate)).toLocaleString('de-DE')}
                             </div>
                             <div className={styles.info}>
-                                &nbsp;| balance:{' '}
+                                | balance:{' '}
                                 {isNaN(Number(bal))
                                     ? 'Connect Wallet'
-                                    : `${Number(bal)} ${token?.symbol}`}
+                                    : `${
+                                          Number(bal) == 0
+                                              ? 0
+                                              : Number(bal).toLocaleString(
+                                                    'de-DE',
+                                                    {
+                                                        minimumFractionDigits: 8,
+                                                        maximumFractionDigits: 8,
+                                                    }
+                                                )
+                                      } ${token?.symbol}`}
                             </div>
                             <div className={styles.info}>
-                                &nbsp;| Worth: $
-                                {Number(worth_).toLocaleString()}
+                                | Worth: $
+                                {Number(worth_) == 0
+                                    ? 0
+                                    : Number(worth_).toLocaleString('de-DE', {
+                                          minimumFractionDigits: 2,
+                                          maximumFractionDigits: 2,
+                                      })}
                             </div>
                         </>
                     )}
                 </div>
-                <div>
-                    {disabled ? null : (
-                        <div className={styles.percentWrapper}>
-                            <div className={styles.row}>
-                                {list.map((n) => (
-                                    <div
-                                        key={n}
-                                        className={
-                                            n === selectedPercent
-                                                ? styles.percentActive
-                                                : styles.percent
-                                        }
-                                        onClick={() => handlePercent(n)}
-                                    >
-                                        <div
+                <div className={styles.inputWrapper}>
+                    <Image
+                        src={icoArrow}
+                        alt="deposit-icon"
+                        className={styles.img}
+                    />
+                    <div className={styles.inputContainer}>
+                        {/* @dev Percentage buttons */}
+                        <div>
+                            {disabled ? null : (
+                                <div className={styles.percentWrapper}>
+                                    <div className={styles.row}>
+                                        {list.map((n) => (
+                                            <div
+                                                key={n}
+                                                className={
+                                                    n === selectedPercent
+                                                        ? styles.percentActive
+                                                        : styles.percent
+                                                }
+                                                onClick={() => handlePercent(n)}
+                                            >
+                                                {/* <div
                                             className={
                                                 n === selectedPercent
                                                     ? styles.percentTxtActive
                                                     : styles.percentTxt
                                             }
-                                        >
-                                            {n}%
-                                        </div>
+                                        > */}
+                                                {n}%{/* </div> */}
+                                            </div>
+                                        ))}
                                     </div>
-                                ))}
+                                </div>
+                            )}
+                        </div>
+                        {/* @dev Input Box */}
+                        <div className={styles.flexContainer}>
+                            <div className={styles.wrapper}>
+                                <input
+                                    className={styles.inputAmt}
+                                    type="number"
+                                    placeholder="0"
+                                    onInput={handleOnInput}
+                                    value={formatValue(val)}
+                                    disabled={disabled}
+                                    step={0.00000001}
+                                />
+                                {token && (
+                                    <Image
+                                        className={styles.tokenImage}
+                                        src={
+                                            token.symbol === 'BTC'
+                                                ? icoBTC
+                                                : icoSU$D
+                                        }
+                                        alt="tokens-logo"
+                                    />
+                                    // <div
+                                    //     className={classNames(styles.dropdown)}
+                                    //     // onClick={onSelect}
+                                    // >
+                                    //     <Image
+                                    //         src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
+                                    //         alt="tokens-logo"
+                                    //         height="35"
+                                    //         width="35"
+                                    //     />
+                                    //     <div className={styles.symbol}>{token.symbol}</div>
+                                    //     <div className={styles.arrowIco}>
+                                    //         <Image alt="arrow-ico" src={ArrowDownReg} />
+                                    //     </div>
+                                    // </div>
+                                )}
                             </div>
+                            <div className={styles.tokenInfo}>| BTC</div>
                         </div>
-                    )}
-                </div>
-                <div className={styles.wrapper}>
-                    <div className={styles.container2}>
-                        <input
-                            className={styles.inputAmount}
-                            type="number"
-                            placeholder="0"
-                            onInput={handleOnInput}
-                            value={formatValue(val)}
-                            disabled={disabled}
-                            step={0.00000001}
-                        />
                     </div>
-                    {token && (
-                        <div
-                            className={classNames(styles.dropdown)}
-                            // onClick={onSelect}
-                        >
-                            <Image
-                                src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
-                                alt="tokens-logo"
-                                height="35"
-                                width="35"
-                            />
-                            <div className={styles.symbol}>{token.symbol}</div>
-                            {/* <div className={styles.arrowIco}>
-                                <Image alt="arrow-ico" src={ArrowDownReg} />
-                            </div> */}
-                        </div>
-                    )}
                 </div>
                 {/* @review (burn) */}
                 {/* <div>

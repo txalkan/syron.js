@@ -50,19 +50,36 @@
     background-color: rgba($color: #fff, $alpha: 0.1);
 }
 
+$font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtConnect {
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+
+    white-space: nowrap;
+    color: #f8f8f8;
+    margin: 10px;
+    background-color: #a238ff;
+    border-radius: 22px;
+    padding: 7%;
+
     font-size: 11px;
-    color: grey;
-    margin-left: 10px;
-    border: 1px solid #dbe4eb;
-    border-radius: 5px;
-    padding: 5px;
+    font-family: $font-anonymous-pro;
+
+    @media only screen and (min-width: 320px) {
+        // @design-mobile
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
 }
 
 .txtConnect:hover {
-    color: gray;
+    cursor: pointer !important; // @review (not working)
+    color: #a238ff;
     border: 1px solid #fff;
-    background-color: rgba($color: #fff, $alpha: 0.1);
+    border: 1px solid #a238ff;
+    background-color: #f8f8f8//rgba($color: #fff, $alpha: 0.1);
 }
 
 .tooltip {
