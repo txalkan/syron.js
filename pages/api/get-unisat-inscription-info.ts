@@ -2,6 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
+import supabase from '../../src/utils/supabase'
 
 type Data = {
     data?: any
@@ -21,10 +22,19 @@ export default async function handler(
         optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
     })
 
-    // @dev Cache response and revalidate every 3 seconds
-    response.setHeader('Cache-Control', 'public, s-maxage=3')
+    // @dev Cache response and revalidate every second
+    response.setHeader('Cache-Control', 'public, s-maxage=1')
 
     const { id } = request.query
+
+    // Get the data from Supabase
+    const { data, error } = await supabase
+        .from('unisat_inscription_info')
+        .select('id, timestamp, data')
+        .eq('id', id)
+        .single()
+
+    console.log('supabase', data, error)
 
     if (!id || Array.isArray(id)) {
         response.status(400).json({
