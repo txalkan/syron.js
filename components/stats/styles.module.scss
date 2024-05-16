@@ -97,7 +97,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     color: #dbe4eb;
     text-align: left;
     text-transform: none;
-    font-size: 17px;
+    font-size: 1.4rem;
     padding-left: 22px;
     margin-bottom: 22px;
     position: relative;
@@ -124,10 +124,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
         /* Ajusta la opacidad según sea necesario */
         z-index: -1;
         /* Coloca la capa detrás del texto */
-    }
-
-    @media (min-width: 576px) {
-        font-size: 22px;
     }
 }
 

@@ -129,7 +129,9 @@ function Component() {
 
     return (
         <div className={styles.dashboard}>
-            <div className={styles.title}>Stats</div>
+            <div className={styles.title}>
+                <span style={{ color: '#ffff32' }}>ᛞ</span> Stats
+            </div>
             <div className={styles.rowRate}>
                 <span>1</span>
                 <Image
