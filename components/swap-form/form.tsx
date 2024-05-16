@@ -111,6 +111,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
             : ''
 
     const [isDEFIx, setIsDEFIx] = React.useState(true)
+
     useEffect(() => {
         if (
             (resolvedDomain === 'tydradex' || resolvedDomain === 'tyrondex') &&
@@ -161,6 +162,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     //@ssibrowser
     const [balances, setGetBalances] = useState(['0', '0'])
+
     useEffect(() => {
         setGetBalances(['0', '0'])
         async function readBalances() {
@@ -316,12 +318,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
                 setGetBalances(bal)
             } catch (error) {
-                console.error('effect:', error)
+                console.error('New Effect Error', error)
             }
         }
 
         readBalances()
     }, [pair, tokensStore, wallet, isDEFIx, zilpay_addr])
+
     //@zilpay
     // const disabled = React.useMemo(() => {
     //     const amount = Big(pair[0].value)

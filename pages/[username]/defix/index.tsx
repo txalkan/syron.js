@@ -22,6 +22,7 @@ import { useStore as effectorStore } from 'effector-react'
 import useFetch from '../../../src/hooks/fetch'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
+import { $props, updateProps } from '../../../src/store/props'
 type Prop = {
     data: ListedTokenResponse
     pair: SwapPair[]
@@ -29,6 +30,7 @@ type Prop = {
 
 const dex = new DragonDex()
 const backend = new ZilPayBackend()
+
 export const PageSwap: NextPage<Prop> = (props) => {
     //const { t } = useTranslation(`swap`);
 
@@ -56,6 +58,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [wallet])
+
     //@zilpay
     React.useEffect(() => {
         if (props.data) {
@@ -64,8 +67,9 @@ export const PageSwap: NextPage<Prop> = (props) => {
             loadFromServer(props.data.tokens.list)
         }
     }, [props])
+
     const handleUpdate = React.useCallback(async () => {
-        if (typeof window !== 'undefined') {
+        if (typeof window !== 'undefined' && props.data) {
             updateRate(props.data.rate)
             try {
                 await dex.updateTokens() //@reviewed: added SSI tokens
@@ -82,6 +86,10 @@ export const PageSwap: NextPage<Prop> = (props) => {
         }
     }, [handleUpdate, wallet])
 
+    React.useEffect(() => {
+        console.log('props', JSON.stringify(props, null, 2))
+    }, [])
+
     return (
         <Layout>
             <div className={styles.headlineWrapper}>
@@ -89,7 +97,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
                 <DomainName />
                 <Tydra type="account" />
             </div>
-            <Defix startPair={props.pair} />
+            {Array.isArray(props.pair) && <Defix startPair={props.pair} />}
         </Layout>
     )
 }
@@ -127,21 +135,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     //         meta: data.tokens.list[1],
     //     },
     // ]
+    console.log('Server Data', JSON.stringify(data, null, 2))
 
     //@ssibrowser
-    // @review: asap dex
-    const ref_pools = {
-        //@S$I
-        '0xf0cb60c75a3d075969e35bf6749bb3f58e484c72': [
-            '62814772743218038',
-            '634978402620139773',
-        ],
-        //@TYRON
-        '0x4f76adebaf4ab6c55e4483c6d10eb0dd1a319165': [
-            '25325608536430145',
-            '153963706725760245',
-        ],
-    }
     const pair = [
         {
             value: '0',
@@ -156,7 +152,19 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
             meta: tyron_tokenState,
         },
     ]
-    //@zilpay
+
+    const ref_pools = {
+        //@S$I
+        '0xf0cb60c75a3d075969e35bf6749bb3f58e484c72': [
+            '62814772743218038',
+            '634978402620139773',
+        ],
+        //@TYRON
+        '0x4f76adebaf4ab6c55e4483c6d10eb0dd1a319165': [
+            '25325608536430145',
+            '153963706725760245',
+        ],
+    }
 
     if (context.query) {
         if (context.query['tokenIn']) {
@@ -188,10 +196,11 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     const zlp_pools = zlp_data.pools
     const ssi_tokens = [s$i_tokenState, tyron_tokenState, ...zlp_tokens]
     const ssi_pools = { ...ref_pools, ...zlp_pools }
+
     updateDexPools(ssi_pools)
     updateRate(data.rate)
     loadFromServer(ssi_tokens)
-    //@zilpay
+
     return {
         props: {
             data,

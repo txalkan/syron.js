@@ -574,6 +574,8 @@ function Component() {
                             alt="close-ico"
                             src={CloseIcon}
                             onClick={outerClose}
+                            width={18}
+                            height={18}
                         />
                     </div>
                     {txType === 'AddFunds' &&

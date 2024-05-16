@@ -106,11 +106,14 @@ function Component() {
         domain: string,
         subdomain: string
     ) => {
-        updateShowSearchBar(false)
+        console.log('GET RESULTS:', tld, domain, subdomain)
         updateLoading(true)
+
+        updateShowSearchBar(false)
         updateDonation(null)
         updateDoc(null)
         updateIsController(false)
+
         if (isValidUsername(domain)) {
             if (tld === 'tyron') {
                 if (VALID_SMART_CONTRACTS.includes(domain)) {
@@ -147,6 +150,7 @@ function Component() {
                         toastId: 2,
                     })
                 }
+                console.log('RESOLVE:', tld, domain, subdomain)
                 await resolveNftUsername(tld, domain, subdomain)
             }
         } else {

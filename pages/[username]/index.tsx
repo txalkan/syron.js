@@ -40,6 +40,7 @@ function Header() {
 
     const wallet = useStore($wallet)
     useEffect(() => {
+        console.log('USER_WALLET', wallet)
         if (!path.includes('/getstarted')) {
             // if (path.includes('did@') || path.includes('.did')) {
             //     fetchDoc()
@@ -54,6 +55,7 @@ function Header() {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [wallet])
+
     return (
         <Layout>
             <div className={styles.headlineWrapper}>

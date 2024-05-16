@@ -81,11 +81,13 @@ export const Defix: React.FC<Prop> = ({ startPair }) => {
     const net = $net.state.net as 'mainnet' | 'testnet'
 
     const wallet = useStore($wallet)
+
     useEffect(() => {
         console.log('/defix: UPDATE_DID_DOC')
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [net, wallet])
+
     useEffect(() => {
         if (wallet) {
             dex.updateState()
