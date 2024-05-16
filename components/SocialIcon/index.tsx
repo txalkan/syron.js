@@ -42,7 +42,12 @@ function Component({ type }) {
                         onClick={() => window.open('https://t.me/tyrondao_org')}
                         className={styles.ico}
                     >
-                        <Image src={telegramIco} alt="soc-ico" />
+                        <Image
+                            src={telegramIco}
+                            alt="soc-ico"
+                            width={33}
+                            height={33}
+                        />
                     </div>
                     <div
                         onClick={() =>
@@ -50,7 +55,12 @@ function Component({ type }) {
                         }
                         className={styles.ico}
                     >
-                        <Image src={githubIco} alt="soc-ico" />
+                        <Image
+                            src={githubIco}
+                            alt="soc-ico"
+                            width={33}
+                            height={33}
+                        />
                     </div>
                     <div
                         onClick={() =>
@@ -58,7 +68,12 @@ function Component({ type }) {
                         }
                         className={styles.ico}
                     >
-                        <Image src={twitterIco} alt="soc-ico" />
+                        <Image
+                            src={twitterIco}
+                            alt="soc-ico"
+                            width={33}
+                            height={33}
+                        />
                     </div>
                     <div
                         onClick={() =>
@@ -68,7 +83,12 @@ function Component({ type }) {
                         }
                         className={styles.ico}
                     >
-                        <Image src={instagramIco} alt="soc-ico" />
+                        <Image
+                            src={instagramIco}
+                            alt="soc-ico"
+                            width={33}
+                            height={33}
+                        />
                     </div>
                     {/* <div
                         onClick={() =>
@@ -94,7 +114,12 @@ function Component({ type }) {
                         }
                         className={styles.ico}
                     >
-                        <Image src={linkedinIco} alt="soc-ico" />
+                        <Image
+                            src={linkedinIco}
+                            alt="soc-ico"
+                            width={33}
+                            height={33}
+                        />
                     </div>
                 </div>
             </div>
@@ -109,7 +134,12 @@ function Component({ type }) {
                         }
                         className={styles.ico2}
                     >
-                        <Image src={githubIco} alt="soc-ico" />
+                        <Image
+                            src={githubIco}
+                            alt="soc-ico"
+                            width={22}
+                            height={22}
+                        />
                     </div>
                     <div
                         onClick={() =>
@@ -117,7 +147,12 @@ function Component({ type }) {
                         }
                         className={styles.ico}
                     >
-                        <Image src={twitterIco} alt="soc-ico" />
+                        <Image
+                            src={twitterIco}
+                            alt="soc-ico"
+                            width={22}
+                            height={22}
+                        />
                     </div>
                     {/* <div
                         onClick={() =>
@@ -143,7 +178,12 @@ function Component({ type }) {
                         }
                         className={styles.ico2}
                     >
-                        <Image src={linkedinIco} alt="soc-ico" />
+                        <Image
+                            src={linkedinIco}
+                            alt="soc-ico"
+                            width={22}
+                            height={22}
+                        />
                     </div>
                     <div
                         onClick={() =>
@@ -153,13 +193,23 @@ function Component({ type }) {
                         }
                         className={styles.ico2}
                     >
-                        <Image src={instagramIco} alt="soc-ico" />
+                        <Image
+                            src={instagramIco}
+                            alt="soc-ico"
+                            width={22}
+                            height={22}
+                        />
                     </div>
                     <div
                         onClick={() => window.open('https://t.me/tyrondao_org')}
                         className={styles.ico}
                     >
-                        <Image src={telegramIco} alt="soc-ico" />
+                        <Image
+                            src={telegramIco}
+                            alt="soc-ico"
+                            width={22}
+                            height={22}
+                        />
                     </div>
                 </div>
             </div>

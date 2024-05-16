@@ -14,9 +14,19 @@
 
 .ico,
 .ico2 {
-    margin-top: 10px;
-    margin-bottom: 10px;
     cursor: pointer;
+    margin-top: 11px;
+    margin-bottom: 11px;
+    margin-left: 11px;
+    margin-right: 11px;
+
+    // @mobile
+    @media only screen and (min-width: 850px) {
+        margin-top: 22px;
+        margin-bottom: 22px;
+        margin-left: 11px;
+        margin-right: 11px;
+    }
 }
 
 @media only screen and (max-width: 850px) {

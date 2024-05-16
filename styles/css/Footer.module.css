@@ -37,7 +37,7 @@
 }
 
 .dropdownCheckListWrapper {
-    width: 170px;
+    width: 180px;
 }
 
 .dropdownCheckList {
@@ -107,7 +107,8 @@
     }
 
     .dropdownCheckListWrapper {
-        width: 80px;
+        width: 110px;
+        margin-left: 33px;
     }
 
     /* .tyronLg {

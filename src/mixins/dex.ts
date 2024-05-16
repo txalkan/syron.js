@@ -2325,6 +2325,7 @@ export class DragonDex {
                           .mul(current_dao_balance)
                           .round(0)
                   )
+        console.log('SSI', shares_supply)
         lpt_balance['tyron_s$i'] =
             shares_supply !== '0' ? BigInt(Number(user_bal)) : _zero
 

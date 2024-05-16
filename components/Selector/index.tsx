@@ -192,7 +192,15 @@ function Selector({
     const DropdownIndicatorMobile = (props) => {
         return (
             <components.DropdownIndicator {...props}>
-                <Image width={10} src={upDown} alt="arrow" />
+                <div
+                    style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        padding: '11px',
+                    }}
+                >
+                    <Image src={upDown} alt="arrow" width={18} height={18} />
+                </div>
             </components.DropdownIndicator>
         )
     }

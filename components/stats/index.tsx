@@ -18,13 +18,15 @@ import { Blockchain } from '../../src/mixins/custom-fetch'
 const dex = new DragonDex()
 const provider = new Blockchain()
 function Component() {
+    const Router = useRouter()
+
     const tydradex_liquidity = useStore($tyron_liquidity)
     const { reserves, daoTotalBalance } = tydradex_liquidity
     const pools_ = reserves
     const [tyronS$IReserves, setTyronS$IReserves] = useState<any>([0, 0])
     const ssiReserve = tyronS$IReserves[0]
     const tyronReserve = tyronS$IReserves[1]
-    const [tyronPrice, setTyronPrice] = useState<any>('loading...')
+    const [tyronPrice, setTyronPrice] = useState<any>('Loading...')
 
     const net = $net.state.net as 'mainnet' | 'testnet'
     const { getSmartContract } = smartContract()
@@ -57,8 +59,18 @@ function Component() {
                 'init'
             )
             const get_services = await getSmartContract(init_addr, 'services')
+
+            if (!get_services) {
+                console.error('get_services is undefined')
+                // Show a message indicating no data is being received from Zilliqa
+                return (
+                    <div className={styles.noDataMessage}>
+                        No data is currently available from Zilliqa.
+                    </div>
+                )
+            }
             const services = await tyron.SmartUtil.default.intoMap(
-                get_services!.result.services
+                get_services.result.services
             )
 
             const ids = ['TYRON', 'S$I']
@@ -90,19 +102,31 @@ function Component() {
                 .div(1e18)
                 .round(1)
             setTyronS$iSupply(String(tyrons$i_supply))
+            setIsLoading(false)
         }
         readSupply()
     }, [reserves])
-    const tyron_tvl = tyronReserve ? Big(tyronReserve).div(1e12).round(1) : 0
 
-    const s$i_tvl = ssiReserve ? Big(ssiReserve).div(1e18).round(1) : 0
-    const total_tvl = ssiReserve ? Big(ssiReserve).mul(2).div(1e18).round(1) : 0
-    const Router = useRouter()
+    const tyron_tvl = tyronReserve
+        ? Big(tyronReserve).div(1e12).round(1)
+        : 'Loading...'
+
+    const s$i_tvl = ssiReserve
+        ? Big(ssiReserve).div(1e18).round(1)
+        : 'Loading...'
+
+    const total_tvl = ssiReserve
+        ? Big(ssiReserve).mul(2).div(1e18).round(1)
+        : 'Loading...'
 
     const locked_supply = 120000 * 32 + 5953 * 6 + 20000 * 98
     const tyron_cs = Number(tyronSupply) - locked_supply
+
     const tyron_tvl_supply = (Number(tyron_tvl) / tyron_cs) * 100
     const s$i_tvl_supply = (Number(s$i_tvl) / Number(s$iSupply)) * 100
+
+    const [isLoading, setIsLoading] = useState(true)
+
     return (
         <div className={styles.dashboard}>
             <div className={styles.title}>Stats</div>
@@ -115,7 +139,11 @@ function Component() {
                     width="25"
                 />
                 <span className={styles.equalsign}>
-                    {String(tyronPrice)} SGD
+                    {Number(tyronPrice).toLocaleString('de-DE', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                    })}{' '}
+                    SGD
                 </span>
             </div>
             <div className={styles.rowRate}>
@@ -128,10 +156,13 @@ function Component() {
                     on TyronDEX
                 </div>
             </div>
-
-            <div className={styles.subtitle}>Circulating Supply</div>
+            <div className={styles.subtitle2}>Circulating Supply</div>
             <div className={styles.rowRate}>
-                <span>{tyron_cs.toLocaleString()}</span>
+                {isLoading ? (
+                    <span>Loading...</span>
+                ) : (
+                    <span>{tyron_cs.toLocaleString('de-DE')}</span>
+                )}
                 <Image
                     src={iconTYRON}
                     alt="tyron-icon"
@@ -140,24 +171,35 @@ function Component() {
                 />
             </div>
             <div className={styles.rowRate}>
-                <span>{Number(s$iSupply).toLocaleString()}</span>
+                {isLoading ? (
+                    <span>Loading...</span>
+                ) : (
+                    <span>{Number(s$iSupply).toLocaleString('de-DE')}</span>
+                )}
                 <Image src={iconSSI} alt="s$i-icon" height="25" width="25" />
             </div>
-            <div className={styles.rowRate}>
-                <span>{Number(tyronS$iSupply).toLocaleString()}</span>
+            {/* <div className={styles.rowRate}>
+                {isLoading || Number(tyronS$iSupply) == 0 ? (
+                    <span>Loading...</span>
+                ) : (
+                    <span>{Number(tyronS$iSupply).toLocaleString()}</span>
+                )}
                 <Image
                     src={iconTyronSSI}
                     alt="tyrons$i-icon"
                     height="25"
                     width="25"
                 />
-            </div>
+            </div> */}
             <div className={styles.subtitle}>Total Value Locked</div>
-            <div className={styles.subtitle2}>
-                {Number(total_tvl).toLocaleString()} SGD
+            <div className={styles.subtitle}>
+                {Number(total_tvl).toLocaleString('de-DE', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2,
+                })}{' '}
+                SGD
             </div>
-
-            <div className={styles.rowRate}>
+            {/* <div className={styles.rowRate}>
                 <span>{Number(tyron_tvl).toLocaleString()}</span>
                 <Image
                     src={iconTYRON}
@@ -169,7 +211,7 @@ function Component() {
             <div className={styles.rowRate}>
                 <span>{Number(s$i_tvl).toLocaleString()}</span>
                 <Image src={iconSSI} alt="s$i-icon" height="25" width="25" />
-            </div>
+            </div> */}
             {/* <div className={styles.subtitle2}>TVL-to-Supply Ratio</div>
             <div className={styles.rowRate}>
                 <Image

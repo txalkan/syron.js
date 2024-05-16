@@ -105,8 +105,8 @@ function Component() {
                     >
                         <Image
                             alt="menu-ico"
-                            width={25}
-                            height={25}
+                            width={33}
+                            height={33}
                             src={menu}
                         />
                     </div>
@@ -314,13 +314,13 @@ function Component() {
                                         ssiprotocol.com&#x2197;
                                     </h4> */}
                                     <h4
-                                        style={{ textTransform: 'lowercase' }}
+                                        style={{ textTransform: 'none' }}
                                         onClick={() =>
-                                            window.open('https://tyron.io')
+                                            window.open('https://tyrondao.org')
                                         }
                                         className={styles.menuItemText}
                                     >
-                                        tyron.io&#x2197;
+                                        TyronDAO.org&#x2197;
                                     </h4>
                                     {/* <h4
                                         onClick={() =>
