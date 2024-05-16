@@ -3,7 +3,7 @@
     "private": true,
     "description": "Tyron's web application",
     "version": "3.0.0",
-    "homepage": "https://tyron.io",
+    "homepage": "https://tyrondao.org",
     "repository": {
         "type": "git",
         "url": "git+https://github.com/tyrondao/ssibrowser.git"
@@ -20,6 +20,7 @@
     "dependencies": {
         "@junobuild/core-peer": "^0.0.11",
         "@reduxjs/toolkit": "^1.6.0",
+        "@supabase/supabase-js": "^2.43.1",
         "@testing-library/dom": "^8.11.2",
         "@testing-library/jest-dom": "^5.14.1",
         "@testing-library/react": "^11.2.7",

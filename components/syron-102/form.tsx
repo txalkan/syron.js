@@ -152,9 +152,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 alt="deposit-icon"
                                 className={styles.img}
                             />
-                            <div className={styles.titleForm2}>
-                                Deposit Bitcoin
-                            </div>
+                            <div className={styles.titleForm2}>Syron</div>
                         </div>
 
                         <BoxInput
