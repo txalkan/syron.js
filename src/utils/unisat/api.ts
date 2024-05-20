@@ -23,6 +23,9 @@ export const unisatApi = {
     getInscriptionInfo(inscriptionId: string) {
         return getUniSat(`v1/indexer/inscription/info/${inscriptionId}`)
     },
+    getBrc20Info(address: string) {
+        return getUniSat(`v1/indexer/address/${address}/brc20/summary`)
+    },
 }
 
 export function sleep(ms: number) {
