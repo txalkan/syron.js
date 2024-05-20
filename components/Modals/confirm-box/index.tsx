@@ -220,7 +220,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     }, []) //direction, pair])
 
     const disabled = React.useMemo(() => {
-        return loadingTxn /*|| Big(priceInfo!.impact) > 10 */ || tyron == null
+        return loadingTxn /*|| Big(priceInfo!.impact) > 10 */ // || tyron == null
     }, [priceInfo, loadingTxn, tyron])
 
     const transaction_status = async (txId) => {

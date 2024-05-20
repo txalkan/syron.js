@@ -30,7 +30,7 @@ export default async function handler(
     console.log('@dev get data from Supabase')
     const { data, error } = await supabase
         .from('unisat_inscription_info')
-        .select('id, timestamp, data')
+        .select()
         .eq('id', id)
         .single()
 
@@ -43,16 +43,27 @@ export default async function handler(
         return
     }
 
-    try {
-        const data = await unisatApi.getInscriptionInfo(id)
-        if (!data) {
-            response.status(404).json({ error: 'No data found' })
-        } else {
-            response.status(200).json({ data })
+    // if id not found in supabase
+    if (data) {
+        response.status(200).json({ data })
+    } else {
+        try {
+            const data = await unisatApi.getInscriptionInfo(id)
+            if (!data) {
+                response.status(404).json({ error: 'No data found' })
+            } else {
+
+                await supabase
+                .from('unisat_inscription_info')
+                .insert({ timestamp: new Date(), data: JSON.stringify(data) })
+
+                response.status(200).json({ data })
+            }
+        } catch (error) {
+            response.status(500).json({
+                error: error instanceof Error ? error.message : 'Unknown error',
+            })
         }
-    } catch (error) {
-        response.status(500).json({
-            error: error instanceof Error ? error.message : 'Unknown error',
-        })
     }
+
 }
