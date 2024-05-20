@@ -45,7 +45,7 @@ export default async function handler(
 
     // if id not found in supabase
     if (data) {
-        response.status(200).json({ data })
+        response.status(200).json({ data: data.data })
     } else {
         console.log('@dev get data from UniSat')
         try {
