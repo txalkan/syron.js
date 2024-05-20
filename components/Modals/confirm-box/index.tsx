@@ -324,7 +324,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 .then((response) => response.json())
                 .then((data) =>
                     console.log(
-                        'indexer response',
+                        'outcall response',
                         JSON.stringify(data, null, 2)
                     )
                 )

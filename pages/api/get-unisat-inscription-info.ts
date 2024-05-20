@@ -34,7 +34,7 @@ export default async function handler(
         .eq('id', id)
         .single()
 
-    console.log('@response data:', data, 'error:', error)
+    console.log('@response Supabase data:', data, 'error:', error)
 
     if (!id || Array.isArray(id)) {
         response.status(400).json({
@@ -47,16 +47,19 @@ export default async function handler(
     if (data) {
         response.status(200).json({ data })
     } else {
+        console.log('@dev get data from UniSat')
         try {
             const data = await unisatApi.getInscriptionInfo(id)
             if (!data) {
                 response.status(404).json({ error: 'No data found' })
             } else {
+                await supabase.from('unisat_inscription_info').insert({
+                    id,
+                    timestamp: new Date(),
+                    data, //: JSON.stringify(data),
+                })
 
-                await supabase
-                .from('unisat_inscription_info')
-                .insert({ timestamp: new Date(), data: JSON.stringify(data) })
-
+                console.log('@response UniSat data:', data)
                 response.status(200).json({ data })
             }
         } catch (error) {
@@ -65,5 +68,4 @@ export default async function handler(
             })
         }
     }
-
 }
