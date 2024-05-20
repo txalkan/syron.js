@@ -255,5 +255,5 @@ service : (network, MinterArg) -> {
 
     "getServiceProviderMap": () -> (vec record { ServiceProvider; nat64 }) query;
 
-    "redeem_btc": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "redeem_btc": (args: GetBoxAddressArgs, txid: text) -> (variant { Ok: text; Err: UpdateBalanceError });
 }

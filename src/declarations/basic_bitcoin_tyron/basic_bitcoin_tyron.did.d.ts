@@ -135,7 +135,7 @@ export interface _SERVICE {
     >
     get_utxos: ActorMethod<[bitcoin_address], get_utxos_response>
     redeem_btc: ActorMethod<
-        [GetBoxAddressArgs, string, bigint],
+        [GetBoxAddressArgs, string],
         { Ok: string } | { Err: UpdateBalanceError }
     >
     send: ActorMethod<

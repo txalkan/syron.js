@@ -285,3 +285,30 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
         font-size: 14px;
     }
 }
+
+$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
+.txt {
+    font-family: $font-anonymous-pro;
+    //bolder
+    font-weight: 600;
+    color: #ffff32;
+}
+
+.sdb {
+    font-family: $font-anonymous-pro;
+
+    padding-left: 4px;
+    padding-right: 4px;
+
+    cursor: pointer;
+
+    //@mobile
+    font-size: 14px;
+    @media only screen and (min-width: 320px) {
+        font-size: 18px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
+    }
+}

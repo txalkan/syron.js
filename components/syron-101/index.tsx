@@ -12,6 +12,8 @@ import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import Big from 'big.js'
 import { $syron } from '../../src/store/syron'
 import { useStore } from 'react-stores'
+import useICPHook from '../../src/hooks/useICP'
+import { toast } from 'react-toastify'
 Big.PE = 999
 const _0 = Big(0)
 
@@ -51,7 +53,24 @@ function Component() {
         },
     ]
 
-    // @dev (syron)
+    const { redeemBTC } = useICPHook()
+    const [isLoading, setIsLoading] = useState(false)
+    const handleRedeem = async () => {
+        setIsLoading(true)
+        toast.info('Coming soon', {
+            position: 'bottom-center',
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            toastId: 1,
+        })
+        // await redeemBTC(tyron?.ssi_box!)
+        setIsLoading(false)
+    }
+
     return (
         <div className={styles.container}>
             {/* @dev: trade */}
@@ -114,22 +133,17 @@ function Component() {
                             <Image
                                 src={icoBalance}
                                 alt={'BTC'}
-                                height="17"
-                                width="17"
+                                height="18"
+                                width="18"
                             />
-                            <span
-                                style={{
-                                    paddingLeft: '4px',
-                                    paddingRight: '8px',
-                                }}
-                            >
+                            <span className={styles.sdb}>
                                 BTC: {Number(tyron?.box_balance.div(1e8))}
                             </span>
                             <Image
                                 src={icoBTC}
                                 alt={'BTC'}
-                                height="17"
-                                width="17"
+                                height="18"
+                                width="18"
                             />
                         </p>
                         <p
@@ -144,8 +158,8 @@ function Component() {
                             <Image
                                 src={icoThunder}
                                 alt={'Wallet'}
-                                height="17"
-                                width="17"
+                                height="18"
+                                width="18"
                             />
                             <span style={{ paddingLeft: '4px' }}>
                                 <span
@@ -154,17 +168,32 @@ function Component() {
                                             `https://mempool.space/testnet/address/${tyron?.ssi_box}`
                                         )
                                     }
-                                    style={{
-                                        paddingLeft: '4px',
-                                        cursor: 'pointer',
-                                        textDecorationLine: 'underline',
-                                        textDecorationColor: '#ffff32',
-                                    }}
+                                    className={styles.sdb}
                                 >
                                     {tyron?.ssi_box}
                                 </span>
                             </span>
                         </p>
+                        <button
+                            style={{
+                                width: '56%',
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                marginTop: '1rem',
+                                cursor: 'pointer',
+                                borderRadius: '14px',
+                                // @design-shadow-3d
+                                backgroundImage:
+                                    'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
+                                boxShadow:
+                                    '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
+                            }}
+                            disabled={isLoading}
+                            onClick={handleRedeem}
+                        >
+                            <div className={styles.txt}>redeem btc</div>
+                        </button>
                     </div>
                 )}
             </div>

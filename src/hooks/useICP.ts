@@ -61,10 +61,28 @@ function useICPHook() {
         }
     }
 
+    const redeemBTC = async (ssi: string) => {
+        try {
+            const txid =
+                '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68'
+            const txId = await syron.redeem_btc(
+                {
+                    ssi,
+                    op: { redeembitcoin: null },
+                },
+                txid
+            )
+            return txId
+        } catch (err) {
+            console.error('useICP_redeemBTC', err)
+        }
+    }
+
     return {
         getBox,
         getSUSD,
         getSyron,
+        redeemBTC,
     }
 }
 

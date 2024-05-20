@@ -150,7 +150,7 @@ export const idlFactory = ({ IDL }) => {
         ),
         get_utxos: IDL.Func([bitcoin_address], [get_utxos_response], []),
         redeem_btc: IDL.Func(
-            [GetBoxAddressArgs, IDL.Text, IDL.Nat64],
+            [GetBoxAddressArgs, IDL.Text],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
             []
         ),
