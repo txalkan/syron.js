@@ -18,7 +18,7 @@ const _0 = Big(0)
 function Component() {
     const tyron = useStore($syron)
     const { t } = useTranslation()
-    const [active, setActive] = useState('syron')
+    const [active, setActive] = useState('GetSyron')
 
     const toggleActive = (id: string) => {
         resetState()
@@ -57,22 +57,30 @@ function Component() {
             {/* @dev: trade */}
             <div className={styles.cardActiveWrapper}>
                 <div
-                    onClick={() => toggleActive('syron')}
+                    onClick={() => toggleActive('GetSyron')}
                     className={
-                        active === 'syron' ? styles.cardActive : styles.card
+                        active === 'GetSyron' ? styles.cardSelect : styles.card
                     }
                 >
-                    <div className={styles.icoWrapper2}>
-                        <div className={styles.titleX}>ᛞ Be Your Own ₿ank</div>
-                    </div>
+                    Withdraw Syron
+                </div>
+                <div
+                    className={
+                        active === 'GetSyron'
+                            ? styles.cardTitle
+                            : styles.cardBeYourBank
+                    }
+                >
+                    <div className={styles.title}>ᛞ Be Your Own ₿ank ᛞ</div>
+
                     {/* <div className={styles.icoWrapper}>
                         <Image
-                            src={active === 'syron' ? icoUp : icoDown}
+                            src={active === 'GetSyron' ? icoUp : icoDown}
                             alt="toggle-ico"
                         />
                     </div> */}
                 </div>
-                {active === 'syron' && (
+                {active === 'GetSyron' && (
                     <div className={styles.cardSub}>
                         <div className={styles.wrapper}>
                             <SyronForm startPair={start_pair} />

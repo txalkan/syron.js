@@ -24,22 +24,27 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
-.title,
-.titleX {
+.title {
     font-family: $font-anonymous-pro;
-    font-size: 25px;
     color: #ffff32;
-    text-transform: uppercase;
     padding-left: 10px;
     padding-top: 7px;
-    @media only screen and (max-width: 767px) {
+
+    font-size: 18px;
+    @media only screen and (min-width: 320px) {
         font-size: 22px;
     }
-}
 
-.titleX {
+    @media only screen and (min-width: 768px) {
+        font-size: 28px;
+    }
+
     text-transform: none;
     text-align: left;
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    white-space: nowrap;
 }
 
 .title2 {
@@ -60,7 +65,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     justify-content: space-between;
     align-items: center;
     background-color: #a238ff; // @design #420085; #ffffff2e;
-    //border-radius: 4px;
     margin-top: 17px;
     margin-bottom: 2px;
     cursor: pointer;
@@ -80,17 +84,90 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     background-color: #ffff32;
 }
 
+.cardTitle {
+    height: fit-content;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #a238ff;
+    margin-bottom: 2px;
+    position: relative;
+    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+}
+
+.cardTitle::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 1px;
+    background-color: #ffff32;
+}
+
+$font-anonymous-pro: 'Anonymous Pro', monospace;
 .card {
+    padding: 11px;
+    font-family: $font-anonymous-pro;
+
+    color: #333333;
+    margin-top: 17px;
+    cursor: pointer;
+    width: 50%;
+
+    border-right: 1px solid #ffff32;
+
+    //@mobile
+    font-size: 14px;
+    @media only screen and (min-width: 320px) {
+        font-size: 18px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
+    }
+
+    background: linear-gradient(33deg, #333333, #dbe4eb, #f8f8f8, #ffffff2e);
+}
+.card:hover {
+    background-color: #a238ff;
+    cursor: pointer !important;
+    color: #a238ff;
+    border-right: 1px solid #a238ff;
+}
+
+.cardSelect {
+    padding: 11px;
+    font-family: $font-anonymous-pro;
+    margin-top: 17px;
+    cursor: pointer;
+    width: 50%;
+
+    border: 1px solid #ffff32;
+    border-bottom: #a238ff;
+
+    //@mobile
+    font-size: 14px;
+    @media only screen and (min-width: 320px) {
+        font-size: 18px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
+    }
+
+    background-color: #a238ff;
+    color: #f8f8f8;
+}
+
+.cardBeYourBank {
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     background-color: #ffffff2e;
-    // border: 1px solid silver;
-    border-radius: 4px;
-    margin-top: 17px;
     margin-bottom: 17px;
-    cursor: pointer;
 }
 
 .cardActive2 {
@@ -121,11 +198,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 
 .icoWrapper {
     margin-top: 7px;
-}
-
-.icoWrapper2 {
-    display: flex;
-    justify-content: flex-start;
 }
 
 .cardSub {
@@ -187,14 +259,21 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .boxTitle {
+    font-family: $font-anonymous-pro;
     padding-left: 4px;
     padding-top: 4%;
     color: #ffff32;
-    font-size: 22px;
-    font-weight: 900;
-    font-family: 'Fragment Mono', monospace;
-    @media only screen and (max-width: 767px) {
-        font-size: 17px;
+    text-decoration: underline;
+    //font-family: 'Fragment Mono', monospace;
+
+    //@mobile
+    font-size: 14px;
+    @media only screen and (min-width: 320px) {
+        font-size: 18px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
     }
 }
 

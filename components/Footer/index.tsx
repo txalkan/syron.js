@@ -157,7 +157,7 @@ function Footer() {
                 </div> */}
             <div
                 onClick={() => {
-                    window.open('http://tyrondao.org', '_self')
+                    window.open('http://tyrondao.org')
                 }}
                 className={styles.tyronLg}
             >

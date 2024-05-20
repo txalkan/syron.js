@@ -75,10 +75,9 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .txtConnect:hover {
-    cursor: pointer !important; // @review (not working)
+    cursor: pointer !important;
     color: #a238ff;
-    border: 1px solid #fff;
-    border: 1px solid #a238ff;
+    border: 1px solid #ffff32;
     background-color: #f8f8f8//rgba($color: #fff, $alpha: 0.1);
 }
 

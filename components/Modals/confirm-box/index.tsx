@@ -220,7 +220,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     }, []) //direction, pair])
 
     const disabled = React.useMemo(() => {
-        return loadingTxn || Big(priceInfo!.impact) > 10 || tyron == null
+        return loadingTxn /*|| Big(priceInfo!.impact) > 10 */ || tyron == null
     }, [priceInfo, loadingTxn, tyron])
 
     const transaction_status = async (txId) => {
@@ -318,12 +318,17 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
-            // const inscription_id =
-            //     'c822a02427a096824059a03f4ea5c87d64c7c083d214a302fe924a7ff39e963ci0'
-            // await fetch(`/api/get-unisat-inscription-info?id=${inscription_id}`)
-            //     .then((response) => response.json())
-            //     .then((data) => console.log(JSON.stringify(data, null, 2)))
-            //     .catch((error) => console.error(error))
+            const inscription_id =
+                '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68i0'
+            await fetch(`/api/get-unisat-inscription-info?id=${inscription_id}`)
+                .then((response) => response.json())
+                .then((data) =>
+                    console.log(
+                        'indexer response',
+                        JSON.stringify(data, null, 2)
+                    )
+                )
+                .catch((error) => console.error(error))
 
             // @pause
             throw new Error('Coming soon!')

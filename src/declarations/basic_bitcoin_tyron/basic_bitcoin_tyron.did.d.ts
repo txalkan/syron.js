@@ -6,6 +6,15 @@ export type BtcNetwork =
     | { Mainnet: null }
     | { Regtest: null }
     | { Testnet: null }
+    | { Signet: null }
+export interface GetBoxAddressArgs {
+    op: syron_operation
+    ssi: bitcoin_address
+}
+export interface HttpHeader {
+    value: string
+    name: string
+}
 export interface InitArgs {
     ecdsa_key_name: string
     mode: Mode
@@ -33,6 +42,15 @@ export interface PendingUtxo {
     value: bigint
     outpoint: { txid: Uint8Array | number[]; vout: number }
 }
+export interface RegisterProviderArgs {
+    cyclesPerCall: bigint
+    credentialPath: string
+    hostname: string
+    credentialHeaders: [] | [Array<HttpHeader>]
+    chainId: bigint
+    cyclesPerMessageByte: bigint
+}
+export type ServiceProvider = { Chain: bigint } | { Provider: bigint }
 export type UpdateBalanceError =
     | {
           GenericError: { error_message: string; error_code: bigint }
@@ -80,12 +98,17 @@ export interface get_utxos_response {
     utxos: Array<utxo>
 }
 export type millisatoshi_per_vbyte = bigint
-export type network = { mainnet: null } | { regtest: null } | { testnet: null }
+export type network =
+    | { mainnet: null }
+    | { regtest: null }
+    | { signet: null }
+    | { testnet: null }
 export interface outpoint {
     txid: Uint8Array | number[]
     vout: number
 }
 export type satoshi = bigint
+export type syron_operation = { getsyron: null } | { redeembitcoin: null }
 export type transaction_id = string
 export interface utxo {
     height: number
@@ -93,15 +116,28 @@ export interface utxo {
     outpoint: outpoint
 }
 export interface _SERVICE {
+    addServiceProvider: ActorMethod<[RegisterProviderArgs], bigint>
+    getServiceProviderMap: ActorMethod<[], Array<[ServiceProvider, bigint]>>
     get_balance: ActorMethod<[bitcoin_address], satoshi>
-    get_box_address: ActorMethod<[{ ssi: bitcoin_address }], bitcoin_address>
+    get_box_address: ActorMethod<[GetBoxAddressArgs], bitcoin_address>
     get_current_fee_percentiles: ActorMethod<[], BigUint64Array | bigint[]>
     get_minter_info: ActorMethod<[], MinterInfo>
+    get_network: ActorMethod<[], network>
     get_p2pkh_address: ActorMethod<[], bitcoin_address>
     get_p2wpkh_address: ActorMethod<[], bitcoin_address>
-    get_subaccount: ActorMethod<[bitcoin_address], Uint8Array | number[]>
-    get_susd: ActorMethod<[{ ssi: string }, string], string>
+    get_subaccount: ActorMethod<
+        [bigint, bitcoin_address],
+        Uint8Array | number[]
+    >
+    get_susd: ActorMethod<
+        [GetBoxAddressArgs, string],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
     get_utxos: ActorMethod<[bitcoin_address], get_utxos_response>
+    redeem_btc: ActorMethod<
+        [GetBoxAddressArgs, string, bigint],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
     send: ActorMethod<
         [
             {
@@ -112,17 +148,15 @@ export interface _SERVICE {
         transaction_id
     >
     test: ActorMethod<[], Array<string>>
-    update_balance: ActorMethod<
-        [
-            {
-                ssi: string
-                owner: [] | [Principal]
-                subaccount: [] | [Uint8Array | number[]]
-            }
-        ],
+    update_ssi: ActorMethod<[GetBoxAddressArgs], string>
+    update_ssi_balance: ActorMethod<
+        [GetBoxAddressArgs],
         { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
     >
-    update_ssi: ActorMethod<[{ ssi: string }], string>
+    withdraw_susd: ActorMethod<
+        [GetBoxAddressArgs, string, bigint, bigint],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
 }
 export declare const idlFactory: IDL.InterfaceFactory
-export declare const init: ({ IDL }: { IDL: IDL }) => IDL.Type[]
+export declare const init: (args: { IDL: typeof IDL }) => IDL.Type[]

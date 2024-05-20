@@ -159,14 +159,13 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .titleForm2 {
     font-family: $font-anonymous-pro;
 
-    font-size: 17px;
     color: black;
     margin-left: 4%;
     text-align: left;
-    font-weight: 600;
 
+    //@mobile
+    font-size: 17px;
     @media only screen and (min-width: 320px) {
-        // @design-mobile
         font-size: 22px;
     }
 

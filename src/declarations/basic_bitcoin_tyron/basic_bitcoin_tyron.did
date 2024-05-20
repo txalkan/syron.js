@@ -10,6 +10,7 @@ type block_hash = blob;
 
 type network = variant {
     regtest;
+    signet;
     testnet;
     mainnet;
 };
@@ -19,6 +20,8 @@ type BtcNetwork = variant {
     Mainnet;
     // The public Bitcoin testnet.
     Testnet;
+    // The public Bitcoin signet.
+    Signet;
     // A local Bitcoin regtest installation.
     Regtest;
 };
@@ -180,9 +183,36 @@ type MinterInfo = record {
     kyt_fee : nat64;
 };
 
+type HttpHeader = record { value: text; name: text };
+
+type RegisterProviderArgs = record {
+    chainId: nat64;
+    hostname: text;
+    credentialPath: text;
+    credentialHeaders: opt vec HttpHeader;
+    cyclesPerCall: nat64;
+    cyclesPerMessageByte: nat64;
+};
+
+type ServiceProvider = variant {
+    Chain: nat64;
+    Provider: nat64;
+};
+
+type syron_operation = variant {
+    getsyron;
+    redeembitcoin;
+};
+
+type GetBoxAddressArgs = record {
+    ssi: bitcoin_address;
+    op: syron_operation
+};
+
 service : (network, MinterArg) -> {
-    "get_p2pkh_address": () -> (bitcoin_address) query;
-    "get_p2wpkh_address": () -> (bitcoin_address) query;
+    "get_p2pkh_address": () -> (bitcoin_address);
+
+    "get_p2wpkh_address": () -> (bitcoin_address);
 
     "get_balance": (address: bitcoin_address) -> (satoshi);
 
@@ -195,29 +225,35 @@ service : (network, MinterArg) -> {
       amount_in_satoshi: satoshi;
     }) -> (transaction_id);
 
+    "get_network": () -> (network);
+
     // Returns the bitcoin address to which the user should send BTC
     // to get SU$D using the [update_balance] endpoint.
-    "get_box_address": (record {
-      ssi: bitcoin_address
-    }) -> (bitcoin_address);
+    "get_box_address": (GetBoxAddressArgs) -> (bitcoin_address);
 
     // Mints SU$D for newly deposited UTXOs.
     //
-    // If the transaction owner is not set, it defaults to the caller's principal.
-    //
     // # Preconditions
     //
-    // * A BTC deposit was made to the bitcoin_address of the SSI Vault, which the
-    //   [get_btc_address] endpoint returns.
-    "update_balance" : (record { owner: opt principal; subaccount : opt blob; ssi: text }) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
+    // * A BTC deposit was made to the address returned by the
+    //   [get_box_address] endpoint.
+    "update_ssi_balance": (GetBoxAddressArgs) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
     
-    "get_susd" : (record { ssi: text }, txid: text) -> (text);
+    "withdraw_susd": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    
+    "get_susd": (args: GetBoxAddressArgs, txid: text) -> (variant { Ok: text; Err: UpdateBalanceError });
 
-    "update_ssi" : (record { ssi: text }) -> (text);
+    "update_ssi": (GetBoxAddressArgs) -> (text);
     
-    "get_subaccount": ( ssi: bitcoin_address ) -> (blob);
+    "get_subaccount": (nonce: nat64, ssi: bitcoin_address) -> (blob) query;
 
     "get_minter_info": () -> (MinterInfo) query;
 
-    "test" : () -> ( vec text);
+    "test": () -> (vec text);
+
+    "addServiceProvider": (RegisterProviderArgs) -> (nat64);
+
+    "getServiceProviderMap": () -> (vec record { ServiceProvider; nat64 }) query;
+
+    "redeem_btc": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
 }

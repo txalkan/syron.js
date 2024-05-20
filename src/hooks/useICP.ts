@@ -11,7 +11,10 @@ function useICPHook() {
             console.log('Satoshis', balance)
 
             if (balance != 0) {
-                const box = await syron.get_box_address({ ssi })
+                const box = await syron.get_box_address({
+                    ssi,
+                    op: { getsyron: null },
+                })
                 console.log('Safety Deposit Box', box)
 
                 const box_balance = await syron.get_balance(box)
@@ -39,7 +42,10 @@ function useICPHook() {
 
     const getSUSD = async (ssi: string, txid: string) => {
         try {
-            const txId = await syron.get_susd({ ssi }, txid)
+            const txId = await syron.get_susd(
+                { ssi, op: { getsyron: null } },
+                txid
+            )
             return txId
         } catch (err) {
             console.error('useICP_getSUSD', err)
@@ -48,7 +54,7 @@ function useICPHook() {
 
     const getSyron = async (ssi: string) => {
         try {
-            const txId = await syron.update_ssi({ ssi })
+            const txId = await syron.update_ssi({ ssi, op: { getsyron: null } })
             return txId
         } catch (err) {
             console.error('useICP_updateSSI', err)

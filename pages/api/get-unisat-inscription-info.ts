@@ -27,14 +27,14 @@ export default async function handler(
 
     const { id } = request.query
 
-    // Get the data from Supabase
+    console.log('@dev get data from Supabase')
     const { data, error } = await supabase
         .from('unisat_inscription_info')
         .select('id, timestamp, data')
         .eq('id', id)
         .single()
 
-    console.log('supabase', data, error)
+    console.log('@response data:', data, 'error:', error)
 
     if (!id || Array.isArray(id)) {
         response.status(400).json({
