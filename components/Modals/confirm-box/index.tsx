@@ -3,7 +3,7 @@ import _Big from 'big.js'
 import classNames from 'classnames'
 import { useStore } from 'react-stores'
 import toformat from 'toformat'
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { DragonDex, SwapDirection } from '../../../src/mixins/dex'
 import { TokensMixine } from '../../../src/mixins/token'
 import { ZERO_ADDR } from '../../../src/config/const'
@@ -37,6 +37,7 @@ import {
 import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
 import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'
+import { useTranslation } from 'next-i18next'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -56,12 +57,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
     // onClose,
 }) {
     const unisat = (window as any).unisat
+    const [unisatInstalled, setUnisatInstalled] = useState(false)
+    const [connected, setConnected] = useState(false)
     const tyron = useStore($syron)
     const btc_wallet = useStore($btc_wallet)
 
     const { updateWallet } = useBTCWalletHook()
     const { getBox, getSUSD, getSyron } = useICPHook()
     const dispatch = useDispatch()
+    const { t } = useTranslation()
 
     const [exactToken, limitToken] = pair
     const exactInput = exactToken.value
@@ -220,7 +224,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     }, []) //direction, pair])
 
     const disabled = React.useMemo(() => {
-        return loadingTxn /*|| Big(priceInfo!.impact) > 10 */ || tyron == null
+        return loadingTxn /*|| Big(priceInfo!.impact) > 10 */ // || tyron == null
     }, [priceInfo, loadingTxn, tyron])
 
     const transaction_status = async (txId) => {
@@ -599,6 +603,61 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
     const xr = useStore($xr)
 
+    const selfRef = useRef<{ accounts: string[] }>({
+        accounts: [],
+    })
+    const self = selfRef.current
+    const handleAccountsChanged = (_accounts: string[]) => {
+        if (self.accounts[0] === _accounts[0]) {
+            // prevent from triggering twice
+            return
+        }
+        self.accounts = _accounts
+        if (_accounts.length > 0) {
+            setConnected(true)
+        } else {
+            setConnected(false)
+        }
+    }
+
+    useEffect(() => {
+        async function checkUnisat() {
+            let unisat = (window as any).unisat
+
+            for (let i = 1; i < 10 && !unisat; i += 1) {
+                await new Promise((resolve) => setTimeout(resolve, 100 * i))
+                unisat = (window as any).unisat
+            }
+
+            if (unisat) {
+                setUnisatInstalled(true)
+            } else if (!unisat) return
+
+            unisat.getAccounts().then((accounts: string[]) => {
+                handleAccountsChanged(accounts)
+            })
+
+            unisat.on('accountsChanged', handleAccountsChanged)
+
+            return () => {
+                unisat.removeListener('accountsChanged', handleAccountsChanged)
+            }
+        }
+
+        checkUnisat().then()
+    }, [])
+
+    const handleButtonClick = async () => {
+        if (!unisatInstalled) {
+            window.open('https://unisat.io', '_blank')
+        } else if (!connected) {
+            const result = await unisat.requestAccounts()
+            handleAccountsChanged(result)
+        } else {
+            handleConfirm()
+        }
+    }
+
     return (
         <>
             {String(expectedOutput) !== '0' && (
@@ -709,12 +768,18 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             disabled ? 'disabled' : 'primary'
                         }`}
                         onClick={
-                            handleConfirm
+                            handleButtonClick
                             // @review (wallet) - else: connect wallet (see dashboard)
                         }
                         // disabled={disabled}
                     >
-                        {disabled ? (
+                        {!unisatInstalled ? (
+                            <div className={styles.txt}>
+                                {t('Install UniSat')}
+                            </div>
+                        ) : !connected ? (
+                            <div className={styles.txt}>{t('CONNECT')}</div>
+                        ) : disabled ? (
                             <ThreeDots color="yellow" />
                         ) : (
                             // <>
