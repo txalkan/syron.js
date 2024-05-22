@@ -49,20 +49,22 @@ export default async function handler(
     } else {
         console.log('@dev get data from UniSat')
         try {
-            const data = await unisatApi.getInscriptionInfo(id)
-            if (!data) {
+            const data_unisat = await unisatApi.getInscriptionInfo(id)
+            if (!data_unisat) {
                 response.status(404).json({ error: 'No data found' })
             } else {
+                console.log('@response UniSat data:', data_unisat)
+
                 await supabase.from('unisat_inscription_info').insert({
                     id,
                     timestamp: new Date(),
-                    data, //: JSON.stringify(data),
+                    data: data_unisat,
                 })
 
-                console.log('@response UniSat data:', data)
-                response.status(200).json({ data })
+                response.status(200).json({ data: data_unisat })
             }
         } catch (error) {
+            console.error('@response UniSat error:', error)
             response.status(500).json({
                 error: error instanceof Error ? error.message : 'Unknown error',
             })

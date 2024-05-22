@@ -363,3 +363,16 @@ function checkError(error: any) {
         throw new Error('API error:' + error)
     }
 }
+
+// async function simulateRequests() {
+//     const promises = []
+//     for (let i = 0; i < 20; i++) {
+//         promises.push(
+//             axios
+//                 .get('http://testnet.tyron.io/api/your-endpoint') // replace with your actual endpoint
+//                 .then((response) => console.log(response.data))
+//                 .catch((error) => console.error(error))
+//         )
+//     }
+//     await Promise.all(promises)
+// }
