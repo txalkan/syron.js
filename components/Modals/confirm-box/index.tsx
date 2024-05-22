@@ -224,7 +224,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
     }, []) //direction, pair])
 
     const disabled = React.useMemo(() => {
-        return loadingTxn /*|| Big(priceInfo!.impact) > 10 */ // || tyron == null
+        return (
+            loadingTxn /*|| Big(priceInfo!.impact) > 10 */ ||
+            (tyron == null && connected)
+        )
     }, [priceInfo, loadingTxn, tyron])
 
     const transaction_status = async (txId) => {
@@ -257,7 +260,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                         pauseOnHover: true,
                         draggable: true,
                         progress: undefined,
-                        toastId: 4,
+                        toastId: 1,
                     })
                     await updateBalance()
                     return data
@@ -357,7 +360,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    toastId: 5,
+                    toastId: 2,
                 }
             )
             const tick = 'SYRO'
@@ -569,7 +572,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    toastId: 1,
+                    toastId: 3,
                 })
             } else if (
                 typeof err === 'object' &&
@@ -583,7 +586,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    toastId: 2,
+                    toastId: 4,
                 })
             } else {
                 toast.error(String(err), {
@@ -594,7 +597,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     pauseOnHover: true,
                     draggable: true,
                     progress: undefined,
-                    toastId: 3,
+                    toastId: 5,
                 })
             }
             setLoading(false)
@@ -653,6 +656,21 @@ export var ConfirmBox: React.FC<Prop> = function ({
         } else if (!connected) {
             const result = await unisat.requestAccounts()
             handleAccountsChanged(result)
+
+            toast.info('Your wallet is now connected! 🎉', {
+                position: 'top-center',
+                autoClose: 2000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                toastId: 6,
+            })
+
+            // @review (syronjs) we need to update the tyron data (otherwise tyron = null) => see dashboard update()
+            // In the meantime, reload page
+            setTimeout(() => window.location.reload(), 2 * 1000) // 2 seconds
         } else {
             handleConfirm()
         }
