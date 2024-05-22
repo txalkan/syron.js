@@ -71,7 +71,6 @@ function Component(props: LayoutProps) {
             setLoadingCard3(false)
             setLoadingTydra_(false)
         }, 2000)
-        fetchDoc()
         return () => {
             setLoadingCard1(false)
             setLoadingCard3(false)
@@ -79,6 +78,11 @@ function Component(props: LayoutProps) {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedDomain, resolvedSubdomain]) //@review: add tld
+
+    useEffect(() => {
+        fetchDoc()
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     // if (loadingDoc || loading) {
     //     return <Spinner />
