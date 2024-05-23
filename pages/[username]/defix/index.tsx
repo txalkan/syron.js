@@ -57,7 +57,7 @@ export const PageSwap: NextPage<Prop> = (props) => {
             resolveUser()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [wallet])
+    }, [])
 
     //@zilpay
     React.useEffect(() => {
