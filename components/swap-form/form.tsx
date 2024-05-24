@@ -165,7 +165,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
     useEffect(() => {
         setGetBalances(['0', '0'])
-        async function readBalances() {
+        async function fetchBalance() {
             try {
                 let balance0 = '0'
                 let balance1 = '0'
@@ -179,7 +179,13 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                     (t) => t.meta.base16 === pair[1].meta.base16
                 )
 
-                if (found0 && found1) {
+                if (
+                    found0 &&
+                    found1 &&
+                    resolvedInfo.addr &&
+                    zilpay_addr &&
+                    wallet
+                ) {
                     let balances_ = [
                         {
                             balance_xwallet: _0,
@@ -318,11 +324,14 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
 
                 setGetBalances(bal)
             } catch (error) {
-                console.error('New Effect Error', error)
+                console.error(
+                    'New Effect Error',
+                    JSON.stringify(error, null, 2)
+                )
             }
         }
 
-        readBalances()
+        fetchBalance()
     }, [pair, tokensStore, wallet, isDEFIx, zilpay_addr])
 
     //@zilpay
