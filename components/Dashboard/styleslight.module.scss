@@ -5,6 +5,15 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    font-size: 14px;
+
+    @media only screen and (min-width: 444px) {
+        font-size: 18px;
+    }
+    @media only screen and (min-width: 777px) {
+        font-size: 22px;
+    }
 }
 
 .wrapperIcon {
@@ -19,13 +28,20 @@
 }
 
 .txtConnected {
-    font-size: 11px;
     color: #333333;
     margin-left: 10px;
     text-transform: uppercase;
     border: 1px solid #dbe4eb;
-    border-radius: 5px;
-    padding: 5px;
+
+    border-radius: 22px;
+
+    padding: 8px 14px;
+    @media only screen and (min-width: 444px) {
+        padding: 8px 18px;
+    }
+    @media only screen and (min-width: 777px) {
+        padding: 8px 22px;
+    }
 }
 
 .txtConnected:hover {
@@ -35,11 +51,18 @@
 }
 
 .txtLoggedIn {
-    font-size: 11px;
     color: #ffff32;
     border: 1px solid #dbe4eb;
-    border-radius: 5px;
-    padding: 5px;
+
+    border-radius: 22px;
+
+    padding: 8px 14px;
+    @media only screen and (min-width: 444px) {
+        padding: 8px 18px;
+    }
+    @media only screen and (min-width: 777px) {
+        padding: 8px 22px;
+    }
 }
 
 .txtLoggedIn:hover {
@@ -49,12 +72,19 @@
 }
 
 .txtConnect {
-    font-size: 11px;
     color: #333333;
     margin-left: 10px;
     border: 1px solid #dbe4eb;
-    border-radius: 5px;
-    padding: 5px;
+
+    border-radius: 22px;
+
+    padding: 8px 14px;
+    @media only screen and (min-width: 444px) {
+        padding: 8px 18px;
+    }
+    @media only screen and (min-width: 777px) {
+        padding: 8px 22px;
+    }
 }
 
 .txtConnect:hover {

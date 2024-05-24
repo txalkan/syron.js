@@ -143,6 +143,9 @@ export const DexOutput: React.FC<Prop> = ({
                                         <Image
                                             src={tydradexSvg}
                                             alt="tydradex"
+                                            layout="responsive"
+                                            width={100}
+                                            height={100}
                                         />
                                     </div>
                                     <div className={styles.dexName}>

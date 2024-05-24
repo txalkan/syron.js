@@ -4,22 +4,16 @@
 
 .searchBarIco {
     justify-content: center;
-    margin-top: 50px;
-    margin-bottom: 30px;
-    padding-top: 30px;
-    padding-bottom: 10px;
     position: absolute;
     top: 50px;
     right: 4%;
+
+    margin-top: 8%;
 }
 
 @media only screen and (max-width: 767px) {
     .magSearchbar {
         margin-top: 20% !important;
         margin-bottom: -125px !important;
-    }
-
-    .searchBarIco {
-        margin-top: 15px;
     }
 }

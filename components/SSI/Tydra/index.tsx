@@ -238,8 +238,9 @@ function Component(props: Props) {
                         <Image
                             src={`data:image/png;base64,${tydra}`}
                             alt="tydra-img"
-                            width={333}
-                            height={333}
+                            layout="responsive"
+                            width={100}
+                            height={100}
                         />
                     ) : tokenUri !== '' ? (
                         <img
