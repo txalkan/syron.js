@@ -23,6 +23,7 @@ import ThreeDots from '../../Spinner/ThreeDots'
 import Tydra from '../Tydra'
 import useFetch from '../../../src/hooks/fetch'
 import { useStore } from 'react-stores'
+import { $wallet } from '../../../src/store/wallet'
 
 interface LayoutProps {
     children: ReactNode
@@ -45,6 +46,7 @@ function Component(props: LayoutProps) {
             : ''
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
+    const wallet = useStore($wallet)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -82,7 +84,7 @@ function Component(props: LayoutProps) {
     useEffect(() => {
         fetchDoc()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [wallet])
 
     // if (loadingDoc || loading) {
     //     return <Spinner />
