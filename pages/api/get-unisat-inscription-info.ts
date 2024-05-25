@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
-import supabase from '../../src/utils/supabase'
 import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
 
@@ -30,8 +29,10 @@ export default async function handler(
     const { id } = request.query
 
     console.log('@dev get data from Firebase')
-    const querySnapshot = await getDocs(collection(db, 'unisat_inscription_info'));
-    const dataList = querySnapshot.docs.map(doc => ({ ...doc.data() }));
+    const querySnapshot = await getDocs(
+        collection(db, 'unisat_inscription_info')
+    )
+    const dataList = querySnapshot.docs.map((doc) => ({ ...doc.data() }))
     const data = dataList.find((val) => val?.inscription_id === id)
 
     console.log('@response Firebase data:', data)
