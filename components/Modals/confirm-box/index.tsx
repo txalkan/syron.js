@@ -325,17 +325,17 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
-            // const inscription_id =
-            //     '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68i0'
-            // await fetch(`/api/get-unisat-inscription-info?id=${inscription_id}`)
-            //     .then(async (response) => {
-            //         const data = await response.json()
-            //         console.log(
-            //             'outcall response',
-            //             JSON.stringify(data, null, 2)
-            //         )
-            //     })
-            //     .catch((error) => console.error(error))
+            const inscription_id =
+                '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68i0'
+            await fetch(`/api/get-unisat-inscription-info?id=${inscription_id}`)
+                .then(async (response) => {
+                    const data = await response.json()
+                    console.log(
+                        'outcall response',
+                        JSON.stringify(data, null, 2)
+                    )
+                })
+                .catch((error) => console.error(error))
 
             // const id =
             //     'tb1p4w59p7nxggc56lg79v7cwh4c8emtudjrtetgasfy5j3q9r4ug9zsuwhykc'

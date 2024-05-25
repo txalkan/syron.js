@@ -3,6 +3,8 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
 import supabase from '../../src/utils/supabase'
+import { addDoc, collection, getDocs } from 'firebase/firestore'
+import { db } from '../../src/utils/firebase/firebaseConfig'
 
 type Data = {
     data?: any
@@ -27,14 +29,12 @@ export default async function handler(
 
     const { id } = request.query
 
-    console.log('@dev get data from Supabase')
-    const { data, error } = await supabase
-        .from('unisat_inscription_info')
-        .select()
-        .eq('id', id)
-        .single()
+    console.log('@dev get data from Firebase')
+    const querySnapshot = await getDocs(collection(db, 'unisat_inscription_info'));
+    const dataList = querySnapshot.docs.map(doc => ({ ...doc.data() }));
+    const data = dataList.find((val) => val?.inscription_id === id)
 
-    console.log('@response Supabase data:', data, 'error:', error)
+    console.log('@response Firebase data:', data)
 
     if (!id || Array.isArray(id)) {
         response.status(400).json({
@@ -43,7 +43,7 @@ export default async function handler(
         return
     }
 
-    // if id not found in supabase
+    // if id not found in firebase
     if (data) {
         response.status(200).json({ data: data.data })
     } else {
@@ -55,11 +55,11 @@ export default async function handler(
             } else {
                 console.log('@response UniSat data:', data_unisat)
 
-                await supabase.from('unisat_inscription_info').insert({
-                    id,
+                await addDoc(collection(db, 'unisat_inscription_info'), {
+                    inscription_id: id,
                     timestamp: new Date(),
                     data: data_unisat,
-                })
+                });
 
                 response.status(200).json({ data: data_unisat })
             }
