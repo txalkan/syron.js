@@ -124,7 +124,6 @@ function useFetch() {
                             subdomainNavigate =
                                 subdomain !== '' ? `${subdomain}@` : ''
                         }
-                        updateLoading(false)
                         //@todo-x-check: issue, this gets run multiple times thus the alert(version) is repeated: adding !loading condition, tested when accessing sbt@bagasi directly
                         const version = version_.slice(0, 7)
                         switch (version.toLowerCase()) {
@@ -182,6 +181,8 @@ function useFetch() {
                                         `/${subdomainNavigate}${domain}.ssi`
                                     )
                                 }
+
+                            updateLoading(false)
                         }
                     } catch (error) {
                         Router.push(`/resolvedAddress`)
