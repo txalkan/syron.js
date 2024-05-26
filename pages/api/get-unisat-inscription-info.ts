@@ -47,7 +47,9 @@ export default async function handler(
 
     // if id not found in firebase
     if (data) {
-        response.status(200).json(sortKeys(data.data)) //{ data: data.data })
+        response
+            .status(200)
+            .json(sortKeys(sanitizeInscriptionInfoResponse(data.data))) //{ data: data.data })
     } else {
         console.log('@dev get data from UniSat')
         try {
@@ -63,7 +65,11 @@ export default async function handler(
                     data: data_unisat,
                 })
 
-                response.status(200).json(sortKeys(data_unisat)) //{ data: data_unisat })
+                response
+                    .status(200)
+                    .json(
+                        sortKeys(sanitizeInscriptionInfoResponse(data_unisat))
+                    ) //{ data: data_unisat })
             }
         } catch (error) {
             console.error('@response UniSat error:', error)
@@ -72,4 +78,44 @@ export default async function handler(
             })
         }
     }
+}
+
+// Function to sanitize and normalize the response
+function sanitizeInscriptionInfoResponse(response: any): any {
+    // Define the structure of the allowed response
+    const allowedKeys = {
+        brc20: {
+            amt: '',
+            // decimal: '',
+            // lim: '',
+            op: '',
+            tick: '',
+        },
+        utxo: {
+            address: '',
+            isSpent: false,
+        },
+    }
+
+    // Recursive function to copy allowed keys
+    function sanitize(obj: any, allowed: any): any {
+        const sanitizedObj: any = {}
+        for (const key in allowed) {
+            if (obj.hasOwnProperty(key)) {
+                if (
+                    typeof allowed[key] === 'object' &&
+                    !Array.isArray(allowed[key])
+                ) {
+                    sanitizedObj[key] = sanitize(obj[key], allowed[key])
+                } else {
+                    sanitizedObj[key] = obj[key]
+                }
+            } else {
+                sanitizedObj[key] = allowed[key]
+            }
+        }
+        return sanitizedObj
+    }
+
+    return sanitize(response, allowedKeys)
 }
