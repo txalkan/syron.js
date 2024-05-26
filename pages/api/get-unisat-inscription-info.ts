@@ -4,6 +4,7 @@ import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
 import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
+import { sortKeys } from '../../src/utils/sortKeys'
 
 type Data = {
     data?: any
@@ -46,7 +47,7 @@ export default async function handler(
 
     // if id not found in firebase
     if (data) {
-        response.status(200).json({ data: data.data })
+        response.status(200).json(sortKeys(data.data)) //{ data: data.data })
     } else {
         console.log('@dev get data from UniSat')
         try {
@@ -60,9 +61,9 @@ export default async function handler(
                     inscription_id: id,
                     timestamp: new Date(),
                     data: data_unisat,
-                });
+                })
 
-                response.status(200).json({ data: data_unisat })
+                response.status(200).json(sortKeys(data_unisat)) //{ data: data_unisat })
             }
         } catch (error) {
             console.error('@response UniSat error:', error)
