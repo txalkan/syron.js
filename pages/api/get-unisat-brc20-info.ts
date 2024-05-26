@@ -3,10 +3,21 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
 import supabase from '../../src/utils/supabase'
+import { sanitize, sortKeys } from '../../src/utils/gatewayResponse'
 
 type Data = {
     data?: any
     error?: string
+}
+
+// Define the structure of the allowed response
+const allowedKeys = {
+    detail: [
+        {
+            ticker: '',
+            overallBalance: '',
+        },
+    ],
 }
 
 export default async function handler(
@@ -43,9 +54,13 @@ export default async function handler(
         return
     }
 
-    // if id not found in supabase
+    // if id found in supabase, send the data - else fetch from unisat
+    // @review Fetch data from UniSat API if the Supabase timestamp is older than 10 seconds
+
     if (data) {
-        response.status(200).json({ data: data.data })
+        response
+            .status(200)
+            .json(sortKeys(sanitize(JSON.parse(data.data), allowedKeys)))
     } else {
         console.log('@dev get data from UniSat')
         try {
@@ -55,19 +70,20 @@ export default async function handler(
             } else {
                 console.log('@response UniSat data:', data_unisat)
 
-                data_unisat.detail = data_unisat.detail.filter(
-                    (item: { ticker: string }) => item.ticker === 'SYRO'
-                )
-                const balance = data_unisat.detail[0].overallBalance
-                console.log(balance)
+                // data_unisat.detail = data_unisat.detail.filter(
+                //     (item: { ticker: string }) => item.ticker === 'SYRO'
+                // )
+                //const balance = data_unisat.detail[0].overallBalance
 
                 await supabase.from('unisat_brc20_info').insert({
                     id,
                     timestamp: new Date(),
-                    data: balance,
+                    data: data_unisat,
                 })
 
-                response.status(200).json({ data: balance })
+                response
+                    .status(200)
+                    .json(sortKeys(sanitize(data_unisat, allowedKeys)))
             }
         } catch (error) {
             console.error('@response UniSat error:', error)

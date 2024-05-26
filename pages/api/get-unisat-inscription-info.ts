@@ -4,11 +4,26 @@ import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
 import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
-import { sortKeys } from '../../src/utils/sortKeys'
+import { sanitize, sortKeys } from '../../src/utils/gatewayResponse'
 
 type Data = {
     data?: any
     error?: string
+}
+
+// Define the structure of the allowed response
+const allowedKeys = {
+    brc20: {
+        amt: '',
+        // decimal: '',
+        // lim: '',
+        op: '',
+        tick: '',
+    },
+    utxo: {
+        address: '',
+        isSpent: false,
+    },
 }
 
 export default async function handler(
@@ -45,11 +60,9 @@ export default async function handler(
         return
     }
 
-    // if id not found in firebase
+    // if id found in firebase, send the data - else fetch from unisat
     if (data) {
-        response
-            .status(200)
-            .json(sortKeys(sanitizeInscriptionInfoResponse(data.data))) //{ data: data.data })
+        response.status(200).json(sortKeys(sanitize(data.data, allowedKeys)))
     } else {
         console.log('@dev get data from UniSat')
         try {
@@ -67,9 +80,7 @@ export default async function handler(
 
                 response
                     .status(200)
-                    .json(
-                        sortKeys(sanitizeInscriptionInfoResponse(data_unisat))
-                    ) //{ data: data_unisat })
+                    .json(sortKeys(sanitize(data_unisat, allowedKeys)))
             }
         } catch (error) {
             console.error('@response UniSat error:', error)
@@ -78,44 +89,4 @@ export default async function handler(
             })
         }
     }
-}
-
-// Function to sanitize and normalize the response
-function sanitizeInscriptionInfoResponse(response: any): any {
-    // Define the structure of the allowed response
-    const allowedKeys = {
-        brc20: {
-            amt: '',
-            // decimal: '',
-            // lim: '',
-            op: '',
-            tick: '',
-        },
-        utxo: {
-            address: '',
-            isSpent: false,
-        },
-    }
-
-    // Recursive function to copy allowed keys
-    function sanitize(obj: any, allowed: any): any {
-        const sanitizedObj: any = {}
-        for (const key in allowed) {
-            if (obj.hasOwnProperty(key)) {
-                if (
-                    typeof allowed[key] === 'object' &&
-                    !Array.isArray(allowed[key])
-                ) {
-                    sanitizedObj[key] = sanitize(obj[key], allowed[key])
-                } else {
-                    sanitizedObj[key] = obj[key]
-                }
-            } else {
-                sanitizedObj[key] = allowed[key]
-            }
-        }
-        return sanitizedObj
-    }
-
-    return sanitize(response, allowedKeys)
 }
