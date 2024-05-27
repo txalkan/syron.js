@@ -90,7 +90,7 @@ function Component() {
                             : styles.cardBeYourBank
                     }
                 >
-                    <div className={styles.title}>ᛞ Be Your Own ₿ank ᛞ</div>
+                    <div className={styles.title}>Be Your Own ₿ank ᛞ</div>
 
                     {/* <div className={styles.icoWrapper}>
                         <Image
