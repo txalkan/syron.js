@@ -2,8 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
-import { addDoc, collection, getDocs } from 'firebase/firestore'
-import { db } from '../../src/utils/firebase/firebaseConfig'
+import supabase from '../../src/utils/supabase'
 import { sanitize, sortKeys } from '../../src/utils/gatewayResponse'
 
 type Data = {
@@ -13,17 +12,12 @@ type Data = {
 
 // Define the structure of the allowed response
 const allowedKeys = {
-    brc20: {
-        amt: '',
-        // decimal: '',
-        // lim: '',
-        op: '',
-        tick: '',
-    },
-    utxo: {
-        address: '',
-        isSpent: false,
-    },
+    detail: [
+        {
+            ticker: '',
+            overallBalance: '',
+        },
+    ],
 }
 
 export default async function handler(
@@ -44,14 +38,14 @@ export default async function handler(
 
     const { id } = request.query
 
-    console.log('@dev get data from Firebase')
-    const querySnapshot = await getDocs(
-        collection(db, 'unisat_inscription_info')
-    )
-    const dataList = querySnapshot.docs.map((doc) => ({ ...doc.data() }))
-    const data = dataList.find((val) => val?.inscription_id === id)
+    console.log('@dev get data from Supabase')
+    const { data, error } = await supabase
+        .from('unisat_brc20_info')
+        .select()
+        .eq('id', id)
+        .single()
 
-    console.log('@response Firebase data:', JSON.stringify(data, null, 2))
+    console.log('@response Supabase data:', data, 'error:', error)
 
     if (!id || Array.isArray(id)) {
         response.status(400).json({
@@ -60,23 +54,29 @@ export default async function handler(
         return
     }
 
-    // @dev If the ID is found, send the data; otherwise, fetch from UniSat
+    // if id found in supabase, send the data - else fetch from unisat
+    // @review Fetch data from UniSat API if the Supabase timestamp is older than 10 seconds
+
     if (data) {
-        response.status(200).json(sortKeys(sanitize(data.data, allowedKeys)))
+        response
+            .status(200)
+            .json(sortKeys(sanitize(JSON.parse(data.data), allowedKeys)))
     } else {
         console.log('@dev get data from UniSat')
         try {
-            const data_unisat = await unisatApi.getInscriptionInfo(id)
+            const data_unisat = await unisatApi.getBrc20Info(id)
             if (!data_unisat) {
                 response.status(404).json({ error: 'No data found' })
             } else {
-                console.log(
-                    '@response UniSat data:',
-                    JSON.stringify(data_unisat, null, 2)
-                )
+                console.log('@response UniSat data:', data_unisat)
 
-                await addDoc(collection(db, 'unisat_inscription_info'), {
-                    inscription_id: id,
+                // data_unisat.detail = data_unisat.detail.filter(
+                //     (item: { ticker: string }) => item.ticker === 'SYRO'
+                // )
+                //const balance = data_unisat.detail[0].overallBalance
+
+                await supabase.from('unisat_brc20_info').insert({
+                    id,
                     timestamp: new Date(),
                     data: data_unisat,
                 })

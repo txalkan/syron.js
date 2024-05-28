@@ -17,3 +17,8 @@ const auth = getAuth(app)
 const db = getFirestore(app)
 
 export { auth, db }
+
+// import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+// const analytics = getAnalytics(app);

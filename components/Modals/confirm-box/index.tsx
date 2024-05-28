@@ -341,10 +341,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     'tb1p4w59p7nxggc56lg79v7cwh4c8emtudjrtetgasfy5j3q9r4ug9zsuwhykc'
             // await fetch(`/api/get-unisat-brc20-info?id=${id}`)
             //     .then(async (response) => {
-            //         const data = await response.json()
+            //         const res = await response.json()
             //         console.log(
             //             'outcall response',
-            //             JSON.stringify(data, null, 2)
+            //             JSON.stringify(res, null, 2)
             //         )
             //     })
             //     .catch((error) => console.error(error))
