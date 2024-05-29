@@ -60,7 +60,7 @@ export default async function handler(
                     inscription_id: id,
                     timestamp: new Date(),
                     data: data_unisat,
-                });
+                })
 
                 response.status(200).json({ data: data_unisat })
             }
