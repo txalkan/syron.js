@@ -55,6 +55,7 @@
         "redux-persist": "^6.0.0",
         "sass": "^1.34.1",
         "sats-connect": "^1.4.1",
+        "sharp": "^0.33.4",
         "toformat": "^2.0.0",
         "tyron": "^4.22.0",
         "use-arconnect": "^1.0.1",
