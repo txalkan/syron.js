@@ -1,29 +1,20 @@
-import { useStore as effectorStore } from 'effector-react'
 import React, { ReactNode, useEffect, useState } from 'react'
+import { useStore as effectorStore } from 'effector-react'
 import { useSelector } from 'react-redux'
 import { $doc } from '../../../src/store/did-doc'
-import { toast } from 'react-toastify'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 // import { $isController } from '../../../src/store/controller' @todo-x review
 import { RootState } from '../../../src/app/reducers'
 import { useTranslation } from 'next-i18next'
-import { ClaimWallet, Spinner } from '../..'
+import { Spinner } from '../..'
 import useRouterHook from '../../../src/hooks/router'
-import {
-    $loading,
-    $loadingDoc,
-    $loadingTydra,
-    updateLoadingTydra,
-} from '../../../src/store/loading'
+import { $loading } from '../../../src/store/loading'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
-// import controller from '../../../src/hooks/isController'
 // import toastTheme from '../../../src/hooks/toastTheme'
 import ThreeDots from '../../Spinner/ThreeDots'
-import Tydra from '../Tydra'
 import useFetch from '../../../src/hooks/fetch'
 import { useStore } from 'react-stores'
-import { $wallet } from '../../../src/store/wallet'
 
 interface LayoutProps {
     children: ReactNode
@@ -36,8 +27,7 @@ function Component(props: LayoutProps) {
     const { children } = props
 
     const { fetchDoc } = useFetch()
-    // @review: loading doc inside wallet & did doc && loading
-    // const loadingDoc = useStore($loadingDoc)
+
     const loading = effectorStore($loading)
     const loginInfo = useSelector((state: RootState) => state.modal)
     const zilpay_addr =
@@ -46,7 +36,6 @@ function Component(props: LayoutProps) {
             : ''
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
     const resolvedInfo = useStore($resolvedInfo)
-    const wallet = useStore($wallet)
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
             ? resolvedInfo.user_domain
@@ -62,21 +51,16 @@ function Component(props: LayoutProps) {
     const styles = isLight ? stylesLight : stylesDark
 
     const [loadingCard1, setLoadingCard1] = useState(false)
-    //const [loadingCard2, setLoadingCard2] = useState(false)
     const [loadingCard3, setLoadingCard3] = useState(false)
-    // const [loadingCard4, setLoadingCard4] = useState(false)
-    const [loadingTydra_, setLoadingTydra_] = useState(true)
 
     useEffect(() => {
         setTimeout(() => {
             setLoadingCard1(false)
             setLoadingCard3(false)
-            setLoadingTydra_(false)
         }, 2000)
         return () => {
             setLoadingCard1(false)
             setLoadingCard3(false)
-            setLoadingTydra_(false)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [resolvedDomain, resolvedSubdomain]) //@review: add tld
@@ -86,9 +70,6 @@ function Component(props: LayoutProps) {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-    // if (loadingDoc || loading) {
-    //     return <Spinner />
-    // }
     if (loading) {
         return <Spinner />
     }
@@ -132,23 +113,18 @@ function Component(props: LayoutProps) {
                     )}
                 </div>
             </div> */}
-            {/* <div style={{ marginBottom: '10%' }}>
-                <Tydra />
-            </div> */}
-            {!loadingTydra_ && (
-                <>
-                    <div
-                        style={{
-                            width: '100%',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            flexDirection: 'row',
-                        }}
-                    >
-                        {children}
-                    </div>
-                    <div>
-                        {/* <div className={styles.cardHeadline}>
+            <div
+                style={{
+                    width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    flexDirection: 'row',
+                }}
+            >
+                {children}
+            </div>
+            <div>
+                {/* <div className={styles.cardHeadline}>
                             <h3 style={{ color: isLight ? '#000' : '#dbe4eb' }}>
                                 {docVersion === 'didxwal' ||
                                     docVersion === 'xwallet' ||
@@ -171,59 +147,57 @@ function Component(props: LayoutProps) {
                                 WALLET
                             </h2>
                         </div> */}
+                <div
+                    style={{
+                        marginTop: '100px',
+                        width: '100%',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                    }}
+                >
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
                         <div
-                            style={{
-                                marginTop: '100px',
-                                width: '100%',
-                                display: 'flex',
-                                flexDirection: 'row',
-                                justifyContent: 'center',
+                            onClick={() => {
+                                setLoadingCard1(true)
+                                navigate(
+                                    `/${subdomainNavigate}${resolvedDomain}/didx/doc`
+                                )
+                                setTimeout(() => {
+                                    setLoadingCard1(false)
+                                }, 1000)
                             }}
+                            className={styles.flipCard}
                         >
-                            <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                }}
-                            >
-                                <div
-                                    onClick={() => {
-                                        setLoadingCard1(true)
-                                        navigate(
-                                            `/${subdomainNavigate}${resolvedDomain}/didx/doc`
-                                        )
-                                        setTimeout(() => {
-                                            setLoadingCard1(false)
-                                        }, 1000)
-                                    }}
-                                    className={styles.flipCard}
-                                >
-                                    <div className={styles.flipCardInner}>
-                                        <div className={styles.flipCardFront}>
-                                            <div className={styles.cardTitle3}>
-                                                {loadingCard1 ? (
-                                                    <ThreeDots color="yellow" />
-                                                ) : (
-                                                    t('DID')
-                                                )}
-                                            </div>
-                                        </div>
-                                        <div className={styles.flipCardBack}>
-                                            <div className={styles.cardTitle2}>
-                                                {loadingCard1 ? (
-                                                    <ThreeDots color="yellow" />
-                                                ) : (
-                                                    t(
-                                                        'DECENTRALIZED IDENTIFIER'
-                                                    )
-                                                )}
-                                            </div>
-                                        </div>
+                            <div className={styles.flipCardInner}>
+                                <div className={styles.flipCardFront}>
+                                    <div className={styles.cardTitle3}>
+                                        {loadingCard1 ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('DID')
+                                        )}
                                     </div>
                                 </div>
-                                {/* <h2>
+                                <div className={styles.flipCardBack}>
+                                    <div className={styles.cardTitle2}>
+                                        {loadingCard1 ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            t('DECENTRALIZED IDENTIFIER')
+                                        )}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard2(true)
@@ -274,76 +248,60 @@ function Component(props: LayoutProps) {
                                         </div>
                                     </div>
                                 </h2> */}
-                            </div>
-                            <div className={styles.xText}>
-                                <h5
-                                    style={{
-                                        color: isLight ? '#000' : '#dbe4eb',
-                                    }}
-                                >
-                                    {/* x */}
-                                </h5>
-                            </div>
+                    </div>
+                    <div className={styles.xText}>
+                        <h5
+                            style={{
+                                color: isLight ? '#000' : '#dbe4eb',
+                            }}
+                        >
+                            {/* x */}
+                        </h5>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                        }}
+                    >
+                        {controller_ === zilpay_addr && (
                             <div
-                                style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
+                                onClick={() => {
+                                    setLoadingCard3(true)
+                                    navigate(
+                                        `/${subdomainNavigate}${resolvedDomain}/didx/wallet`
+                                    )
+                                    setTimeout(() => {
+                                        setLoadingCard3(false)
+                                    }, 1000)
                                 }}
+                                className={styles.flipCard}
                             >
-                                {controller_ === zilpay_addr && (
-                                    <div
-                                        onClick={() => {
-                                            setLoadingCard3(true)
-                                            navigate(
-                                                `/${subdomainNavigate}${resolvedDomain}/didx/wallet`
-                                            )
-                                            setTimeout(() => {
-                                                setLoadingCard3(false)
-                                            }, 1000)
-                                        }}
-                                        className={styles.flipCard}
-                                    >
-                                        <div className={styles.flipCardInner}>
-                                            <div
-                                                className={
-                                                    styles.flipCardFrontWallet
-                                                }
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.cardTitle3
-                                                    }
-                                                >
-                                                    {loadingCard3 ? (
-                                                        <ThreeDots color="yellow" />
-                                                    ) : (
-                                                        t('SETTINGS')
-                                                    )}
-                                                </div>
-                                            </div>
-                                            <div
-                                                className={styles.flipCardBack}
-                                            >
-                                                <div
-                                                    className={
-                                                        styles.cardTitle2
-                                                    }
-                                                >
-                                                    {loadingCard3 ? (
-                                                        <ThreeDots color="yellow" />
-                                                    ) : (
-                                                        t(
-                                                            'ACCOUNT CONFIGURATION'
-                                                        )
-                                                    )}
-                                                </div>
-                                            </div>
+                                <div className={styles.flipCardInner}>
+                                    <div className={styles.flipCardFrontWallet}>
+                                        <div className={styles.cardTitle3}>
+                                            {loadingCard3 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('SETTINGS')
+                                            )}
                                         </div>
                                     </div>
-                                )}
-                                {/* <h2>
+                                    <div className={styles.flipCardBack}>
+                                        <div className={styles.cardTitle2}>
+                                            {loadingCard3 ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                t('ACCOUNT CONFIGURATION')
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+                        {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard3(true)
@@ -417,7 +375,7 @@ function Component(props: LayoutProps) {
                                         </div>
                                     </div>
                                 </h2> */}
-                                {/* <h2>
+                        {/* <h2>
                                     <div
                                         onClick={() => {
                                             setLoadingCard4(true)
@@ -496,9 +454,9 @@ function Component(props: LayoutProps) {
                                         </div>
                                     </div>
                                 </h2> */}
-                            </div>
-                        </div>
-                        {/* <div
+                    </div>
+                </div>
+                {/* <div
                             style={{
                                 display: 'flex',
                                 justifyContent: 'center',
@@ -508,9 +466,7 @@ function Component(props: LayoutProps) {
                                 <ClaimWallet title="CLAIM DIDxWALLET" />
                             </div>
                         </div> */}
-                    </div>
-                </>
-            )}
+            </div>
         </div>
     )
 }
