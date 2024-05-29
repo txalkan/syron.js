@@ -25,6 +25,7 @@ import { User, signIn } from '@junobuild/core-peer'
 import { authSubscribe } from '@junobuild/core-peer'
 import { AddressPurpose, BitcoinNetworkType, getAddress } from 'sats-connect'
 import { useStore } from 'react-stores'
+import { useStore as useStoreEffector } from 'effector-react'
 import {
     $bitcoin_addresses,
     updateBitcoinAddresses,
@@ -34,6 +35,10 @@ import { updateXR } from '../../src/store/xr'
 import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
+import {
+    $walletConnected,
+    updateWalletConnected,
+} from '../../src/store/loading'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -159,7 +164,6 @@ function Component() {
     // @dev (unisat)
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
-    const [connected, setConnected] = useState(false)
     const [accounts, setAccounts] = useState<string[]>([])
     const [publicKey, setPublicKey] = useState('')
     const [address_, setAddress] = useState('')
@@ -169,6 +173,7 @@ function Component() {
         total: 0,
     })
     const [network_, setNetwork] = useState('testnet')
+    const walletConnected = useStoreEffector($walletConnected)
 
     const getBasicInfo = async () => {
         const unisat = (window as any).unisat
@@ -214,13 +219,13 @@ function Component() {
         self.accounts = _accounts
         if (_accounts.length > 0) {
             setAccounts(_accounts)
-            setConnected(true)
+            updateWalletConnected(true)
 
             setAddress(_accounts[0])
 
             getBasicInfo()
         } else {
-            setConnected(false)
+            updateWalletConnected(false)
         }
     }
 
@@ -334,7 +339,7 @@ function Component() {
                         ) : (
                             <>
                                 {
-                                    !connected ? (
+                                    !walletConnected ? (
                                         <>
                                             {!unisatInstalled ? (
                                                 <div

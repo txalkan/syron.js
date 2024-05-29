@@ -30,8 +30,10 @@ export default async function handler(
     const { id } = request.query
 
     console.log('@dev get data from Firebase')
-    const querySnapshot = await getDocs(collection(db, 'unisat_inscription_info'));
-    const dataList = querySnapshot.docs.map(doc => ({ ...doc.data() }));
+    const querySnapshot = await getDocs(
+        collection(db, 'unisat_inscription_info')
+    )
+    const dataList = querySnapshot.docs.map((doc) => ({ ...doc.data() }))
     const data = dataList.find((val) => val?.inscription_id === id)
 
     console.log('@response Firebase data:', data)
@@ -59,7 +61,7 @@ export default async function handler(
                     inscription_id: id,
                     timestamp: new Date(),
                     data: data_unisat,
-                });
+                })
 
                 response.status(200).json({ data: data_unisat })
             }
