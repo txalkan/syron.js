@@ -1,39 +1,28 @@
 import React, { createContext, useEffect, useRef, useState } from 'react'
+import { useStore } from 'react-stores'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
 import stylesDark from './styles.module.scss'
 import stylesLight from './styleslight.module.scss'
 import { RootState } from '../../src/app/reducers'
-import {
-    updateModalDashboard,
-    updateModalNewSsi,
-    updateShowZilpay,
-    // $showZilpay,
-    // $dashboardState,
-} from '../../src/store/modal'
-// import { DashboardLabel, ZilPay } from '..'
-// import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
 import sunIco from '../../src/assets/icons/sun.svg'
 import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
 // import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
-import useArConnect from '../../src/hooks/useArConnect'
-import useZilpayHook from '../../src/hooks/zilpayHook'
 import { User, signIn } from '@junobuild/core-peer'
 import { authSubscribe } from '@junobuild/core-peer'
 import { AddressPurpose, BitcoinNetworkType, getAddress } from 'sats-connect'
-import { useStore } from 'react-stores'
 import {
     $bitcoin_addresses,
     updateBitcoinAddresses,
 } from '../../src/store/bitcoin-addresses'
 import useICPHook from '../../src/hooks/useICP'
-import { updateXR } from '../../src/store/xr'
 import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
+import { $walletConnected, updateWalletConnected } from '../../src/store/syron'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -48,12 +37,10 @@ function Component() {
     const { getXR } = useMempoolHook()
 
     const dispatch = useDispatch()
-    // const { connect } = useArConnect()
     const loginInfo = useSelector((state: RootState) => state.modal)
     const styles = loginInfo.isLight ? stylesLight : stylesDark
 
     const { t } = useTranslation()
-    // const { handleConnect } = useZilpayHook()
 
     const onSignIn = () => {
         console.log('sign in')
@@ -63,37 +50,7 @@ function Component() {
         }
 
         internetIdentity()
-
-        // if (loginInfo.zilAddr) {
-        //     updateModalDashboard(true)
-        //     updateModalNewSsi(false)
-        // } else {
-        //     handleConnect()
-        // }
-        // toast.info(t('Browsing on {{net}}', { net: net }), {
-        //     position: 'bottom-right',
-        //     autoClose: 2000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     theme: toastTheme(loginInfo.isLight),
-        //     toastId: 4,
-        // })
     }
-
-    // const checkArConnect = () => {
-    //     if (loginInfo.arAddr) {
-    //         connect()
-    //     }
-    // }
-
-    // useEffect(() => {
-    //     if (loginInfo.zilAddr !== null) {
-    //         updateShowZilpay(false)
-    //     }
-    // }, [loginInfo.zilAddr])
 
     const [user, setUser] = useState<User | null>(null)
     useEffect(() => {
@@ -159,7 +116,6 @@ function Component() {
     // @dev (unisat)
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
-    const [connected, setConnected] = useState(false)
     const [accounts, setAccounts] = useState<string[]>([])
     const [publicKey, setPublicKey] = useState('')
     const [address_, setAddress] = useState('')
@@ -169,6 +125,7 @@ function Component() {
         total: 0,
     })
     const [network_, setNetwork] = useState('testnet')
+    const walletConnected = useStore($walletConnected).isConnected
 
     const getBasicInfo = async () => {
         const unisat = (window as any).unisat
@@ -214,13 +171,13 @@ function Component() {
         self.accounts = _accounts
         if (_accounts.length > 0) {
             setAccounts(_accounts)
-            setConnected(true)
+            updateWalletConnected(true)
 
             setAddress(_accounts[0])
 
             getBasicInfo()
         } else {
-            setConnected(false)
+            updateWalletConnected(false)
         }
     }
 
@@ -299,7 +256,6 @@ function Component() {
                                 <div
                                     className={styles.wrapperIcon}
                                     onClick={() => {
-                                        // checkArConnect() @review(zil-ar)
                                         onSignIn()
                                     }}
                                 >
@@ -334,7 +290,7 @@ function Component() {
                         ) : (
                             <>
                                 {
-                                    !connected ? (
+                                    !walletConnected ? (
                                         <>
                                             {!unisatInstalled ? (
                                                 <div

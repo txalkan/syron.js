@@ -1,7 +1,7 @@
 import styles from './index.module.scss'
 import _Big from 'big.js'
-import classNames from 'classnames'
 import { useStore } from 'react-stores'
+import { useStore as useStoreEffector } from 'effector-react'
 import toformat from 'toformat'
 import React, { useEffect, useRef, useState } from 'react'
 import { DragonDex, SwapDirection } from '../../../src/mixins/dex'
@@ -20,7 +20,12 @@ import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import { $xr } from '../../../src/store/xr'
-import { $btc_wallet, $syron } from '../../../src/store/syron'
+import {
+    $btc_wallet,
+    $syron,
+    $walletConnected,
+    updateWalletConnected,
+} from '../../../src/store/syron'
 import { unisatApi } from '../../../src/utils/unisat/api'
 import {
     getStringByteCount,
@@ -58,9 +63,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
 }) {
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
-    const [connected, setConnected] = useState(false)
     const tyron = useStore($syron)
     const btc_wallet = useStore($btc_wallet)
+    const walletConnected = useStore($walletConnected).isConnected
 
     const { updateWallet } = useBTCWalletHook()
     const { getBox, getSUSD, getSyron } = useICPHook()
@@ -226,7 +231,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const disabled = React.useMemo(() => {
         return (
             loadingTxn /*|| Big(priceInfo!.impact) > 10 */ ||
-            (tyron == null && connected)
+            (tyron == null && walletConnected)
         )
     }, [priceInfo, loadingTxn, tyron])
 
@@ -629,9 +634,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
         }
         self.accounts = _accounts
         if (_accounts.length > 0) {
-            setConnected(true)
+            updateWalletConnected(true)
         } else {
-            setConnected(false)
+            updateWalletConnected(false)
         }
     }
 
@@ -665,7 +670,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const handleButtonClick = async () => {
         if (!unisatInstalled) {
             window.open('https://unisat.io', '_blank')
-        } else if (!connected) {
+        } else if (!walletConnected) {
             const result = await unisat.requestAccounts()
             handleAccountsChanged(result)
 
@@ -807,7 +812,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             <div className={styles.txt}>
                                 {t('Install UniSat')}
                             </div>
-                        ) : !connected ? (
+                        ) : !walletConnected ? (
                             <div className={styles.txt}>{t('CONNECT')}</div>
                         ) : disabled ? (
                             <ThreeDots color="yellow" />
