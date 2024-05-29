@@ -49,6 +49,7 @@ const nextConfig = {
                 pathname: '/[lang]/[username]/didx/wallet',
             },
         ],
+        dangerouslyAllowSVG: true,
     },
     headers() {
         return [
