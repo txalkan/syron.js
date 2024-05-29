@@ -25,11 +25,3 @@ export const updateLoadingTydra = loadingTydra.createEvent<boolean | true>()
 export const $loadingTydra = loadingTydra
     .createStore<boolean | true>(true)
     .on(updateLoadingTydra, (_, payload) => payload)
-
-const walletConnected = createDomain()
-export const updateWalletConnected = walletConnected.createEvent<
-    boolean | false
->()
-export const $walletConnected = walletConnected
-    .createStore<boolean | false>(false)
-    .on(updateWalletConnected, (_, payload) => payload)

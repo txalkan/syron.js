@@ -10,3 +10,10 @@ export const $btc_wallet = new Store<BTCWallet | null>(null)
 export function updateBTCWallet(args: BTCWallet) {
     $btc_wallet.setState(args)
 }
+
+export const $walletConnected = new Store<{ isConnected: boolean }>({
+    isConnected: false,
+})
+export function updateWalletConnected(args: boolean) {
+    $walletConnected.setState({ isConnected: args })
+}

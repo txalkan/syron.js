@@ -1,6 +1,5 @@
 import styles from './index.module.scss'
 import _Big from 'big.js'
-import classNames from 'classnames'
 import { useStore } from 'react-stores'
 import { useStore as useStoreEffector } from 'effector-react'
 import toformat from 'toformat'
@@ -21,7 +20,12 @@ import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
 import { $xr } from '../../../src/store/xr'
-import { $btc_wallet, $syron } from '../../../src/store/syron'
+import {
+    $btc_wallet,
+    $syron,
+    $walletConnected,
+    updateWalletConnected,
+} from '../../../src/store/syron'
 import { unisatApi } from '../../../src/utils/unisat/api'
 import {
     getStringByteCount,
@@ -39,10 +43,6 @@ import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
 import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'
 import { useTranslation } from 'next-i18next'
-import {
-    $walletConnected,
-    updateWalletConnected,
-} from '../../../src/store/loading'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -65,7 +65,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const [unisatInstalled, setUnisatInstalled] = useState(false)
     const tyron = useStore($syron)
     const btc_wallet = useStore($btc_wallet)
-    const walletConnected = useStoreEffector($walletConnected)
+    const walletConnected = useStore($walletConnected).isConnected
 
     const { updateWallet } = useBTCWalletHook()
     const { getBox, getSUSD, getSyron } = useICPHook()
