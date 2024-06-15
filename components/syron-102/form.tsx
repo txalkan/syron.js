@@ -17,21 +17,24 @@ import Image from 'next/image'
 import { SSIVault } from '../../src/mixins/vault'
 import { ConfirmBox } from '../Modals/confirm-box'
 import { $xr } from '../../src/store/xr'
+import { BoxLiquidInput } from './input/liquid'
 
 type Prop = {
     startPair: VaultPair[]
+    type: string
 }
 
 Big.PE = 999
 
 const vault = new SSIVault()
 
-export const SyronForm: React.FC<Prop> = ({ startPair }) => {
+export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const tokensStore = useStore($tokens)
 
     const [modal0, setModal0] = React.useState(false)
     const [modal1, setModal1] = React.useState(false)
     const [modal3, setModal3] = React.useState(false)
+    const [verified, setVerified] = React.useState(false)
     const [confirmModal, setConfirmModal] = React.useState(false)
     const [vault_pair, setPair] = React.useState<VaultPair[]>(startPair)
 
@@ -124,9 +127,91 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
         if (xr != null) setDisabled(false)
     }, [xr])
 
+    if (type === 'get') {
+        return (
+            <>
+                <SwapSettingsModal
+                    show={modal3}
+                    onClose={() => setModal3(false)}
+                />
+                <TokensModal
+                    show={modal0}
+                    // warn
+                    // include
+                    exceptions={vault_pair.map((t) => t.meta.symbol)}
+                    onClose={() => setModal0(false)}
+                    onSelect={(token) => handleOnSelectToken(token, 0)}
+                />
+                <TokensModal
+                    show={modal1}
+                    include
+                    // warn
+                    exceptions={vault_pair.map((t) => t.meta.symbol)}
+                    onClose={() => setModal1(false)}
+                    onSelect={(token) => handleOnSelectToken(token, 1)}
+                />
+                {vault_pair.length === 2 ? (
+                    <form className={styles.container} onSubmit={handleSubmit}>
+                        <div className={styles.contentWrapper}>
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={icoSend}
+                                    alt="deposit-icon"
+                                    className={styles.img}
+                                />
+                                <div className={styles.titleForm2}>
+                                    Deposit Bitcoin
+                                </div>
+                            </div>
+
+                            <BoxInput
+                                value={vault_pair[0].value}
+                                token={vault_pair[0].meta}
+                                disabled={disabled}
+                                onSelect={() => setModal0(true)}
+                                onInput={handleOnInput}
+                                onMax={handleOnInput}
+                                onSwap={handleForm}
+                            />
+                        </div>
+                        {/* <div className={styles.contentWrapper2}>
+                            <div className={styles.icoWrapper}>
+                                <Image
+                                    src={icoReceive}
+                                    alt="get-icon"
+                                    height="22"
+                                    width="22"
+                                />
+                                <div className={styles.titleForm2}>Get Syron</div>
+                            </div>
+                            <TokenInput
+                                token={vault_pair[1].meta}
+                                onSelect={() => setModal1(true)}
+                            />
+                        </div> */}
+                        <div style={{ width: '100%' }}>
+                            <TransactionOutput
+                                amount={amount}
+                                token={vault_pair[1].meta}
+                            />
+                            <ConfirmBox
+                                show={confirmModal}
+                                pair={vault_pair}
+                                direction={direction}
+                                // onClose={() => {
+                                //     setConfirmModal(false)
+                                // }}
+                            />
+                        </div>
+                    </form>
+                ) : null}
+            </>
+        )
+    }
+
     return (
         <>
-            <SwapSettingsModal show={modal3} onClose={() => setModal3(false)} />
+            {/* <SwapSettingsModal show={modal3} onClose={() => setModal3(false)} /> */}
             <TokensModal
                 show={modal0}
                 // warn
@@ -153,11 +238,20 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                                 className={styles.img}
                             />
                             <div className={styles.titleForm2}>
-                                Deposit Bitcoin
+                                Bobeda a Liquidar
+                            </div>
+                            <div className={styles.btnTitle}>
+                                Seleccionar SDB
                             </div>
                         </div>
 
-                        <BoxInput
+                        <div className={styles.selectInfoWrapper}>
+                            <div className={styles.selectInfo}>
+                                Elige Bobeda en este boton ↑
+                            </div>
+                        </div>
+
+                        <BoxLiquidInput
                             value={vault_pair[0].value}
                             token={vault_pair[0].meta}
                             disabled={disabled}
@@ -183,18 +277,70 @@ export const SyronForm: React.FC<Prop> = ({ startPair }) => {
                         />
                     </div> */}
                     <div style={{ width: '100%' }}>
-                        <TransactionOutput
-                            amount={amount}
-                            token={vault_pair[1].meta}
-                        />
-                        <ConfirmBox
-                            show={confirmModal}
-                            pair={vault_pair}
-                            direction={direction}
-                            // onClose={() => {
-                            //     setConfirmModal(false)
-                            // }}
-                        />
+                        <div className={styles.icoWrapper}>
+                            <Image
+                                src={icoSend}
+                                alt="deposit-icon"
+                                className={styles.img2}
+                            />
+                            <div className={styles.titleForm2}>
+                                Bobeda para pagar con
+                                <span className={styles.txtTitle}>
+                                    &nbsp;Syron
+                                </span>
+                            </div>
+                        </div>
+
+                        <div className={styles.selectInfoWrapper}>
+                            <div className={styles.selectInfoPurple}>
+                                SDB: g9gr7Kjnkajsfnajsfajnsfw...
+                            </div>
+                        </div>
+
+                        <div className={styles.selectInfoStatusWrapper}>
+                            <div
+                                className={
+                                    verified
+                                        ? styles.selectInfoStatusVerified
+                                        : styles.selectInfoStatusPending
+                                }
+                            >
+                                VERIFICACION DE TU CUENTA
+                            </div>
+                            {verified ? (
+                                <div
+                                    className={
+                                        styles.selectInfoStatusVerifiedText
+                                    }
+                                >
+                                    La cuenta ha verificada
+                                </div>
+                            ) : (
+                                <div
+                                    className={
+                                        styles.selectInfoStatusPendingText
+                                    }
+                                >
+                                    No pudo verificarse la cuenta o saldo
+                                </div>
+                            )}
+                        </div>
+
+                        <div className={styles.btnConfirmWrapper}>
+                            <div
+                                className={
+                                    verified
+                                        ? styles.btnConfirm
+                                        : styles.btnConfirmDisabled
+                                }
+                                // onClick={
+                                //     handleButtonClick
+                                // }
+                                // disabled={disabled}
+                            >
+                                <div className={styles.txt}>CONFIRMAR</div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             ) : null}

@@ -262,6 +262,154 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     font-size: small;
 }
 
+.btnTitle {
+    background-color: #a238ff;
+    padding: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    border-radius: 30px;
+    color: #fff;
+    cursor: pointer;
+    margin-left: 1rem;
+
+    @media only screen and (max-width: 600px) {
+        font-size: 11px;
+    }
+}
+
+.txtTitle {
+    color: #a238ff;
+}
+
+.selectInfoWrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 11px;
+
+    @media only screen and (max-width: 600px) {
+        display: flex;
+        justify-content: flex-end;
+    }
+}
+
+.selectInfo {
+    border-radius: 22px;
+    background-color: #a9a9a9;
+    width: 65%;
+    color: #fff;
+    margin-right: 20%;
+    height: 40px;
+    justify-content: flex-start;
+    display: flex;
+    padding-left: 15px;
+    align-items: center;
+    font-size: 17px;
+
+    @media only screen and (max-width: 600px) {
+        width: 100%;
+        margin-right: 0%;
+        margin-left: 10%;
+        font-size: 14px;
+    }
+}
+
+.selectInfoPurple {
+    border-radius: 22px;
+    background-color: #a9a9a9;
+    width: 65%;
+    color: #a238ff;
+    margin-right: 20%;
+    height: 40px;
+    justify-content: flex-start;
+    display: flex;
+    padding-left: 15px;
+    align-items: center;
+    font-size: 17px;
+
+    @media only screen and (max-width: 600px) {
+        width: 100%;
+        margin-right: 0%;
+        margin-left: 10%;
+        font-size: 14px;
+    }
+}
+
+.selectInfoStatusWrapper {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+    width: 100%;
+    margin-top: 15px;
+    margin-left: 7.5%;
+}
+
+.selectInfoStatusPending {
+    width: fit-content;
+    border-radius: 22px;
+    background-color: #e84c09;
+    color: #fff;
+    margin-right: 20%;
+    height: 40px;
+    justify-content: flex-start;
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
+    align-items: center;
+    font-size: 17px;
+
+    @media only screen and (max-width: 600px) {
+        margin-right: 0%;
+        margin-left: 2%;
+        font-size: 14px;
+    }
+}
+
+.selectInfoStatusVerified {
+    width: fit-content;
+    border-radius: 22px;
+    background-color: #a238ff;
+    color: #fff;
+    margin-right: 20%;
+    height: 40px;
+    justify-content: flex-start;
+    display: flex;
+    padding-left: 15px;
+    padding-right: 15px;
+    align-items: center;
+    font-size: 17px;
+
+    @media only screen and (max-width: 600px) {
+        margin-right: 0%;
+        margin-left: 2%;
+        font-size: 14px;
+    }
+}
+
+.selectInfoStatusPendingText {
+    color: #e84c09;
+    text-align: left;
+    margin-left: 5px;
+    margin-top: 5px;
+
+    @media only screen and (max-width: 600px) {
+        margin-left: 12px;
+        font-size: 12px;
+    }
+}
+
+.selectInfoStatusVerifiedText {
+    color: #a238ff;
+    text-align: left;
+    margin-left: 5px;
+    margin-top: 5px;
+
+    @media only screen and (max-width: 600px) {
+        margin-left: 12px;
+        font-size: 12px;
+    }
+}
+
 .img {
     height: 18px;
     width: 18px;
@@ -275,4 +423,59 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
         height: 33px;
         width: 33px;
     }
+}
+
+.img2 {
+    transform: rotate(270deg);
+
+    height: 18px;
+    width: 18px;
+
+    @media only screen and (min-width: 320px) {
+        height: 28px;
+        width: 28px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        height: 33px;
+        width: 33px;
+    }
+}
+
+.btnConfirmWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btnConfirm {
+    width: 40%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+    border-radius: 14px;
+    background-origin: #a238ff;
+    background-image: linear-gradient(to right, #a238ff, #7a28ff);
+    box-shadow: 0 0 14px rgba(255, 255, 50, 0.6),
+        inset 0 -3px 7px rgba(0, 0, 0, 0.4);
+}
+
+.btnConfirmDisabled {
+    width: 40%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    cursor: not-allowed;
+    border: 1px solid #808080;
+    border-radius: 14px;
+    background-origin: #979797;
+    background-image: linear-gradient(to right, #979797, #808080);
+    box-shadow: 0 0 14px rgba(151, 151, 151, 0.6),
+        inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }

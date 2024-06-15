@@ -24,6 +24,15 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
+.tabWrapper {
+    display: flex;
+    flex-direction: row;
+
+    // @media only screen and (max-width: 767px) {
+    //     width: 92%;
+    // }
+}
+
 .title {
     font-family: $font-anonymous-pro;
     color: #ffff32;
