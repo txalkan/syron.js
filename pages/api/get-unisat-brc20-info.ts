@@ -2,7 +2,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { unisatApi } from '../../src/utils/unisat/api'
 import nextCors from 'nextjs-cors'
-import supabase from '../../src/utils/supabase'
 import { sanitize, sortKeys } from '../../src/utils/gatewayResponse'
 import { addDoc, collection, getDocs } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
@@ -40,12 +39,9 @@ export default async function handler(
 
     const { id } = request.query
 
-    console.log('@dev get data from Firebase')
     const querySnapshot = await getDocs(collection(db, 'unisat_brc20_info'))
     const dataList = querySnapshot.docs.map((doc) => ({ ...doc.data() }))
     const data = dataList.find((val) => val?.id === id)
-
-    console.log('@response Firebase data:', JSON.stringify(data, null, 2))
 
     if (!id || Array.isArray(id)) {
         response.status(400).json({
@@ -55,12 +51,10 @@ export default async function handler(
     }
 
     // @dev If the ID is found, send the data; otherwise, fetch from UniSat
-    // @review Fetch data from UniSat API if the Supabase timestamp is older than 10 seconds
 
     if (data) {
         response.status(200).json(sortKeys(sanitize(data.data, allowedKeys)))
     } else {
-        console.log('@dev get data from UniSat')
         try {
             const data_unisat = await unisatApi.getBrc20Info(id)
             if (!data_unisat) {
@@ -71,9 +65,11 @@ export default async function handler(
                     JSON.stringify(data_unisat, null, 2)
                 )
 
+                console.log('@dev add document')
+                // @dev Create a new document if not found
                 await addDoc(collection(db, 'unisat_brc20_info'), {
                     id,
-                    timestamp: new Date(),
+                    timestamp: new Date().getTime(),
                     data: data_unisat,
                 })
 
