@@ -278,6 +278,36 @@ export async function mempoolFeeRate() {
     }
 }
 
+export async function mempoolBalance(address: string) {
+    try {
+        const url = `https://mempool.space/testnet/api/address/${address}/utxo`
+
+        const response = await fetch(url, {
+            method: 'GET',
+        })
+
+        if (!response.ok) {
+            throw new Error(
+                `Mempool API request failed with status ${response.status}`
+            )
+        }
+
+        const data = await response.json()
+
+        //console.log('SDB UTXOs', JSON.stringify(data, null, 2))
+
+        const balance = data.reduce(
+            (total: number, utxo: { value: number }) => total + utxo.value,
+            0
+        )
+
+        return balance
+    } catch (error) {
+        console.error('Mempool Error:', error)
+        checkError(error)
+    }
+}
+
 // @dev Best In Slot API
 
 export async function bisInscriptionInfo(id: string) {

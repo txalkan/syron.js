@@ -11,17 +11,27 @@ function useICPHook() {
             console.log('Satoshis', balance)
 
             if (balance != 0) {
-                const box = await syron.get_box_address({
-                    ssi,
-                    op: { getsyron: null },
-                })
-                console.log('Safety Deposit Box', box)
+                const sdb = await fetch(`/api/get-sdb?id=${ssi}`)
+                    .then(async (response) => {
+                        const res = await response.json()
+                        console.log(
+                            'outcall response',
+                            JSON.stringify(res, null, 2)
+                        )
+                        return res
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
 
-                const box_balance = await syron.get_balance(box)
+                // @dev Get the balance of the SDB using ICP (deprecated in favour of Mempool API)
+                // const box_balance = await syron.get_balance(sdb.data.address)
 
                 updateSyronSSI({
-                    ssi_box: box,
-                    box_balance: Big(Number(box_balance)),
+                    ssi_box: sdb.data.address,
+                    box_balance: Big(Number(sdb.data.btc)), // @review (mainnet) balance)),
+                    box_loan: Big(Number(sdb.data.susd)),
+                    box_ratio: Big(Number(sdb.data.ratio)),
                 })
             }
         } catch (err) {

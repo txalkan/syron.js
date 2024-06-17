@@ -202,11 +202,19 @@ type ServiceProvider = variant {
 type syron_operation = variant {
     getsyron;
     redeembitcoin;
+    liquidation;
 };
 
 type GetBoxAddressArgs = record {
     ssi: bitcoin_address;
     op: syron_operation
+};
+
+type CollateralizedAccount = record {
+    exchange_rate: nat64;
+    collateral_ratio: nat64;
+    btc_1: nat64;
+    susd_1: nat64;
 };
 
 service : (network, MinterArg) -> {
@@ -239,6 +247,8 @@ service : (network, MinterArg) -> {
     //   [get_box_address] endpoint.
     "update_ssi_balance": (GetBoxAddressArgs) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
     
+    "get_inscription": (txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    
     "withdraw_susd": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
     
     "get_susd": (args: GetBoxAddressArgs, txid: text) -> (variant { Ok: text; Err: UpdateBalanceError });
@@ -255,5 +265,11 @@ service : (network, MinterArg) -> {
 
     "getServiceProviderMap": () -> (vec record { ServiceProvider; nat64 }) query;
 
-    "redeem_btc": (args: GetBoxAddressArgs, txid: text) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "get_indexed_balance": (id: text) -> (variant { Ok: text; Err: UpdateBalanceError });
+    
+    "redeem_btc": (args: GetBoxAddressArgs) -> (variant { Ok: text; Err: UpdateBalanceError });
+
+    "get_account": (ssi: bitcoin_address) -> (variant { Ok: CollateralizedAccount; Err: UpdateBalanceError });
+
+    "liquidate": (args: GetBoxAddressArgs, id: text) -> (variant { Ok: text; Err: UpdateBalanceError });
 }

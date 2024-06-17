@@ -7,6 +7,12 @@ export type BtcNetwork =
     | { Regtest: null }
     | { Testnet: null }
     | { Signet: null }
+export interface CollateralizedAccount {
+    collateral_ratio: bigint
+    susd_1: bigint
+    btc_1: bigint
+    exchange_rate: bigint
+}
 export interface GetBoxAddressArgs {
     op: syron_operation
     ssi: bitcoin_address
@@ -108,7 +114,10 @@ export interface outpoint {
     vout: number
 }
 export type satoshi = bigint
-export type syron_operation = { getsyron: null } | { redeembitcoin: null }
+export type syron_operation =
+    | { getsyron: null }
+    | { liquidation: null }
+    | { redeembitcoin: null }
 export type transaction_id = string
 export interface utxo {
     height: number
@@ -118,9 +127,21 @@ export interface utxo {
 export interface _SERVICE {
     addServiceProvider: ActorMethod<[RegisterProviderArgs], bigint>
     getServiceProviderMap: ActorMethod<[], Array<[ServiceProvider, bigint]>>
+    get_account: ActorMethod<
+        [bitcoin_address],
+        { Ok: CollateralizedAccount } | { Err: UpdateBalanceError }
+    >
     get_balance: ActorMethod<[bitcoin_address], satoshi>
     get_box_address: ActorMethod<[GetBoxAddressArgs], bitcoin_address>
     get_current_fee_percentiles: ActorMethod<[], BigUint64Array | bigint[]>
+    get_indexed_balance: ActorMethod<
+        [string],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
+    get_inscription: ActorMethod<
+        [string, bigint, bigint],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
     get_minter_info: ActorMethod<[], MinterInfo>
     get_network: ActorMethod<[], network>
     get_p2pkh_address: ActorMethod<[], bitcoin_address>
@@ -134,8 +155,12 @@ export interface _SERVICE {
         { Ok: string } | { Err: UpdateBalanceError }
     >
     get_utxos: ActorMethod<[bitcoin_address], get_utxos_response>
-    redeem_btc: ActorMethod<
+    liquidate: ActorMethod<
         [GetBoxAddressArgs, string],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
+    redeem_btc: ActorMethod<
+        [GetBoxAddressArgs],
         { Ok: string } | { Err: UpdateBalanceError }
     >
     send: ActorMethod<
