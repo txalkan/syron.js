@@ -27,6 +27,7 @@ type Prop = {
     onSelect?: () => void
     onMax?: (b: Big) => void
     onSwap?: () => void
+    selectedData
 }
 
 const list = [10, 30, 50, 70]
@@ -40,6 +41,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
     onSelect = () => null,
     onMax = () => null,
     onSwap = () => {},
+    selectedData,
 }) => {
     const syron = useStore($syron)
     const btc_wallet = useStore($btc_wallet)
@@ -142,7 +144,9 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                                     )}
                                     <input
                                         className={styles.inputAmt}
-                                        value={0}
+                                        value={
+                                            selectedData ? selectedData?.btc : 0
+                                        }
                                         disabled={true}
                                     />
                                 </div>
@@ -163,7 +167,11 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                                 <div className={styles.wrapperDisabled}>
                                     <input
                                         className={styles.inputAmtSusd}
-                                        value={0}
+                                        value={
+                                            selectedData
+                                                ? selectedData?.susd
+                                                : 0
+                                        }
                                         disabled={true}
                                     />
                                     {token && (

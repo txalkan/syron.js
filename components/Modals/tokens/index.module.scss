@@ -161,10 +161,153 @@ If you have any questions, comments or interest in pursuing any other use cases,
     padding: 1rem;
 }
 
+.modalContainerPurple {
+    background-color: #a238ff;
+    width: 600px;
+    border-radius: 10px;
+    padding: 1rem;
+}
+
+.modalHeaderPurple {
+    display: flex;
+    justify-content: space-between;
+}
+
 @media only screen and (max-width: 850px) {
-    .modalContainer {
+    .modalContainer,
+    .modalContainerPurple {
         width: 90%;
     }
+}
+
+.wrapperToken {
+    background-color: #fff;
+    margin: -1rem;
+    margin-top: 1rem;
+    padding-bottom: 2rem;
+    padding-top: 1px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+
+.tokenRow {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    border-bottom: 0.5px solid #000;
+    margin-top: 1rem;
+}
+
+.tokenRowDisabled {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    border-bottom: 0.5px solid #000;
+    margin-top: 1rem;
+    filter: grayscale(1);
+    transition: filter 0.3s ease;
+}
+
+.innerRadio {
+    background-color: #a238ff;
+    width: 7.5px;
+    height: 7.5px;
+    border-radius: 3.5px;
+}
+
+.outerRadio {
+    border: 1px solid #a238ff;
+    background-color: #fff;
+    width: 15px;
+    height: 15px;
+    border-radius: 7.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.outerRadioDisabled {
+    border: 1px solid gray;
+    background-color: gray;
+    width: 15px;
+    height: 15px;
+    border-radius: 7.5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: not-allowed;
+}
+
+.tokenImage {
+    height: 15px;
+    width: 15px;
+}
+
+.tokenInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+}
+
+.cRatioTxt {
+    color: #000;
+    font-weight: bold;
+}
+
+.sdbTxt {
+    color: #a238ff;
+}
+
+.btcWrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.btcTxt {
+    color: #ea983d;
+    margin-left: 5px;
+}
+
+.susdTxt {
+    color: #a238ff;
+    margin-left: 5px;
+}
+
+.btnConfirmWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btnConfirm {
+    width: 40%;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 1rem;
+    cursor: pointer;
+    border: 1px solid #ffff32;
+    border-radius: 14px;
+    background-origin: #a238ff;
+    background-image: linear-gradient(to right, #a238ff, #7a28ff);
+    box-shadow: 0 0 14px rgba(255, 255, 50, 0.6),
+        inset 0 -3px 7px rgba(0, 0, 0, 0.4);
+}
+
+.wrapperTokenList {
+    max-height: 400px;
+    overflow-y: scroll;
+}
+
+.closeIco {
+    cursor: pointer;
 }
 
 //@ssibrowser

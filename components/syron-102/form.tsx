@@ -18,6 +18,7 @@ import { SSIVault } from '../../src/mixins/vault'
 import { ConfirmBox } from '../Modals/confirm-box'
 import { $xr } from '../../src/store/xr'
 import { BoxLiquidInput } from './input/liquid'
+import { SyronTokenModal } from '../Modals/tokens/syron'
 
 type Prop = {
     startPair: VaultPair[]
@@ -34,9 +35,12 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const [modal0, setModal0] = React.useState(false)
     const [modal1, setModal1] = React.useState(false)
     const [modal3, setModal3] = React.useState(false)
+    const [modal4, setModal4] = React.useState(false)
     const [verified, setVerified] = React.useState(false)
     const [confirmModal, setConfirmModal] = React.useState(false)
     const [vault_pair, setPair] = React.useState<VaultPair[]>(startPair)
+    const [selectedIndex, setSelectedIndex] = React.useState(0)
+    const [selectedData, setSelectedData] = React.useState<any>(null)
 
     const _0 = Big(0)
     const [amount, setAmount] = React.useState(_0)
@@ -213,20 +217,19 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         <>
             {/* <SwapSettingsModal show={modal3} onClose={() => setModal3(false)} /> */}
             <TokensModal
-                show={modal0}
+                show={false}
                 // warn
                 // include
                 exceptions={vault_pair.map((t) => t.meta.symbol)}
                 onClose={() => setModal0(false)}
                 onSelect={(token) => handleOnSelectToken(token, 0)}
             />
-            <TokensModal
-                show={modal1}
-                include
-                // warn
-                exceptions={vault_pair.map((t) => t.meta.symbol)}
-                onClose={() => setModal1(false)}
-                onSelect={(token) => handleOnSelectToken(token, 1)}
+            <SyronTokenModal
+                show={modal4}
+                onClose={() => setModal4(false)}
+                selectedIndex={selectedIndex}
+                setSelectedIndex={setSelectedIndex}
+                setSelectedData={setSelectedData}
             />
             {vault_pair.length === 2 ? (
                 <form className={styles.container} onSubmit={handleSubmit}>
@@ -240,15 +243,27 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             <div className={styles.titleForm2}>
                                 Bobeda a Liquidar
                             </div>
-                            <div className={styles.btnTitle}>
+                            <div
+                                onClick={() => setModal4(true)}
+                                className={styles.btnTitle}
+                            >
                                 Seleccionar SDB
                             </div>
                         </div>
 
                         <div className={styles.selectInfoWrapper}>
-                            <div className={styles.selectInfo}>
-                                Elige Bobeda en este boton ↑
-                            </div>
+                            {selectedData ? (
+                                <div className={styles.selectInfoWrapper}>
+                                    <div className={styles.selectInfoPurple}>
+                                        SDB:{' '}
+                                        {selectedData.sdbAddr?.slice(0, 15)}...
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className={styles.selectInfo}>
+                                    Elige Bobeda en este boton ↑
+                                </div>
+                            )}
                         </div>
 
                         <BoxLiquidInput
@@ -259,6 +274,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             onInput={handleOnInput}
                             onMax={handleOnInput}
                             onSwap={handleForm}
+                            selectedData={selectedData}
                         />
                     </div>
                     {/* <div className={styles.contentWrapper2}>
@@ -300,14 +316,14 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         <div className={styles.selectInfoStatusWrapper}>
                             <div
                                 className={
-                                    verified
+                                    selectedData
                                         ? styles.selectInfoStatusVerified
                                         : styles.selectInfoStatusPending
                                 }
                             >
                                 VERIFICACION DE TU CUENTA
                             </div>
-                            {verified ? (
+                            {selectedData ? (
                                 <div
                                     className={
                                         styles.selectInfoStatusVerifiedText
@@ -329,7 +345,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         <div className={styles.btnConfirmWrapper}>
                             <div
                                 className={
-                                    verified
+                                    selectedData
                                         ? styles.btnConfirm
                                         : styles.btnConfirmDisabled
                                 }
