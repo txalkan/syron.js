@@ -54,20 +54,11 @@ export const idlFactory = ({ IDL }) => {
         Provider: IDL.Nat64,
     })
     const bitcoin_address = IDL.Text
-    const satoshi = IDL.Nat64
-    const syron_operation = IDL.Variant({
-        getsyron: IDL.Null,
-        redeembitcoin: IDL.Null,
-    })
-    const GetBoxAddressArgs = IDL.Record({
-        op: syron_operation,
-        ssi: bitcoin_address,
-    })
-    const millisatoshi_per_vbyte = IDL.Nat64
-    const MinterInfo = IDL.Record({
-        retrieve_btc_min_amount: IDL.Nat64,
-        min_confirmations: IDL.Nat32,
-        kyt_fee: IDL.Nat64,
+    const CollateralizedAccount = IDL.Record({
+        collateral_ratio: IDL.Nat64,
+        susd_1: IDL.Nat64,
+        btc_1: IDL.Nat64,
+        exchange_rate: IDL.Nat64,
     })
     const PendingUtxo = IDL.Record({
         confirmations: IDL.Nat32,
@@ -86,6 +77,22 @@ export const idlFactory = ({ IDL }) => {
             pending_utxos: IDL.Opt(IDL.Vec(PendingUtxo)),
             current_confirmations: IDL.Opt(IDL.Nat32),
         }),
+    })
+    const satoshi = IDL.Nat64
+    const syron_operation = IDL.Variant({
+        getsyron: IDL.Null,
+        liquidation: IDL.Null,
+        redeembitcoin: IDL.Null,
+    })
+    const GetBoxAddressArgs = IDL.Record({
+        op: syron_operation,
+        ssi: bitcoin_address,
+    })
+    const millisatoshi_per_vbyte = IDL.Nat64
+    const MinterInfo = IDL.Record({
+        retrieve_btc_min_amount: IDL.Nat64,
+        min_confirmations: IDL.Nat32,
+        kyt_fee: IDL.Nat64,
     })
     const block_hash = IDL.Vec(IDL.Nat8)
     const outpoint = IDL.Record({
@@ -127,11 +134,31 @@ export const idlFactory = ({ IDL }) => {
             [IDL.Vec(IDL.Tuple(ServiceProvider, IDL.Nat64))],
             ['query']
         ),
+        get_account: IDL.Func(
+            [bitcoin_address],
+            [
+                IDL.Variant({
+                    Ok: CollateralizedAccount,
+                    Err: UpdateBalanceError,
+                }),
+            ],
+            []
+        ),
         get_balance: IDL.Func([bitcoin_address], [satoshi], []),
         get_box_address: IDL.Func([GetBoxAddressArgs], [bitcoin_address], []),
         get_current_fee_percentiles: IDL.Func(
             [],
             [IDL.Vec(millisatoshi_per_vbyte)],
+            []
+        ),
+        get_indexed_balance: IDL.Func(
+            [IDL.Text],
+            [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
+            []
+        ),
+        get_inscription: IDL.Func(
+            [IDL.Text, IDL.Nat64, IDL.Nat64],
+            [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
             []
         ),
         get_minter_info: IDL.Func([], [MinterInfo], ['query']),
@@ -149,8 +176,13 @@ export const idlFactory = ({ IDL }) => {
             []
         ),
         get_utxos: IDL.Func([bitcoin_address], [get_utxos_response], []),
-        redeem_btc: IDL.Func(
+        liquidate: IDL.Func(
             [GetBoxAddressArgs, IDL.Text],
+            [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
+            []
+        ),
+        redeem_btc: IDL.Func(
+            [GetBoxAddressArgs],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
             []
         ),
