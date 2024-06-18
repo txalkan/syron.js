@@ -55,7 +55,21 @@ export var SyronTokenModal: React.FC<Prop> = function ({
         await fetch(`/api/get-all-sdb`)
             .then(async (response) => {
                 const res = await response.json()
-                setTokenList(res.data)
+                const sdbs = res.data.map(
+                    (item: { ratio: number; btc: number; susd: number }) => ({
+                        ...item,
+                        ratio: item.ratio / 10000,
+                        btc: (item.btc / 1e8).toLocaleString('de-DE', {
+                            minimumFractionDigits: 8,
+                            maximumFractionDigits: 8,
+                        }),
+                        susd: (item.susd / 1e8).toLocaleString('de-DE', {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                        }),
+                    })
+                )
+                setTokenList(sdbs)
                 setLoading(false)
             })
             .catch((error) => {
@@ -100,24 +114,6 @@ export var SyronTokenModal: React.FC<Prop> = function ({
     //         susd: 666.3,
     //     },
     //     {
-    //         ratio: 1.18,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 152.3,
-    //     },
-    //     {
-    //         ratio: 1.25,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 152.3,
-    //     },
-    //     {
-    //         ratio: 1.25,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 152.3,
-    //     },
-    //     {
     //         ratio: 1.25,
     //         btc: 0.143242,
     //         address: 'tajb35766dhasdas6d675asdas7d',
@@ -129,7 +125,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
         <Modal show={show} onClose={onClose}>
             <div className={styles.modalContainerPurple}>
                 <div className={styles.modalHeaderPurple}>
-                    <div>Seleccionar Bobeda Liquidar SDB</div>
+                    <div>Select SDB to liquidate</div>
                     <span className={styles.closeIco} onClick={onClose}>
                         <Image width={14} src={CloseIcon} alt="close-ico" />
                     </span>
@@ -173,7 +169,14 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                             className={styles.tokenInfoWrapper}
                                         >
                                             <div className={styles.cRatioTxt}>
-                                                C. Ratio = {val.ratio}
+                                                C. Ratio ={' '}
+                                                {val.ratio.toLocaleString(
+                                                    'de-DE',
+                                                    {
+                                                        minimumFractionDigits: 2,
+                                                        maximumFractionDigits: 2,
+                                                    }
+                                                )}
                                             </div>
                                             <div className={styles.btcWrapper}>
                                                 <Image
@@ -192,7 +195,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                             className={styles.tokenInfoWrapper}
                                         >
                                             <div className={styles.sdbTxt}>
-                                                SDB: {val.address.slice(0, 15)}
+                                                SDB: {val.address.slice(0, 14)}
                                                 ...
                                             </div>
                                             <div className={styles.btcWrapper}>

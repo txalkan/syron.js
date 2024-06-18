@@ -277,19 +277,21 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     }
 }
 
+$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txtTitle {
+    font-family: $font-anonymous-pro;
     color: #a238ff;
 }
 
 .selectInfoWrapper {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     width: 100%;
-    margin-top: 11px;
+    margin-top: 17px;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (min-width: 400px) {
         display: flex;
-        justify-content: flex-end;
+        justify-content: center;
     }
 }
 

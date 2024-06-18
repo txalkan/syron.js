@@ -1,10 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nextCors from 'nextjs-cors'
-import { addDoc, collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
-import { basic_bitcoin_syron as syron } from '../../src/declarations/basic_bitcoin_tyron'
-import { mempoolBalance } from '../../src/utils/unisat/httpUtils'
 
 type Data = {
     data?: any
@@ -32,7 +30,6 @@ export default async function handler(
         const collectionRef = collection(db, 'sdb')
         const querySnapshot = await getDocs(collectionRef)
         const dataList = querySnapshot.docs.map((doc) => ({
-            id: doc.id,
             ...doc.data(),
         }))
 

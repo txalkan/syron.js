@@ -19,6 +19,7 @@ import { ConfirmBox } from '../Modals/confirm-box'
 import { $xr } from '../../src/store/xr'
 import { BoxLiquidInput } from './input/liquid'
 import { SyronTokenModal } from '../Modals/tokens/syron'
+import { $syron } from '../../src/store/syron'
 
 type Prop = {
     startPair: VaultPair[]
@@ -30,6 +31,8 @@ Big.PE = 999
 const vault = new SSIVault()
 
 export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
+    const syron = useStore($syron)
+
     const tokensStore = useStore($tokens)
 
     const [modal0, setModal0] = React.useState(false)
@@ -241,13 +244,13 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 className={styles.img}
                             />
                             <div className={styles.titleForm2}>
-                                Bobeda a Liquidar
+                                Liquidate Safety Deposit ₿ox
                             </div>
                             <div
                                 onClick={() => setModal4(true)}
                                 className={styles.btnTitle}
                             >
-                                Seleccionar SDB
+                                Select SDB
                             </div>
                         </div>
 
@@ -255,13 +258,13 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             {selectedData ? (
                                 <div className={styles.selectInfoWrapper}>
                                     <div className={styles.selectInfoPurple}>
-                                        SDB:{' '}
+                                        Debtor&apos;s SDB:{' '}
                                         {selectedData.address?.slice(0, 15)}...
                                     </div>
                                 </div>
                             ) : (
                                 <div className={styles.selectInfo}>
-                                    Elige Bobeda en este boton ↑
+                                    Choose SDB with the button above ↑
                                 </div>
                             )}
                         </div>
@@ -277,6 +280,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             selectedData={selectedData}
                         />
                     </div>
+
                     {/* <div className={styles.contentWrapper2}>
                         <div className={styles.icoWrapper}>
                             <Image
@@ -292,6 +296,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             onSelect={() => setModal1(true)}
                         />
                     </div> */}
+
                     <div style={{ width: '100%' }}>
                         <div className={styles.icoWrapper}>
                             <Image
@@ -300,7 +305,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 className={styles.img2}
                             />
                             <div className={styles.titleForm2}>
-                                Bobeda para pagar con
+                                SDB to pay with
                                 <span className={styles.txtTitle}>
                                     &nbsp;Syron
                                 </span>
@@ -309,7 +314,18 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
 
                         <div className={styles.selectInfoWrapper}>
                             <div className={styles.selectInfoPurple}>
-                                SDB: g9gr7Kjnkajsfnajsfajnsfw...
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                        marginRight: '10px',
+                                    }}
+                                >
+                                    Liquidator&apos;s SDB: {syron?.ssi_box}
+                                </span>
                             </div>
                         </div>
 
@@ -321,7 +337,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         : styles.selectInfoStatusPending
                                 }
                             >
-                                VERIFICACION DE TU CUENTA
+                                VERIFY SUSD BALANCE
                             </div>
                             {selectedData ? (
                                 <div
@@ -329,7 +345,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         styles.selectInfoStatusVerifiedText
                                     }
                                 >
-                                    La cuenta ha verificada
+                                    Liquidator&apos;s SUSD balance has been
+                                    verified.
                                 </div>
                             ) : (
                                 <div
@@ -337,7 +354,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         styles.selectInfoStatusPendingText
                                     }
                                 >
-                                    No pudo verificarse la cuenta o saldo
+                                    Insufficient SUSD balance in the
+                                    liquidator&apos;s SDB.
                                 </div>
                             )}
                         </div>
@@ -354,7 +372,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 // }
                                 // disabled={disabled}
                             >
-                                <div className={styles.txt}>CONFIRMAR</div>
+                                <div className={styles.txt}>CONFIRM</div>
                             </div>
                         </div>
                     </div>

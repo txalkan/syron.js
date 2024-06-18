@@ -106,7 +106,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
         <label>
             <div className={classNames(styles.container)}>
                 <div className={styles.formWrapper}>
-                    <div className={styles.inputTitle}>Vas a Ganar</div>
+                    <div className={styles.inputTitle}>You&apos;ll win</div>
                     <div className={styles.inputWrapper}>
                         <Image
                             src={icoArrow}
@@ -136,7 +136,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                             </div>
                         </div>
                     </div>
-                    <div className={styles.inputTitle}>Vas a Pagar</div>
+                    <div className={styles.inputTitle}>You&apos;ll pay</div>
                     <div className={styles.inputWrapper}>
                         <Image
                             src={icoArrow}
