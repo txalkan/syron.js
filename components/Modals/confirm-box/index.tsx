@@ -284,7 +284,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
         await updateWallet(address, Number(balance.confirmed), network)
-        await getBox(address, Number(balance.confirmed), network)
+        await getBox(address, Number(balance.confirmed), network, false)
         console.log('balance updated')
     }
 

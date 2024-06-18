@@ -135,7 +135,7 @@ export const idlFactory = ({ IDL }) => {
             ['query']
         ),
         get_account: IDL.Func(
-            [bitcoin_address],
+            [bitcoin_address, IDL.Bool],
             [
                 IDL.Variant({
                     Ok: CollateralizedAccount,
@@ -177,13 +177,18 @@ export const idlFactory = ({ IDL }) => {
         ),
         get_utxos: IDL.Func([bitcoin_address], [get_utxos_response], []),
         liquidate: IDL.Func(
-            [GetBoxAddressArgs, IDL.Text],
-            [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
+            [GetBoxAddressArgs, IDL.Text, IDL.Text],
+            [IDL.Variant({ Ok: IDL.Vec(IDL.Text), Err: UpdateBalanceError })],
             []
         ),
         redeem_btc: IDL.Func(
             [GetBoxAddressArgs],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
+            []
+        ),
+        sbtc_balance_of: IDL.Func(
+            [bitcoin_address, IDL.Nat64],
+            [IDL.Nat64],
             []
         ),
         send: IDL.Func(
@@ -194,6 +199,11 @@ export const idlFactory = ({ IDL }) => {
                 }),
             ],
             [transaction_id],
+            []
+        ),
+        susd_balance_of: IDL.Func(
+            [bitcoin_address, IDL.Nat64],
+            [IDL.Nat64],
             []
         ),
         test: IDL.Func([], [IDL.Vec(IDL.Text)], []),

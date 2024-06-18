@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nextCors from 'nextjs-cors'
-import { addDoc, collection, getDocs } from 'firebase/firestore'
+import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
 import { basic_bitcoin_syron as syron } from '../../src/declarations/basic_bitcoin_tyron'
 import { mempoolBalance } from '../../src/utils/unisat/httpUtils'
@@ -27,11 +27,15 @@ export default async function handler(
     // @dev Cache response and revalidate every second
     response.setHeader('Cache-Control', 'public, s-maxage=1')
 
-    const { id } = request.query
+    const { id, dummy } = request.query
+    const dummy_ = dummy === 'true'
 
     console.log('@dev get data from Firebase')
     const querySnapshot = await getDocs(collection(db, 'sdb'))
-    const dataList = querySnapshot.docs.map((doc) => ({ ...doc.data() }))
+    const dataList = querySnapshot.docs.map((doc) => ({
+        ...(doc.data() as any),
+        docId: doc.id,
+    }))
     const data = dataList.find((val) => val?.id === id)
 
     console.log('@response Firebase data:', JSON.stringify(data, null, 2))
@@ -55,53 +59,83 @@ export default async function handler(
         ratio = data.ratio
         btc = data.btc
         susd = data.susd
-    } else {
-        console.log('@dev get data from ICP')
-        try {
-            address = await syron.get_box_address({
-                ssi: id,
-                op: { getsyron: null },
-            })
 
-            if (!address) {
-                response.status(404).json({ error: 'No data found' })
+        const now = new Date()
+
+        const diff = now.getTime() - data.timestamp
+
+        if (diff < 10000) {
+            console.log(
+                '@response Firebase data:',
+                JSON.stringify(data, null, 2)
+            )
+
+            const balance = await mempoolBalance(address)
+
+            response
+                .status(200)
+                .json({ data: { address, balance, ratio, btc, susd } })
+            return
+        }
+    }
+
+    console.log('@dev get data from ICP')
+    try {
+        address = await syron.get_box_address({
+            ssi: id,
+            op: { getsyron: null },
+        })
+
+        if (!address) {
+            response.status(404).json({ error: 'No data found' })
+        } else {
+            console.log(
+                '@response from ICP, SDB address:',
+                JSON.stringify(address, null, 2)
+            )
+
+            // @dev Get account from ICP
+            const account = await syron.get_account(id, dummy_)
+
+            if (account.Ok) {
+                ratio = account.Ok.collateral_ratio.toString()
+                btc = account.Ok.btc_1.toString()
+                susd = account.Ok.susd_1.toString()
+            }
+
+            if (data) {
+                console.log('@dev update document')
+                // @dev Update the document if found
+                const docRef = doc(db, 'sdb', data.docId)
+                await updateDoc(docRef, {
+                    timestamp: new Date().getTime(),
+                    address,
+                    ratio,
+                    btc,
+                    susd,
+                })
             } else {
-                console.log(
-                    '@response from ICP, SDB address:',
-                    JSON.stringify(address, null, 2)
-                )
-
-                // @dev Get account from ICP
-                const account = await syron.get_account(id)
-
-                if (account.Ok) {
-                    ratio = account.Ok.collateral_ratio.toString()
-                    btc = account.Ok.btc_1.toString()
-                    susd = account.Ok.susd_1.toString()
-                }
-
+                console.log('@dev add document')
+                // @dev Create a new document if not found
                 await addDoc(collection(db, 'sdb'), {
                     id,
-                    timestamp: new Date(),
+                    timestamp: new Date().getTime(),
                     address,
                     ratio,
                     btc,
                     susd,
                 })
             }
-        } catch (error) {
-            console.error('@response ICP error:', error)
-            response.status(500).json({
-                error: error instanceof Error ? error.message : 'Unknown error',
-            })
+
+            const balance = await mempoolBalance(address)
+            response
+                .status(200)
+                .json({ data: { address, balance, ratio, btc, susd } })
         }
-    }
-
-    if (address !== '') {
-        const balance = await mempoolBalance(address)
-
-        response
-            .status(200)
-            .json({ data: { address, balance, ratio, btc, susd } })
+    } catch (error) {
+        console.error('@response ICP error:', error)
+        response.status(500).json({
+            error: error instanceof Error ? error.message : 'Unknown error',
+        })
     }
 }

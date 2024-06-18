@@ -6,12 +6,17 @@ import { updateXR } from '../store/xr'
 Big.PE = 999
 
 function useICPHook() {
-    const getBox = async (ssi: string, balance: number, network: string) => {
+    const getBox = async (
+        ssi: string,
+        balance: number,
+        network: string,
+        dummy: boolean
+    ) => {
         try {
             console.log('Satoshis', balance)
 
             if (balance != 0) {
-                const sdb = await fetch(`/api/get-sdb?id=${ssi}`)
+                const sdb = await fetch(`/api/get-sdb?id=${ssi}&dummy=${dummy}`)
                     .then(async (response) => {
                         const res = await response.json()
                         console.log(

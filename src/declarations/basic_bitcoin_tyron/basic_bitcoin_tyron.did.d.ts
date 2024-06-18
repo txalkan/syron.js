@@ -128,7 +128,7 @@ export interface _SERVICE {
     addServiceProvider: ActorMethod<[RegisterProviderArgs], bigint>
     getServiceProviderMap: ActorMethod<[], Array<[ServiceProvider, bigint]>>
     get_account: ActorMethod<
-        [bitcoin_address],
+        [bitcoin_address, boolean],
         { Ok: CollateralizedAccount } | { Err: UpdateBalanceError }
     >
     get_balance: ActorMethod<[bitcoin_address], satoshi>
@@ -156,13 +156,14 @@ export interface _SERVICE {
     >
     get_utxos: ActorMethod<[bitcoin_address], get_utxos_response>
     liquidate: ActorMethod<
-        [GetBoxAddressArgs, string],
-        { Ok: string } | { Err: UpdateBalanceError }
+        [GetBoxAddressArgs, string, string],
+        { Ok: Array<string> } | { Err: UpdateBalanceError }
     >
     redeem_btc: ActorMethod<
         [GetBoxAddressArgs],
         { Ok: string } | { Err: UpdateBalanceError }
     >
+    sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     send: ActorMethod<
         [
             {
@@ -172,6 +173,7 @@ export interface _SERVICE {
         ],
         transaction_id
     >
+    susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     test: ActorMethod<[], Array<string>>
     update_ssi: ActorMethod<[GetBoxAddressArgs], string>
     update_ssi_balance: ActorMethod<
