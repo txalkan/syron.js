@@ -17,12 +17,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
 import styles from './index.module.scss'
 
 import { useStore } from 'react-stores'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Modal, ModalHeader } from '../../modal'
 import Image from 'next/image'
 import CloseIcon from '../../../src/assets/icons/ic_cross_black.svg'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '../../../src/utils/firebase/firebaseConfig'
+import Spinner from '../../Spinner'
 
 type Prop = {
     show: boolean
@@ -39,67 +42,88 @@ export var SyronTokenModal: React.FC<Prop> = function ({
     setSelectedData,
     selectedIndex,
 }) {
+    const [tokenList, setTokenList] = useState<any>([])
+    const [loading, setLoading] = useState(false)
+
     const onDataChange = (data, index) => {
         setSelectedIndex(index)
         setSelectedData(data)
     }
 
-    const tokenList = [
-        {
-            sdbRatio: 1.15,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 152.3,
-        },
-        {
-            sdbRatio: 1.16,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 154.3,
-        },
-        {
-            sdbRatio: 1.17,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 134.3,
-        },
-        {
-            sdbRatio: 1.18,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 786.3,
-        },
-        {
-            sdbRatio: 1.18,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 666.3,
-        },
-        {
-            sdbRatio: 1.18,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 152.3,
-        },
-        {
-            sdbRatio: 1.25,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 152.3,
-        },
-        {
-            sdbRatio: 1.25,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 152.3,
-        },
-        {
-            sdbRatio: 1.25,
-            btc: 0.143242,
-            sdbAddr: 'tajb35766dhasdas6d675asdas7d',
-            susd: 152.3,
-        },
-    ]
+    const getTokenList = async () => {
+        setLoading(true)
+        await fetch(`/api/get-all-sdb`)
+            .then(async (response) => {
+                const res = await response.json()
+                setTokenList(res.data)
+                setLoading(false)
+            })
+            .catch((error) => {
+                setLoading(false)
+                console.log(error)
+            })
+    }
+
+    useEffect(() => {
+        getTokenList()
+    }, [])
+
+    // const tokenList = [
+    //     {
+    //         ratio: 1.15,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 152.3,
+    //     },
+    //     {
+    //         ratio: 1.16,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 154.3,
+    //     },
+    //     {
+    //         ratio: 1.17,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 134.3,
+    //     },
+    //     {
+    //         ratio: 1.18,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 786.3,
+    //     },
+    //     {
+    //         ratio: 1.18,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 666.3,
+    //     },
+    //     {
+    //         ratio: 1.18,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 152.3,
+    //     },
+    //     {
+    //         ratio: 1.25,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 152.3,
+    //     },
+    //     {
+    //         ratio: 1.25,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 152.3,
+    //     },
+    //     {
+    //         ratio: 1.25,
+    //         btc: 0.143242,
+    //         address: 'tajb35766dhasdas6d675asdas7d',
+    //         susd: 152.3,
+    //     },
+    // ]
 
     return (
         <Modal show={show} onClose={onClose}>
@@ -112,63 +136,82 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                 </div>
                 <div className={styles.wrapperToken}>
                     <div className={styles.wrapperTokenList}>
-                        {tokenList.map((val, i) => (
-                            <div
-                                key={i}
-                                className={
-                                    val.sdbRatio <= 1.2
-                                        ? styles.tokenRow
-                                        : styles.tokenRowDisabled
-                                }
-                            >
-                                <div
-                                    onClick={() =>
-                                        val.sdbRatio <= 1.2
-                                            ? onDataChange(val, i)
-                                            : {}
-                                    }
-                                    className={
-                                        val.sdbRatio <= 1.2
-                                            ? styles.outerRadio
-                                            : styles.outerRadioDisabled
-                                    }
-                                >
-                                    {i === selectedIndex && (
-                                        <div className={styles.innerRadio} />
-                                    )}
-                                </div>
-                                <div className={styles.tokenInfoWrapper}>
-                                    <div className={styles.cRatioTxt}>
-                                        C. Ratio = {val.sdbRatio}
-                                    </div>
-                                    <div className={styles.btcWrapper}>
-                                        <Image
-                                            className={styles.tokenImage}
-                                            src={icoBTC}
-                                            alt="tokens-logo"
-                                        />
-                                        <div className={styles.btcTxt}>
-                                            {val.btc}
+                        {loading ? (
+                            <Spinner />
+                        ) : (
+                            <>
+                                {tokenList.map((val, i) => (
+                                    <div
+                                        key={i}
+                                        className={
+                                            val.ratio <= 1.2
+                                                ? styles.tokenRow
+                                                : styles.tokenRowDisabled
+                                        }
+                                    >
+                                        <div
+                                            onClick={() =>
+                                                val.ratio <= 1.2
+                                                    ? onDataChange(val, i)
+                                                    : {}
+                                            }
+                                            className={
+                                                val.ratio <= 1.2
+                                                    ? styles.outerRadio
+                                                    : styles.outerRadioDisabled
+                                            }
+                                        >
+                                            {i === selectedIndex && (
+                                                <div
+                                                    className={
+                                                        styles.innerRadio
+                                                    }
+                                                />
+                                            )}
+                                        </div>
+                                        <div
+                                            className={styles.tokenInfoWrapper}
+                                        >
+                                            <div className={styles.cRatioTxt}>
+                                                C. Ratio = {val.ratio}
+                                            </div>
+                                            <div className={styles.btcWrapper}>
+                                                <Image
+                                                    className={
+                                                        styles.tokenImage
+                                                    }
+                                                    src={icoBTC}
+                                                    alt="tokens-logo"
+                                                />
+                                                <div className={styles.btcTxt}>
+                                                    {val.btc}
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div
+                                            className={styles.tokenInfoWrapper}
+                                        >
+                                            <div className={styles.sdbTxt}>
+                                                SDB: {val.address.slice(0, 15)}
+                                                ...
+                                            </div>
+                                            <div className={styles.btcWrapper}>
+                                                <Image
+                                                    className={
+                                                        styles.tokenImage
+                                                    }
+                                                    src={icoSU$D}
+                                                    alt="tokens-logo"
+                                                />
+                                                <div className={styles.susdTxt}>
+                                                    {val.susd}
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                                <div className={styles.tokenInfoWrapper}>
-                                    <div className={styles.sdbTxt}>
-                                        SDB: {val.sdbAddr.slice(0, 15)}...
-                                    </div>
-                                    <div className={styles.btcWrapper}>
-                                        <Image
-                                            className={styles.tokenImage}
-                                            src={icoSU$D}
-                                            alt="tokens-logo"
-                                        />
-                                        <div className={styles.susdTxt}>
-                                            {val.susd}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
+                                ))}
+                            </>
+                        )}
                     </div>
 
                     <div className={styles.btnConfirmWrapper}>

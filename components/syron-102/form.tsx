@@ -256,7 +256,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 <div className={styles.selectInfoWrapper}>
                                     <div className={styles.selectInfoPurple}>
                                         SDB:{' '}
-                                        {selectedData.sdbAddr?.slice(0, 15)}...
+                                        {selectedData.address?.slice(0, 15)}...
                                     </div>
                                 </div>
                             ) : (

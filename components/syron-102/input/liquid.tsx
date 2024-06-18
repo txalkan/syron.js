@@ -102,24 +102,6 @@ export const BoxLiquidInput: React.FC<Prop> = ({
         [onInput]
     )
 
-    const formatValue = (val: Big) => {
-        // Handle zero case
-        if (val.eq(0)) {
-            return 0
-        }
-
-        // Convert to string and remove trailing zeros
-        const formattedValue = val.toString().replace(/0+$/, '')
-
-        // Limit decimal places to 8
-        if (formattedValue.indexOf('.') !== -1) {
-            return formattedValue.slice(0, formattedValue.indexOf('.') + 9)
-        } else {
-            // No decimal point, return the value itself
-            return formattedValue
-        }
-    }
-
     return (
         <label>
             <div className={classNames(styles.container)}>
