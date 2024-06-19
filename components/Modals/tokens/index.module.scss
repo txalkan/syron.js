@@ -178,7 +178,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
     .modalContainerPurple {
         width: 90%;
     }
+}
 
+@media only screen and (max-width: 599px) {
+    .modalContainerPurple {
+        margin-top: 25%;
+    }
+}
+
+@media only screen and (max-width: 1300px) and (min-width: 600px) {
     .modalContainerPurple {
         margin-top: 20%;
     }
@@ -263,8 +271,27 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-weight: bold;
 }
 
-.sdbTxt {
+.sdbTxt,
+.sdbTxtMobile {
     color: #a238ff;
+}
+
+@media only screen and (max-width: 599px) {
+    .sdbTxt {
+        display: none;
+    }
+    .sdbTxtMobile {
+        display: contents;
+    }
+}
+
+@media only screen and (min-width: 600px) {
+    .sdbTxt {
+        display: contents;
+    }
+    .sdbTxtMobile {
+        display: none;
+    }
 }
 
 .btcWrapper {

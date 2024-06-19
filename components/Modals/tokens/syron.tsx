@@ -195,6 +195,12 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                             className={styles.tokenInfoWrapper}
                                         >
                                             <div className={styles.sdbTxt}>
+                                                SDB: {val.address.slice(0, 25)}
+                                                ...
+                                            </div>
+                                            <div
+                                                className={styles.sdbTxtMobile}
+                                            >
                                                 SDB: {val.address.slice(0, 14)}
                                                 ...
                                             </div>
