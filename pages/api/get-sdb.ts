@@ -81,57 +81,53 @@ export default async function handler(
 
     console.log('@dev get data from ICP')
     try {
-        address = await syron.get_box_address({
-            ssi: id,
-            op: { getsyron: null },
-        })
-
-        if (!address) {
-            response.status(404).json({ error: 'No data found' })
-        } else {
-            console.log(
-                '@response from ICP, SDB address:',
-                JSON.stringify(address, null, 2)
-            )
-
-            // @dev Get account from ICP
-            const account = await syron.get_account(id, dummy_)
-
-            if (account.Ok) {
-                ratio = account.Ok.collateral_ratio.toString()
-                btc = account.Ok.btc_1.toString()
-                susd = account.Ok.susd_1.toString()
+        if (address === '') {
+            address = await syron.get_box_address({
+                ssi: id,
+                op: { getsyron: null },
+            })
+            if (!address) {
+                response.status(404).json({ error: 'No data found' })
             }
-
-            if (data) {
-                console.log('@dev update document')
-                // @dev Update the document if found
-                const docRef = doc(db, 'sdb', data.docId)
-                await updateDoc(docRef, {
-                    timestamp: new Date().getTime(),
-                    address,
-                    ratio,
-                    btc,
-                    susd,
-                })
-            } else {
-                console.log('@dev add document')
-                // @dev Create a new document if not found
-                await addDoc(collection(db, 'sdb'), {
-                    id,
-                    timestamp: new Date().getTime(),
-                    address,
-                    ratio,
-                    btc,
-                    susd,
-                })
-            }
-
-            const balance = await mempoolBalance(address)
-            response
-                .status(200)
-                .json({ data: { address, balance, ratio, btc, susd } })
         }
+
+        // @dev Get account from ICP
+        const account = await syron.get_account(id, dummy_)
+
+        if (account.Ok) {
+            ratio = account.Ok.collateral_ratio.toString()
+            btc = account.Ok.btc_1.toString()
+            susd = account.Ok.susd_1.toString()
+        }
+
+        if (data) {
+            console.log('@dev update document')
+            // @dev Update the document if found
+            const docRef = doc(db, 'sdb', data.docId)
+            await updateDoc(docRef, {
+                timestamp: new Date().getTime(),
+                address,
+                ratio,
+                btc,
+                susd,
+            })
+        } else {
+            console.log('@dev add document')
+            // @dev Create a new document if not found
+            await addDoc(collection(db, 'sdb'), {
+                id,
+                timestamp: new Date().getTime(),
+                address,
+                ratio,
+                btc,
+                susd,
+            })
+        }
+
+        const balance = await mempoolBalance(address)
+        response
+            .status(200)
+            .json({ data: { address, balance, ratio, btc, susd } })
     } catch (error) {
         console.error('@response ICP error:', error)
         response.status(500).json({
