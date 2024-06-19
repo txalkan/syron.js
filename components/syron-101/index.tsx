@@ -75,17 +75,31 @@ function Component() {
         <div className={styles.container}>
             {/* @dev: trade */}
             <div className={styles.cardActiveWrapper}>
-                <div
-                    onClick={() => toggleActive('GetSyron')}
-                    className={
-                        active === 'GetSyron' ? styles.cardSelect : styles.card
-                    }
-                >
-                    Withdraw Syron
+                <div className={styles.tabWrapper}>
+                    <div
+                        onClick={() => toggleActive('GetSyron')}
+                        className={
+                            active === 'GetSyron'
+                                ? styles.cardSelect
+                                : styles.card
+                        }
+                    >
+                        Withdraw Syron
+                    </div>
+                    <div
+                        onClick={() => toggleActive('LiquidSyron')}
+                        className={
+                            active === 'LiquidSyron'
+                                ? styles.cardSelect
+                                : styles.card
+                        }
+                    >
+                        Liquidar con Syron
+                    </div>
                 </div>
                 <div
                     className={
-                        active === 'GetSyron'
+                        active === 'GetSyron' || active === 'LiquidSyron'
                             ? styles.cardTitle
                             : styles.cardBeYourBank
                     }
@@ -102,7 +116,14 @@ function Component() {
                 {active === 'GetSyron' && (
                     <div className={styles.cardSub}>
                         <div className={styles.wrapper}>
-                            <SyronForm startPair={start_pair} />
+                            <SyronForm type="get" startPair={start_pair} />
+                        </div>
+                    </div>
+                )}
+                {active === 'LiquidSyron' && (
+                    <div className={styles.cardSub}>
+                        <div className={styles.wrapper}>
+                            <SyronForm type="liquid" startPair={start_pair} />
                         </div>
                     </div>
                 )}
