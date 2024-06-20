@@ -51,12 +51,12 @@ export var SyronTokenModal: React.FC<Prop> = function ({
     }
 
     const getTokenList = async () => {
-        setLoading(true)
+        setLoading(true);
         await fetch(`/api/get-all-sdb`)
             .then(async (response) => {
-                const res = await response.json()
-                const sdbs = res.data.map(
-                    (item: { ratio: number; btc: number; susd: number }) => ({
+                const res = await response.json();
+                const sdbs = res.data
+                    .map((item: { ratio: number; btc: number; susd: number }) => ({
                         ...item,
                         ratio: item.ratio / 10000,
                         btc: (item.btc / 1e8).toLocaleString('de-DE', {
@@ -67,16 +67,17 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                             minimumFractionDigits: 2,
                             maximumFractionDigits: 2,
                         }),
-                    })
-                )
-                setTokenList(sdbs)
-                setLoading(false)
+                    }))
+                    .sort((a, b) => a.ratio - b.ratio); // Sorting step
+                    
+                setTokenList(sdbs);
+                setLoading(false);
             })
             .catch((error) => {
-                setLoading(false)
-                console.log(error)
-            })
-    }
+                setLoading(false);
+                console.log(error);
+            });
+    }    
 
     useEffect(() => {
         getTokenList()
@@ -144,13 +145,13 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                                 ? styles.tokenRow
                                                 : styles.tokenRowDisabled
                                         }
+                                        onClick={() =>
+                                            val.ratio <= 1.2
+                                                ? onDataChange(val, i)
+                                                : {}
+                                        }
                                     >
                                         <div
-                                            onClick={() =>
-                                                val.ratio <= 1.2
-                                                    ? onDataChange(val, i)
-                                                    : {}
-                                            }
                                             className={
                                                 val.ratio <= 1.2
                                                     ? styles.outerRadio
@@ -166,7 +167,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                             )}
                                         </div>
                                         <div
-                                            className={styles.tokenInfoWrapper}
+                                            className={styles.tokenInfoWrapperBtc}
                                         >
                                             <div className={styles.cRatioTxt}>
                                                 C. Ratio ={' '}
@@ -192,7 +193,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                             </div>
                                         </div>
                                         <div
-                                            className={styles.tokenInfoWrapper}
+                                            className={styles.tokenInfoWrapperSusd}
                                         >
                                             <div className={styles.sdbTxt}>
                                                 SDB: {val.address.slice(0, 25)}

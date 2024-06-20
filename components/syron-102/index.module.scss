@@ -314,11 +314,23 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     align-items: center;
     font-size: 17px;
 
-    @media only screen and (max-width: 800px) {
+    @media only screen and (max-width: 768px) {
         width: 100%;
         margin-right: 0%;
         margin-left: 10%;
         font-size: 14px;
+    }
+
+    @media only screen and (max-width: 420px) {
+        font-size: 12px;
+    }
+
+    @media only screen and (max-width: 360px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 320px) {
+        font-size: 10px;
     }
 }
 
@@ -335,11 +347,23 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     align-items: center;
     font-size: 17px;
 
-    @media only screen and (max-width: 800px) {
+    @media only screen and (max-width: 768px) {
         width: 100%;
         margin-right: 0%;
         margin-left: 10%;
         font-size: 14px;
+    }
+
+    @media only screen and (max-width: 420px) {
+        font-size: 12px;
+    }
+
+    @media only screen and (max-width: 360px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 320px) {
+        font-size: 10px;
     }
 }
 
@@ -369,6 +393,14 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
         margin-left: 2%;
         font-size: 14px;
     }
+
+    @media only screen and (max-width: 470px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 392px) {
+        font-size: 10px;
+    }
 }
 
 .selectInfoStatusVerified {
@@ -389,6 +421,14 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
         margin-right: 0%;
         margin-left: 2%;
         font-size: 14px;
+    }
+
+    @media only screen and (max-width: 470px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 392px) {
+        font-size: 10px;
     }
 }
 

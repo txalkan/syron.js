@@ -379,7 +379,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                     {syron?.ssi_box ? (
                                         <>
                                             Liquidator&apos;s SDB:{' '}
-                                            {syron?.ssi_box}
+                                            {syron?.ssi_box?.slice(0, 12)}...
                                         </>
                                     ) : (
                                         <>Connect SDB</>

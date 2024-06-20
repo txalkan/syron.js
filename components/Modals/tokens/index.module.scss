@@ -210,6 +210,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin-right: 1rem;
     border-bottom: 0.5px solid #000;
     margin-top: 1rem;
+    cursor: pointer;
 }
 
 .tokenRowDisabled {
@@ -260,15 +261,37 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 15px;
 }
 
-.tokenInfoWrapper {
+.tokenInfoWrapperBtc {
+    width: 30%;
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
+    margin-left: 1rem;
+    align-items: flex-start;
+}
+
+.tokenInfoWrapperSusd {
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    margin-left: 1rem;
+    align-items: flex-start;
 }
 
 .cRatioTxt {
     color: #000;
     font-weight: bold;
+
+    @media only screen and (max-width: 525px) and (min-width: 412px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 411px) and (min-width: 328px) {
+        font-size: 9px;
+    }
+
+    @media only screen and (max-width: 327px) {
+        font-size: 8px;
+    }
 }
 
 .sdbTxt,
@@ -276,7 +299,19 @@ If you have any questions, comments or interest in pursuing any other use cases,
     color: #a238ff;
 }
 
-@media only screen and (max-width: 599px) {
+@media only screen and (max-width: 525px) and (min-width: 325px) {
+    .sdbTxtMobile {
+        font-size: 11px;
+    }
+}
+
+@media only screen and (max-width: 324px) {
+    .sdbTxtMobile {
+        font-size: 9px;
+    }
+}
+
+@media only screen and (max-width: 570px) {
     .sdbTxt {
         display: none;
     }
@@ -285,7 +320,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-@media only screen and (min-width: 600px) {
+@media only screen and (min-width: 571px) {
     .sdbTxt {
         display: contents;
     }
@@ -303,11 +338,26 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .btcTxt {
     color: #ea983d;
     margin-left: 5px;
+    @media only screen and (max-width: 525px) and (min-width: 325px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 324px) {
+        font-size: 9px;
+    }
 }
 
 .susdTxt {
     color: #a238ff;
     margin-left: 5px;
+
+    @media only screen and (max-width: 525px) and (min-width: 325px) {
+        font-size: 11px;
+    }
+
+    @media only screen and (max-width: 324px) {
+        font-size: 9px;
+    }
 }
 
 .btnConfirmWrapper {

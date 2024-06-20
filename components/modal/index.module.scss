@@ -50,7 +50,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     @include border-radius(16px);
 
-    @media (max-width: 767px) {
+    @media (max-width: 640px) {
         width: 100vw !important;
         height: 100vh !important;
         margin: 0;
