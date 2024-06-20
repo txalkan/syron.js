@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './index.module.scss'
 import Big from 'big.js'
 import { useStore } from 'react-stores'
@@ -21,6 +21,13 @@ import { BoxLiquidInput } from './input/liquid'
 import { SyronTokenModal } from '../Modals/tokens/syron'
 import { $syron } from '../../src/store/syron'
 import { toast } from 'react-toastify'
+import {
+    FileStatus,
+    InscribeOrderData,
+    InscribeOrderStatus,
+} from '../../src/utils/unisat/api-types'
+import { unisatApi } from '../../src/utils/unisat/api'
+import { mempoolFeeRate } from '../../src/utils/unisat/httpUtils'
 
 type Prop = {
     startPair: VaultPair[]
@@ -33,6 +40,16 @@ const vault = new SSIVault()
 
 export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const syron = useStore($syron)
+    const [sdb, setSDB] = useState('')
+
+    useEffect(() => {
+        if (syron !== null) {
+            console.log('Syron', JSON.stringify(syron, null, 2))
+
+            setSDB(syron.ssi_box)
+        }
+    }, [syron?.ssi_box])
+
     const tokensStore = useStore($tokens)
 
     const [loading, setLoading] = React.useState(false)
@@ -223,6 +240,33 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         setLoading(true)
         try {
             throw new Error('Coming soon!')
+
+            let order: InscribeOrderData
+
+            let amt
+
+            // @dev The transaction fee rate in sat/vB @review (mainnet)
+            let feeRate = await mempoolFeeRate()
+            console.log('Fee Rate', feeRate)
+
+            if (!feeRate) {
+                feeRate = 20
+            }
+
+            if (sdb === '') {
+                throw new Error('SDB Loading error')
+            } else {
+                // @dev Transfer Inscription
+                order = await unisatApi.createTransfer({
+                    receiveAddress: sdb,
+                    feeRate: feeRate || 1,
+                    outputValue: 546,
+                    devAddress: '', // @review (mainnet) fee
+                    devFee: 0,
+                    brc20Ticker: 'SYRO',
+                    brc20Amount: String(amt),
+                })
+            }
         } catch (err) {
             console.error('handleConfirm', err)
             // dispatch(setTxStatusLoading('rejected'))
@@ -307,18 +351,41 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         </div>
 
                         <div className={styles.selectInfoWrapper}>
-                            {selectedData ? (
-                                <div className={styles.selectInfoWrapper}>
-                                    <div className={styles.selectInfoPurple}>
-                                        Debtor&apos;s SDB:{' '}
-                                        {selectedData.address?.slice(0, 15)}...
-                                    </div>
-                                </div>
-                            ) : (
-                                <div className={styles.selectInfo}>
-                                    Choose SDB with the button above ↑
-                                </div>
-                            )}
+                            <div className={styles.selectedInfo}>
+                                <span
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                    }}
+                                >
+                                    {selectedData ? (
+                                        <>
+                                            <span
+                                                style={{
+                                                    fontWeight: 'bold',
+                                                    color: 'white',
+                                                    marginRight: '1rem',
+                                                }}
+                                            >
+                                                Debtor&apos;s SDB:{' '}
+                                            </span>
+                                            {selectedData.address}
+                                        </>
+                                    ) : (
+                                        <span
+                                            style={{
+                                                color: 'white',
+                                                whiteSpace: 'normal',
+                                            }}
+                                        >
+                                            Choose SDB with the button above ↑
+                                        </span>
+                                    )}
+                                </span>
+                            </div>
                         </div>
 
                         <BoxLiquidInput
@@ -365,7 +432,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         </div>
 
                         <div className={styles.selectInfoWrapper}>
-                            <div className={styles.selectInfoPurple}>
+                            <div className={styles.selectedInfo}>
                                 <span
                                     style={{
                                         display: 'flex',
@@ -373,13 +440,20 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         textOverflow: 'ellipsis',
                                         whiteSpace: 'nowrap',
                                         overflow: 'hidden',
-                                        marginRight: '10px',
                                     }}
                                 >
-                                    {syron?.ssi_box ? (
+                                    {sdb ? (
                                         <>
-                                            Liquidator&apos;s SDB:{' '}
-                                            {syron?.ssi_box?.slice(0, 12)}...
+                                            <span
+                                                style={{
+                                                    fontWeight: 'bold',
+                                                    color: 'white',
+                                                    marginRight: '1rem',
+                                                }}
+                                            >
+                                                Liquidator&apos;s SDB:
+                                            </span>
+                                            {sdb}
                                         </>
                                     ) : (
                                         <>Connect SDB</>

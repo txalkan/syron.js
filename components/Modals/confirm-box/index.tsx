@@ -31,7 +31,11 @@ import {
     getStringByteCount,
     stringToBase64,
 } from '../../../src/utils/unisat/utils'
-import { InscribeOrderData } from '../../../src/utils/unisat/api-types'
+import {
+    FileStatus,
+    InscribeOrderData,
+    InscribeOrderStatus,
+} from '../../../src/utils/unisat/api-types'
 import useICPHook from '../../../src/hooks/useICP'
 import { useDispatch } from 'react-redux'
 import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
@@ -61,9 +65,17 @@ export var ConfirmBox: React.FC<Prop> = function ({
     direction,
     // onClose,
 }) {
+    const syron = useStore($syron)
+    const [sdb, setSDB] = useState('')
+
+    useEffect(() => {
+        if (syron !== null) {
+            setSDB(syron.ssi_box)
+        }
+    }, [syron?.ssi_box])
+
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
-    const tyron = useStore($syron)
     const btc_wallet = useStore($btc_wallet)
     const walletConnected = useStore($walletConnected).isConnected
 
@@ -231,9 +243,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const disabled = React.useMemo(() => {
         return (
             loadingTxn /*|| Big(priceInfo!.impact) > 10 */ ||
-            (tyron == null && walletConnected)
+            (syron == null && walletConnected)
         )
-    }, [priceInfo, loadingTxn, tyron])
+    }, [priceInfo, loadingTxn, syron])
 
     const transaction_status = async (txId) => {
         // @review (mainnet)
@@ -357,7 +369,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // @pause
             throw new Error('Coming soon!')
             if (!btc_wallet?.btc_addr) {
-                throw new Error('Connect Wallet')
+                throw new Error('Wait for Wallet to Connect')
             }
 
             if (btc_wallet?.network == 'livenet')
@@ -506,23 +518,25 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     devFee: 1111, //Number(Big(exactToken.value)),
             // })
 
-            let box_addr =
-                'tb1pduxfg234ckmc3mq5znzhhtgukg79c3emc9d42twafhdcgk5rgxcqxwpu35' //@review (mainnet)
+            // let box_addr =
+            // 'tb1pduxfg234ckmc3mq5znzhhtgukg79c3emc9d42twafhdcgk5rgxcqxwpu35' //@review (mainnet)
 
-            if (tyron !== null) {
-                box_addr = tyron?.ssi_box!
+            let order: InscribeOrderData
+
+            if (sdb === '') {
+                throw new Error('SDB Loading Error')
+            } else {
+                // @dev Transfer Inscription
+                order = await unisatApi.createTransfer({
+                    receiveAddress,
+                    feeRate: feeRate || 1, // Assign a default value of 1 if feeRate is undefined
+                    outputValue: 546,
+                    devAddress: sdb,
+                    devFee: collateral,
+                    brc20Ticker: tick,
+                    brc20Amount: String(amt),
+                })
             }
-
-            // @dev Transfer Inscription
-            const order: InscribeOrderData = await unisatApi.createTransfer({
-                receiveAddress,
-                feeRate: feeRate || 1, // Assign a default value of 1 if feeRate is undefined
-                outputValue: 546,
-                devAddress: box_addr,
-                devFee: collateral,
-                brc20Ticker: tick,
-                brc20Amount: String(amt),
-            })
 
             console.log('Order', JSON.stringify(order, null, 2))
             // const order = await api.orderInfo(orderId)
@@ -619,7 +633,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             }
             setLoading(false)
         }
-    }, [pair, /*limit,*/ direction /*onClose*/, tyron])
+    }, [pair, /*limit,*/ direction /*onClose*/, syron])
 
     const xr = useStore($xr)
 
@@ -785,6 +799,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     <div
                         style={{
                             width: '100%',
+                            height: '60px',
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',

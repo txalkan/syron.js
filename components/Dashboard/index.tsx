@@ -128,26 +128,30 @@ function Component() {
     const walletConnected = useStore($walletConnected).isConnected
 
     const getBasicInfo = async () => {
-        const unisat = (window as any).unisat
+        try {
+            const unisat = (window as any).unisat
 
-        const [address] = await unisat.getAccounts()
-        console.log('SSI', address)
-        setAddress(address)
+            const [address] = await unisat.getAccounts()
+            console.log('SSI', address)
+            setAddress(address)
 
-        const publicKey = await unisat.getPublicKey()
-        setPublicKey(publicKey)
+            const publicKey = await unisat.getPublicKey()
+            setPublicKey(publicKey)
 
-        const balance = await unisat.getBalance()
-        console.log('Balance', JSON.stringify(balance, null, 2))
+            const balance = await unisat.getBalance()
+            console.log('Balance', JSON.stringify(balance, null, 2))
 
-        setBalance(balance)
+            setBalance(balance)
 
-        const network = await unisat.getNetwork()
-        console.log('Bitcoin', network)
-        if (network == UnisatNetworkType.livenet) {
-            await unisat.switchNetwork(UnisatNetworkType.testnet)
+            const network = await unisat.getNetwork()
+            console.log('Bitcoin', network)
+            if (network == UnisatNetworkType.livenet) {
+                await unisat.switchNetwork(UnisatNetworkType.testnet)
+            }
+            setNetwork(network)
+        } catch (error) {
+            console.error(error)
         }
-        setNetwork(network)
     }
 
     useEffect(() => {

@@ -263,12 +263,18 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .btnTitle {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    color: #fff;
+
     cursor: pointer;
     width: 100%;
     background-color: #a238ff;
     padding: 11px;
     border-radius: 33px;
-    color: #fff;
 
     margin-left: 1rem;
 
@@ -291,79 +297,32 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
 .selectInfoWrapper {
     display: flex;
-    justify-content: flex-end;
+    justify-content: flex-start;
     width: 100%;
     margin-top: 2rem;
-
-    @media only screen and (min-width: 400px) {
-        display: flex;
-        justify-content: center;
-    }
+    margin-left: 7.5%;
 }
 
-.selectInfo {
-    border-radius: 22px;
+.selectedInfo {
+    border-radius: 33px;
     background-color: #a9a9a9;
-    width: 65%;
-    color: #fff;
-    margin-right: 20%;
-    height: 40px;
-    justify-content: flex-start;
-    display: flex;
-    padding-left: 15px;
-    align-items: center;
-    font-size: 17px;
-
-    @media only screen and (max-width: 768px) {
-        width: 100%;
-        margin-right: 0%;
-        margin-left: 10%;
-        font-size: 14px;
-    }
-
-    @media only screen and (max-width: 420px) {
-        font-size: 12px;
-    }
-
-    @media only screen and (max-width: 360px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 320px) {
-        font-size: 10px;
-    }
-}
-
-.selectInfoPurple {
-    border-radius: 22px;
-    background-color: #a9a9a9;
-    width: 65%;
+    width: 90%;
     color: #a238ff;
-    margin-right: 20%;
-    height: 40px;
+    height: 50px;
     justify-content: flex-start;
     display: flex;
-    padding-left: 15px;
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
     align-items: center;
-    font-size: 17px;
 
-    @media only screen and (max-width: 768px) {
-        width: 100%;
-        margin-right: 0%;
-        margin-left: 10%;
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
         font-size: 14px;
     }
 
-    @media only screen and (max-width: 420px) {
-        font-size: 12px;
-    }
-
-    @media only screen and (max-width: 360px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 320px) {
-        font-size: 10px;
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
     }
 }
 
@@ -376,60 +335,45 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     margin-left: 7.5%;
 }
 
+.selectInfoStatusPending,
+.selectInfoStatusVerified {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: 900;
+    color: #fff;
+
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
+}
+
 .selectInfoStatusPending {
     width: 50%;
     border-radius: 33px;
     background-color: #a238ff;
-    color: #fff;
-    justify-content: center;
-    display: flex;
+
     padding: 11px;
-    align-items: center;
-    font-size: 17px;
     cursor: pointer;
-
-    @media only screen and (max-width: 768px) {
-        margin-right: 0%;
-        margin-left: 2%;
-        font-size: 14px;
-    }
-
-    @media only screen and (max-width: 470px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 392px) {
-        font-size: 10px;
-    }
 }
-
 .selectInfoStatusVerified {
     width: fit-content;
     border-radius: 22px;
     background-color: #979797;
     color: #fff;
     height: 40px;
-    justify-content: flex-start;
-    display: flex;
+
     padding-left: 17px;
     padding-right: 17px;
-    align-items: center;
-    font-size: 17px;
+
     cursor: not-allowed;
-
-    @media only screen and (max-width: 768px) {
-        margin-right: 0%;
-        margin-left: 2%;
-        font-size: 14px;
-    }
-
-    @media only screen and (max-width: 470px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 392px) {
-        font-size: 10px;
-    }
 }
 
 .selectInfoStatusPendingText {
@@ -506,16 +450,22 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     margin-top: 30px;
 }
 
-.btnConfirm {
-    width: 40%;
-    height: 50px;
+.btnConfirm,
+.btnConfirmDisabled {
     display: flex;
+    width: 40%;
+    height: 60px;
+
+    margin-top: 1rem;
     justify-content: center;
     align-items: center;
-    margin-top: 1rem;
+    border-radius: 14px;
+}
+
+.btnConfirm {
+    color: #ffff32;
     cursor: pointer;
     border: 1px solid #ffff32;
-    border-radius: 14px;
     background-origin: #a238ff;
     background-image: linear-gradient(to right, #a238ff, #7a28ff);
     box-shadow: 0 0 14px rgba(255, 255, 50, 0.6),
@@ -523,17 +473,26 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .btnConfirmDisabled {
-    width: 40%;
-    height: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-top: 1rem;
     cursor: not-allowed;
     border: 1px solid #808080;
-    border-radius: 14px;
     background-origin: #979797;
     background-image: linear-gradient(to right, #979797, #808080);
     box-shadow: 0 0 14px rgba(151, 151, 151, 0.6),
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
+}
+
+$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
+.txt {
+    font-family: $font-anonymous-pro;
+    font-weight: 900;
+
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
 }
