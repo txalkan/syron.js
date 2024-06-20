@@ -94,7 +94,7 @@ function Component() {
                                 : styles.card
                         }
                     >
-                        Liquidar con Syron
+                        SUSD Liquidation
                     </div>
                 </div>
                 <div
@@ -104,7 +104,7 @@ function Component() {
                             : styles.cardBeYourBank
                     }
                 >
-                    <div className={styles.title}>Be Your Own ₿ank ᛞ</div>
+                    <div className={styles.title}>ᛞ Be Your Own ₿ank</div>
 
                     {/* <div className={styles.icoWrapper}>
                         <Image

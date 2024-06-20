@@ -120,12 +120,10 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     padding: 11px;
     font-family: $font-anonymous-pro;
 
-    color: #333333;
-    margin-top: 17px;
     cursor: pointer;
     width: 50%;
 
-    border-right: 1px solid #ffff32;
+    border-left: 1px solid #ffff32;
 
     //@mobile
     font-size: 14px;
@@ -138,6 +136,10 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 
     background: linear-gradient(33deg, #333333, #dbe4eb, #f8f8f8, #ffffff2e);
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .card:hover {
     background-color: #a238ff;
@@ -149,12 +151,11 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 .cardSelect {
     padding: 11px;
     font-family: $font-anonymous-pro;
-    margin-top: 17px;
+
     cursor: pointer;
     width: 50%;
 
-    border: 1px solid #ffff32;
-    border-bottom: #a238ff;
+    border-left: 1px solid #ffff32;
 
     //@mobile
     font-size: 14px;
@@ -168,6 +169,9 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 
     background-color: #a238ff;
     color: #f8f8f8;
+    display: flex;
+    align-items: center; // vertically center the text
+    justify-content: center;
 }
 
 .cardBeYourBank {

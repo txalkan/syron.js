@@ -817,12 +817,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                         ) : disabled ? (
                             <ThreeDots color="yellow" />
                         ) : (
-                            // <>
-                            //     {btc_wallet != null
-                            //         ? 'get su$d'
-                            //         : 'connect wallet'}
-                            // </>
-                            <div className={styles.txt}>continue</div>
+                            <div className={styles.txt}>confirm</div>
                         )}
                     </div>
                     {/* <div onClick={onClose} className={styles.cancel}>

@@ -20,6 +20,7 @@ import { $xr } from '../../src/store/xr'
 import { BoxLiquidInput } from './input/liquid'
 import { SyronTokenModal } from '../Modals/tokens/syron'
 import { $syron } from '../../src/store/syron'
+import { toast } from 'react-toastify'
 
 type Prop = {
     startPair: VaultPair[]
@@ -32,14 +33,16 @@ const vault = new SSIVault()
 
 export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const syron = useStore($syron)
-
     const tokensStore = useStore($tokens)
 
+    const [loading, setLoading] = React.useState(false)
     const [modal0, setModal0] = React.useState(false)
     const [modal1, setModal1] = React.useState(false)
     const [modal3, setModal3] = React.useState(false)
     const [modal4, setModal4] = React.useState(false)
     const [verified, setVerified] = React.useState(false)
+    const [known, setKnown] = React.useState(false)
+    const [sufficient, setSufficient] = React.useState(false)
     const [confirmModal, setConfirmModal] = React.useState(false)
     const [vault_pair, setPair] = React.useState<VaultPair[]>(startPair)
     const [selectedIndex, setSelectedIndex] = React.useState(0)
@@ -216,6 +219,55 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         )
     }
 
+    const handleVerify = async () => {
+        setLoading(true)
+        try {
+            throw new Error('Coming soon!')
+        } catch (err) {
+            console.error('handleConfirm', err)
+            // dispatch(setTxStatusLoading('rejected'))
+
+            if (err == 'Error: Coming soon!') {
+                toast.info('Coming soon!', {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 3,
+                })
+            } else if (
+                typeof err === 'object' &&
+                Object.keys(err!).length !== 0
+            ) {
+                toast.error('Request Rejected', {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 4,
+                })
+            } else {
+                toast.error(String(err), {
+                    position: 'bottom-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    toastId: 5,
+                })
+            }
+            setLoading(false)
+        }
+    }
+
     return (
         <>
             {/* <SwapSettingsModal show={modal3} onClose={() => setModal3(false)} /> */}
@@ -297,7 +349,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         />
                     </div> */}
 
-                    <div style={{ width: '100%' }}>
+                    <div style={{ width: '100%', marginTop: '3rem' }}>
                         <div className={styles.icoWrapper}>
                             <Image
                                 src={icoSend}
@@ -305,7 +357,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 className={styles.img2}
                             />
                             <div className={styles.titleForm2}>
-                                SDB to pay with
+                                Pay with
                                 <span className={styles.txtTitle}>
                                     &nbsp;Syron
                                 </span>
@@ -324,7 +376,14 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         marginRight: '10px',
                                     }}
                                 >
-                                    Liquidator&apos;s SDB: {syron?.ssi_box}
+                                    {syron?.ssi_box ? (
+                                        <>
+                                            Liquidator&apos;s SDB:{' '}
+                                            {syron?.ssi_box}
+                                        </>
+                                    ) : (
+                                        <>Connect SDB</>
+                                    )}
                                 </span>
                             </div>
                         </div>
@@ -332,14 +391,19 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         <div className={styles.selectInfoStatusWrapper}>
                             <div
                                 className={
-                                    selectedData
+                                    verified
                                         ? styles.selectInfoStatusVerified
                                         : styles.selectInfoStatusPending
                                 }
+                                onClick={() => {
+                                    if (!verified) {
+                                        handleVerify()
+                                    }
+                                }}
                             >
-                                VERIFY SUSD BALANCE
+                                Verify SUSD Balance
                             </div>
-                            {selectedData ? (
+                            {verified ? (
                                 <div
                                     className={
                                         styles.selectInfoStatusVerifiedText
@@ -354,8 +418,19 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         styles.selectInfoStatusPendingText
                                     }
                                 >
-                                    Insufficient SUSD balance in the
-                                    liquidator&apos;s SDB.
+                                    {!known ? (
+                                        <>
+                                            ↑ Send BRC-20 inscription with the
+                                            button above
+                                        </>
+                                    ) : sufficient ? (
+                                        <> </>
+                                    ) : (
+                                        <>
+                                            Insufficient SUSD balance in the
+                                            liquidator&apos;s SDB.
+                                        </>
+                                    )}
                                 </div>
                             )}
                         </div>
@@ -363,7 +438,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         <div className={styles.btnConfirmWrapper}>
                             <div
                                 className={
-                                    selectedData
+                                    verified
                                         ? styles.btnConfirm
                                         : styles.btnConfirmDisabled
                                 }

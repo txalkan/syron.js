@@ -263,17 +263,23 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .btnTitle {
-    background-color: #a238ff;
-    padding: 5px;
-    padding-left: 10px;
-    padding-right: 10px;
-    border-radius: 30px;
-    color: #fff;
     cursor: pointer;
+    width: 100%;
+    background-color: #a238ff;
+    padding: 11px;
+    border-radius: 33px;
+    color: #fff;
+
     margin-left: 1rem;
 
-    @media only screen and (max-width: 600px) {
-        font-size: 11px;
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
     }
 }
 
@@ -287,7 +293,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     display: flex;
     justify-content: flex-end;
     width: 100%;
-    margin-top: 17px;
+    margin-top: 2rem;
 
     @media only screen and (min-width: 400px) {
         display: flex;
@@ -342,25 +348,23 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     justify-content: flex-start;
     flex-direction: column;
     width: 100%;
-    margin-top: 15px;
+    margin-top: 2rem;
     margin-left: 7.5%;
 }
 
 .selectInfoStatusPending {
-    width: fit-content;
-    border-radius: 22px;
-    background-color: #e84c09;
+    width: 50%;
+    border-radius: 33px;
+    background-color: #a238ff;
     color: #fff;
-    margin-right: 20%;
-    height: 40px;
-    justify-content: flex-start;
+    justify-content: center;
     display: flex;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding: 11px;
     align-items: center;
     font-size: 17px;
+    cursor: pointer;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 768px) {
         margin-right: 0%;
         margin-left: 2%;
         font-size: 14px;
@@ -370,18 +374,18 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .selectInfoStatusVerified {
     width: fit-content;
     border-radius: 22px;
-    background-color: #a238ff;
+    background-color: #979797;
     color: #fff;
-    margin-right: 20%;
     height: 40px;
     justify-content: flex-start;
     display: flex;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 17px;
+    padding-right: 17px;
     align-items: center;
     font-size: 17px;
+    cursor: not-allowed;
 
-    @media only screen and (max-width: 600px) {
+    @media only screen and (max-width: 768px) {
         margin-right: 0%;
         margin-left: 2%;
         font-size: 14px;
@@ -389,26 +393,38 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .selectInfoStatusPendingText {
-    color: #e84c09;
+    color: #333333;
     text-align: left;
-    margin-left: 5px;
-    margin-top: 5px;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    padding-right: 2rem;
 
-    @media only screen and (max-width: 600px) {
-        margin-left: 12px;
-        font-size: 12px;
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
     }
 }
 
 .selectInfoStatusVerifiedText {
     color: #a238ff;
     text-align: left;
-    margin-left: 5px;
-    margin-top: 5px;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    padding-right: 2rem;
 
-    @media only screen and (max-width: 600px) {
-        margin-left: 12px;
-        font-size: 12px;
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
     }
 }
 
