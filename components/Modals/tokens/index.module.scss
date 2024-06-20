@@ -197,30 +197,40 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin: -1rem;
     margin-top: 1rem;
     padding-bottom: 2rem;
-    padding-top: 1px;
+    padding-top: 10px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 }
 
-.tokenRow {
+.wrapperTokenList {
+    width: 100%;
+    max-height: 400px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     align-items: center;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    border-bottom: 0.5px solid #000;
-    margin-top: 1rem;
-    cursor: pointer;
 }
 
+.tokenRow,
 .tokenRowDisabled {
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-left: 1rem;
-    margin-right: 1rem;
-    border-bottom: 0.5px solid #000;
-    margin-top: 1rem;
+    margin: 1rem;
+    border-top: 0.5px solid #000;
+    padding-top: 1rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.tokenRow {
+    cursor: pointer;
+}
+
+.tokenRowDisabled {
+    cursor: not-allowed;
     filter: grayscale(1);
     transition: filter 0.3s ease;
 }
@@ -232,132 +242,92 @@ If you have any questions, comments or interest in pursuing any other use cases,
     border-radius: 3.5px;
 }
 
-.outerRadio {
-    border: 1px solid #a238ff;
-    background-color: #fff;
+.outerRadio,
+.outerRadioDisabled {
     width: 15px;
     height: 15px;
     border-radius: 7.5px;
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-shrink: 0; /* Avoid horizontal compression */
+}
+
+.outerRadio {
+    border: 1px solid #a238ff;
+    background-color: #fff;
     cursor: pointer;
 }
 
 .outerRadioDisabled {
     border: 1px solid gray;
     background-color: gray;
-    width: 15px;
-    height: 15px;
-    border-radius: 7.5px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: not-allowed;
 }
 
 .tokenImage {
-    height: 15px;
-    width: 15px;
+    height: 22px;
+    width: 22px;
 }
 
-.tokenInfoWrapperBtc {
-    width: 30%;
+.wrapperColumn {
+    width: 50%;
     display: flex;
     flex-direction: column;
     margin-left: 1rem;
     align-items: flex-start;
 }
 
-.tokenInfoWrapperSusd {
-    width: 60%;
-    display: flex;
-    flex-direction: column;
-    margin-left: 1rem;
-    align-items: flex-start;
+.cRatioTxt,
+.sdbTxt {
+    white-space: nowrap !important;
+
+    //@mobile-first
+    font-size: 10px;
+    @media only screen and (min-width: 320px) {
+        font-size: 12px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 14px;
+    }
 }
 
 .cRatioTxt {
-    color: #000;
-    font-weight: bold;
-
-    @media only screen and (max-width: 525px) and (min-width: 412px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 411px) and (min-width: 328px) {
-        font-size: 9px;
-    }
-
-    @media only screen and (max-width: 327px) {
-        font-size: 8px;
-    }
+    color: #333333;
+    font-weight: 900;
 }
 
-.sdbTxt,
-.sdbTxtMobile {
+.sdbTxt {
     color: #a238ff;
 }
 
-@media only screen and (max-width: 525px) and (min-width: 325px) {
-    .sdbTxtMobile {
-        font-size: 11px;
-    }
-}
-
-@media only screen and (max-width: 324px) {
-    .sdbTxtMobile {
-        font-size: 9px;
-    }
-}
-
-@media only screen and (max-width: 570px) {
-    .sdbTxt {
-        display: none;
-    }
-    .sdbTxtMobile {
-        display: contents;
-    }
-}
-
-@media only screen and (min-width: 571px) {
-    .sdbTxt {
-        display: contents;
-    }
-    .sdbTxtMobile {
-        display: none;
-    }
-}
-
-.btcWrapper {
+.tokenWrapper {
     display: flex;
     flex-direction: row;
     align-items: center;
+    margin-top: 1rem;
+}
+
+.btcTxt,
+.susdTxt {
+    margin-left: 5px;
+    //@mobile-first
+    font-size: 10px;
+    @media only screen and (min-width: 320px) {
+        font-size: 12px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 14px;
+    }
 }
 
 .btcTxt {
     color: #ea983d;
-    margin-left: 5px;
-    @media only screen and (max-width: 525px) and (min-width: 325px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 324px) {
-        font-size: 9px;
-    }
 }
 
 .susdTxt {
     color: #a238ff;
-    margin-left: 5px;
-
-    @media only screen and (max-width: 525px) and (min-width: 325px) {
-        font-size: 11px;
-    }
-
-    @media only screen and (max-width: 324px) {
-        font-size: 9px;
-    }
 }
 
 .btnConfirmWrapper {
@@ -382,11 +352,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }
 
-.wrapperTokenList {
-    max-height: 400px;
-    overflow-y: scroll;
-}
-
 .closeIco {
     cursor: pointer;
 }
@@ -395,4 +360,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .title {
     text-transform: uppercase;
     font-size: medium;
+}
+
+.spinner {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    margin: 20px;
 }

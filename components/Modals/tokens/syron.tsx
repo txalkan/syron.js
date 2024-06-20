@@ -51,33 +51,39 @@ export var SyronTokenModal: React.FC<Prop> = function ({
     }
 
     const getTokenList = async () => {
-        setLoading(true);
+        setLoading(true)
         await fetch(`/api/get-all-sdb`)
             .then(async (response) => {
-                const res = await response.json();
+                const res = await response.json()
                 const sdbs = res.data
-                    .map((item: { ratio: number; btc: number; susd: number }) => ({
-                        ...item,
-                        ratio: item.ratio / 10000,
-                        btc: (item.btc / 1e8).toLocaleString('de-DE', {
-                            minimumFractionDigits: 8,
-                            maximumFractionDigits: 8,
-                        }),
-                        susd: (item.susd / 1e8).toLocaleString('de-DE', {
-                            minimumFractionDigits: 2,
-                            maximumFractionDigits: 2,
-                        }),
-                    }))
-                    .sort((a, b) => a.ratio - b.ratio); // Sorting step
-                    
-                setTokenList(sdbs);
-                setLoading(false);
+                    .map(
+                        (item: {
+                            ratio: number
+                            btc: number
+                            susd: number
+                        }) => ({
+                            ...item,
+                            ratio: item.ratio / 10000,
+                            btc: (item.btc / 1e8).toLocaleString('de-DE', {
+                                minimumFractionDigits: 8,
+                                maximumFractionDigits: 8,
+                            }),
+                            susd: (item.susd / 1e8).toLocaleString('de-DE', {
+                                minimumFractionDigits: 2,
+                                maximumFractionDigits: 2,
+                            }),
+                        })
+                    )
+                    .sort((a, b) => a.ratio - b.ratio) // Sorting step
+
+                setTokenList(sdbs)
+                setLoading(false)
             })
             .catch((error) => {
-                setLoading(false);
-                console.log(error);
-            });
-    }    
+                setLoading(false)
+                console.log(error)
+            })
+    }
 
     useEffect(() => {
         getTokenList()
@@ -124,17 +130,25 @@ export var SyronTokenModal: React.FC<Prop> = function ({
 
     return (
         <Modal show={show} onClose={onClose}>
-            <div className={styles.modalContainerPurple}>
-                <div className={styles.modalHeaderPurple}>
+            <div
+                className={`${styles.modalContainerPurple} ${styles.centered}`}
+            >
+                <div
+                    className={`${styles.modalHeaderPurple} ${styles.centered}`}
+                >
                     <div>Select SDB to liquidate</div>
                     <span className={styles.closeIco} onClick={onClose}>
                         <Image width={14} src={CloseIcon} alt="close-ico" />
                     </span>
                 </div>
-                <div className={styles.wrapperToken}>
-                    <div className={styles.wrapperTokenList}>
+                <div className={`${styles.wrapperToken} ${styles.centered}`}>
+                    <div
+                        className={`${styles.wrapperTokenList} ${styles.centered}`}
+                    >
                         {loading ? (
-                            <Spinner />
+                            <div className={styles.spinner}>
+                                <Spinner />
+                            </div>
                         ) : (
                             <>
                                 {tokenList.map((val, i) => (
@@ -166,9 +180,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                                 />
                                             )}
                                         </div>
-                                        <div
-                                            className={styles.tokenInfoWrapperBtc}
-                                        >
+                                        <div className={styles.wrapperColumn}>
                                             <div className={styles.cRatioTxt}>
                                                 C. Ratio ={' '}
                                                 {val.ratio.toLocaleString(
@@ -179,7 +191,9 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                                     }
                                                 )}
                                             </div>
-                                            <div className={styles.btcWrapper}>
+                                            <div
+                                                className={styles.tokenWrapper}
+                                            >
                                                 <Image
                                                     className={
                                                         styles.tokenImage
@@ -192,20 +206,15 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                                 </div>
                                             </div>
                                         </div>
-                                        <div
-                                            className={styles.tokenInfoWrapperSusd}
-                                        >
+                                        <div className={styles.wrapperColumn}>
                                             <div className={styles.sdbTxt}>
-                                                SDB: {val.address.slice(0, 25)}
+                                                {val.address.slice(0, 17)}
                                                 ...
                                             </div>
+
                                             <div
-                                                className={styles.sdbTxtMobile}
+                                                className={styles.tokenWrapper}
                                             >
-                                                SDB: {val.address.slice(0, 14)}
-                                                ...
-                                            </div>
-                                            <div className={styles.btcWrapper}>
                                                 <Image
                                                     className={
                                                         styles.tokenImage
