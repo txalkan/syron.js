@@ -71,8 +71,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     margin-left: 14%;
     color: #6e6e6e;
 
+    //@mobile-first
     font-size: 12px;
-
     @media only screen and (min-width: 320px) {
         font-size: 14px;
     }
@@ -129,7 +129,16 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txt {
     font-family: $font-anonymous-pro;
-    //bolder
-    font-weight: 600;
+    font-weight: 900;
     color: #ffff32;
+
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 320px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
 }
