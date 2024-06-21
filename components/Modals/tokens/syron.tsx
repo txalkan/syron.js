@@ -29,9 +29,13 @@ export var SyronTokenModal: React.FC<Prop> = function ({
     const [tokenList, setTokenList] = useState<any>([])
     const [loading, setLoading] = useState(false)
 
-    const onDataChange = (data, index) => {
+    const onDataChange = (index) => {
         setSelectedIndex(index)
-        setSelectedData(data)
+    }
+
+    const onConfirm = () => {
+        setSelectedData(tokenList[selectedIndex])
+        onClose()
     }
 
     const getTokenList = async () => {
@@ -145,7 +149,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                         }
                                         onClick={() =>
                                             val.ratio <= 1.2
-                                                ? onDataChange(val, i)
+                                                ? onDataChange(i)
                                                 : {}
                                         }
                                     >
@@ -218,7 +222,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                     </div>
 
                     <div className={styles.btnConfirmWrapper}>
-                        <div className={styles.btnConfirm} onClick={onClose}>
+                        <div className={styles.btnConfirm} onClick={onConfirm}>
                             <div className={styles.txt}>CONFIRMAR</div>
                         </div>
                     </div>
