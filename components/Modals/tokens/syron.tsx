@@ -62,7 +62,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                             }),
                         })
                     )
-                    .sort((a, b) => a.ratio - b.ratio) // Sorting step
+                    .sort((a, b) => a.ratio - b.ratio)
 
                 setTokenList(sdbs)
                 setLoading(false)
@@ -76,45 +76,6 @@ export var SyronTokenModal: React.FC<Prop> = function ({
     useEffect(() => {
         getTokenList()
     }, [])
-
-    // const tokenList = [
-    //     {
-    //         ratio: 1.15,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 152.3,
-    //     },
-    //     {
-    //         ratio: 1.16,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 154.3,
-    //     },
-    //     {
-    //         ratio: 1.17,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 134.3,
-    //     },
-    //     {
-    //         ratio: 1.18,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 786.3,
-    //     },
-    //     {
-    //         ratio: 1.18,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 666.3,
-    //     },
-    //     {
-    //         ratio: 1.25,
-    //         btc: 0.143242,
-    //         address: 'tajb35766dhasdas6d675asdas7d',
-    //         susd: 152.3,
-    //     },
-    // ]
 
     return (
         <Modal show={show} onClose={onClose}>
