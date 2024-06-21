@@ -184,7 +184,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
 
                     <div className={styles.btnConfirmWrapper}>
                         <div className={styles.btnConfirm} onClick={onConfirm}>
-                            <div className={styles.txt}>CONFIRMAR</div>
+                            <div className={styles.txt}>CONFIRM</div>
                         </div>
                     </div>
                 </div>
