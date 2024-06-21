@@ -64,6 +64,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const [vault_pair, setPair] = React.useState<VaultPair[]>(startPair)
     const [selectedIndex, setSelectedIndex] = React.useState(0)
     const [selectedData, setSelectedData] = React.useState<any>(null)
+    const [incriptionTx, setInscTx] = React.useState<any>(null)
 
     const _0 = Big(0)
     const [amount, setAmount] = React.useState(_0)
@@ -236,22 +237,39 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         )
     }
 
+    const unisat = (window as any).unisat
     const handleVerify = async () => {
         setLoading(true)
         try {
+            await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
+                .then(async (response) => {
+                    const res = await response.json()
+                    console.log(
+                        'outcall response',
+                        JSON.stringify(res, null, 2)
+                    )
+                })
+                .catch((error) => console.error(error))
+
+            if (selectedData === null) {
+                throw new Error('Select SDB')
+            }
+
+            //
             throw new Error('Coming soon!')
 
             let order: InscribeOrderData
 
-            let amt
+            let amt = Number(selectedData.susd) + 0.01
 
             // @dev The transaction fee rate in sat/vB @review (mainnet)
-            let feeRate = await mempoolFeeRate()
-            console.log('Fee Rate', feeRate)
+            let feeRate = 265
+            // await mempoolFeeRate()
+            // console.log('Fee Rate', feeRate)
 
-            if (!feeRate) {
-                feeRate = 20
-            }
+            // if (!feeRate) {
+            //     feeRate = 20
+            // }
 
             if (sdb === '') {
                 throw new Error('SDB Loading error')
@@ -267,8 +285,18 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                     brc20Amount: String(amt),
                 })
             }
+
+            await unisat
+                .sendBitcoin(order.payAddress, order.amount, order.feeRate)
+                .then(async (txId) => {
+                    setInscTx(txId)
+                    setVerified(true)
+                    console.log('Deposit Transaction ID #1', txId)
+                    // dispatch(setTxId(txId))
+                    // dispatch(setTxStatusLoading('submitted'))
+                })
         } catch (err) {
-            console.error('handleConfirm', err)
+            console.error('handleVerify', err)
             // dispatch(setTxStatusLoading('rejected'))
 
             if (err == 'Error: Coming soon!') {
@@ -340,13 +368,13 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 className={styles.img}
                             />
                             <div className={styles.titleForm2}>
-                                Liquidate Safety Deposit ₿ox
+                                Safety Deposit ₿ox
                             </div>
                             <div
                                 onClick={() => setModal4(true)}
                                 className={styles.btnTitle}
                             >
-                                Select SDB
+                                Select
                             </div>
                         </div>
 
@@ -387,7 +415,6 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 </span>
                             </div>
                         </div>
-
                         <BoxLiquidInput
                             value={vault_pair[0].value}
                             token={vault_pair[0].meta}
@@ -451,7 +478,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                                     marginRight: '1rem',
                                                 }}
                                             >
-                                                Liquidator&apos;s SDB:
+                                                Your SDB:
                                             </span>
                                             {sdb}
                                         </>
@@ -475,7 +502,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                     }
                                 }}
                             >
-                                Verify SUSD Balance
+                                Verify
                             </div>
                             {verified ? (
                                 <div

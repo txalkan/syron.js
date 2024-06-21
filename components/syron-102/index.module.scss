@@ -343,6 +343,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     align-items: center;
     font-weight: 900;
     color: #fff;
+    padding: 11px;
 
     //@mobile-first
     font-size: 12px;
@@ -353,26 +354,16 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     @media only screen and (min-width: 768px) {
         font-size: 17px;
     }
+    width: 50%;
+    border-radius: 33px;
 }
 
 .selectInfoStatusPending {
-    width: 50%;
-    border-radius: 33px;
     background-color: #a238ff;
-
-    padding: 11px;
     cursor: pointer;
 }
 .selectInfoStatusVerified {
-    width: fit-content;
-    border-radius: 22px;
     background-color: #979797;
-    color: #fff;
-    height: 40px;
-
-    padding-left: 17px;
-    padding-right: 17px;
-
     cursor: not-allowed;
 }
 
