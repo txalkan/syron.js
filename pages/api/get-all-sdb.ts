@@ -1,8 +1,8 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nextCors from 'nextjs-cors'
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '../../src/utils/firebase/firebaseConfig'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db, auth } from '../../src/utils/firebase/firebaseConfig'
 
 type Data = {
     data?: any
@@ -27,7 +27,11 @@ export default async function handler(
 
     console.log('@dev get data from Firebase')
     try {
+        //const uid = auth.currentUser!.uid
+        //console.log('@dev uid:', uid)
+
         const collectionRef = collection(db, 'sdb')
+        //const q = query(collectionRef, where('uid', '==', uid))
         const querySnapshot = await getDocs(collectionRef)
         const dataList = querySnapshot.docs.map((doc) => ({
             ...doc.data(),

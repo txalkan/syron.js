@@ -7,8 +7,6 @@ import Image from 'next/image'
 import CloseIcon from '../../../src/assets/icons/ic_cross_black.svg'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
-import { collection, getDocs } from 'firebase/firestore'
-import { db } from '../../../src/utils/firebase/firebaseConfig'
 import Spinner from '../../Spinner'
 
 type Prop = {
