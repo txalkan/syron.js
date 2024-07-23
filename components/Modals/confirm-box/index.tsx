@@ -42,6 +42,7 @@ import { setTxId, setTxStatusLoading } from '../../../src/app/actions'
 import {
     mempoolTxId,
     mempoolFeeRate,
+    transaction_status,
 } from '../../../src/utils/unisat/httpUtils'
 import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
@@ -80,7 +81,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const walletConnected = useStore($walletConnected).isConnected
 
     const { updateWallet } = useBTCWalletHook()
-    const { getBox, getSUSD, getSyron } = useICPHook()
+    const { getBox, getSUSD, updateSyronLedgers } = useICPHook()
     const dispatch = useDispatch()
     const { t } = useTranslation()
 
@@ -247,50 +248,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         )
     }, [priceInfo, loadingTxn, syron])
 
-    const transaction_status = async (txId) => {
-        // @review (mainnet)
-        const url = `https://mempool.space/testnet/api/tx/${txId}/status`
-
-        while (true) {
-            try {
-                const response = await fetch(url, {
-                    method: 'GET',
-                })
-
-                if (!response.ok) {
-                    throw new Error(
-                        `API request failed with status ${response.status}`
-                    )
-                }
-
-                const data = await response.json()
-                console.log(JSON.stringify(data, null, 2))
-
-                if (!data.confirmed) {
-                    throw new Error(`Trying again`)
-                } else {
-                    toast.info('BTC deposit confirmed', {
-                        position: 'bottom-center',
-                        autoClose: 4000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        toastId: 1,
-                    })
-                    await updateBalance()
-                    return data
-                }
-            } catch (error) {
-                console.log(`Transaction status not confirmed. ${error}`)
-                await new Promise(
-                    (resolve) => setTimeout(resolve, 1 * 60 * 1000) // 1 min
-                )
-            }
-        }
-    }
-
+    // @review (mainnet)
     const updateBalance = async () => {
         const [address] = await unisat.getAccounts()
         const balance = await unisat.getBalance()
@@ -300,6 +258,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         console.log('balance updated')
     }
 
+    // @dev 2) Receive Syron
     const mintStablecoin = async (tx_id) => {
         console.log('Deposit Transaction ID #2', tx_id)
         await getSUSD(btc_wallet?.btc_addr!, tx_id)
@@ -314,8 +273,8 @@ export var ConfirmBox: React.FC<Prop> = function ({
             })
     }
 
-    const getSyronNow = async () => {
-        await getSyron(btc_wallet?.btc_addr!)
+    const updateSyron = async () => {
+        await updateSyronLedgers(btc_wallet?.btc_addr!)
             .then((tx) => {
                 if (tx) {
                     console.log('Get Syron ICP ID', tx)
@@ -329,7 +288,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const updateBox = async () => {
         setLoading(true)
         try {
-            await getSyronNow().then(async (res) => await updateBalance())
+            await updateSyron().then(async (res) => await updateBalance())
         } catch (error) {
             console.error(error)
         }
@@ -342,9 +301,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
-            // const inscription_id =
-            //     '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68i0'
-            // await fetch(`/api/get-unisat-inscription-info?id=${inscription_id}`)
+            // const txId =
+            //     'cb85cacdf57976bd8111aca54e07110effc2b60128767dfa3c2e03f9a2065fe3'
+            // await fetch(`/api/get-unisat-inscription-info?id=${txId}i0`)
             //     .then(async (response) => {
             //         const res = await response.json()
             //         console.log(
@@ -376,7 +335,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 throw new Error('Use Bitcoin Testnet')
 
             const collateral = Math.floor(Number(exactInput))
-            if (collateral <= 1000)
+            if (collateral < 1000)
                 throw new Error('BTC deposit is below the minimum')
 
             toast.info(
@@ -554,6 +513,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
 
                     await transaction_status(txId).then(async (res) => {
+                        await updateBalance()
                         await unisatApi
                             .orderInfo(order.orderId)
                             .then(async (order_) => {
@@ -564,7 +524,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 const inscription_id =
                                     order_.files[0].inscriptionId
 
-                                // @dev Double-check inscription using indexer @todo
+                                // @dev Update inscription info in Tyron indexer
                                 await fetch(
                                     `/api/get-unisat-inscription-info?id=${inscription_id}`
                                 )
@@ -703,7 +663,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // In the meantime, reload page
             setTimeout(() => window.location.reload(), 2 * 1000) // 2 seconds
         } else {
-            handleConfirm()
+            mintStablecoin(
+                '4b02c7fe34f7d26694ec1befe834ff85a0e601ee8b19eed956b61c9ca2bd9215'
+            )
+            // handleConfirm()
         }
     }
 

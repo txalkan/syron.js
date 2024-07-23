@@ -255,7 +255,7 @@ export async function mempoolFeeRate() {
         }
 
         const data = await response.json()
-        console.log(JSON.stringify(data, null, 2))
+        // console.log(JSON.stringify(data, null, 2))
 
         // Extract gas fees for the 50th percentile from the last 60 blocks
         const lastBlocks = data.slice(-60)
@@ -266,7 +266,7 @@ export async function mempoolFeeRate() {
             })
             .filter((value) => value !== undefined) as number[] // Filter out undefined values
 
-        console.log(JSON.stringify(percentiles))
+        // console.log(JSON.stringify(percentiles))
         // Calculate the average
         const sum = percentiles.reduce((acc, value) => acc + value, 0)
         const average = Math.ceil(sum / percentiles.length)
@@ -406,3 +406,47 @@ function checkError(error: any) {
 //     }
 //     await Promise.all(promises)
 // }
+
+export const transaction_status = async (txId) => {
+    // @review (mainnet)
+    const url = `https://mempool.space/testnet/api/tx/${txId}/status`
+
+    while (true) {
+        try {
+            const response = await fetch(url, {
+                method: 'GET',
+            })
+
+            if (!response.ok) {
+                throw new Error(
+                    `API request failed with status ${response.status}`
+                )
+            }
+
+            const data = await response.json()
+            console.log(JSON.stringify(data, null, 2))
+
+            if (!data.confirmed) {
+                throw new Error(`Trying again`)
+            } else {
+                // toast.info('BTC deposit confirmed', {
+                //     position: 'bottom-center',
+                //     autoClose: 4000,
+                //     hideProgressBar: false,
+                //     closeOnClick: true,
+                //     pauseOnHover: true,
+                //     draggable: true,
+                //     progress: undefined,
+                //     toastId: 1,
+                // })
+
+                return data
+            }
+        } catch (error) {
+            console.log(`Transaction status not confirmed. ${error}`)
+            await new Promise(
+                (resolve) => setTimeout(resolve, 1 * 60 * 1000) // 1 min
+            )
+        }
+    }
+}
