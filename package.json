@@ -18,7 +18,7 @@
         "s": "next build && prettier -w ."
     },
     "dependencies": {
-        "@junobuild/core-peer": "^0.0.11",
+        "@junobuild/core-peer": "0.0.20",
         "@reduxjs/toolkit": "^1.6.0",
         "@supabase/supabase-js": "^2.43.1",
         "@testing-library/dom": "^8.11.2",
@@ -46,7 +46,7 @@
         "react-dom": "18.2.0",
         "react-modal": "^3.14.3",
         "react-redux": "^7.2.4",
-        "react-scripts": "^3.0.1",
+        "react-scripts": "^5.0.1",
         "react-select": "^5.5.2",
         "react-sortable-hoc": "^2.0.0",
         "react-stores": "^5.5.0",
