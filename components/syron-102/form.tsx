@@ -27,7 +27,11 @@ import {
     InscribeOrderStatus,
 } from '../../src/utils/unisat/api-types'
 import { unisatApi } from '../../src/utils/unisat/api'
-import { mempoolFeeRate } from '../../src/utils/unisat/httpUtils'
+import {
+    mempoolFeeRate,
+    transaction_status,
+} from '../../src/utils/unisat/httpUtils'
+import ThreeDots from '../Spinner/ThreeDots'
 
 type Prop = {
     startPair: VaultPair[]
@@ -241,16 +245,6 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const handleVerify = async () => {
         setLoading(true)
         try {
-            await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
-                .then(async (response) => {
-                    const res = await response.json()
-                    console.log(
-                        'outcall response',
-                        JSON.stringify(res, null, 2)
-                    )
-                })
-                .catch((error) => console.error(error))
-
             if (selectedData === null) {
                 throw new Error('Select SDB')
             }
@@ -274,6 +268,18 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
             if (sdb === '') {
                 throw new Error('SDB Loading error')
             } else {
+                await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
+                    .then(async (response) => {
+                        const res = await response.json()
+                        console.log(
+                            'outcall response',
+                            JSON.stringify(res, null, 2)
+                        )
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
+
                 // @dev Transfer Inscription
                 order = await unisatApi.createTransfer({
                     receiveAddress: sdb,
@@ -292,6 +298,36 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                     setInscTx(txId)
                     setVerified(true)
                     console.log('Deposit Transaction ID #1', txId)
+
+                    await transaction_status(txId)
+                        .then(async (res) => {
+                            await unisatApi
+                                .orderInfo(order.orderId)
+                                .then(async (order_) => {
+                                    console.log(
+                                        'Order From OrderId',
+                                        JSON.stringify(order_, null, 2)
+                                    )
+                                    const inscription_id =
+                                        order_.files[0].inscriptionId
+
+                                    // @dev Double-check inscription using indexer @review
+                                    await fetch(
+                                        `/api/get-unisat-inscription-info?id=${inscription_id}`
+                                    )
+                                        .then((response) => response.json())
+                                        .then((data) => {
+                                            console.log(
+                                                JSON.stringify(data, null, 2)
+                                            )
+                                            setLoading(false)
+                                        })
+                                })
+                        })
+                        .catch((error) => {
+                            throw error
+                        })
+
                     // dispatch(setTxId(txId))
                     // dispatch(setTxStatusLoading('submitted'))
                 })
@@ -502,7 +538,11 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                     }
                                 }}
                             >
-                                Verify
+                                {loading ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    <>Verify</>
+                                )}
                             </div>
                             {verified ? (
                                 <div

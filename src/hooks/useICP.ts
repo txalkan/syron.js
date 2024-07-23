@@ -57,9 +57,11 @@ function useICPHook() {
 
     const getSUSD = async (ssi: string, txid: string) => {
         try {
-            const txId = await syron.get_susd(
+            const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
-                txid
+                txid,
+                72000000,
+                1
             )
             return txId
         } catch (err) {
@@ -67,9 +69,12 @@ function useICPHook() {
         }
     }
 
-    const getSyron = async (ssi: string) => {
+    const updateSyronLedgers = async (ssi: string) => {
         try {
-            const txId = await syron.update_ssi({ ssi, op: { getsyron: null } })
+            const txId = await syron.update_ssi_balance({
+                ssi,
+                op: { getsyron: null },
+            })
             return txId
         } catch (err) {
             console.error('useICP_updateSSI', err)
@@ -96,7 +101,7 @@ function useICPHook() {
     return {
         getBox,
         getSUSD,
-        getSyron,
+        updateSyronLedgers,
         redeemBTC,
     }
 }
