@@ -11,8 +11,6 @@ import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
 // import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
-import { User, signIn } from '@junobuild/core-peer'
-import { authSubscribe } from '@junobuild/core-peer'
 import { AddressPurpose, BitcoinNetworkType, getAddress } from 'sats-connect'
 import {
     $bitcoin_addresses,
@@ -45,19 +43,15 @@ function Component() {
     const onSignIn = () => {
         console.log('sign in')
 
-        async function internetIdentity() {
-            await signIn()
+        async function signIn() {
+            throw new Error('Function not implemented.')
         }
 
-        internetIdentity()
+        signIn()
     }
 
-    const [user, setUser] = useState<User | null>(null)
-    useEffect(() => {
-        const sub = authSubscribe((user) => setUser(user))
-
-        return () => sub()
-    }, [])
+    // @review (user) data model, e.g. Juno User
+    const [user, setUser] = useState<boolean | null>(null)
 
     // @dev (xverse)
 
@@ -221,7 +215,7 @@ function Component() {
     return (
         <AuthContext.Provider value={{ user }}>
             <div className={styles.wrapper}>
-                {user !== undefined && user !== null ? (
+                {user !== false && user !== null ? (
                     <div>
                         {loginInfo.isLight ? (
                             <div

@@ -12,7 +12,6 @@ import isZil from '../../../src/hooks/isZil'
 import { $resolvedInfo } from '../../../src/store/resolvedInfo'
 import { updateNet } from '../../../src/store/network'
 import { useStore } from 'react-stores'
-import { signIn } from '@junobuild/core-peer'
 
 function Component() {
     const dispatch = useDispatch()
@@ -71,6 +70,10 @@ function Component() {
                 return 'actionBtn'
             }
         }
+    }
+
+    function signIn(): void | PromiseLike<void> {
+        throw new Error('Function not implemented.')
     }
 
     return (

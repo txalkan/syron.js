@@ -18,7 +18,7 @@
         "s": "next build && prettier -w ."
     },
     "dependencies": {
-        "@junobuild/core-peer": "0.0.20",
+        "@dfinity/agent": "^2.0.0",
         "@reduxjs/toolkit": "^1.6.0",
         "@supabase/supabase-js": "^2.43.1",
         "@testing-library/dom": "^8.11.2",
