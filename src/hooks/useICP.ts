@@ -13,14 +13,15 @@ function useICPHook() {
         dummy: boolean
     ) => {
         try {
-            console.log('Satoshis', balance)
+            console.log('Balance in Satoshis', balance)
 
+            console.log('Loading SDB')
             if (balance != 0) {
                 const sdb = await fetch(`/api/get-sdb?id=${ssi}&dummy=${dummy}`)
                     .then(async (response) => {
                         const res = await response.json()
                         console.log(
-                            'outcall response',
+                            'outcall response - SDB',
                             JSON.stringify(res, null, 2)
                         )
                         return res
@@ -33,10 +34,10 @@ function useICPHook() {
                 // const box_balance = await syron.get_balance(sdb.data.address)
 
                 updateSyronSSI({
-                    ssi_box: sdb.data.address,
-                    box_balance: Big(Number(sdb.data.btc)), // @review (mainnet) balance)),
-                    box_loan: Big(Number(sdb.data.susd)),
-                    box_ratio: Big(Number(sdb.data.ratio)),
+                    sdb: sdb.data.address,
+                    syron_btc: Big(Number(sdb.data.btc)), // @review (mainnet) balance)),
+                    syron_usd_loan: Big(Number(sdb.data.susd)),
+                    collateral_ratio: Big(Number(sdb.data.ratio)),
                 })
             }
         } catch (err) {
@@ -57,15 +58,17 @@ function useICPHook() {
 
     const getSUSD = async (ssi: string, txid: string) => {
         try {
+            console.log('Loading SUSD Issuance')
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
                 1
             )
+            console.log(txId)
             return txId
         } catch (err) {
-            console.error('useICP_getSUSD', err)
+            console.error('Get SUSD Error', err)
         }
     }
 
@@ -77,7 +80,7 @@ function useICPHook() {
             })
             return txId
         } catch (err) {
-            console.error('useICP_updateSSI', err)
+            console.error('Update Balance Error', err)
         }
     }
 
@@ -85,16 +88,30 @@ function useICPHook() {
         try {
             const txid =
                 '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68'
+
+            console.log('Loading BTC Redemption')
             const txId = await syron.redeem_btc(
                 {
                     ssi,
                     op: { redeembitcoin: null },
-                },
-                txid
+                }
+                // txid
             )
+            console.log(txId)
             return txId
         } catch (err) {
-            console.error('useICP_redeemBTC', err)
+            console.error('Redeem BTC Error', err)
+        }
+    }
+
+    const getServiceProviders = async () => {
+        try {
+            console.log('Loading Service Providers')
+            const res = await syron.getServiceProviderMap()
+            console.log('Service Providers', res)
+            return res
+        } catch (err) {
+            console.error(err)
         }
     }
 
@@ -103,6 +120,7 @@ function useICPHook() {
         getSUSD,
         updateSyronLedgers,
         redeemBTC,
+        getServiceProviders,
     }
 }
 

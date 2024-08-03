@@ -162,15 +162,16 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     color: black;
     margin-left: 4%;
     text-align: left;
+    font-weight: bold;
 
     //@mobile
-    font-size: 17px;
+    font-size: 14px;
     @media only screen and (min-width: 320px) {
-        font-size: 22px;
+        font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 28px;
+        font-size: 21px;
     }
 }
 
@@ -271,8 +272,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     color: #fff;
 
     cursor: pointer;
-    width: 100%;
-    background-color: #a238ff;
+    width: 40%;
+    background-color: rgb(75, 0, 130);
     padding: 11px;
     border-radius: 33px;
 
@@ -292,7 +293,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txtTitle {
     font-family: $font-anonymous-pro;
-    color: #a238ff;
+    color: rgb(75, 0, 130);
 }
 
 .selectInfoWrapper {
@@ -307,7 +308,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     border-radius: 33px;
     background-color: #a9a9a9;
     width: 90%;
-    color: #a238ff;
+    color: rgb(75, 0, 130);
     height: 50px;
     justify-content: flex-start;
     display: flex;
@@ -359,7 +360,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .selectInfoStatusPending {
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     cursor: pointer;
 }
 .selectInfoStatusVerified {
@@ -386,7 +387,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .selectInfoStatusVerifiedText {
-    color: #a238ff;
+    color: rgb(75, 0, 130);
     text-align: left;
     margin-left: 1rem;
     margin-top: 1rem;
@@ -457,8 +458,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     color: #ffff32;
     cursor: pointer;
     border: 1px solid #ffff32;
-    background-origin: #a238ff;
-    background-image: linear-gradient(to right, #a238ff, #7a28ff);
+    background-origin: rgb(75, 0, 130);
+    background-image: linear-gradient(to right, rgb(75, 0, 130), #7a28ff);
     box-shadow: 0 0 14px rgba(255, 255, 50, 0.6),
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }

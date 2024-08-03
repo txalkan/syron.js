@@ -50,9 +50,9 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         if (syron !== null) {
             console.log('Syron', JSON.stringify(syron, null, 2))
 
-            setSDB(syron.ssi_box)
+            setSDB(syron.sdb)
         }
-    }, [syron?.ssi_box])
+    }, [syron?.sdb])
 
     const tokensStore = useStore($tokens)
 
@@ -407,7 +407,10 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 Safety Deposit ₿ox
                             </div>
                             <div
-                                onClick={() => setModal4(true)}
+                                onClick={
+                                    () => toast.info('Coming soon!')
+                                    // setModal4(true)
+                                }
                                 className={styles.btnTitle}
                             >
                                 Select
@@ -489,7 +492,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             <div className={styles.titleForm2}>
                                 Pay with
                                 <span className={styles.txtTitle}>
-                                    &nbsp;Syron
+                                    &nbsp;Syron ᛞ
                                 </span>
                             </div>
                         </div>
@@ -533,9 +536,11 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         : styles.selectInfoStatusPending
                                 }
                                 onClick={() => {
-                                    if (!verified) {
-                                        handleVerify()
-                                    }
+                                    toast.info('Coming soon!')
+
+                                    // if (!verified) {
+                                    //     handleVerify()
+                                    // }
                                 }}
                             >
                                 {loading ? (

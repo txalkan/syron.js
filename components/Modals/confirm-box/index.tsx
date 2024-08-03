@@ -71,9 +71,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
     useEffect(() => {
         if (syron !== null) {
-            setSDB(syron.ssi_box)
+            setSDB(syron.sdb)
         }
-    }, [syron?.ssi_box])
+    }, [])
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
@@ -81,7 +81,8 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const walletConnected = useStore($walletConnected).isConnected
 
     const { updateWallet } = useBTCWalletHook()
-    const { getBox, getSUSD, updateSyronLedgers } = useICPHook()
+    const { getBox, getSUSD, updateSyronLedgers, getServiceProviders } =
+        useICPHook()
     const dispatch = useDispatch()
     const { t } = useTranslation()
 
@@ -259,18 +260,16 @@ export var ConfirmBox: React.FC<Prop> = function ({
     }
 
     // @dev 2) Receive Syron
-    const mintStablecoin = async (tx_id) => {
-        console.log('Deposit Transaction ID #2', tx_id)
+    const mintStablecoin = async (tx_id: string) => {
+        // Txn: Inscription to minter & deposit into SDB
+        console.log('Read Transaction', tx_id)
+
         await getSUSD(btc_wallet?.btc_addr!, tx_id)
-            .then(async (tx) => {
-                if (tx) {
-                    console.log('Get SU$D ICP ID', tx)
-                    // dispatch(setTxStatusLoading('confirmed'))
-                }
-            })
-            .catch((err) => {
-                throw err
-            })
+        await updateBalance()
+
+        window.open(
+            `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
+        )
     }
 
     const updateSyron = async () => {
@@ -297,6 +296,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
     const handleConfirm = React.useCallback(async () => {
         setLoading(true)
+        toast.dismiss(4)
 
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
@@ -326,7 +326,8 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     .catch((error) => console.error(error))
 
             // @pause
-            throw new Error('Coming soon!')
+            // throw new Error('Coming soon!')
+
             if (!btc_wallet?.btc_addr) {
                 throw new Error('Wait for Wallet to Connect')
             }
@@ -338,19 +339,11 @@ export var ConfirmBox: React.FC<Prop> = function ({
             if (collateral < 1000)
                 throw new Error('BTC deposit is below the minimum')
 
-            toast.info(
-                'Your Bitcoin transaction can take around 30 minutes to complete.',
-                {
-                    position: 'bottom-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    toastId: 2,
-                }
-            )
+            toast.info('Submitting your BTC deposit...', {
+                autoClose: false,
+                closeOnClick: true,
+                toastId: 1,
+            })
             const tick = 'SYRO'
             const amt = Number(limitInput.round(3))
 
@@ -502,6 +495,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // console.log('Order Value', order.amount)
             // console.log('Order ID', order.orderId)
 
+            toast.info(
+                "Loading... Please don 't close this window. This process should complete in about 2 transactions.",
+                {
+                    autoClose: false,
+                    closeOnClick: false,
+                    toastId: 2,
+                }
+            )
+
             // @dev 1) Send Bitcoin transaction (#B1)
             await unisat
                 .sendBitcoin(order.payAddress, order.amount, order.feeRate)
@@ -510,10 +512,16 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     // dispatch(setTxId(txId))
                     // dispatch(setTxStatusLoading('submitted'))
 
-                    // @dev 2) Make sure that the Bitcoin transaction (1) is confirmed
+                    // @dev 2) Make sure that the Bitcoin transaction (2) is confirmed
 
-                    await transaction_status(txId).then(async (res) => {
-                        await updateBalance()
+                    await transaction_status(txId).then(async (_res) => {
+                        toast.info('Your Bitcoin deposit has been confirmed.', {
+                            autoClose: false,
+                            closeOnClick: true,
+                            toastId: 3,
+                        })
+                        toast.dismiss(1)
+
                         await unisatApi
                             .orderInfo(order.orderId)
                             .then(async (order_) => {
@@ -523,6 +531,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 )
                                 const inscription_id =
                                     order_.files[0].inscriptionId
+
+                                // @or from
+                                // await mempoolTxId(order.payAddress).then(
 
                                 // @dev Update inscription info in Tyron indexer
                                 await fetch(
@@ -538,57 +549,58 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
                                 return inscription_id.slice(0, -2)
                             })
-                            .then(
-                                // await mempoolTxId(order.payAddress).then(
-                                async (tx_id) => {
-                                    await mintStablecoin(tx_id)
-                                    window.open(
-                                        `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
-                                    )
-                                    setLoading(false)
-                                }
-                            )
+                            .then(async (txId2) => {
+                                await transaction_status(txId2).then(
+                                    async (res) => {
+                                        await mintStablecoin(txId2)
+
+                                        setLoading(false)
+                                        toast.dismiss(2)
+                                        toast.dismiss(3)
+                                    }
+                                )
+                            })
                     })
                 })
         } catch (err) {
             console.error('handleConfirm', err)
+
+            toast.dismiss(1)
+            toast.dismiss(2)
             // dispatch(setTxStatusLoading('rejected'))
 
             if (err == 'Error: Coming soon!') {
                 toast.info('Coming soon!', {
-                    position: 'bottom-center',
                     autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    toastId: 3,
                 })
             } else if (
                 typeof err === 'object' &&
                 Object.keys(err!).length !== 0
             ) {
-                toast.error('Request Rejected', {
-                    position: 'bottom-center',
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    toastId: 4,
-                })
+                toast.error(
+                    <div>
+                        Your request was rejected. For assistance, please join
+                        us on Telegram{' '}
+                        <a
+                            href="https://t.me/tyrondao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: 'blue',
+                                textDecoration: 'underline',
+                            }}
+                        >
+                            @tyronDAO
+                        </a>
+                    </div>,
+                    {
+                        autoClose: false,
+                        toastId: 4,
+                    }
+                )
             } else {
                 toast.error(String(err), {
-                    position: 'bottom-center',
                     autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    toastId: 5,
                 })
             }
             setLoading(false)
@@ -663,10 +675,11 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // In the meantime, reload page
             setTimeout(() => window.location.reload(), 2 * 1000) // 2 seconds
         } else {
-            mintStablecoin(
-                '4b02c7fe34f7d26694ec1befe834ff85a0e601ee8b19eed956b61c9ca2bd9215'
-            )
-            // handleConfirm()
+            // getServiceProviders()
+            // await mintStablecoin(
+            //     '107028e7c5341b0d19b824501bb7dfcc6a58bb3d7307ff9d6e22d1bdcf9a1dfd'
+            // )
+            handleConfirm()
         }
     }
 
@@ -770,10 +783,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             cursor: 'pointer',
                             border: '1px solid #ffff32',
                             borderRadius: '14px',
-                            backgroundColor: '#a238ff',
+                            backgroundColor: 'rgb(75,0,130)',
                             // @design-shadow-3d
                             backgroundImage:
-                                'linear-gradient(to right, #a238ff, #7a28ff)', // Added gradient background
+                                'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
                             boxShadow:
                                 '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
                         }}
@@ -795,7 +808,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
                         ) : disabled ? (
                             <ThreeDots color="yellow" />
                         ) : (
-                            <div className={styles.txt}>confirm</div>
+                            <div className={styles.txt}>
+                                confirm btc deposit
+                            </div>
                         )}
                     </div>
                     {/* <div onClick={onClose} className={styles.cancel}>

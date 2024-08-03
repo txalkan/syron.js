@@ -127,34 +127,49 @@ export const BoxInput: React.FC<Prop> = ({
                     ) : (
                         <>
                             <div className={styles.info}>
-                                {/* &nbsp; */}| price of 1 BTC: $
-                                {Number(Big(xr!.rate)).toLocaleString('de-DE')}
+                                {/* &nbsp; */}| Current BTC Price:
+                                <span className={styles.infoPurple}>
+                                    $
+                                    {Number(Big(xr!.rate)).toLocaleString(
+                                        'de-DE'
+                                    )}
+                                </span>
                             </div>
                             <div className={styles.info}>
-                                | balance:{' '}
-                                {isNaN(Number(bal))
-                                    ? 'Connect Wallet'
-                                    : `${
-                                          Number(bal) == 0
-                                              ? 0
-                                              : Number(bal).toLocaleString(
-                                                    'de-DE',
-                                                    {
-                                                        minimumFractionDigits: 8,
-                                                        maximumFractionDigits: 8,
-                                                    }
-                                                )
-                                      } ${token?.symbol}`}
+                                | your balance:
+                                <span className={styles.infoPurple}>
+                                    {isNaN(Number(bal))
+                                        ? 'Connect Wallet'
+                                        : `${
+                                              Number(bal) == 0
+                                                  ? 0
+                                                  : Number(bal).toLocaleString(
+                                                        'de-DE',
+                                                        {
+                                                            minimumFractionDigits: 8,
+                                                            maximumFractionDigits: 8,
+                                                        }
+                                                    )
+                                          } ${token?.symbol}`}
+                                </span>
                             </div>
-                            <div className={styles.info}>
-                                | Worth: $
-                                {Number(worth_) == 0
-                                    ? 0
-                                    : Number(worth_).toLocaleString('de-DE', {
-                                          minimumFractionDigits: 2,
-                                          maximumFractionDigits: 2,
-                                      })}
-                            </div>
+                            {Number(bal) != 0 && (
+                                <div className={styles.info}>
+                                    | Worth:
+                                    <span className={styles.infoPurple}>
+                                        $
+                                        {Number(worth_) == 0
+                                            ? 0
+                                            : Number(worth_).toLocaleString(
+                                                  'de-DE',
+                                                  {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                  }
+                                              )}
+                                    </span>
+                                </div>
+                            )}
                         </>
                     )}
                 </div>

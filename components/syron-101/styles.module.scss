@@ -38,6 +38,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     color: #ffff32;
     padding-left: 10px;
     padding-top: 7px;
+    font-weight: bold;
 
     font-size: 14px;
     @media only screen and (min-width: 320px) {
@@ -73,7 +74,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #a238ff; // @design #420085; #ffffff2e;
+    background-color: rgb(75, 0, 130); // @design #420085; #ffffff2e;
     margin-top: 17px;
     margin-bottom: 2px;
     cursor: pointer;
@@ -99,10 +100,13 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     margin-bottom: 2px;
     position: relative;
-    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+
+    /* Apply shadows only at the bottom */
+    box-shadow: inset 0 -5px 3px rgba(255, 255, 50, 0.3),
+        /* More subtle inset shadow for bottom effect */ inset 0 -1px 3px rgba(255, 255, 50, 0.4);
 }
 
 .cardTitle::before {
@@ -142,15 +146,16 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     justify-content: center;
 }
 .card:hover {
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     cursor: pointer !important;
-    color: #a238ff;
-    border-right: 1px solid #a238ff;
+    color: rgb(75, 0, 130);
+    border-right: 1px solid rgb(75, 0, 130);
 }
 
 .cardSelect {
     padding: 11px;
     font-family: $font-anonymous-pro;
+    font-weight: bold;
 
     cursor: pointer;
     width: 50%;
@@ -167,7 +172,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
         font-size: 22px;
     }
 
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     color: #f8f8f8;
     display: flex;
     align-items: center; // vertically center the text
@@ -269,24 +274,27 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     display: flex;
     flex-direction: column;
     text-align: left;
+    /* Metallic purple shadow */
+    box-shadow: 0 10px 20px rgba(75, 0, 130, 0.5),
+        /* Main shadow */ 0 6px 6px rgba(75, 0, 130, 0.3); /* Softer shadow for depth */
 }
 
 .boxTitle {
     font-family: $font-anonymous-pro;
     padding-left: 4px;
     padding-top: 4%;
-    color: #ffff32;
-    text-decoration: underline;
+    color: rgba(75, 0, 130);
+    font-weight: bold;
     //font-family: 'Fragment Mono', monospace;
 
     //@mobile
-    font-size: 14px;
+    font-size: 17px;
     @media only screen and (min-width: 320px) {
-        font-size: 18px;
+        font-size: 19px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 22px;
+        font-size: 23px;
     }
 }
 
@@ -307,13 +315,13 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     color: #ffff32;
 }
 
-.sdb {
+.sdb,
+.plain,
+.purple {
     font-family: $font-anonymous-pro;
 
     padding-left: 4px;
     padding-right: 4px;
-
-    cursor: pointer;
 
     //@mobile
     font-size: 14px;
@@ -324,4 +332,14 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     @media only screen and (min-width: 768px) {
         font-size: 22px;
     }
+}
+
+.purple {
+    color: rgb(75, 0, 130);
+}
+
+.sdb {
+    cursor: pointer;
+    text-decoration: underline;
+    color: blue;
 }

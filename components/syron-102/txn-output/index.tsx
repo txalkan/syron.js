@@ -47,7 +47,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                             className={styles.outputAmt}
                         />
                     </div>
-                    <div className={styles.tokenInfo}>| SU$D</div>
+                    <div className={styles.tokenInfo}>| SUSD</div>
                 </div>
             </div>
         </div>

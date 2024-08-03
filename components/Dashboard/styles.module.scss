@@ -57,7 +57,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     white-space: nowrap;
     color: #f8f8f8;
     margin: 10px;
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     border-radius: 22px;
     padding: 7%;
 
@@ -76,7 +76,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 
 .txtConnect:hover {
     cursor: pointer !important;
-    color: #a238ff;
+    color: rgb(75, 0, 130);
     border: 1px solid #ffff32;
     background-color: #f8f8f8//rgba($color: #fff, $alpha: 0.1);
 }

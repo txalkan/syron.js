@@ -162,7 +162,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .modalContainerPurple {
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     width: 600px;
     border-radius: 10px;
     padding: 1rem;
@@ -236,7 +236,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .innerRadio {
-    background-color: #a238ff;
+    background-color: rgb(75, 0, 130);
     width: 7.5px;
     height: 7.5px;
     border-radius: 3.5px;
@@ -254,7 +254,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .outerRadio {
-    border: 1px solid #a238ff;
+    border: 1px solid rgb(75, 0, 130);
     background-color: #fff;
     cursor: pointer;
 }
@@ -298,7 +298,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .sdbTxt {
-    color: #a238ff;
+    color: rgb(75, 0, 130);
 }
 
 .tokenWrapper {
@@ -327,7 +327,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .susdTxt {
-    color: #a238ff;
+    color: rgb(75, 0, 130);
 }
 
 .btnConfirmWrapper {
@@ -346,8 +346,8 @@ If you have any questions, comments or interest in pursuing any other use cases,
     cursor: pointer;
     border: 1px solid #ffff32;
     border-radius: 14px;
-    background-origin: #a238ff;
-    background-image: linear-gradient(to right, #a238ff, #7a28ff);
+    background-origin: rgb(75, 0, 130);
+    background-image: linear-gradient(to right, rgb(75, 0, 130), #7a28ff);
     box-shadow: 0 0 14px rgba(255, 255, 50, 0.6),
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }

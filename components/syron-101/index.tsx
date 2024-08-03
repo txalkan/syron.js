@@ -10,7 +10,7 @@ import icoBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import icoBTC from '../../src/assets/icons/bitcoin.png'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import Big from 'big.js'
-import { $syron } from '../../src/store/syron'
+import { $btc_wallet, $syron } from '../../src/store/syron'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -46,8 +46,8 @@ function Component() {
         {
             value: _0,
             meta: {
-                name: 'Syron U$D',
-                symbol: 'SU$D',
+                name: 'Syron USD',
+                symbol: 'SUSD',
                 decimals: 8,
             },
         },
@@ -55,19 +55,35 @@ function Component() {
 
     const { redeemBTC } = useICPHook()
     const [isLoading, setIsLoading] = useState(false)
+
+    const btc_wallet = useStore($btc_wallet)
     const handleRedeem = async () => {
         setIsLoading(true)
-        toast.info('Coming soon', {
-            position: 'bottom-center',
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            toastId: 1,
-        })
-        // await redeemBTC(tyron?.ssi_box!)
+        // toast.info('Coming soon', {
+        //     position: 'bottom-center',
+        //     autoClose: 4000,
+        //     hideProgressBar: false,
+        //     closeOnClick: true,
+        //     pauseOnHover: true,
+        //     draggable: true,
+        //     progress: undefined,
+        //     toastId: 1,
+        // })
+
+        await fetch(`/api/get-unisat-brc20-balance?id=${tyron?.sdb}`)
+            .then(async (response) => {
+                const res = await response.json()
+                console.log(
+                    'outcall response - SDB SUSD balance',
+                    JSON.stringify(res, null, 2)
+                )
+
+                await redeemBTC(btc_wallet?.btc_addr!)
+            })
+            .catch((error) => {
+                throw error
+            })
+
         setIsLoading(false)
     }
 
@@ -84,7 +100,7 @@ function Component() {
                                 : styles.card
                         }
                     >
-                        Withdraw Syron
+                        Receive Syron ᛞ
                     </div>
                     <div
                         onClick={() => toggleActive('LiquidSyron')}
@@ -94,7 +110,7 @@ function Component() {
                                 : styles.card
                         }
                     >
-                        SUSD Liquidation
+                        Earn Bitcoin
                     </div>
                 </div>
                 <div
@@ -104,7 +120,7 @@ function Component() {
                             : styles.cardBeYourBank
                     }
                 >
-                    <div className={styles.title}>ᛞ Be Your Own ₿ank</div>
+                    <div className={styles.title}>Be Your Own ₿ank</div>
 
                     {/* <div className={styles.icoWrapper}>
                         <Image
@@ -127,7 +143,7 @@ function Component() {
                         </div>
                     </div>
                 )}
-                {tyron?.ssi_box && (
+                {tyron?.sdb && (
                     <div className={styles.boxWrapper}>
                         <p className={styles.boxTitle}>
                             Your Safety Deposit ₿ox
@@ -157,8 +173,11 @@ function Component() {
                                 height="18"
                                 width="18"
                             />
-                            <span className={styles.sdb}>
-                                BTC: {Number(tyron?.box_balance.div(1e8))}
+                            <span className={styles.plain}>
+                                Deposit:{' '}
+                                <span className={styles.purple}>
+                                    {Number(tyron?.syron_btc.div(1e8))}
+                                </span>
                             </span>
                             <Image
                                 src={icoBTC}
@@ -183,15 +202,17 @@ function Component() {
                                 width="18"
                             />
                             <span style={{ paddingLeft: '4px' }}>
+                                <span className={styles.plain}>SDB:</span>
+
                                 <span
                                     onClick={() =>
                                         window.open(
-                                            `https://mempool.space/testnet/address/${tyron?.ssi_box}`
+                                            `https://mempool.space/testnet/address/${tyron?.sdb}`
                                         )
                                     }
                                     className={styles.sdb}
                                 >
-                                    {tyron?.ssi_box}
+                                    {tyron?.sdb}
                                 </span>
                             </span>
                         </p>
@@ -211,7 +232,10 @@ function Component() {
                                     '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
                             }}
                             disabled={isLoading}
-                            onClick={handleRedeem}
+                            onClick={() => {
+                                toast.info('Coming soon!')
+                                // handleRedeem
+                            }}
                         >
                             <div className={styles.txt}>redeem btc</div>
                         </button>
