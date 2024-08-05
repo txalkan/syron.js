@@ -6,6 +6,10 @@ import { db } from '../../src/utils/firebase/firebaseConfig'
 import { basic_bitcoin_syron as syron } from '../../src/declarations/basic_bitcoin_tyron'
 import { mempoolBalance } from '../../src/utils/unisat/httpUtils'
 
+export const config = {
+    maxDuration: 50,
+}
+
 type Data = {
     data?: any
     error?: string
