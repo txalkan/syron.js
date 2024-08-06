@@ -67,13 +67,6 @@ export var ConfirmBox: React.FC<Prop> = function ({
     // onClose,
 }) {
     const syron = useStore($syron)
-    const [sdb, setSDB] = useState('')
-
-    useEffect(() => {
-        if (syron !== null) {
-            setSDB(syron.sdb)
-        }
-    }, [])
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
@@ -266,10 +259,6 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
         await getSUSD(btc_wallet?.btc_addr!, tx_id)
         await updateBalance()
-
-        window.open(
-            `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
-        )
     }
 
     const updateSyron = async () => {
@@ -325,6 +314,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     })
             //     .catch((error) => console.error(error))
 
+            // await mintStablecoin(
+            //     'd0bba00f889ba9917fd69729d6a80f05f8e5473dd3d4ce2b06b9a9fb98ac655d'
+            // )
+
             // @pause
             // throw new Error('Coming soon!')
 
@@ -337,7 +330,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
             const collateral = Math.floor(Number(exactInput))
             if (collateral < 1000)
-                throw new Error('BTC deposit is below the minimum')
+                throw new Error(
+                    'Your BTC deposit is below the minimum required amount. Please increase your deposit.'
+                )
 
             toast.info('Submitting your BTC deposit...', {
                 autoClose: false,
@@ -475,7 +470,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
             let order: InscribeOrderData
 
-            if (sdb === '') {
+            if (syron?.sdb === '') {
                 throw new Error('SDB Loading Error')
             } else {
                 // @dev Transfer Inscription
@@ -483,7 +478,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     receiveAddress,
                     feeRate: feeRate || 1, // Assign a default value of 1 if feeRate is undefined
                     outputValue: 546,
-                    devAddress: sdb,
+                    devAddress: syron!.sdb,
                     devFee: collateral,
                     brc20Ticker: tick,
                     brc20Amount: String(amt),
@@ -496,7 +491,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // console.log('Order ID', order.orderId)
 
             toast.info(
-                "Loading... Please don 't close this window. This process should complete in about 2 transactions.",
+                "Please don't close this window. This process will finish in about two blocks.",
                 {
                     autoClose: false,
                     closeOnClick: false,
@@ -557,6 +552,14 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                         setLoading(false)
                                         toast.dismiss(2)
                                         toast.dismiss(3)
+
+                                        toast.info(
+                                            `You have received ${amt} SUSD in your wallet!`,
+                                            { autoClose: false }
+                                        )
+                                        window.open(
+                                            `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
+                                        )
                                     }
                                 )
                             })
@@ -570,9 +573,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // dispatch(setTxStatusLoading('rejected'))
 
             if (err == 'Error: Coming soon!') {
-                toast.info('Coming soon!', {
-                    autoClose: 2000,
-                })
+                toast.info('Coming soon!', { autoClose: 2000 })
+            } else if (
+                (err as Error).message ===
+                "Cannot read properties of null (reading 'sdb')"
+            ) {
+                toast.info(
+                    'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.',
+                    { autoClose: 2000 }
+                )
             } else if (
                 typeof err === 'object' &&
                 Object.keys(err!).length !== 0
@@ -599,9 +608,36 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     }
                 )
             } else {
-                toast.error(String(err), {
-                    autoClose: 2000,
-                })
+                toast.error(
+                    <div
+                        style={{
+                            maxWidth: '350px', // Set a maximum width for the toast content
+                            maxHeight: '500px', // Set a fixed maximum height for the toast content
+                            overflowY: 'auto', // Enable vertical scrolling if content exceeds the height
+                            whiteSpace: 'normal', // Allow text to wrap normally
+                            fontSize: '14px', // Set a readable font size
+                            lineHeight: '1.5', // Improve readability with better line spacing
+                            wordBreak: 'break-word', // Break long words or URLs properly
+                        }}
+                    >
+                        <p>{String(err)}</p>
+                        <p>
+                            For assistance, you can join us on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @tyronDAO
+                            </a>
+                        </p>
+                    </div>,
+                    { autoClose: false }
+                )
             }
             setLoading(false)
         }
@@ -676,9 +712,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             setTimeout(() => window.location.reload(), 2 * 1000) // 2 seconds
         } else {
             // getServiceProviders()
-            // await mintStablecoin(
-            //     '107028e7c5341b0d19b824501bb7dfcc6a58bb3d7307ff9d6e22d1bdcf9a1dfd'
-            // )
+
             handleConfirm()
         }
     }

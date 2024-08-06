@@ -69,6 +69,7 @@ function useICPHook() {
             return txId
         } catch (err) {
             console.error('Get SUSD Error', err)
+            throw err
         }
     }
 
