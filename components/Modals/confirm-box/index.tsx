@@ -474,18 +474,36 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 throw new Error('SDB Loading Error')
             } else {
                 // @dev Transfer Inscription
-                order = await unisatApi.createTransfer({
-                    receiveAddress,
-                    feeRate: feeRate || 1, // Assign a default value of 1 if feeRate is undefined
-                    outputValue: 546,
-                    devAddress: syron!.sdb,
-                    devFee: collateral,
-                    brc20Ticker: tick,
-                    brc20Amount: String(amt),
-                })
+                order =
+                    // await unisatApi.createTransfer({
+                    //     receiveAddress,
+                    //     feeRate: feeRate || 1, // Assign a default value of 1 if feeRate is undefined
+                    //     outputValue: 546,
+                    //     devAddress: syron!.sdb,
+                    //     devFee: collateral,
+                    //     brc20Ticker: tick,
+                    //     brc20Amount: String(amt),
+                    // })
+
+                    await fetch(
+                        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${feeRate}&devAddress=${
+                            syron!.sdb
+                        }&devFee=${collateral}&brc20Ticker=${tick}&brc20Amount=${String(
+                            amt
+                        )}`
+                    )
+                        .then((response) => response.json())
+                        .then((res) => {
+                            // console.log(JSON.stringify(res, null, 2))
+                            return res.data
+                        })
+                        .catch((error) => {
+                            throw error
+                        })
             }
 
             console.log('Order', JSON.stringify(order, null, 2))
+
             // const order = await api.orderInfo(orderId)
             // console.log('Order Value', order.amount)
             // console.log('Order ID', order.orderId)
@@ -509,61 +527,72 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
                     // @dev 2) Make sure that the Bitcoin transaction (2) is confirmed
 
-                    await transaction_status(txId).then(async (_res) => {
-                        toast.info('Your Bitcoin deposit has been confirmed.', {
-                            autoClose: false,
-                            closeOnClick: true,
-                            toastId: 3,
+                    await transaction_status(txId)
+                        .then(async (_res) => {
+                            toast.info(
+                                'Your Bitcoin deposit has been confirmed.',
+                                {
+                                    autoClose: false,
+                                    closeOnClick: true,
+                                    toastId: 3,
+                                }
+                            )
+                            toast.dismiss(1)
+
+                            const order_ = await fetch(
+                                `/api/get-unisat-brc20-order?id=${order.orderId}`
+                            )
+                                .then((response) => response.json())
+                                .then((res) => {
+                                    // console.log(JSON.stringify(res, null, 2))
+                                    return res.data
+                                })
+                                .catch((error) => {
+                                    throw error
+                                })
+
+                            console.log(
+                                'Order From OrderId',
+                                JSON.stringify(order_, null, 2)
+                            )
+                            const inscription_id = order_.files[0].inscriptionId
+
+                            // @or from
+                            // await mempoolTxId(order.payAddress).then(
+
+                            // @dev Update inscription info in Tyron indexer
+                            await fetch(
+                                `/api/get-unisat-inscription-info?id=${inscription_id}`
+                            )
+                                .then((response) => response.json())
+                                .then((data) =>
+                                    console.log(JSON.stringify(data, null, 2))
+                                )
+                                .catch((error) => {
+                                    throw error
+                                })
+
+                            return inscription_id.slice(0, -2)
                         })
-                        toast.dismiss(1)
+                        .then(async (txId2) => {
+                            await transaction_status(txId2).then(
+                                async (res) => {
+                                    await mintStablecoin(txId2)
 
-                        await unisatApi
-                            .orderInfo(order.orderId)
-                            .then(async (order_) => {
-                                console.log(
-                                    'Order From OrderId',
-                                    JSON.stringify(order_, null, 2)
-                                )
-                                const inscription_id =
-                                    order_.files[0].inscriptionId
+                                    setLoading(false)
+                                    toast.dismiss(2)
+                                    toast.dismiss(3)
 
-                                // @or from
-                                // await mempoolTxId(order.payAddress).then(
-
-                                // @dev Update inscription info in Tyron indexer
-                                await fetch(
-                                    `/api/get-unisat-inscription-info?id=${inscription_id}`
-                                )
-                                    .then((response) => response.json())
-                                    .then((data) =>
-                                        console.log(
-                                            JSON.stringify(data, null, 2)
-                                        )
+                                    toast.info(
+                                        `You have received ${amt} SUSD in your wallet!`,
+                                        { autoClose: false }
                                     )
-                                    .catch((error) => console.error(error))
-
-                                return inscription_id.slice(0, -2)
-                            })
-                            .then(async (txId2) => {
-                                await transaction_status(txId2).then(
-                                    async (res) => {
-                                        await mintStablecoin(txId2)
-
-                                        setLoading(false)
-                                        toast.dismiss(2)
-                                        toast.dismiss(3)
-
-                                        toast.info(
-                                            `You have received ${amt} SUSD in your wallet!`,
-                                            { autoClose: false }
-                                        )
-                                        window.open(
-                                            `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
-                                        )
-                                    }
-                                )
-                            })
-                    })
+                                    window.open(
+                                        `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
+                                    )
+                                }
+                            )
+                        })
                 })
         } catch (err) {
             console.error('handleConfirm', err)
