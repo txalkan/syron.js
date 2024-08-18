@@ -340,7 +340,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 toastId: 1,
             })
             const tick = 'SYRO'
-            const amt = Number(limitInput.round(3))
+            const amt = Number(limitInput.round(2))
 
             console.log('BTC Collateral', collateral)
             console.log('Stablecoin Amount', amt)
