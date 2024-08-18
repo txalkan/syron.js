@@ -121,7 +121,7 @@ section {
 }
 
 .body {
-    background-color: silver;
+    background-color: #333333;
     background-blend-mode: soft-light;
     /* background-color: black;
     background-blend-mode: luminosity; */
