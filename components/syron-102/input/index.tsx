@@ -127,7 +127,7 @@ export const BoxInput: React.FC<Prop> = ({
                     ) : (
                         <>
                             <div className={styles.info}>
-                                {/* &nbsp; */}| Current BTC Price:
+                                {/* &nbsp; */}| BTC Price:
                                 <span className={styles.infoPurple}>
                                     $
                                     {Number(Big(xr!.rate)).toLocaleString(
