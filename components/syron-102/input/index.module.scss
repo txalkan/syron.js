@@ -215,7 +215,12 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 $font-anonymous-pro: 'Anonymous Pro', monospace;
-.percent {
+.percent,
+.percentActive {
+    //@design-text
+    font-family: $font-anonymous-pro;
+    color: #f8f8f8; // @design chrome #dbe4eb;
+
     background-color: rgb(75, 0, 130);
     box-shadow: 2px 1px 6px rgba(0, 0, 0, 0.6); // @design-shadow-percent
 
@@ -224,62 +229,30 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     align-items: center;
     justify-content: center;
     width: 60px;
-    height: 25px;
+    height: 22px;
     margin-right: 10px;
 
     cursor: pointer;
 
-    //@design-text
-    font-family: $font-anonymous-pro;
-    color: #f8f8f8; // @design chrome #dbe4eb;
-    font-size: 11px;
-
+    // @design-mobile
+    font-size: 8px;
     padding: 14px;
     @media only screen and (min-width: 320px) {
-        // @design-mobile
-        font-size: 12px;
+        font-size: 10px;
         padding: 11px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 14px;
+        font-size: 12px;
         padding: 0;
     }
 }
 
-.percent:hover {
-    background-color: #f8f8f8;
-    border: 1px solid rgb(75, 0, 130);
-    color: #000;
-}
-
-$font-anonymous-pro: 'Anonymous Pro', monospace;
+.percent:hover,
 .percentActive {
+    color: #000;
     background-color: #f8f8f8;
-    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
-    border: 1px solid rgb(75, 0, 130);
-    border-radius: 22px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 60px;
-    height: 30px;
-    margin-right: 10px;
-    padding: 6px;
-
-    //@design-text
-    font-family: $font-anonymous-pro;
-    color: #000; // @design chrome #dbe4eb;
-    font-size: 11px;
-
-    @media only screen and (min-width: 320px) {
-        // @design-mobile
-        font-size: 14px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 17px;
-    }
+    box-shadow: 2px 1px 9px rgba(255, 243, 50, 0.6);
 }
 
 .btnSwapWrapper {

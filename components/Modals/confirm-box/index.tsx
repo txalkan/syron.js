@@ -838,20 +838,19 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     <div
                         style={{
                             width: '100%',
-                            height: '60px',
+                            height: '40px',
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
                             marginTop: '1rem',
                             cursor: 'pointer',
-                            border: '1px solid #ffff32',
-                            borderRadius: '14px',
+                            borderRadius: '22px',
                             backgroundColor: 'rgb(75,0,130)',
                             // @design-shadow-3d
                             backgroundImage:
                                 'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
                             boxShadow:
-                                '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
+                                '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)', // Added 3D effect
                         }}
                         className={`button ${
                             disabled ? 'disabled' : 'primary'

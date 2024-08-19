@@ -136,7 +136,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
         font-size: 22px;
     }
 
-    background: linear-gradient(33deg, #333333, #dbe4eb, #f8f8f8, #ffffff2e);
+    background: linear-gradient(22deg, #999, #f8f8f8, #dbe4eb, #ffffff2e);
     color: #333333;
     display: flex;
     align-items: center;
@@ -148,7 +148,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     background-color: rgb(75, 0, 130);
     cursor: pointer !important;
     color: rgb(75, 0, 130);
-    border-right: 1px solid rgb(75, 0, 130);
 }
 
 .cardSelect {

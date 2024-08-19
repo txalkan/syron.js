@@ -54,7 +54,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtConnect {
     font-family: $font-anonymous-pro;
 
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6); // @design-shadow
+    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
 
     white-space: nowrap;
     color: #f8f8f8;
@@ -88,8 +88,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtConnect:hover {
     cursor: pointer !important;
     color: rgb(75, 0, 130);
-    border: 1px solid #ffff32;
-    background-color: #f8f8f8//rgba($color: #fff, $alpha: 0.1);
+    box-shadow: 2px 1px 9px rgba(255, 243, 50, 0.6);
+    background-color: rgba(248, 248, 248, 0.9);
 }
 
 .tooltip {
