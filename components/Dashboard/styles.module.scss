@@ -68,14 +68,14 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 
     position: relative;
     // @design-mobile
-    right: 12px;
+    right: 10px;
     font-size: 11px;
     margin-top: 8px;
 
     @media only screen and (min-width: 320px) {
         font-size: 14px;
         margin-top: 7px;
-        right: 19px;
+        right: 17px;
     }
 
     @media only screen and (min-width: 768px) {
