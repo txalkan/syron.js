@@ -240,7 +240,7 @@ function Header() {
         )
         script.setAttribute(
             'data-icon',
-            'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/03/ssi_tyronssi_bB.png'
+            'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/08/tyrondao_icon_transparent.svg'
         )
         script.setAttribute('data-site', 'https://www.tyrondao.org/')
         document.body.appendChild(script)
