@@ -52,25 +52,35 @@
 
 $font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtConnect {
-    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+    font-family: $font-anonymous-pro;
+
+    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6); // @design-shadow
 
     white-space: nowrap;
     color: #f8f8f8;
-    margin: 10px;
+
+    position: relative;
+    right: 22px;
+
     background-color: rgb(75, 0, 130);
     border-radius: 22px;
-    padding: 7%;
 
+    padding: 4%;
+    padding-left: 10%;
+    padding-right: 10%;
+
+    // @design-mobile
     font-size: 11px;
-    font-family: $font-anonymous-pro;
+    margin-top: 8px;
 
     @media only screen and (min-width: 320px) {
-        // @design-mobile
         font-size: 14px;
+        margin-top: 7px;
     }
 
     @media only screen and (min-width: 768px) {
         font-size: 17px;
+        margin-top: 5px;
     }
 }
 

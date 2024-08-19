@@ -110,7 +110,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                     <div className={styles.inputWrapper}>
                         <Image
                             src={icoArrow}
-                            alt="deposit-icon"
+                            alt="arrow-icon"
                             className={styles.img}
                         />
                         <div className={styles.inputContainer}>
@@ -140,7 +140,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                     <div className={styles.inputWrapper}>
                         <Image
                             src={icoArrow}
-                            alt="deposit-icon"
+                            alt="arrow-icon"
                             className={styles.img}
                         />
                         <div className={styles.inputContainer}>

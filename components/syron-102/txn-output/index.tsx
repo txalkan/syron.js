@@ -19,11 +19,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <Image
-                    src={icoArrow}
-                    alt="deposit-icon"
-                    className={styles.img}
-                />
+                <Image src={icoArrow} alt="arrow-icon" className={styles.img} />
                 <div className={styles.outputContainer}>
                     <div className={styles.output}>
                         <Image

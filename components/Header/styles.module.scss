@@ -25,10 +25,10 @@
 }
 
 .header {
-    background-color: rgba(248, 248, 248, 0.6);
+    // background-color: rgba(248, 248, 248, 0.6);
     backdrop-filter: blur(9px);
 
-    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+    box-shadow: 2px 3px 6px rgba(248, 248, 248, 0.3); // @design-shadow
 
     z-index: 1000;
     position: fixed;
@@ -37,12 +37,13 @@
     left: 0; /* Add this line to cover the full width */
 
     //@mobile
-    height: 70px;
+    height: 60px;
+
     @media only screen and (min-width: 320px) {
-        height: 90px;
+        height: 70px;
     }
 
     @media only screen and (min-width: 768px) {
-        height: 110px;
+        height: 90px;
     }
 }

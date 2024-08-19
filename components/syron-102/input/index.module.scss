@@ -217,7 +217,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 $font-anonymous-pro: 'Anonymous Pro', monospace;
 .percent {
     background-color: rgb(75, 0, 130);
-    box-shadow: 3px 6px 9px rgba(0, 0, 0, 0.6); // @design-shadow
+    box-shadow: 2px 1px 6px rgba(0, 0, 0, 0.6); // @design-shadow-percent
     border-radius: 22px;
     display: flex;
     align-items: center;
@@ -374,17 +374,18 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     // MAKE TRANSPARENT
     opacity: 0;
     margin-right: 3%;
-    height: 18px;
-    width: 18px;
+
+    height: 14px;
+    width: 14px;
 
     @media only screen and (min-width: 320px) {
-        height: 28px;
-        width: 28px;
+        height: 19px;
+        width: 19px;
     }
 
     @media only screen and (min-width: 768px) {
-        height: 33px;
-        width: 33px;
+        height: 25px;
+        width: 25px;
     }
 }
 

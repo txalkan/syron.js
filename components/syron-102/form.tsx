@@ -12,7 +12,7 @@ import { TokensModal } from '../Modals/tokens'
 import { TokenBalance, TokenState } from '../../src/types/token'
 import { SwapSettingsModal } from '../Modals/settings'
 import icoReceive from '../../src/assets/icons/ssi_icon_receive.svg'
-import icoSend from '../../src/assets/icons/ssi_icon_3arrowsDown.svg'
+import icoArrow from '../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 import Image from 'next/image'
 import { SSIVault } from '../../src/mixins/vault'
 import { ConfirmBox } from '../Modals/confirm-box'
@@ -187,8 +187,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         <div className={styles.contentWrapper}>
                             <div className={styles.icoWrapper}>
                                 <Image
-                                    src={icoSend}
-                                    alt="deposit-icon"
+                                    src={icoArrow}
+                                    alt="arrow-icon"
                                     className={styles.img}
                                 />
                                 <div className={styles.titleForm2}>
@@ -399,8 +399,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                     <div className={styles.contentWrapper}>
                         <div className={styles.icoWrapper}>
                             <Image
-                                src={icoSend}
-                                alt="deposit-icon"
+                                src={icoArrow}
+                                alt="arrow-icon"
                                 className={styles.img}
                             />
                             <div className={styles.titleForm2}>
@@ -485,8 +485,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                     <div style={{ width: '100%', marginTop: '3rem' }}>
                         <div className={styles.icoWrapper}>
                             <Image
-                                src={icoSend}
-                                alt="deposit-icon"
+                                src={icoArrow}
+                                alt="arrow-icon"
                                 className={styles.img2}
                             />
                             <div className={styles.titleForm2}>

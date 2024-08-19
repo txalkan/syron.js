@@ -126,7 +126,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .titleForm {
     text-transform: uppercase;
     font-size: 17px;
-    font-weight: bold;
+
     color: #ffff32;
     padding-left: 11px;
     padding-right: 11px;
@@ -162,7 +162,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     color: black;
     margin-left: 4%;
     text-align: left;
-    font-weight: bold;
 
     //@mobile
     font-size: 14px;
@@ -404,36 +403,24 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     }
 }
 
-.img {
-    height: 18px;
-    width: 18px;
+.img,
+.img2 {
+    height: 14px;
+    width: 14px;
 
     @media only screen and (min-width: 320px) {
-        height: 28px;
-        width: 28px;
+        height: 19px;
+        width: 19px;
     }
 
     @media only screen and (min-width: 768px) {
-        height: 33px;
-        width: 33px;
+        height: 25px;
+        width: 25px;
     }
 }
 
 .img2 {
     transform: rotate(270deg);
-
-    height: 18px;
-    width: 18px;
-
-    @media only screen and (min-width: 320px) {
-        height: 28px;
-        width: 28px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        height: 33px;
-        width: 33px;
-    }
 }
 
 .btnConfirmWrapper {

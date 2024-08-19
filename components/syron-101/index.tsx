@@ -100,7 +100,7 @@ function Component() {
                                 : styles.card
                         }
                     >
-                        Receive Syron ᛞ
+                        Receive Syron
                     </div>
                     <div
                         onClick={() => toggleActive('LiquidSyron')}
@@ -175,7 +175,7 @@ function Component() {
                             />
                             <span className={styles.plain}>
                                 Deposit:{' '}
-                                <span className={styles.purple}>
+                                <span className={styles.yellow}>
                                     {Number(tyron?.syron_btc.div(1e8))}
                                 </span>
                             </span>
