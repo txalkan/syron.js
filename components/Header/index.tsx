@@ -224,6 +224,32 @@ function Header() {
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [replaceLangPath])
 
+    useEffect(() => {
+        const script = document.createElement('script')
+        script.src =
+            'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
+        script.async = true
+        script.setAttribute('data-background-color', '#08090c')
+        script.setAttribute('data-text-color', '#FFFFFF')
+        script.setAttribute('data-button-color', '#F7931A')
+        script.setAttribute('data-button-text-color', '#FFFFFF')
+        script.setAttribute('data-title', 'TyronDAO')
+        script.setAttribute(
+            'data-description',
+            "Tyron's Decentralized Autonomous Organization ᛞ Be Your Own ₿ank"
+        )
+        script.setAttribute(
+            'data-icon',
+            'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/03/ssi_tyronssi_bB.png'
+        )
+        script.setAttribute('data-site', 'https://www.tyrondao.org/')
+        document.body.appendChild(script)
+
+        return () => {
+            document.body.removeChild(script)
+        }
+    }, [])
+
     return (
         <>
             {showZilpay && <ZilPay />}
