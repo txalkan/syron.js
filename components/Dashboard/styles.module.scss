@@ -59,9 +59,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     white-space: nowrap;
     color: #f8f8f8;
 
-    position: relative;
-    right: 22px;
-
     background-color: rgb(75, 0, 130);
     border-radius: 22px;
 
@@ -69,18 +66,22 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     padding-left: 10%;
     padding-right: 10%;
 
+    position: relative;
     // @design-mobile
+    right: 12px;
     font-size: 11px;
     margin-top: 8px;
 
     @media only screen and (min-width: 320px) {
         font-size: 14px;
         margin-top: 7px;
+        right: 19px;
     }
 
     @media only screen and (min-width: 768px) {
         font-size: 17px;
         margin-top: 5px;
+        right: 22px;
     }
 }
 

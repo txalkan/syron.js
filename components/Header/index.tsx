@@ -231,7 +231,7 @@ function Header() {
         script.async = true
         script.setAttribute('data-background-color', '#08090c')
         script.setAttribute('data-text-color', '#FFFFFF')
-        script.setAttribute('data-button-color', '#F7931A')
+        script.setAttribute('data-button-color', '#4B0082')
         script.setAttribute('data-button-text-color', '#FFFFFF')
         script.setAttribute('data-title', 'TyronDAO')
         script.setAttribute(
