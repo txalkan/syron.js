@@ -276,7 +276,8 @@ function Header() {
                 <div id={headerClassName}>
                     <div
                         style={{
-                            marginTop: '3rem', //searchBarMargin,
+                            marginTop: '11%', //searchBarMargin,
+                            marginBottom: '44%',
                             width: '100%',
                         }}
                         className={contentClassName}
