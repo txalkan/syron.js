@@ -26,6 +26,7 @@ const securityHeaders = [
 
 const nextConfig = {
     reactStrictMode: true,
+    transpilePackages: ['geist'],
     webpack5: true,
     webpack: (config) => {
         config.resolve.fallback = {

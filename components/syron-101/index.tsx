@@ -100,7 +100,7 @@ function Component() {
                                 : styles.card
                         }
                     >
-                        Receive Syron
+                        Borrow Syron
                     </div>
                     <div
                         onClick={() => toggleActive('LiquidSyron')}

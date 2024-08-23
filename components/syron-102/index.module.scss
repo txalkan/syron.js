@@ -155,17 +155,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .titleForm2 {
-    font-family: $font-anonymous-pro;
-
     color: black;
     margin-left: 4%;
     text-align: left;
 
     //@mobile
     font-size: 14px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 17px;
     }
 
@@ -176,7 +173,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
 .contentWrapper {
     width: 100%;
-    margin-top: 20px;
+    margin-top: 14px;
 }
 
 .contentWrapper2 {
@@ -263,15 +260,14 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 }
 
 .btnTitle {
-    height: 60px;
+    height: 40px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 900;
     color: #fff;
 
     cursor: pointer;
-    width: 40%;
+    width: 30%;
     background-color: rgb(75, 0, 130);
     padding: 11px;
     border-radius: 33px;
@@ -280,7 +276,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 
@@ -289,9 +285,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     }
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txtTitle {
-    font-family: $font-anonymous-pro;
     color: rgb(75, 0, 130);
 }
 
@@ -317,7 +311,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 
@@ -337,25 +331,26 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
 .selectInfoStatusPending,
 .selectInfoStatusVerified {
-    height: 60px;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-weight: 900;
+
+    height: 40px;
+    width: 30%;
+    border-radius: 33px;
+
     color: #fff;
     padding: 11px;
 
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 
     @media only screen and (min-width: 768px) {
         font-size: 17px;
     }
-    width: 50%;
-    border-radius: 33px;
 }
 
 .selectInfoStatusPending {
@@ -376,7 +371,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 
@@ -394,7 +389,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 
@@ -408,7 +403,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     height: 14px;
     width: 14px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 19px;
         width: 19px;
     }
@@ -460,14 +455,10 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txt {
-    font-family: $font-anonymous-pro;
-    font-weight: 900;
-
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 

@@ -1,5 +1,4 @@
 @import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 
 .outerWrapper {
     top: 0%;
@@ -50,7 +49,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .menuItemText {
-    font-family: $font-anonymous-pro;
     cursor: pointer;
     margin-bottom: 14%;
     padding-left: 1%;

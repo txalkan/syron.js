@@ -11,7 +11,7 @@
 
     height: 30px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 33px;
     }
 
@@ -103,15 +103,12 @@
     width: 30%;
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .outputAmt {
-    font-family: $font-anonymous-pro;
-
     font-size: 14px;
     color: rgb(75, 0, 130) !important;
     border: none !important;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         // @design-mobile
         font-size: 17px;
     }
@@ -180,7 +177,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     height: 30px;
     width: 30px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 33px;
         width: 33px;
     }
@@ -191,9 +188,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .tokenInfo {
-    font-family: $font-anonymous-pro;
     width: 40%;
     text-align: left;
     padding-left: 2%;
@@ -202,7 +197,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     letter-spacing: normal;
     font-size: 12px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         // @design-mobile
         font-size: 14px;
     }
@@ -220,7 +215,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
     height: 14px;
     width: 14px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 19px;
         width: 19px;
     }

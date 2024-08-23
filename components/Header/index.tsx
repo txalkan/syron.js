@@ -229,7 +229,7 @@ function Header() {
         script.src =
             'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
         script.async = true
-        script.setAttribute('data-background-color', '#08090c')
+        script.setAttribute('data-background-color', '#666666')
         script.setAttribute('data-text-color', '#FFFFFF')
         script.setAttribute('data-button-color', '#4B0082')
         script.setAttribute('data-button-text-color', '#FFFFFF')

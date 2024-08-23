@@ -283,7 +283,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     //@mobile-first
     font-size: 10px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 12px;
     }
 
@@ -313,7 +313,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin-left: 5px;
     //@mobile-first
     font-size: 10px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 12px;
     }
 
@@ -370,14 +370,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
     margin: 20px;
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txt {
-    font-family: $font-anonymous-pro;
     font-weight: 900;
 
     //@mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 

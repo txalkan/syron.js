@@ -50,10 +50,7 @@
     background-color: rgba($color: #fff, $alpha: 0.1);
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .txtConnect {
-    font-family: $font-anonymous-pro;
-
     box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
 
     white-space: nowrap;
@@ -72,7 +69,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     font-size: 11px;
     margin-top: 8px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
         margin-top: 7px;
         right: 17px;

@@ -60,7 +60,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
 
     height: 30px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 33px;
     }
 
@@ -80,7 +80,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
 
     height: 30px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 33px;
     }
 
@@ -93,7 +93,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     height: 30px;
     width: 30px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 33px;
         width: 33px;
     }
@@ -144,18 +144,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
     padding-bottom: 4%;
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .info,
 .infoPurple {
     margin-left: 9%;
-    font-family: $font-anonymous-pro;
     text-transform: uppercase;
     color: #000;
     letter-spacing: normal;
 
     // @mobile-first
     font-size: 12px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 14px;
     }
 
@@ -169,7 +167,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     margin-left: 2%;
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .inputAmt {
     border: 0px !important;
     color: #000 !important;
@@ -178,9 +175,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     background-color: transparent;
 
     font-size: 14px;
-    font-family: $font-anonymous-pro;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         // @design-mobile
         font-size: 17px;
     }
@@ -202,9 +198,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     background-color: transparent;
 
     font-size: 14px;
-    font-family: $font-anonymous-pro;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         // @design-mobile
         font-size: 17px;
     }
@@ -214,11 +209,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .percent,
 .percentActive {
-    //@design-text
-    font-family: $font-anonymous-pro;
     color: #f8f8f8; // @design chrome #dbe4eb;
 
     background-color: rgb(75, 0, 130);
@@ -237,7 +229,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     // @design-mobile
     font-size: 8px;
     padding: 14px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 10px;
         padding: 11px;
     }
@@ -326,9 +318,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     margin-top: 11px;
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .tokenInfo {
-    font-family: $font-anonymous-pro;
     width: 40%;
     text-align: left;
     padding-left: 2%;
@@ -337,7 +327,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     letter-spacing: normal;
     font-size: 12px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         // @design-mobile
         font-size: 14px;
     }
@@ -355,7 +345,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     height: 14px;
     width: 14px;
 
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         height: 19px;
         width: 19px;
     }
@@ -377,9 +367,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     flex-direction: column;
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .inputTitle {
-    font-family: $font-anonymous-pro;
     color: #000;
     text-align: left;
     text-transform: none;
@@ -388,7 +376,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 
     // @mobile-first
     font-size: 14px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 17px;
     }
 

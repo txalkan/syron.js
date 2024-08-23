@@ -1,6 +1,3 @@
-@import url('https://fonts.googleapis.com/css?family=Anonymous+Pro&display=swap');
-$font-anonymous-pro: 'Anonymous Pro', monospace;
-
 .container {
     display: flex;
     flex-direction: column;
@@ -34,13 +31,12 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .title {
-    font-family: $font-anonymous-pro;
     color: #ffff32;
     padding-left: 10px;
     padding-top: 7px;
 
     font-size: 14px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 17px;
     }
 
@@ -67,46 +63,20 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
-.cardActive {
-    height: fit-content;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background-color: rgb(75, 0, 130); // @design #420085; #ffffff2e;
-    margin-top: 17px;
-    margin-bottom: 2px;
-    cursor: pointer;
-    //border: 1px solid silver;
-    position: relative;
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
-}
-
-// .cardActive::before {
-//     content: '';
-//     position: absolute;
-//     //dashboard must have position:relative
-//     top: 0;
-//     left: 0;
-//     height: 100%;
-//     width: 1px;
-//     background-color: #ffff32;
-// }
-
 .cardTitle,
 .cardBeYourBank {
-    padding: 14px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
+    padding: 14px;
+
+    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.3);
 }
 
 .cardTitle {
     margin-bottom: 2px;
-    background-color: rgb(75, 0, 130);
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.3);
-
-    position: relative;
+    background-color: rgb(75, 0, 130, 0.6);
 }
 
 .cardBeYourBank {
@@ -124,10 +94,8 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 //     background-color: #ffff32;
 // }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace;
 .card,
 .cardSelect {
-    font-family: $font-anonymous-pro;
     text-transform: uppercase;
     white-space: nowrap;
 
@@ -167,7 +135,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .cardSelect {
-    background-color: rgb(75, 0, 130);
+    background-color: rgb(75, 0, 130, 0.9);
     color: #f8f8f8;
 }
 
@@ -266,7 +234,6 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 }
 
 .boxTitle {
-    font-family: $font-anonymous-pro;
     padding-left: 4px;
     padding-top: 4%;
     color: #ffff32;
@@ -275,7 +242,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
 
     //@mobile
     font-size: 17px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 19px;
     }
 
@@ -293,10 +260,7 @@ $font-anonymous-pro: 'Anonymous Pro', monospace;
     }
 }
 
-$font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .txt {
-    font-family: $font-anonymous-pro;
-    //bolder
     font-weight: 600;
     color: #ffff32;
 }
@@ -304,14 +268,12 @@ $font-anonymous-pro: 'Anonymous Pro', monospace; //@design-font
 .sdb,
 .plain,
 .yellow {
-    font-family: $font-anonymous-pro;
-
     padding-left: 4px;
     padding-right: 4px;
 
     //@mobile
     font-size: 14px;
-    @media only screen and (min-width: 320px) {
+    @media only screen and (min-width: 375px) {
         font-size: 18px;
     }
 

@@ -87,7 +87,7 @@ video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
-    font-family: 'Noto Sans Mono';
+    /* font-family: 'Noto Sans Mono'; */
 }
 
 article,
@@ -121,7 +121,9 @@ section {
 }
 
 .body {
-    background-color: #333333;
+    background-color: #777777;
+    /* #dbe4eb; */
+    /* @design background: ; */
     background-blend-mode: soft-light;
     /* background-color: black;
     background-blend-mode: luminosity; */
@@ -266,7 +268,7 @@ input,
 select,
 textarea {
     color: #ffffff;
-    font-family: 'Noto Sans Mono';
+    /* font-family: 'Noto Sans Mono'; */
     font-weight: 300;
     font-size: 1rem;
     line-height: 1.65;
