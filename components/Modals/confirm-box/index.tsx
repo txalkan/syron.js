@@ -283,6 +283,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
         setLoading(false)
     }
 
+    const extractRejectText = (error: string) => {
+        const match = error.match(/value: (.*?), src/)
+        let rejectMsg = match ? match[1] : error
+
+        // Remove any links like src/basic_bitcoin ...
+        // rejectMsg = rejectMsg.replace(/src\/\S+/g, '')
+        return rejectMsg
+    }
+
     const handleConfirm = React.useCallback(async () => {
         setLoading(true)
         toast.dismiss(4)
@@ -315,7 +324,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     .catch((error) => console.error(error))
 
             // await mintStablecoin(
-            //     'd0bba00f889ba9917fd69729d6a80f05f8e5473dd3d4ce2b06b9a9fb98ac655d'
+            //     '72ff236edf4651d6903f76384fc256ea3d71c013c93411faa16bb1bd2a6952d4'
             // )
 
             // @pause
@@ -331,7 +340,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             const collateral = Math.floor(Number(exactInput))
             if (collateral < 1000)
                 throw new Error(
-                    'Your BTC deposit is below the minimum required amount. Please increase your deposit.'
+                    'Your BTC deposit is below the minimum required amount of 0,00001 BTC. Please increase your deposit.'
                 )
 
             toast.info('Submitting your BTC deposit...', {
@@ -649,9 +658,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             wordBreak: 'break-word', // Break long words or URLs properly
                         }}
                     >
-                        <p>{String(err)}</p>
+                        <p>{extractRejectText(String(err))}</p>
                         <p>
-                            For assistance, you can join us on Telegram{' '}
+                            Please let us know about this error on Telegram{' '}
                             <a
                                 href="https://t.me/tyrondao"
                                 target="_blank"

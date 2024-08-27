@@ -29,7 +29,7 @@ type Prop = {
     onSwap?: () => void
 }
 
-const list = [10, 30, 50, 70]
+const list = [10, 25, 50, 75]
 
 export const BoxInput: React.FC<Prop> = ({
     value: value_,
@@ -91,7 +91,7 @@ export const BoxInput: React.FC<Prop> = ({
                     const input = Big(target.value).mul(1e8)
                     onInput(input)
                 } else {
-                    onInput(Big(0))
+                    onInput(_0)
                 }
             } catch (err) {
                 console.error('HandleOnInput', err)
@@ -100,23 +100,27 @@ export const BoxInput: React.FC<Prop> = ({
         [onInput]
     )
 
-    const formatValue = (val: Big) => {
-        // Handle zero case
-        if (val.eq(0)) {
-            return 0
-        }
+    const handleOnBlur = useCallback(
+        (event: React.FocusEvent<HTMLInputElement>) => {
+            const target = event.target as HTMLInputElement
+            const value = target.value
+            try {
+                if (value) {
+                    const input = Big(value)
 
-        // Convert to string and remove trailing zeros
-        const formattedValue = val.toString().replace(/0+$/, '')
+                    // Handle zero case
+                    if (input.eq(_0)) {
+                        return target.value
+                    }
 
-        // Limit decimal places to 8
-        if (formattedValue.indexOf('.') !== -1) {
-            return formattedValue.slice(0, formattedValue.indexOf('.') + 9)
-        } else {
-            // No decimal point, return the value itself
-            return formattedValue
-        }
-    }
+                    target.value = input.toFixed(8).replace(/\.?0+$/, '') // Format to 8 decimal places on blur and remove trailing zeros
+                }
+            } catch (err) {
+                console.error('HandleOnBlur', err)
+            }
+        },
+        []
+    )
 
     return (
         <label>
@@ -131,7 +135,7 @@ export const BoxInput: React.FC<Prop> = ({
                                 <span className={styles.infoPurple}>
                                     $
                                     {Number(Big(xr!.rate)).toLocaleString(
-                                        'de-DE'
+                                        'en-US'
                                     )}
                                 </span>
                             </div>
@@ -144,7 +148,7 @@ export const BoxInput: React.FC<Prop> = ({
                                               Number(bal) == 0
                                                   ? 0
                                                   : Number(bal).toLocaleString(
-                                                        'de-DE',
+                                                        'en-US',
                                                         {
                                                             minimumFractionDigits: 8,
                                                             maximumFractionDigits: 8,
@@ -161,7 +165,7 @@ export const BoxInput: React.FC<Prop> = ({
                                         {Number(worth_) == 0
                                             ? 0
                                             : Number(worth_).toLocaleString(
-                                                  'de-DE',
+                                                  'en-US',
                                                   {
                                                       minimumFractionDigits: 2,
                                                       maximumFractionDigits: 2,
@@ -217,9 +221,11 @@ export const BoxInput: React.FC<Prop> = ({
                                     type="number"
                                     placeholder="0"
                                     onInput={handleOnInput}
-                                    value={formatValue(val)}
+                                    value={Number(val)}
                                     disabled={disabled}
-                                    step={0.00000001}
+                                    step="0.00000001"
+                                    min="0"
+                                    onBlur={handleOnBlur}
                                 />
                                 {token && (
                                     <Image

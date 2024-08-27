@@ -30,7 +30,7 @@ type Prop = {
     selectedData
 }
 
-const list = [10, 30, 50, 70]
+const list = [10, 25, 50, 75]
 
 export const BoxLiquidInput: React.FC<Prop> = ({
     value: value_,

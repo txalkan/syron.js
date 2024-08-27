@@ -168,21 +168,22 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .inputAmt {
+    font-family: 'GeistMono', monospace;
+    color: #333333 !important;
+
     border: 0px !important;
-    color: #000 !important;
     padding-left: 9% !important;
     width: 100%;
     background-color: transparent;
 
+    // @design-mobile
     font-size: 14px;
-
     @media only screen and (min-width: 375px) {
-        // @design-mobile
         font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 22px;
+        font-size: 19px;
     }
 }
 
@@ -191,8 +192,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .inputAmtSusd {
-    border: 0px !important;
+    font-family: 'GeistMono', monospace;
     color: rgb(75, 0, 130) !important;
+
+    border: 0px !important;
     padding-left: 9% !important;
     width: 100%;
     background-color: transparent;
@@ -205,7 +208,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 22px;
+        font-size: 19px;
     }
 }
 

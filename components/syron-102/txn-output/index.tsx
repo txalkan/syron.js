@@ -33,7 +33,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                             value={
                                 Number(amount) == 0
                                     ? 0
-                                    : Number(amount).toLocaleString('de-DE', {
+                                    : Number(amount).toLocaleString('en-US', {
                                           minimumFractionDigits: 2,
                                           maximumFractionDigits: 2,
                                       })

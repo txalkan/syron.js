@@ -104,17 +104,19 @@
 }
 
 .outputAmt {
-    font-size: 14px;
+    font-family: 'GeistMono', monospace;
     color: rgb(75, 0, 130) !important;
+
     border: none !important;
 
+    // @design-mobile
+    font-size: 14px;
     @media only screen and (min-width: 375px) {
-        // @design-mobile
         font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 22px;
+        font-size: 19px;
     }
 }
 
@@ -195,10 +197,10 @@
 
     color: #6e6e6e;
     letter-spacing: normal;
-    font-size: 12px;
 
+    // @design-mobile
+    font-size: 12px;
     @media only screen and (min-width: 375px) {
-        // @design-mobile
         font-size: 14px;
     }
 

@@ -52,11 +52,11 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                         }) => ({
                             ...item,
                             ratio: item.ratio / 10000,
-                            btc: (item.btc / 1e8).toLocaleString('de-DE', {
+                            btc: (item.btc / 1e8).toLocaleString('en-US', {
                                 minimumFractionDigits: 8,
                                 maximumFractionDigits: 8,
                             }),
-                            susd: (item.susd / 1e8).toLocaleString('de-DE', {
+                            susd: (item.susd / 1e8).toLocaleString('en-US', {
                                 minimumFractionDigits: 2,
                                 maximumFractionDigits: 2,
                             }),
@@ -133,7 +133,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                             <div className={styles.cRatioTxt}>
                                                 C. Ratio ={' '}
                                                 {val.ratio.toLocaleString(
-                                                    'de-DE',
+                                                    'en-US',
                                                     {
                                                         minimumFractionDigits: 2,
                                                         maximumFractionDigits: 2,
