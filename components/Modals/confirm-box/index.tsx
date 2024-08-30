@@ -328,7 +328,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // )
 
             // @pause
-            // throw new Error('Coming soon!')
+            throw new Error('Coming soon!')
 
             if (!btc_wallet?.btc_addr) {
                 throw new Error('Wait for Wallet to Connect')
