@@ -268,25 +268,38 @@ export var ConfirmBox: React.FC<Prop> = function ({
         // Txn: Inscription to minter
         console.log('Read Transaction', tx_id)
 
-        // @dev Add inscription info to Tyron indexer
-        await fetch(`/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`)
-            .then((response) => response.json())
-            .then((data) => console.log(JSON.stringify(data, null, 2)))
-            .catch((error) => {
-                throw error
-            })
+        try {
+            // @dev Add inscription info to Tyron indexer
+            const add = await fetch(
+                `/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`
+            )
 
-        await getSUSD(btc_wallet?.btc_addr!, tx_id)
+            if (!add.ok) {
+                throw new Error(`Indexer error! status: ${add.status}`)
+            }
 
-        // @dev Update inscription info in Tyron indexer
-        await fetch(`/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`)
-            .then((response) => response.json())
-            .then((data) => console.log(JSON.stringify(data, null, 2)))
-            .catch((error) => {
-                throw error
-            })
+            const add_data = await add.json()
+            console.log(JSON.stringify(add_data, null, 2))
 
-        await updateBalance()
+            await getSUSD(btc_wallet?.btc_addr!, tx_id)
+
+            // @dev Update inscription info in Tyron indexer
+            const update = await fetch(
+                `/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`
+            )
+
+            if (!update.ok) {
+                throw new Error(`Indexer error! status: ${add.status}`)
+            }
+
+            const update_data = await update.json()
+            console.log(JSON.stringify(update_data, null, 2))
+
+            await updateBalance()
+        } catch (error) {
+            console.error('mintStablecoin', error)
+            throw error
+        }
     }
 
     const updateSyron = async () => {
