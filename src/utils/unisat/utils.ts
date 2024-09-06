@@ -22,3 +22,14 @@ export function getStringByteCount(str: string) {
     }
     return totalLength
 }
+
+export const extractRejectText = (error: string) => {
+    //const match = error.match(/value: (.*?), src/)
+    const match = error.match(/(?:value:|with message:)\s(.*?),\s?src/)
+
+    let rejectMsg = match ? match[1] : error
+
+    // Remove any links like src/basic_bitcoin ...
+    // rejectMsg = rejectMsg.replace(/src\/\S+/g, '')
+    return rejectMsg
+}

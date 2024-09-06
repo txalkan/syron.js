@@ -78,7 +78,6 @@ export const idlFactory = ({ IDL }) => {
             current_confirmations: IDL.Opt(IDL.Nat32),
         }),
     })
-    const satoshi = IDL.Nat64
     const syron_operation = IDL.Variant({
         getsyron: IDL.Null,
         liquidation: IDL.Null,
@@ -93,39 +92,6 @@ export const idlFactory = ({ IDL }) => {
         retrieve_btc_min_amount: IDL.Nat64,
         min_confirmations: IDL.Nat32,
         kyt_fee: IDL.Nat64,
-    })
-    const block_hash = IDL.Vec(IDL.Nat8)
-    const outpoint = IDL.Record({
-        txid: IDL.Vec(IDL.Nat8),
-        vout: IDL.Nat32,
-    })
-    const utxo = IDL.Record({
-        height: IDL.Nat32,
-        value: satoshi,
-        outpoint: outpoint,
-    })
-    const get_utxos_response = IDL.Record({
-        next_page: IDL.Opt(IDL.Vec(IDL.Nat8)),
-        tip_height: IDL.Nat32,
-        tip_block_hash: block_hash,
-        utxos: IDL.Vec(utxo),
-    })
-    const transaction_id = IDL.Text
-    const Utxo = IDL.Record({
-        height: IDL.Nat32,
-        value: IDL.Nat64,
-        outpoint: IDL.Record({ txid: IDL.Vec(IDL.Nat8), vout: IDL.Nat32 }),
-    })
-    const UtxoStatus = IDL.Variant({
-        ValueTooSmall: Utxo,
-        Tainted: Utxo,
-        Minted: IDL.Record({
-            minted_amount: IDL.Nat64,
-            block_index: IDL.Nat64,
-            utxo: Utxo,
-        }),
-        Checked: Utxo,
-        TransferInscription: Utxo,
     })
     return IDL.Service({
         addServiceProvider: IDL.Func([RegisterProviderArgs], [IDL.Nat64], []),
@@ -144,13 +110,13 @@ export const idlFactory = ({ IDL }) => {
             ],
             []
         ),
-        get_balance: IDL.Func([bitcoin_address], [satoshi], []),
         get_box_address: IDL.Func([GetBoxAddressArgs], [bitcoin_address], []),
         get_current_fee_percentiles: IDL.Func(
             [],
             [IDL.Vec(millisatoshi_per_vbyte)],
             []
         ),
+        get_fee_percentile: IDL.Func([IDL.Nat64], [IDL.Nat64], []),
         get_indexed_balance: IDL.Func(
             [IDL.Text],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
@@ -162,28 +128,25 @@ export const idlFactory = ({ IDL }) => {
             []
         ),
         get_minter_info: IDL.Func([], [MinterInfo], ['query']),
-        get_network: IDL.Func([], [network], []),
-        get_p2pkh_address: IDL.Func([], [bitcoin_address], []),
         get_p2wpkh_address: IDL.Func([], [bitcoin_address], []),
         get_subaccount: IDL.Func(
             [IDL.Nat64, bitcoin_address],
             [IDL.Vec(IDL.Nat8)],
             ['query']
         ),
-        get_susd: IDL.Func(
-            [GetBoxAddressArgs, IDL.Text],
-            [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
-            []
-        ),
-        get_utxos: IDL.Func([bitcoin_address], [get_utxos_response], []),
         liquidate: IDL.Func(
             [GetBoxAddressArgs, IDL.Text, IDL.Text],
             [IDL.Variant({ Ok: IDL.Vec(IDL.Text), Err: UpdateBalanceError })],
             []
         ),
         redeem_btc: IDL.Func(
-            [GetBoxAddressArgs],
+            [GetBoxAddressArgs, IDL.Text],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
+            []
+        ),
+        redemption_gas: IDL.Func(
+            [GetBoxAddressArgs],
+            [IDL.Variant({ Ok: IDL.Nat64, Err: UpdateBalanceError })],
             []
         ),
         sbtc_balance_of: IDL.Func(
@@ -191,31 +154,9 @@ export const idlFactory = ({ IDL }) => {
             [IDL.Nat64],
             []
         ),
-        send: IDL.Func(
-            [
-                IDL.Record({
-                    destination_address: bitcoin_address,
-                    amount_in_satoshi: satoshi,
-                }),
-            ],
-            [transaction_id],
-            []
-        ),
         susd_balance_of: IDL.Func(
             [bitcoin_address, IDL.Nat64],
             [IDL.Nat64],
-            []
-        ),
-        test: IDL.Func([], [IDL.Vec(IDL.Text)], []),
-        update_ssi: IDL.Func([GetBoxAddressArgs], [IDL.Text], []),
-        update_ssi_balance: IDL.Func(
-            [GetBoxAddressArgs],
-            [
-                IDL.Variant({
-                    Ok: IDL.Vec(UtxoStatus),
-                    Err: UpdateBalanceError,
-                }),
-            ],
             []
         ),
         withdraw_susd: IDL.Func(

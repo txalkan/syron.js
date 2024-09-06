@@ -261,7 +261,8 @@
 }
 
 .txt {
-    font-weight: 600;
+    font-family: 'GeistMono', monospace;
+    font-weight: 500;
     color: #ffff32;
 }
 
@@ -289,5 +290,16 @@
 .sdb {
     cursor: pointer;
     text-decoration: underline;
-    color: blue;
+    color: #1e90ff;
+}
+
+.error {
+    margin-top: 14px;
+    max-width: 350px; // Set a maximum width for the toast content
+    max-height: 500px; // Set a fixed maximum height for the toast content
+    overflow-y: auto; // Enable vertical scrolling if content exceeds the height
+    white-space: normal; // Allow text to wrap normally
+    font-size: 14px; // Set a readable font size
+    line-height: 1.5; // Improve readability with better line spacing
+    word-break: break-word; // Break long words or URLs properly
 }

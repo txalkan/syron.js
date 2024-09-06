@@ -63,12 +63,15 @@ function useICPHook() {
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
-                1
+                0 // @mainnet
             )
+            if (txId.Err) {
+                throw new Error(txId.Err.GenericError.error_message)
+            }
             console.log(txId)
             return txId
         } catch (err) {
-            console.error('Get SUSD Error', err)
+            console.error('Get SUSD', err)
             throw err
         }
     }
@@ -85,23 +88,43 @@ function useICPHook() {
         }
     }
 
-    const redeemBTC = async (ssi: string) => {
+    const redemptionGas = async (ssi: string) => {
         try {
-            const txid =
-                '6f5bf11ec0a565351c316bc2bca5014d3388f96c6d0ab726f7db4a1adb820d68'
+            console.log('Loading Redemption Gas')
+            const gas = await syron.redemption_gas({
+                ssi,
+                op: { redeembitcoin: null },
+            })
+            if (gas.Err) {
+                throw new Error(gas.Err.GenericError.error_message)
+            } else {
+                console.log('Redeption Gas:', gas.Ok)
+                return gas.Ok
+            }
+        } catch (err) {
+            console.error('Redemption Gas', err)
+            throw err
+        }
+    }
 
+    const redeemBTC = async (ssi: string, txid: string) => {
+        try {
             console.log('Loading BTC Redemption')
             const txId = await syron.redeem_btc(
                 {
                     ssi,
                     op: { redeembitcoin: null },
-                }
-                // txid
+                },
+                txid
             )
+            if (txId.Err) {
+                throw new Error(txId.Err.GenericError.error_message)
+            }
             console.log(txId)
             return txId
         } catch (err) {
-            console.error('Redeem BTC Error', err)
+            console.error('Redeem BTC', err)
+            throw err
         }
     }
 
@@ -120,6 +143,7 @@ function useICPHook() {
         getBox,
         getSUSD,
         updateSyronLedgers,
+        redemptionGas,
         redeemBTC,
         getServiceProviders,
     }

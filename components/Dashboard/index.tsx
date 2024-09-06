@@ -144,9 +144,10 @@ function Component() {
             setBalance(balance)
 
             const network = await unisat.getNetwork()
-            console.log('Bitcoin', network)
-            if (network == UnisatNetworkType.livenet) {
-                await unisat.switchNetwork(UnisatNetworkType.testnet)
+
+            console.log('Bitcoin', network) // @mainnet
+            if (network != UnisatNetworkType.mainnet) {
+                await unisat.switchNetwork(UnisatNetworkType.mainnet)
             }
             setNetwork(network)
         } catch (error) {

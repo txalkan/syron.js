@@ -48,7 +48,7 @@ export default async function handler(
     try {
         const order = await unisatApi.createTransfer({
             receiveAddress,
-            feeRate: 2, //Number(feeRate), @review (mainnet)
+            feeRate: Number(feeRate),
             outputValue: 546,
             devAddress,
             devFee: Number(devFee),

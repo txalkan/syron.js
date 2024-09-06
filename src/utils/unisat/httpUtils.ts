@@ -1,12 +1,11 @@
 import axios from 'axios'
 
-// @review (mainnet)
 export enum UnisatNetworkType {
-    livenet = 'livenet',
+    mainnet = 'livenet',
     testnet = 'testnet',
 }
 
-let network = UnisatNetworkType.testnet
+let network = UnisatNetworkType.mainnet // @mainnet @review (wallet)
 
 export function setApiNetwork(type: UnisatNetworkType) {
     network = type
@@ -21,7 +20,9 @@ function unisatCreateApi(baseURL: string) {
         },
     })
 
-    const apiKey = process.env.NEXT_PUBLIC_API_UNISAT //localStorage.getItem('apiKey') || ''
+    const apiKey = UnisatNetworkType.mainnet
+        ? process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
+        : process.env.NEXT_PUBLIC_API_UNISAT // localStorage.getItem('apiKey') || ''
 
     api.interceptors.request.use((config) => {
         if (!apiKey) {
@@ -42,7 +43,7 @@ function getApi() {
 
 export const getUniSat = async (url: string, params?: any) => {
     const res = await getApi().get(url, { params })
-    // console.log(JSON.stringify(res, null, 2))
+    //console.log(JSON.stringify(res, null, 2))
 
     if (res.status !== 200) {
         throw new Error(res.statusText)
@@ -138,7 +139,7 @@ export async function unisatInscriptionInfo(id: string) {
     try {
         const url = `https://open-api-testnet.unisat.io/v1/indexer/inscription/info/${id}`
 
-        const apiKey = process.env.NEXT_PUBLIC_API_UNISAT
+        const apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET // @mainnet
         if (!apiKey) {
             throw new Error('input apiKey and reload page')
         }
@@ -243,8 +244,7 @@ export async function mempoolTxId(address: string) {
 
 export async function mempoolFeeRate() {
     try {
-        const url =
-            'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h'
+        const url = 'https://mempool.space/api/v1/mining/blocks/fee-rates/24h' //'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h' @mainnet
 
         const response = await fetch(url, {
             method: 'GET',
@@ -255,13 +255,13 @@ export async function mempoolFeeRate() {
         }
 
         const data = await response.json()
-        // console.log(JSON.stringify(data, null, 2))
+        //console.log(JSON.stringify(data, null, 2))
 
-        // Extract gas fees for the 50th percentile from the last 60 blocks
-        const lastBlocks = data.slice(-60)
+        // Extract gas fees for the 75th percentile from the last 100 blocks
+        const lastBlocks = data.slice(-100)
         const percentiles = lastBlocks
-            .map((block: { avgFee_50 }) => {
-                const fee = block.avgFee_50
+            .map((block: { avgFee_75 }) => {
+                const fee = block.avgFee_75
                 return fee === 0 ? undefined : fee // Exclude zero values
             })
             .filter((value) => value !== undefined) as number[] // Filter out undefined values
@@ -280,7 +280,7 @@ export async function mempoolFeeRate() {
 
 export async function mempoolBalance(address: string) {
     try {
-        const url = `https://mempool.space/testnet/api/address/${address}/utxo`
+        const url = `https://mempool.space/api/address/${address}/utxo` // @mainnet `https://mempool.space/testnet/api/address/${address}/utxo`
 
         const response = await fetch(url, {
             method: 'GET',
@@ -408,8 +408,8 @@ function checkError(error: any) {
 // }
 
 export const transaction_status = async (txId) => {
-    // @review (mainnet)
-    const url = `https://mempool.space/testnet/api/tx/${txId}/status`
+    // @mainnet
+    const url = `https://mempool.space/api/tx/${txId}/status` //`https://mempool.space/testnet/api/tx/${txId}/status`
 
     while (true) {
         try {

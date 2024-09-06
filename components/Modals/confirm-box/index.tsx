@@ -28,6 +28,7 @@ import {
 } from '../../../src/store/syron'
 import { unisatApi } from '../../../src/utils/unisat/api'
 import {
+    extractRejectText,
     getStringByteCount,
     stringToBase64,
 } from '../../../src/utils/unisat/utils'
@@ -68,6 +69,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
 }) {
     const syron = useStore($syron)
 
+    const [sdb, setSDB] = useState('')
+    useEffect(() => {
+        if (syron !== null) {
+            console.log('Syron', JSON.stringify(syron, null, 2))
+
+            setSDB(syron.sdb)
+        }
+    }, [syron?.sdb])
+
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
     const btc_wallet = useStore($btc_wallet)
@@ -76,6 +86,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const { updateWallet } = useBTCWalletHook()
     const { getBox, getSUSD, updateSyronLedgers, getServiceProviders } =
         useICPHook()
+
     const dispatch = useDispatch()
     const { t } = useTranslation()
 
@@ -88,7 +99,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     //const settings = useStore($settings)
     // const liquidity = useStore($liquidity)
 
-    const [loadingTxn, setLoading] = React.useState(false)
+    const [isLoading, setIsLoading] = React.useState(false)
 
     // const [isAllow, setIsAllow] = React.useState(false)
     // const [priceRevert, setPriceRevert] = React.useState(true)
@@ -237,12 +248,12 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
     const disabled = React.useMemo(() => {
         return (
-            loadingTxn /*|| Big(priceInfo!.impact) > 10 */ ||
+            isLoading /*|| Big(priceInfo!.impact) > 10 */ ||
             (syron == null && walletConnected)
         )
-    }, [priceInfo, loadingTxn, syron])
+    }, [priceInfo, isLoading, syron])
 
-    // @review (mainnet)
+    // @review (wallet)
     const updateBalance = async () => {
         const [address] = await unisat.getAccounts()
         const balance = await unisat.getBalance()
@@ -254,10 +265,27 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
     // @dev 2) Receive Syron
     const mintStablecoin = async (tx_id: string) => {
-        // Txn: Inscription to minter & deposit into SDB
+        // Txn: Inscription to minter
         console.log('Read Transaction', tx_id)
 
+        // @dev Add inscription info to Tyron indexer
+        await fetch(`/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`)
+            .then((response) => response.json())
+            .then((data) => console.log(JSON.stringify(data, null, 2)))
+            .catch((error) => {
+                throw error
+            })
+
         await getSUSD(btc_wallet?.btc_addr!, tx_id)
+
+        // @dev Update inscription info in Tyron indexer
+        await fetch(`/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`)
+            .then((response) => response.json())
+            .then((data) => console.log(JSON.stringify(data, null, 2)))
+            .catch((error) => {
+                throw error
+            })
+
         await updateBalance()
     }
 
@@ -274,26 +302,17 @@ export var ConfirmBox: React.FC<Prop> = function ({
     }
 
     const updateBox = async () => {
-        setLoading(true)
+        setIsLoading(true)
         try {
             await updateSyron().then(async (res) => await updateBalance())
         } catch (error) {
             console.error(error)
         }
-        setLoading(false)
-    }
-
-    const extractRejectText = (error: string) => {
-        const match = error.match(/value: (.*?), src/)
-        let rejectMsg = match ? match[1] : error
-
-        // Remove any links like src/basic_bitcoin ...
-        // rejectMsg = rejectMsg.replace(/src\/\S+/g, '')
-        return rejectMsg
+        setIsLoading(false)
     }
 
     const handleConfirm = React.useCallback(async () => {
-        setLoading(true)
+        setIsLoading(true)
         toast.dismiss(4)
 
         // @review (asap) transaction status modal not working - see dispatch(setTx
@@ -324,23 +343,34 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     .catch((error) => console.error(error))
 
             // await mintStablecoin(
-            //     '72ff236edf4651d6903f76384fc256ea3d71c013c93411faa16bb1bd2a6952d4'
+            //     'aa61e0c3844ed4088bf7eb40f6908d0e0df64c724feef93cdd6476e9440050c2'
             // )
 
             // @pause
-            throw new Error('Coming soon!')
+            //throw new Error('Coming soon!')
 
             if (!btc_wallet?.btc_addr) {
-                throw new Error('Wait for Wallet to Connect')
+                throw new Error(
+                    'Please wait for the wallet to connect (ensure it has a balance).'
+                )
             }
 
-            if (btc_wallet?.network == 'livenet')
-                throw new Error('Use Bitcoin Testnet')
+            if (btc_wallet?.network != 'livenet') {
+                // @mainnet
+                console.log('Network:', btc_wallet?.network)
+                throw new Error('Use Bitcoin Mainnet')
+            }
 
             const collateral = Math.floor(Number(exactInput))
-            if (collateral < 1000)
+            if (collateral < 2000)
                 throw new Error(
-                    'Your BTC deposit is below the minimum required amount of 0,00001 BTC. Please increase your deposit.'
+                    'Your BTC deposit is below the minimum required amount of 0.00002 BTC. Please increase your deposit.'
+                )
+
+            // @mainnet collateral cannot be more than 5000 sats
+            if (collateral > 10000)
+                throw new Error(
+                    'Your BTC deposit exceeds the maximum allowed amount of 0.0001 BTC. Please reduce your deposit.'
                 )
 
             toast.info('Submitting your BTC deposit...', {
@@ -348,7 +378,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 closeOnClick: true,
                 toastId: 1,
             })
-            const tick = 'SYRO'
+            const tick = 'SYRON' // @mainnet
             const amt = Number(limitInput.round(2))
 
             console.log('BTC Collateral', collateral)
@@ -373,19 +403,19 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     },
             // ]
 
-            const receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER! // the receiver address
+            const receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET! // @mainnet the receiver address
 
             // const inscriptionBalance = 333 // the balance in each inscription
             // const fileCount = 1 // the fileCount
             // const fileSize = 1000 // the total size of all files
             // const contentTypeSize = 100 // the size of contentType
 
-            // @dev The transaction fee rate in sat/vB @review (mainnet)
+            // @dev The transaction fee rate in sat/vB @mainnet
             let feeRate = await mempoolFeeRate()
             console.log('Fee Rate', feeRate)
 
             if (!feeRate) {
-                feeRate = 20
+                feeRate = 5
             }
 
             // const feeFileSize = 100 // the total size of first 25 files
@@ -474,12 +504,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     devFee: 1111, //Number(Big(exactToken.value)),
             // })
 
-            // let box_addr =
-            // 'tb1pduxfg234ckmc3mq5znzhhtgukg79c3emc9d42twafhdcgk5rgxcqxwpu35' //@review (mainnet)
-
             let order: InscribeOrderData
 
-            if (syron?.sdb === '') {
+            if (sdb === '') {
                 throw new Error('SDB Loading Error')
             } else {
                 // @dev Transfer Inscription
@@ -495,9 +522,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     // })
 
                     await fetch(
-                        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${feeRate}&devAddress=${
-                            syron!.sdb
-                        }&devFee=${collateral}&brc20Ticker=${tick}&brc20Amount=${String(
+                        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${feeRate}&devAddress=${sdb}&devFee=${collateral}&brc20Ticker=${tick}&brc20Amount=${String(
                             amt
                         )}`
                     )
@@ -526,7 +551,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 }
             )
 
-            // @dev 1) Send Bitcoin transaction (#B1)
+            // @dev 1) Send Bitcoin transaction (#1)
             await unisat
                 .sendBitcoin(order.payAddress, order.amount, order.feeRate)
                 .then(async (txId) => {
@@ -569,18 +594,6 @@ export var ConfirmBox: React.FC<Prop> = function ({
                             // @or from
                             // await mempoolTxId(order.payAddress).then(
 
-                            // @dev Update inscription info in Tyron indexer
-                            await fetch(
-                                `/api/get-unisat-inscription-info?id=${inscription_id}`
-                            )
-                                .then((response) => response.json())
-                                .then((data) =>
-                                    console.log(JSON.stringify(data, null, 2))
-                                )
-                                .catch((error) => {
-                                    throw error
-                                })
-
                             return inscription_id.slice(0, -2)
                         })
                         .then(async (txId2) => {
@@ -588,7 +601,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 async (res) => {
                                     await mintStablecoin(txId2)
 
-                                    setLoading(false)
+                                    setIsLoading(false)
                                     toast.dismiss(2)
                                     toast.dismiss(3)
 
@@ -597,13 +610,14 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                         { autoClose: false }
                                     )
                                     window.open(
-                                        `https://testnet.unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRO`
+                                        `https://unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRON`
                                     )
                                 }
                             )
                         })
                 })
         } catch (err) {
+            setIsLoading(false)
             console.error('handleConfirm', err)
 
             toast.dismiss(1)
@@ -613,8 +627,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             if (err == 'Error: Coming soon!') {
                 toast.info('Coming soon!', { autoClose: 2000 })
             } else if (
-                (err as Error).message ===
-                "Cannot read properties of null (reading 'sdb')"
+                (err as Error).message.includes('SDB Loading Error') //"Cannot read properties of null (reading 'sdb')"
             ) {
                 toast.info(
                     'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.',
@@ -625,20 +638,25 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 Object.keys(err!).length !== 0
             ) {
                 toast.error(
-                    <div>
-                        Your request was rejected. For assistance, please join
-                        us on Telegram{' '}
-                        <a
-                            href="https://t.me/tyrondao"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: 'blue',
-                                textDecoration: 'underline',
-                            }}
-                        >
-                            @tyronDAO
-                        </a>
+                    <div className={styles.error}>
+                        <p>
+                            Your request was rejected. For assistance, please
+                            let us know on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @tyronDAO
+                            </a>
+                        </p>
+                        <p style={{ color: 'red' }}>
+                            {JSON.stringify(err, null, 2)}
+                        </p>
                     </div>,
                     {
                         autoClose: false,
@@ -647,18 +665,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 )
             } else {
                 toast.error(
-                    <div
-                        style={{
-                            maxWidth: '350px', // Set a maximum width for the toast content
-                            maxHeight: '500px', // Set a fixed maximum height for the toast content
-                            overflowY: 'auto', // Enable vertical scrolling if content exceeds the height
-                            whiteSpace: 'normal', // Allow text to wrap normally
-                            fontSize: '14px', // Set a readable font size
-                            lineHeight: '1.5', // Improve readability with better line spacing
-                            wordBreak: 'break-word', // Break long words or URLs properly
-                        }}
-                    >
-                        <p>{extractRejectText(String(err))}</p>
+                    <div className={styles.error}>
                         <p>
                             Please let us know about this error on Telegram{' '}
                             <a
@@ -673,11 +680,13 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 @tyronDAO
                             </a>
                         </p>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(err))}
+                        </p>
                     </div>,
                     { autoClose: false }
                 )
             }
-            setLoading(false)
         }
     }, [pair, /*limit,*/ direction /*onClose*/, syron])
 

@@ -75,7 +75,25 @@ export default async function handler(
     }
 
     try {
-        const data_unisat = await unisatApi.getBrc20Info(id)
+        const fetchBalanceWithRetry = async (
+            id: string,
+            retryInterval: number = 5000
+        ): Promise<any> => {
+            let data_unisat
+            while (true) {
+                data_unisat = await unisatApi.getBrc20Info(id)
+                if (data_unisat && data_unisat.detail.length > 0) {
+                    break
+                }
+                console.log('detail is empty, retrying...')
+                await new Promise((resolve) =>
+                    setTimeout(resolve, retryInterval)
+                )
+            }
+            return data_unisat
+        }
+
+        const data_unisat = await fetchBalanceWithRetry(id)
         if (!data_unisat) {
             response.status(404).json({ error: 'No data found' })
         } else {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './styles.module.scss'
 import { updateDonation } from '../../src/store/donation'
 import Image from 'next/image'
@@ -14,13 +14,34 @@ import { $btc_wallet, $syron } from '../../src/store/syron'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
+import { extractRejectText } from '../../src/utils/unisat/utils'
+import {
+    mempoolFeeRate,
+    transaction_status,
+} from '../../src/utils/unisat/httpUtils'
+import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 Big.PE = 999
 const _0 = Big(0)
 
 function Component() {
-    const tyron = useStore($syron)
+    const syron = useStore($syron)
+
     const { t } = useTranslation()
     const [active, setActive] = useState('GetSyron')
+
+    const [sdb, setSDB] = useState('')
+    const [loan, setLoan] = useState('')
+    useEffect(() => {
+        if (syron !== null) {
+            console.log('Syron', JSON.stringify(syron, null, 2))
+
+            setSDB(syron.sdb)
+
+            const loan_ = syron.syron_usd_loan.div(1e8).toFixed(2).toString()
+            setLoan(loan_)
+            console.log('loan', loan_)
+        }
+    }, [syron])
 
     const toggleActive = (id: string) => {
         resetState()
@@ -53,40 +74,225 @@ function Component() {
         },
     ]
 
-    const { redeemBTC } = useICPHook()
+    const { redemptionGas, redeemBTC, getBox } = useICPHook()
     const [isLoading, setIsLoading] = useState(false)
 
     const btc_wallet = useStore($btc_wallet)
+
+    const unisat = (window as any).unisat
     const handleRedeem = async () => {
         setIsLoading(true)
-        // toast.info('Coming soon', {
-        //     position: 'bottom-center',
-        //     autoClose: 4000,
-        //     hideProgressBar: false,
-        //     closeOnClick: true,
-        //     pauseOnHover: true,
-        //     draggable: true,
-        //     progress: undefined,
-        //     toastId: 1,
-        // })
 
-        await fetch(`/api/get-unisat-brc20-balance?id=${tyron?.sdb}`)
-            .then(async (response) => {
-                const res = await response.json()
-                console.log(
-                    'outcall response - SDB SUSD balance',
-                    JSON.stringify(res, null, 2)
+        try {
+            // await redeemBitcoin(
+            //     'c56d3e6d6aaf79a7adf25e9241b13c73dd60c307ed1e89b66696ae8d4b111019'
+            // )
+
+            // @pause
+            throw new Error('Coming soon!')
+
+            if (sdb === '') {
+                throw new Error('SDB Loading error')
+            } else {
+                let gas = await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
+                    .then(async (response) => {
+                        const res = await response.json()
+                        console.log(
+                            'outcall response - SDB SUSD balance',
+                            JSON.stringify(res, null, 2)
+                        )
+
+                        const overallBalance = parseFloat(
+                            res.detail[0].overallBalance
+                        )
+                        const loanAmount = parseFloat(loan)
+
+                        if (overallBalance < loanAmount) {
+                            throw new Error(
+                                `Please deposit ${
+                                    loanAmount - overallBalance
+                                } into your SDB before proceeding.`
+                            )
+                        }
+
+                        return await redemptionGas(btc_wallet?.btc_addr!)
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
+
+                // @dev The transaction fee rate in sat/vB @mainnet
+                let feeRate = await mempoolFeeRate()
+                if (!feeRate) {
+                    feeRate = 5
+                }
+                console.log('Fee Rate', feeRate)
+
+                let deposit = (Number(gas) + 50).toString()
+                console.log(deposit)
+                const tick = 'SYRON' // @mainnet
+
+                let order = await fetch(
+                    `/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&devAddress=${sdb}&devFee=${deposit}&brc20Ticker=${tick}&brc20Amount=${loan}`
                 )
+                    .then((response) => response.json())
+                    .then((res) => {
+                        console.log(JSON.stringify(res, null, 2))
+                        return res.data
+                    })
+                    .catch((error) => {
+                        throw error
+                    })
 
-                await redeemBTC(btc_wallet?.btc_addr!)
-            })
+                // @dev 1) Send Bitcoin transaction (#1)
+                await unisat
+                    .sendBitcoin(order.payAddress, order.amount, order.feeRate)
+                    .then(async (txId) => {
+                        console.log('Transaction ID #1', txId)
+
+                        // @dev 2) Make sure that the Bitcoin transaction (#2) is confirmed
+                        await transaction_status(txId)
+                            .then(async (_res) => {
+                                const order_ = await fetch(
+                                    `/api/get-unisat-brc20-order?id=${order.orderId}`
+                                )
+                                    .then((response) => response.json())
+                                    .then((res) => {
+                                        return res.data
+                                    })
+                                    .catch((error) => {
+                                        throw error
+                                    })
+
+                                console.log(
+                                    'Order From OrderId',
+                                    JSON.stringify(order_, null, 2)
+                                )
+                                const inscription_id =
+                                    order_.files[0].inscriptionId
+
+                                return inscription_id.slice(0, -2)
+                            })
+                            .then(async (txId2) => {
+                                console.log('Transaction ID #2', txId2)
+                                await transaction_status(txId2).then(
+                                    async () => {
+                                        await redeemBitcoin(txId2)
+                                        setIsLoading(false)
+
+                                        toast.info(
+                                            `You have redeemed your BTC!`,
+                                            { autoClose: false }
+                                        )
+                                    }
+                                )
+                            })
+                    })
+            }
+        } catch (err) {
+            console.error('handleRedeem', err)
+
+            if (err == 'Error: Coming soon!') {
+                toast.info('Coming soon!', { autoClose: 2000 })
+            } else if ((err as Error).message.includes('SDB Loading Error')) {
+                toast.info(
+                    'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.',
+                    { autoClose: 2000 }
+                )
+            } else if (
+                typeof err === 'object' &&
+                Object.keys(err!).length !== 0
+            ) {
+                toast.error(
+                    <div className={styles.error}>
+                        <p>
+                            Your request was rejected. For assistance, please
+                            let us know on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @tyronDAO
+                            </a>
+                        </p>
+                        <p style={{ color: 'red' }}>
+                            {JSON.stringify(err, null, 2)}
+                        </p>
+                    </div>,
+                    {
+                        autoClose: false,
+                        toastId: 4,
+                    }
+                )
+            } else {
+                toast.error(
+                    <div className={styles.error}>
+                        <p>
+                            Please let us know about this error on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @tyronDAO
+                            </a>
+                        </p>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(err))}
+                        </p>
+                    </div>,
+                    { autoClose: false }
+                )
+            }
+            setIsLoading(false)
+        }
+    }
+
+    const redeemBitcoin = async (tx_id: string) => {
+        // Txn: Inscription to SDB
+        console.log('Read Transaction', tx_id)
+
+        // @dev Add inscription info to Tyron indexer
+        await fetch(`/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`)
+            .then((response) => response.json())
+            .then((data) => console.log(JSON.stringify(data, null, 2)))
             .catch((error) => {
                 throw error
             })
 
-        setIsLoading(false)
+        await redeemBTC(btc_wallet?.btc_addr!, tx_id)
+
+        // @dev Update inscription info in Tyron indexer
+        await fetch(`/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`)
+            .then((response) => response.json())
+            .then((data) => console.log(JSON.stringify(data, null, 2)))
+            .catch((error) => {
+                throw error
+            })
+
+        await updateBalance()
     }
 
+    // @review (mainnet)
+    const { updateWallet } = useBTCWalletHook()
+
+    const updateBalance = async () => {
+        const [address] = await unisat.getAccounts()
+        const balance = await unisat.getBalance()
+        const network = await unisat.getNetwork()
+        await updateWallet(address, Number(balance.confirmed), network)
+        await getBox(address, Number(balance.confirmed), network, false)
+        console.log('balance updated')
+    }
     return (
         <div className={styles.container}>
             {/* @dev: trade */}
@@ -143,7 +349,7 @@ function Component() {
                         </div>
                     </div>
                 )}
-                {tyron?.sdb && (
+                {sdb && (
                     <div className={styles.boxWrapper}>
                         <p className={styles.boxTitle}>
                             Your Safety Deposit ₿ox
@@ -176,7 +382,7 @@ function Component() {
                             <span className={styles.plain}>
                                 Deposit:{' '}
                                 <span className={styles.yellow}>
-                                    {Number(tyron?.syron_btc.div(1e8))}
+                                    {Number(syron?.syron_btc.div(1e8))}
                                 </span>
                             </span>
                             <Image
@@ -203,16 +409,23 @@ function Component() {
                             />
                             <span style={{ paddingLeft: '4px' }}>
                                 <span className={styles.plain}>SDB:</span>
-
                                 <span
                                     onClick={() =>
                                         window.open(
-                                            `https://mempool.space/testnet/address/${tyron?.sdb}`
+                                            `https://mempool.space/address/${syron?.sdb}`
                                         )
                                     }
                                     className={styles.sdb}
                                 >
-                                    {tyron?.sdb}
+                                    {syron?.sdb}
+                                    <span
+                                        style={{
+                                            marginLeft: '5px',
+                                            fontSize: '1rem',
+                                        }}
+                                    >
+                                        ↗
+                                    </span>
                                 </span>
                             </span>
                         </p>
@@ -232,10 +445,7 @@ function Component() {
                                     '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
                             }}
                             disabled={isLoading}
-                            onClick={() => {
-                                toast.info('Coming soon!')
-                                // handleRedeem
-                            }}
+                            onClick={handleRedeem}
                         >
                             <div className={styles.txt}>redeem btc</div>
                         </button>

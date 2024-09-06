@@ -131,9 +131,9 @@ export interface _SERVICE {
         [bitcoin_address, boolean],
         { Ok: CollateralizedAccount } | { Err: UpdateBalanceError }
     >
-    get_balance: ActorMethod<[bitcoin_address], satoshi>
     get_box_address: ActorMethod<[GetBoxAddressArgs], bitcoin_address>
     get_current_fee_percentiles: ActorMethod<[], BigUint64Array | bigint[]>
+    get_fee_percentile: ActorMethod<[bigint], bigint>
     get_indexed_balance: ActorMethod<
         [string],
         { Ok: string } | { Err: UpdateBalanceError }
@@ -143,43 +143,25 @@ export interface _SERVICE {
         { Ok: string } | { Err: UpdateBalanceError }
     >
     get_minter_info: ActorMethod<[], MinterInfo>
-    get_network: ActorMethod<[], network>
-    get_p2pkh_address: ActorMethod<[], bitcoin_address>
     get_p2wpkh_address: ActorMethod<[], bitcoin_address>
     get_subaccount: ActorMethod<
         [bigint, bitcoin_address],
         Uint8Array | number[]
     >
-    get_susd: ActorMethod<
-        [GetBoxAddressArgs, string],
-        { Ok: string } | { Err: UpdateBalanceError }
-    >
-    get_utxos: ActorMethod<[bitcoin_address], get_utxos_response>
     liquidate: ActorMethod<
         [GetBoxAddressArgs, string, string],
         { Ok: Array<string> } | { Err: UpdateBalanceError }
     >
     redeem_btc: ActorMethod<
-        [GetBoxAddressArgs],
+        [GetBoxAddressArgs, string],
         { Ok: string } | { Err: UpdateBalanceError }
     >
-    sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
-    send: ActorMethod<
-        [
-            {
-                destination_address: bitcoin_address
-                amount_in_satoshi: satoshi
-            }
-        ],
-        transaction_id
-    >
-    susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
-    test: ActorMethod<[], Array<string>>
-    update_ssi: ActorMethod<[GetBoxAddressArgs], string>
-    update_ssi_balance: ActorMethod<
+    redemption_gas: ActorMethod<
         [GetBoxAddressArgs],
-        { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
+        { Ok: bigint } | { Err: UpdateBalanceError }
     >
+    sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
+    susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     withdraw_susd: ActorMethod<
         [GetBoxAddressArgs, string, bigint, bigint],
         { Ok: string } | { Err: UpdateBalanceError }

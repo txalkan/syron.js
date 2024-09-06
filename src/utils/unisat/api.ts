@@ -24,7 +24,9 @@ export const unisatApi = {
         return getUniSat(`v1/indexer/inscription/info/${inscriptionId}`)
     },
     getBrc20Info(address: string) {
-        return getUniSat(`v1/indexer/address/${address}/brc20/summary`)
+        return getUniSat(
+            `v1/indexer/address/${address}/brc20/summary?start=0&limit=20&tick_filter=16`
+        )
     },
 }
 

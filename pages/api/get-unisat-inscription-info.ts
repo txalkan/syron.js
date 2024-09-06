@@ -66,7 +66,26 @@ export default async function handler(
     } else {
         console.log('@dev get data from UniSat')
         try {
-            const data_unisat = await unisatApi.getInscriptionInfo(id)
+            const fetchInscriptionInfoWithRetry = async (
+                id: string,
+                retryInterval: number = 5000
+            ): Promise<any> => {
+                let data_unisat
+                while (true) {
+                    data_unisat = await unisatApi.getInscriptionInfo(id)
+                    if (data_unisat && data_unisat.brc20 !== null) {
+                        break
+                    }
+                    console.log('brc20 is null, retrying...')
+                    await new Promise((resolve) =>
+                        setTimeout(resolve, retryInterval)
+                    )
+                }
+                return data_unisat
+            }
+
+            const data_unisat = await fetchInscriptionInfoWithRetry(id) //await unisatApi.getInscriptionInfo(id)
+
             if (!data_unisat) {
                 response.status(404).json({ error: 'No data found' })
             } else {
@@ -75,15 +94,15 @@ export default async function handler(
                     JSON.stringify(data_unisat, null, 2)
                 )
 
+                const res = sortKeys(sanitize(data_unisat, allowedKeys))
+
                 await addDoc(collection(db, 'unisat_inscription_info'), {
                     inscription_id: id,
                     timestamp: new Date(),
-                    data: data_unisat,
+                    data: res,
                 })
 
-                response
-                    .status(200)
-                    .json(sortKeys(sanitize(data_unisat, allowedKeys)))
+                response.status(200).json(res)
             }
         } catch (error) {
             console.error('@response UniSat error:', error)

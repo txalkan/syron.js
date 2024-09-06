@@ -256,14 +256,13 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
 
             let amt = Number(selectedData.susd) + 0.01
 
-            // @dev The transaction fee rate in sat/vB @review (mainnet)
-            let feeRate = 265
-            // await mempoolFeeRate()
-            // console.log('Fee Rate', feeRate)
+            // @dev The transaction fee rate in sat/vB @mainnet
+            let feeRate = await mempoolFeeRate()
+            console.log('Fee Rate', feeRate)
 
-            // if (!feeRate) {
-            //     feeRate = 20
-            // }
+            if (!feeRate) {
+                feeRate = 5
+            }
 
             if (sdb === '') {
                 throw new Error('SDB Loading error')
@@ -287,7 +286,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                     outputValue: 546,
                     devAddress: '', // @review (mainnet) fee
                     devFee: 0,
-                    brc20Ticker: 'SYRO',
+                    brc20Ticker: 'SYRON', //@mainnet
                     brc20Amount: String(amt),
                 })
             }
