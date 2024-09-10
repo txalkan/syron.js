@@ -107,15 +107,17 @@ function Component() {
                         )
                         const loanAmount = parseFloat(loan)
 
-                        if (overallBalance < loanAmount) {
+                        const limit = 0.02 // @governance
+                        if (overallBalance < loanAmount - limit) {
+                            const depositAmount = (
+                                loanAmount - overallBalance
+                            ).toFixed(2)
                             throw new Error(
-                                `Please deposit ${
-                                    loanAmount - overallBalance
-                                } into your SDB before proceeding.`
+                                `Please deposit ${depositAmount} into your SDB before proceeding.`
                             )
                         }
 
-                        return await redemptionGas(btc_wallet?.btc_addr!)
+                        //return await redemptionGas(btc_wallet?.btc_addr!)
                     })
                     .catch((error) => {
                         throw error
@@ -128,12 +130,14 @@ function Component() {
                 }
                 console.log('Fee Rate', feeRate)
 
-                let deposit = (Number(gas) + 50).toString()
-                console.log(deposit)
+                //let deposit = (Number(gas) + 50).toString()
+                let deposit = (700).toString()
+
                 const tick = 'SYRON' // @mainnet
 
                 let order = await fetch(
                     `/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&devAddress=${sdb}&devFee=${deposit}&brc20Ticker=${tick}&brc20Amount=${loan}`
+                    //`/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&brc20Ticker=${tick}&brc20Amount=${loan}`
                 )
                     .then((response) => response.json())
                     .then((res) => {
@@ -258,28 +262,65 @@ function Component() {
     }
 
     const redeemBitcoin = async (tx_id: string) => {
-        // Txn: Inscription to SDB
-        console.log('Read Transaction', tx_id)
+        try {
+            // @dev Add inscription info to Tyron indexer
+            const balance = await fetch(
+                `/api/get-unisat-brc20-balance?id=${sdb}`
+            )
 
-        // @dev Add inscription info to Tyron indexer
-        await fetch(`/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`)
-            .then((response) => response.json())
-            .then((data) => console.log(JSON.stringify(data, null, 2)))
-            .catch((error) => {
-                throw error
-            })
+            if (!balance.ok) {
+                throw new Error(`Indexer error! status: 500`)
+            }
 
-        await redeemBTC(btc_wallet?.btc_addr!, tx_id)
+            const balance_data = await balance.json()
+            console.log(JSON.stringify(balance_data, null, 2))
 
-        // @dev Update inscription info in Tyron indexer
-        await fetch(`/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`)
-            .then((response) => response.json())
-            .then((data) => console.log(JSON.stringify(data, null, 2)))
-            .catch((error) => {
-                throw error
-            })
+            // Txn: Inscription to SDB
+            console.log('Read Transaction', tx_id)
 
-        await updateBalance()
+            // @dev Add inscription info to Tyron indexer
+            const add = await fetch(
+                `/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`
+            )
+
+            if (!add.ok) {
+                throw new Error(`Indexer error! status: 501`)
+            }
+
+            const add_data = await add.json()
+            console.log(JSON.stringify(add_data, null, 2))
+
+            // @dev Update inscription info in Tyron indexer
+            let update = await fetch(
+                `/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`
+            )
+
+            if (!update.ok) {
+                throw new Error(`Indexer error! status: 502`)
+            }
+
+            let update_data = await update.json()
+            console.log(JSON.stringify(update_data, null, 2))
+
+            await redeemBTC(btc_wallet?.btc_addr!, tx_id)
+
+            // @dev Update inscription info in Tyron indexer
+            update = await fetch(
+                `/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`
+            )
+
+            if (!update.ok) {
+                throw new Error(`Indexer error! status: 503`)
+            }
+
+            update_data = await update.json()
+            console.log(JSON.stringify(update_data, null, 2))
+
+            await updateBalance()
+        } catch (error) {
+            console.error('redeemBitcoin', error)
+            throw error
+        }
     }
 
     // @review (mainnet)
