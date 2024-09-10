@@ -77,14 +77,24 @@ export default async function handler(
     try {
         const fetchBalanceWithRetry = async (
             id: string,
-            retryInterval: number = 5000
+            retryInterval: number = 5000,
+            maxRetryTime: number = 300000 // 5 minutes in milliseconds
         ): Promise<any> => {
             let data_unisat
+            const startTime = Date.now()
+
             while (true) {
                 data_unisat = await unisatApi.getBrc20Info(id)
                 if (data_unisat && data_unisat.detail.length > 0) {
                     break
                 }
+
+                if (Date.now() - startTime >= maxRetryTime) {
+                    throw new Error(
+                        'The SDB balance is zero. Please make a deposit.'
+                    )
+                }
+
                 console.log('detail is empty, retrying...')
                 await new Promise((resolve) =>
                     setTimeout(resolve, retryInterval)

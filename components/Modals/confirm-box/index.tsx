@@ -275,7 +275,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             )
 
             if (!add.ok) {
-                throw new Error(`Indexer error! status: ${add.status}`)
+                throw new Error(`Indexer error! status: 501`)
             }
 
             const add_data = await add.json()
@@ -289,7 +289,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             )
 
             if (!update.ok) {
-                throw new Error(`Indexer error! status: ${add.status}`)
+                throw new Error(`Indexer error! status: 502`)
             }
 
             const update_data = await update.json()
@@ -375,9 +375,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
             }
 
             const collateral = Math.floor(Number(exactInput))
-            if (collateral < 2000)
+            if (collateral < 1000)
                 throw new Error(
-                    'Your BTC deposit is below the minimum required amount of 0.00002 BTC. Please increase your deposit.'
+                    'Your BTC deposit is below the minimum required amount of 0.00001 BTC. Please increase your deposit.'
                 )
 
             // @mainnet collateral cannot be more than 5000 sats

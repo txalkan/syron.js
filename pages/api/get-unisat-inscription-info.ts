@@ -68,14 +68,23 @@ export default async function handler(
         try {
             const fetchInscriptionInfoWithRetry = async (
                 id: string,
+                maxRetryTime: number = 5 * 60 * 1000, // 5 minutes in milliseconds
                 retryInterval: number = 5000
             ): Promise<any> => {
+                const startTime = Date.now()
                 let data_unisat
                 while (true) {
                     data_unisat = await unisatApi.getInscriptionInfo(id)
                     if (data_unisat && data_unisat.brc20 !== null) {
                         break
                     }
+
+                    if (Date.now() - startTime >= maxRetryTime) {
+                        throw new Error(
+                            'The inscription balance is wrong. Please try again.'
+                        )
+                    }
+
                     console.log('brc20 is null, retrying...')
                     await new Promise((resolve) =>
                         setTimeout(resolve, retryInterval)
