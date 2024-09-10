@@ -229,20 +229,21 @@ function Header() {
         script.src =
             'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
         script.async = true
-        script.setAttribute('data-background-color', '#666666')
-        script.setAttribute('data-text-color', '#FFFFFF')
+        script.setAttribute('data-background-color', '#383838')
+        script.setAttribute('data-text-color', '#dbe4eb')
         script.setAttribute('data-button-color', '#4B0082')
-        script.setAttribute('data-button-text-color', '#FFFFFF')
+        script.setAttribute('data-button-text-color', '#dbe4eb')
         script.setAttribute('data-title', 'TyronDAO')
         script.setAttribute(
             'data-description',
-            "Tyron's Decentralized Autonomous Organization ᛞ Be Your Own ₿ank"
+            "Tyron's Decentralized Autonomous Organization ᛞ Be Your ₿ank"
         )
         script.setAttribute(
             'data-icon',
-            'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/08/tyrondao_brand_mark.png'
+            'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
         )
         script.setAttribute('data-site', 'https://www.tyrondao.org/')
+
         document.body.appendChild(script)
 
         return () => {
@@ -276,8 +277,8 @@ function Header() {
                 <div id={headerClassName}>
                     <div
                         style={{
-                            marginTop: '11%', //searchBarMargin,
-                            marginBottom: '44%',
+                            marginTop: '7%', //searchBarMargin,
+                            marginBottom: '1%',
                             width: '100%',
                         }}
                         className={contentClassName}
