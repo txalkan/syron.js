@@ -96,6 +96,7 @@
 
 .card,
 .cardSelect {
+    font-weight: bolder;
     text-transform: uppercase;
     white-space: nowrap;
 
@@ -247,7 +248,7 @@
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 23px;
+        font-size: 22px;
     }
 }
 
@@ -263,7 +264,7 @@
 .txt {
     font-family: 'GeistMono', monospace;
     font-weight: 500;
-    color: #ffff32;
+    color: #f8f8f8;
 }
 
 .sdb,
@@ -275,11 +276,11 @@
     //@mobile
     font-size: 14px;
     @media only screen and (min-width: 375px) {
-        font-size: 18px;
+        font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 22px;
+        font-size: 19px;
     }
 }
 

@@ -415,7 +415,7 @@ function Component() {
                                     width="22"
                                 />
                                 <span className={styles.plain}>
-                                    Deposit:{' '}
+                                    BTC Deposited:{' '}
                                     <span className={styles.yellow}>
                                         {Number(btcSatoshi.div(1e8))}
                                     </span>
@@ -436,7 +436,7 @@ function Component() {
                                     width="22"
                                 />
                                 <span className={styles.plain}>
-                                    Loan:{' '}
+                                    SYRON Borrowed:{' '}
                                     <span className={styles.yellow}>
                                         {loan === '0.00' ? '0' : loan}
                                     </span>
@@ -451,18 +451,22 @@ function Component() {
 
                             <button
                                 style={{
-                                    width: '56%',
+                                    width: '50%',
+                                    height: '40px',
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                     marginTop: '1rem',
                                     cursor: 'pointer',
-                                    borderRadius: '14px',
+                                    borderRadius: '22px',
                                     // @design-shadow-3d
                                     backgroundImage:
                                         'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
                                     boxShadow:
-                                        '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
+                                        // 3D effect
+                                        '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)',
+
+                                    //'0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)',
                                 }}
                                 disabled={isLoading}
                                 onClick={handleRedeem}
