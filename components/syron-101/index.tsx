@@ -8,9 +8,11 @@ import { useTranslation } from 'next-i18next'
 import { SyronForm } from '../syron-102'
 import icoBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import icoBTC from '../../src/assets/icons/bitcoin.png'
+import icoSUSD from '../../src/assets/icons/ssi_SU$D_iso.svg'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
+import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import Big from 'big.js'
-import { $btc_wallet, $syron } from '../../src/store/syron'
+import { $btc_wallet, $syron, $walletConnected } from '../../src/store/syron'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -24,18 +26,21 @@ Big.PE = 999
 const _0 = Big(0)
 
 function Component() {
+    const walletConnected = useStore($walletConnected).isConnected
     const syron = useStore($syron)
 
     const { t } = useTranslation()
     const [active, setActive] = useState('GetSyron')
 
     const [sdb, setSDB] = useState('')
+    const [btcSatoshi, setBtcSatoshi] = useState(_0)
     const [loan, setLoan] = useState('')
     useEffect(() => {
         if (syron !== null) {
             console.log('Syron', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
+            setBtcSatoshi(syron.sdb_btc)
 
             const loan_ = syron.syron_usd_loan.div(1e8).toFixed(2).toString()
             setLoan(loan_)
@@ -93,6 +98,8 @@ function Component() {
 
             if (sdb === '') {
                 throw new Error('SDB Loading error')
+            } else if (Number(loan) <= 0) {
+                throw new Error('Loan amount is invalid')
             } else {
                 let gas = await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
                     .then(async (response) => {
@@ -225,7 +232,9 @@ function Component() {
                             </a>
                         </p>
                         <p style={{ color: 'red' }}>
-                            {JSON.stringify(err, null, 2)}
+                            {err && (err as Error).message
+                                ? (err as Error).message
+                                : JSON.stringify(err, null, 2)}
                         </p>
                     </div>,
                     {
@@ -331,11 +340,144 @@ function Component() {
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
         await updateWallet(address, Number(balance.confirmed), network)
-        await getBox(address, Number(balance.confirmed), network, false)
+        await getBox(address, false)
         console.log('balance updated')
     }
     return (
         <div className={styles.container}>
+            {walletConnected && (
+                <>
+                    {sdb ? (
+                        <div className={styles.boxWrapper}>
+                            <p className={styles.boxTitle}>
+                                Your Safety Deposit ₿ox
+                                {/* <span @review
+                                        onClick={updateBitcoinVault}
+                                        style={{
+                                            cursor: 'pointer',
+                                            paddingLeft: '8px',
+                                        }}
+                                    >
+                                        {loading ? (
+                                            <Spinner />
+                                        ) : (
+                                            <Image
+                                                src={refreshIco}
+                                                alt="refresh-ico"
+                                                height="12"
+                                                width="12"
+                                            />
+                                        )}
+                                    </span> */}
+                            </p>
+
+                            <p
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                }}
+                            >
+                                <Image
+                                    src={icoShield}
+                                    alt={'SDB'}
+                                    height="22"
+                                    width="22"
+                                />
+                                <span className={styles.plain}>SDB:</span>
+                                <span
+                                    onClick={() =>
+                                        window.open(
+                                            `https://mempool.space/address/${syron?.sdb}`
+                                        )
+                                    }
+                                    className={styles.sdb}
+                                >
+                                    {syron?.sdb}
+                                    <span
+                                        style={{
+                                            marginLeft: '5px',
+                                            fontSize: '1rem',
+                                        }}
+                                    >
+                                        ↗
+                                    </span>
+                                </span>
+                            </p>
+
+                            <p className={styles.info}>
+                                <Image
+                                    src={icoBalance}
+                                    alt={'Deposit'}
+                                    height="22"
+                                    width="22"
+                                />
+                                <span className={styles.plain}>
+                                    Deposit:{' '}
+                                    <span className={styles.yellow}>
+                                        {Number(btcSatoshi.div(1e8))}
+                                    </span>
+                                </span>
+                                <Image
+                                    src={icoBTC}
+                                    alt={'BTC'}
+                                    height="22"
+                                    width="22"
+                                />
+                            </p>
+
+                            <p className={styles.info}>
+                                <Image
+                                    src={icoThunder}
+                                    alt={'Loan'}
+                                    height="22"
+                                    width="22"
+                                />
+                                <span className={styles.plain}>
+                                    Loan:{' '}
+                                    <span className={styles.yellow}>
+                                        {loan}
+                                    </span>
+                                </span>
+                                <Image
+                                    src={icoSUSD}
+                                    alt={'SUSD'}
+                                    height="22"
+                                    width="22"
+                                />
+                            </p>
+
+                            <button
+                                style={{
+                                    width: '56%',
+                                    display: 'flex',
+                                    justifyContent: 'center',
+                                    alignItems: 'center',
+                                    marginTop: '1rem',
+                                    cursor: 'pointer',
+                                    borderRadius: '14px',
+                                    // @design-shadow-3d
+                                    backgroundImage:
+                                        'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
+                                    boxShadow:
+                                        '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
+                                }}
+                                disabled={isLoading}
+                                onClick={handleRedeem}
+                            >
+                                <div className={styles.txt}>redeem btc</div>
+                            </button>
+                        </div>
+                    ) : (
+                        <div className={styles.boxWrapper}>
+                            Loading your Safety Deposit ₿ox...
+                        </div>
+                    )}
+                </>
+            )}
+
             {/* @dev: trade */}
             <div className={styles.cardActiveWrapper}>
                 <div className={styles.tabWrapper}>
@@ -367,7 +509,7 @@ function Component() {
                             : styles.cardBeYourBank
                     }
                 >
-                    <div className={styles.title}>Be Your Own ₿ank</div>
+                    <div className={styles.title}>₿e Your ₿ank</div>
 
                     {/* <div className={styles.icoWrapper}>
                         <Image
@@ -388,108 +530,6 @@ function Component() {
                         <div className={styles.wrapper}>
                             <SyronForm type="liquid" startPair={start_pair} />
                         </div>
-                    </div>
-                )}
-                {sdb && (
-                    <div className={styles.boxWrapper}>
-                        <p className={styles.boxTitle}>
-                            Your Safety Deposit ₿ox
-                            {/* <span @review
-                                    onClick={updateBitcoinVault}
-                                    style={{
-                                        cursor: 'pointer',
-                                        paddingLeft: '8px',
-                                    }}
-                                >
-                                    {loading ? (
-                                        <Spinner />
-                                    ) : (
-                                        <Image
-                                            src={refreshIco}
-                                            alt="refresh-ico"
-                                            height="12"
-                                            width="12"
-                                        />
-                                    )}
-                                </span> */}
-                        </p>
-                        <p className={styles.info}>
-                            <Image
-                                src={icoBalance}
-                                alt={'BTC'}
-                                height="18"
-                                width="18"
-                            />
-                            <span className={styles.plain}>
-                                Deposit:{' '}
-                                <span className={styles.yellow}>
-                                    {Number(syron?.syron_btc.div(1e8))}
-                                </span>
-                            </span>
-                            <Image
-                                src={icoBTC}
-                                alt={'BTC'}
-                                height="18"
-                                width="18"
-                            />
-                        </p>
-                        <p
-                            style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                textOverflow: 'ellipsis',
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                            }}
-                        >
-                            <Image
-                                src={icoThunder}
-                                alt={'Wallet'}
-                                height="18"
-                                width="18"
-                            />
-                            <span style={{ paddingLeft: '4px' }}>
-                                <span className={styles.plain}>SDB:</span>
-                                <span
-                                    onClick={() =>
-                                        window.open(
-                                            `https://mempool.space/address/${syron?.sdb}`
-                                        )
-                                    }
-                                    className={styles.sdb}
-                                >
-                                    {syron?.sdb}
-                                    <span
-                                        style={{
-                                            marginLeft: '5px',
-                                            fontSize: '1rem',
-                                        }}
-                                    >
-                                        ↗
-                                    </span>
-                                </span>
-                            </span>
-                        </p>
-                        <button
-                            style={{
-                                width: '56%',
-                                display: 'flex',
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                                marginTop: '1rem',
-                                cursor: 'pointer',
-                                borderRadius: '14px',
-                                // @design-shadow-3d
-                                backgroundImage:
-                                    'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
-                                boxShadow:
-                                    '0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)', // Added 3D effect
-                            }}
-                            disabled={isLoading}
-                            onClick={handleRedeem}
-                        >
-                            <div className={styles.txt}>redeem btc</div>
-                        </button>
                     </div>
                 )}
             </div>
