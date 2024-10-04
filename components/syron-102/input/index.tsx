@@ -140,7 +140,7 @@ export const BoxInput: React.FC<Prop> = ({
                                 </span>
                             </div>
                             <div className={styles.info}>
-                                | your balance:
+                                | UniSat balance:
                                 <span className={styles.infoPurple}>
                                     {isNaN(Number(bal))
                                         ? 'Connect Wallet'

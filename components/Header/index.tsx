@@ -236,7 +236,7 @@ function Header() {
         script.setAttribute('data-title', 'TyronDAO')
         script.setAttribute(
             'data-description',
-            "Tyron's Decentralized Autonomous Organization ᛞ Be Your ₿ank"
+            "Tyron's Decentralized Autonomous Organization ᛞ ₿e Your ₿ank"
         )
         script.setAttribute(
             'data-icon',
