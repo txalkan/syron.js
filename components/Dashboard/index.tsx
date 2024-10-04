@@ -157,12 +157,19 @@ function Component() {
 
     useEffect(() => {
         async function update() {
-            console.log('@dev get safety deposit box')
+            console.log('@dev update wallet info')
             await updateWallet(address_, Number(balance_.confirmed), network_) //@review (mainnet) showcase unconfirmed too
-            await getBox(address_, Number(balance_.confirmed), network_, true)
         }
         update()
     }, [address_, balance_, network_])
+
+    useEffect(() => {
+        async function updateSDB() {
+            console.log('@dev update safety deposit box')
+            await getBox(address_, false)
+        }
+        if (address_ != '') updateSDB()
+    }, [address_])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],

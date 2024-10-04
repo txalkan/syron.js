@@ -259,7 +259,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
         await updateWallet(address, Number(balance.confirmed), network)
-        await getBox(address, Number(balance.confirmed), network, false)
+        await getBox(address, false)
         console.log('balance updated')
     }
 
@@ -381,9 +381,9 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 )
 
             // @mainnet collateral cannot be more than 5000 sats
-            if (collateral > 10000)
+            if (collateral > 30000)
                 throw new Error(
-                    'Your BTC deposit exceeds the maximum allowed amount of 0.0001 BTC. Please reduce your deposit.'
+                    'Your BTC deposit exceeds the maximum allowed amount of 0.0003 BTC. Please reduce your deposit.'
                 )
 
             toast.info('Submitting your BTC deposit...', {
@@ -667,8 +667,11 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                 @tyronDAO
                             </a>
                         </p>
+
                         <p style={{ color: 'red' }}>
-                            {JSON.stringify(err, null, 2)}
+                            {err && (err as Error).message
+                                ? (err as Error).message
+                                : JSON.stringify(err, null, 2)}
                         </p>
                     </div>,
                     {
