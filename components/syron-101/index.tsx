@@ -438,7 +438,7 @@ function Component() {
                                 <span className={styles.plain}>
                                     Loan:{' '}
                                     <span className={styles.yellow}>
-                                        {loan}
+                                        {loan === '0.00' ? '0' : loan}
                                     </span>
                                 </span>
                                 <Image
