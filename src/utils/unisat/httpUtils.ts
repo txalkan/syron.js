@@ -308,6 +308,36 @@ export async function mempoolBalance(address: string) {
     }
 }
 
+export async function unisatBalance(address: string) {
+    try {
+        const url = `https://open-api.unisat.io/v1/indexer/address/${address}/balance`
+
+        const apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET // @mainnet
+        if (!apiKey) {
+            throw new Error('input apiKey and reload page')
+        }
+
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: {
+                Authorization: `Bearer ${apiKey}`,
+            },
+        })
+
+        if (!response.ok) {
+            throw new Error(`API request failed with status ${response.status}`)
+        }
+
+        const data = await response.json()
+        //console.log(JSON.stringify(data, null, 2))
+
+        return data.data.btcSatoshi
+    } catch (error) {
+        console.error('UniSat Error:', error)
+        checkError(error)
+    }
+}
+
 // @dev Best In Slot API
 
 export async function bisInscriptionInfo(id: string) {
@@ -388,9 +418,9 @@ export async function bisApi(url: string) {
 // create a reusable function to check the erorr instance
 function checkError(error: any) {
     if (error instanceof Error) {
-        throw new Error('API Error:' + error.message)
+        throw new Error('API Error: ' + error.message)
     } else {
-        throw new Error('API error:' + error)
+        throw new Error('API error: ' + error)
     }
 }
 
@@ -424,7 +454,7 @@ export const transaction_status = async (txId) => {
             }
 
             const data = await response.json()
-            console.log(JSON.stringify(data, null, 2))
+            //console.log(JSON.stringify(data, null, 2))
 
             if (!data.confirmed) {
                 throw new Error(`Trying again`)
@@ -443,7 +473,7 @@ export const transaction_status = async (txId) => {
                 return data
             }
         } catch (error) {
-            console.log(`Transaction status not confirmed. ${error}`)
+            console.error(`Transaction status not confirmed. ${error}`)
             await new Promise(
                 (resolve) => setTimeout(resolve, 1 * 60 * 1000) // 1 min
             )
