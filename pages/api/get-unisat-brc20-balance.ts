@@ -77,8 +77,8 @@ export default async function handler(
     try {
         const fetchBalanceWithRetry = async (
             id: string,
-            retryInterval: number = 5000,
-            maxRetryTime: number = 300000 // 5 minutes in milliseconds
+            retryInterval: number = 10000,
+            maxRetryTime: number = 180000 // 3 minutes in milliseconds
         ): Promise<any> => {
             let data_unisat
             const startTime = Date.now()

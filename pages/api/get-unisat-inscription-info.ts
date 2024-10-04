@@ -68,8 +68,8 @@ export default async function handler(
         try {
             const fetchInscriptionInfoWithRetry = async (
                 id: string,
-                maxRetryTime: number = 5 * 60 * 1000, // 5 minutes in milliseconds
-                retryInterval: number = 5000
+                maxRetryTime: number = 3 * 60 * 1000, // 3 minutes in milliseconds
+                retryInterval: number = 10000
             ): Promise<any> => {
                 const startTime = Date.now()
                 let data_unisat
