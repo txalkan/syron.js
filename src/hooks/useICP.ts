@@ -62,10 +62,19 @@ function useICPHook() {
                 72000000,
                 0 // @mainnet
             )
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+            //console.log('txId response: ', JSON.stringify(txId, null, 2))
+
             if (txId.Err) {
-                throw new Error(txId.Err.GenericError.error_message)
+                throw new Error(txIdStringified)
             }
-            console.log(txId)
+
             return txId
         } catch (err) {
             console.error('Get SUSD', err)
