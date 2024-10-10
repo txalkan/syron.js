@@ -36,7 +36,9 @@ export default async function handler(
         const dummy_ = dummy === 'true'
 
         console.log('@dev get data from Firebase')
-        const querySnapshot = await getDocs(collection(db, 'sdb'))
+        const querySnapshot = await getDocs(
+            collection(db, 'sdb-qczt5-riaaa-aaaam-qbfkq-cai')
+        )
         const dataList = querySnapshot.docs.map((doc) => ({
             ...(doc.data() as any),
             docId: doc.id,
@@ -106,7 +108,11 @@ export default async function handler(
         if (data) {
             console.log('@dev update document')
             // @dev Update the document if found
-            const docRef = doc(db, 'sdb', data.docId)
+            const docRef = doc(
+                db,
+                'sdb-qczt5-riaaa-aaaam-qbfkq-cai',
+                data.docId
+            )
             await updateDoc(docRef, {
                 timestamp: new Date().getTime(),
                 address,
@@ -117,7 +123,7 @@ export default async function handler(
         } else {
             console.log('@dev add document')
             // @dev Create a new document if not found
-            await addDoc(collection(db, 'sdb'), {
+            await addDoc(collection(db, 'sdb-qczt5-riaaa-aaaam-qbfkq-cai'), {
                 id,
                 timestamp: new Date().getTime(),
                 address,
