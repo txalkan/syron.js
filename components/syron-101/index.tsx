@@ -94,7 +94,9 @@ function Component() {
             // )
 
             // @pause
-            throw new Error('Coming soon!')
+            if (process.env.NEXT_PUBLIC_BURNING_PAUSE === 'true') {
+                throw new Error('Burning is paused')
+            }
 
             if (sdb === '') {
                 throw new Error('SDB Loading error')

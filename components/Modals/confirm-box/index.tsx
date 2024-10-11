@@ -360,7 +360,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
             // )
 
             // @pause
-            //throw new Error('Coming soon!')
+            // use environment variable to pause the minting process
+            if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
+                throw new Error('Minting is paused')
+            }
 
             if (!btc_wallet?.btc_addr) {
                 throw new Error(

@@ -263,8 +263,17 @@
 
 .txt {
     font-family: 'GeistMono', monospace;
-    font-weight: 500;
-    color: #f8f8f8;
+    color: #ffff32;
+
+    //@mobile-first
+    font-size: 10px;
+    @media only screen and (min-width: 375px) {
+        font-size: 12px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 14px;
+    }
 }
 
 .sdb,
