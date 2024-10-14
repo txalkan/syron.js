@@ -14,6 +14,10 @@ export const canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
 export const createActor = (canisterId, options = {}) => {
     const agent = options.agent || new HttpAgent({ ...options.agentOptions })
 
+    const replicaTime = agent.replicaTime
+    const newReplicaTime = new Date(replicaTime - Date.now() + 60000)
+    agent.replicaTime = newReplicaTime
+
     if (options.agent && options.agentOptions) {
         console.warn(
             'Detected both agent and agentOptions passed to createActor. Ignoring agentOptions and proceeding with the provided agent.'
