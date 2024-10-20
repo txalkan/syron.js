@@ -25,10 +25,11 @@ function useICPHook() {
                     if (sdb.data) {
                         updateSyronSSI({
                             sdb: sdb.data.address,
+                            collateral_ratio: Big(Number(sdb.data.ratio)),
                             sdb_btc: Big(Number(sdb.data.balance ?? 0)),
                             syron_btc: Big(Number(sdb.data.btc)), // @review (mainnet)
                             syron_usd_loan: Big(Number(sdb.data.susd)),
-                            collateral_ratio: Big(Number(sdb.data.ratio)),
+                            syron_usd_bal: Big(Number(sdb.data.bal)),
                         })
                     }
                 })
@@ -39,6 +40,32 @@ function useICPHook() {
             //}
         } catch (err) {
             console.error(err)
+        }
+    }
+
+    const updateSyronBalance = async (ssi: string) => {
+        try {
+            console.log('Calling Syron update...')
+            const txId = await syron.update_ssi_balance({
+                ssi,
+                op: { getsyron: null },
+            })
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+
+            if (txId.Err) {
+                throw new Error(txIdStringified)
+            }
+
+            return txId
+        } catch (err) {
+            console.error('Update Syron Balance: ', err)
+            throw err
         }
     }
 
@@ -55,7 +82,7 @@ function useICPHook() {
 
     const getSUSD = async (ssi: string, txid: string) => {
         try {
-            console.log('Loading SUSD Issuance')
+            console.log('Loading SUSD Issuance...')
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
@@ -77,20 +104,8 @@ function useICPHook() {
 
             return txId
         } catch (err) {
-            console.error('Get SUSD', err)
+            console.error('Get SYRON: ', err)
             throw err
-        }
-    }
-
-    const updateSyronLedgers = async (ssi: string) => {
-        try {
-            const txId = await syron.update_ssi_balance({
-                ssi,
-                op: { getsyron: null },
-            })
-            return txId
-        } catch (err) {
-            console.error('Update Balance Error', err)
         }
     }
 
@@ -147,8 +162,8 @@ function useICPHook() {
 
     return {
         getBox,
+        updateSyronBalance,
         getSUSD,
-        updateSyronLedgers,
         redemptionGas,
         redeemBTC,
         getServiceProviders,

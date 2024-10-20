@@ -58,12 +58,16 @@ export default async function handler(
         let ratio: string = ''
         let btc: string = ''
         let susd: string = ''
+        let bal: string = ''
+        let brc20: string = ''
 
         if (data) {
             address = data.address
             ratio = data.ratio
             btc = data.btc
             susd = data.susd
+            bal = data.bal
+            brc20 = data.brc20
 
             const now = new Date()
 
@@ -77,9 +81,17 @@ export default async function handler(
 
                 const balance = await unisatBalance(address)
 
-                response
-                    .status(200)
-                    .json({ data: { address, balance, ratio, btc, susd } })
+                response.status(200).json({
+                    data: {
+                        address,
+                        balance,
+                        ratio,
+                        btc,
+                        susd,
+                        bal,
+                        brc20,
+                    },
+                })
                 return
             }
         }
@@ -103,6 +115,8 @@ export default async function handler(
             ratio = account.Ok.collateral_ratio.toString()
             btc = account.Ok.btc_1.toString()
             susd = account.Ok.susd_1.toString()
+            bal = account.Ok.susd_2.toString()
+            brc20 = account.Ok.susd_3.toString()
         }
 
         if (data) {
@@ -119,6 +133,8 @@ export default async function handler(
                 ratio,
                 btc,
                 susd,
+                bal,
+                brc20,
             })
         } else {
             console.log('@dev add document')
@@ -130,6 +146,8 @@ export default async function handler(
                 ratio,
                 btc,
                 susd,
+                bal,
+                brc20,
             })
         }
 
@@ -137,7 +155,7 @@ export default async function handler(
 
         response
             .status(200)
-            .json({ data: { address, balance, ratio, btc, susd } })
+            .json({ data: { address, balance, ratio, btc, susd, bal, brc20 } })
     } catch (error) {
         console.error('@response ICP error:', error)
         response.status(500).json({

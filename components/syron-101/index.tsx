@@ -35,6 +35,8 @@ function Component() {
     const [sdb, setSDB] = useState('')
     const [btcSatoshi, setBtcSatoshi] = useState(_0)
     const [loan, setLoan] = useState('')
+    const [susd_balance, setBalance] = useState('')
+
     useEffect(() => {
         if (syron !== null) {
             console.log('Syron', JSON.stringify(syron, null, 2))
@@ -45,6 +47,10 @@ function Component() {
             const loan_ = syron.syron_usd_loan.div(1e8).toFixed(2).toString()
             setLoan(loan_)
             console.log('loan', loan_)
+
+            const bal_ = syron.syron_usd_bal.div(1e8).toFixed(2).toString()
+            setBalance(bal_)
+            console.log('SUSD Balance', bal_)
         }
     }, [syron])
 
@@ -79,7 +85,8 @@ function Component() {
         },
     ]
 
-    const { redemptionGas, redeemBTC, getBox } = useICPHook()
+    const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
+        useICPHook()
     const [isLoading, setIsLoading] = useState(false)
 
     const btc_wallet = useStore($btc_wallet)
@@ -230,7 +237,7 @@ function Component() {
                                     textDecoration: 'underline',
                                 }}
                             >
-                                @tyronDAO
+                                @TyronDAO
                             </a>
                         </p>
                         <p style={{ color: 'red' }}>
@@ -248,7 +255,8 @@ function Component() {
                 toast.error(
                     <div className={styles.error}>
                         <p>
-                            Please let us know about this error on Telegram{' '}
+                            For assistance with this error, please join us on
+                            Telegram{' '}
                             <a
                                 href="https://t.me/tyrondao"
                                 target="_blank"
@@ -258,7 +266,7 @@ function Component() {
                                     textDecoration: 'underline',
                                 }}
                             >
-                                @tyronDAO
+                                @TyronDAO
                             </a>
                         </p>
                         <p style={{ color: 'red' }}>
@@ -327,7 +335,7 @@ function Component() {
             update_data = await update.json()
             console.log(JSON.stringify(update_data, null, 2))
 
-            await updateBalance()
+            await updateSession()
         } catch (error) {
             console.error('redeemBitcoin', error)
             throw error
@@ -337,14 +345,78 @@ function Component() {
     // @review (mainnet)
     const { updateWallet } = useBTCWalletHook()
 
-    const updateBalance = async () => {
+    const updateSession = async () => {
         const [address] = await unisat.getAccounts()
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
         await updateWallet(address, Number(balance.confirmed), network)
         await getBox(address, false)
-        console.log('balance updated')
+        console.log('Session updated.')
     }
+
+    const updateBalance = async () => {
+        try {
+            await updateSyronBalance(btc_wallet?.btc_addr!)
+        } catch (error) {
+            if (typeof error === 'object' && Object.keys(error!).length !== 0) {
+                toast.error(
+                    <div className={styles.error}>
+                        <p>
+                            Your request was rejected. For assistance, please
+                            let us know on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @TyronDAO
+                            </a>
+                        </p>
+
+                        <p style={{ color: 'red' }}>
+                            {error && (error as Error).message
+                                ? (error as Error).message
+                                : JSON.stringify(error, null, 2)}
+                        </p>
+                    </div>,
+                    {
+                        autoClose: false,
+                    }
+                )
+            } else {
+                toast.error(
+                    <div className={styles.error}>
+                        <p>
+                            For assistance with this error, please join us on
+                            Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @TyronDAO
+                            </a>
+                        </p>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(error))}
+                        </p>
+                    </div>,
+                    { autoClose: false }
+                )
+            }
+        }
+        updateSession()
+    }
+
+    const updateWithdraw = async () => {}
     return (
         <div className={styles.container}>
             {walletConnected && (
@@ -449,6 +521,36 @@ function Component() {
                                     height="22"
                                     width="22"
                                 />
+
+                                {/* add button to call update balance */}
+                                <button onClick={updateBalance}>Update</button>
+                            </p>
+
+                            <p className={styles.info}>
+                                <Image
+                                    src={icoThunder}
+                                    alt={'Balance'}
+                                    height="22"
+                                    width="22"
+                                />
+                                <span className={styles.plain}>
+                                    Balance:{' '}
+                                    <span className={styles.yellow}>
+                                        {susd_balance === '0.00'
+                                            ? '0'
+                                            : susd_balance}
+                                    </span>
+                                </span>
+                                <Image
+                                    src={icoSUSD}
+                                    alt={'SUSD'}
+                                    height="22"
+                                    width="22"
+                                />
+
+                                <button onClick={updateWithdraw}>
+                                    Withdraw
+                                </button>
                             </p>
 
                             <button

@@ -57,6 +57,8 @@ export const idlFactory = ({ IDL }) => {
     const CollateralizedAccount = IDL.Record({
         collateral_ratio: IDL.Nat64,
         susd_1: IDL.Nat64,
+        susd_2: IDL.Nat64,
+        susd_3: IDL.Nat64,
         btc_1: IDL.Nat64,
         exchange_rate: IDL.Nat64,
     })
@@ -92,6 +94,22 @@ export const idlFactory = ({ IDL }) => {
         retrieve_btc_min_amount: IDL.Nat64,
         min_confirmations: IDL.Nat32,
         kyt_fee: IDL.Nat64,
+    })
+    const Utxo = IDL.Record({
+        height: IDL.Nat32,
+        value: IDL.Nat64,
+        outpoint: IDL.Record({ txid: IDL.Vec(IDL.Nat8), vout: IDL.Nat32 }),
+    })
+    const UtxoStatus = IDL.Variant({
+        ValueTooSmall: Utxo,
+        Tainted: Utxo,
+        Minted: IDL.Record({
+            minted_amount: IDL.Nat64,
+            block_index: IDL.Nat64,
+            utxo: Utxo,
+        }),
+        Checked: Utxo,
+        TransferInscription: Utxo,
     })
     return IDL.Service({
         addServiceProvider: IDL.Func([RegisterProviderArgs], [IDL.Nat64], []),
@@ -157,6 +175,16 @@ export const idlFactory = ({ IDL }) => {
         susd_balance_of: IDL.Func(
             [bitcoin_address, IDL.Nat64],
             [IDL.Nat64],
+            []
+        ),
+        update_ssi_balance: IDL.Func(
+            [GetBoxAddressArgs],
+            [
+                IDL.Variant({
+                    Ok: IDL.Vec(UtxoStatus),
+                    Err: UpdateBalanceError,
+                }),
+            ],
             []
         ),
         withdraw_susd: IDL.Func(

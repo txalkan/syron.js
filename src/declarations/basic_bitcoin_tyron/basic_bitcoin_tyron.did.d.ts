@@ -10,6 +10,8 @@ export type BtcNetwork =
 export interface CollateralizedAccount {
     collateral_ratio: bigint
     susd_1: bigint
+    susd_2: bigint
+    susd_3: bigint
     btc_1: bigint
     exchange_rate: bigint
 }
@@ -162,6 +164,10 @@ export interface _SERVICE {
     >
     sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
+    update_ssi_balance: ActorMethod<
+        [GetBoxAddressArgs],
+        { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
+    >
     withdraw_susd: ActorMethod<
         [GetBoxAddressArgs, string, bigint, bigint],
         { Ok: string } | { Err: UpdateBalanceError }

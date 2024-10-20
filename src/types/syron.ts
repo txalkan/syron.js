@@ -2,10 +2,11 @@ import Big from 'big.js'
 
 export interface SyronSSI {
     sdb: string
+    collateral_ratio: Big
     sdb_btc: Big // BTC deposit balance of the SDB
     syron_btc: Big // Registered balance in the Syron ledger
     syron_usd_loan: Big
-    collateral_ratio: Big
+    syron_usd_bal: Big
 }
 
 export interface BTCWallet {
