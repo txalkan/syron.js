@@ -12,11 +12,16 @@ export { idlFactory } from './basic_bitcoin_tyron.did.js'
 export const canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
 
 export const createActor = (canisterId, options = {}) => {
+    console.log('Options:', options)
+
     const agent = options.agent || new HttpAgent({ ...options.agentOptions })
 
-    const replicaTime = agent.replicaTime
-    const newReplicaTime = new Date(replicaTime - Date.now() + 60000)
-    agent.replicaTime = newReplicaTime
+    console.log('Agent:', agent)
+
+    //let newReplicaTime = Date.now() + 60000
+    //newReplicaTime = new Date(newReplicaTime).toUTCString()
+    //console.log('New replicaTime:', newReplicaTime)
+    //agent.replicaTime = newReplicaTime
 
     if (options.agent && options.agentOptions) {
         console.warn(
@@ -35,17 +40,20 @@ export const createActor = (canisterId, options = {}) => {
     }
 
     // Creates an actor with using the candid interface and the HttpAgent
-    return Actor.createActor(idlFactory, {
+    const actor = Actor.createActor(idlFactory, {
         agent,
         canisterId,
         ...options.actorOptions,
     })
+
+    console.log('Actor:', actor)
+    return actor
 }
 
 export const basic_bitcoin_syron = canisterId
     ? createActor(canisterId, {
           agentOptions: {
-              host: 'https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/',
+              host: 'https://icp-api.io', //'https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/',
           },
       })
     : undefined

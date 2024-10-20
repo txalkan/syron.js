@@ -84,8 +84,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
     const walletConnected = useStore($walletConnected).isConnected
 
     const { updateWallet } = useBTCWalletHook()
-    const { getBox, getSUSD, updateSyronLedgers, getServiceProviders } =
-        useICPHook()
+    const { getBox, getSUSD, getServiceProviders } = useICPHook()
 
     const dispatch = useDispatch()
     const { t } = useTranslation()
@@ -302,27 +301,15 @@ export var ConfirmBox: React.FC<Prop> = function ({
         }
     }
 
-    const updateSyron = async () => {
-        await updateSyronLedgers(btc_wallet?.btc_addr!)
-            .then((tx) => {
-                if (tx) {
-                    console.log('Get Syron ICP ID', tx)
-                }
-            })
-            .catch((err) => {
-                throw err
-            })
-    }
-
-    const updateBox = async () => {
-        setIsLoading(true)
-        try {
-            await updateSyron().then(async (res) => await updateBalance())
-        } catch (error) {
-            console.error(error)
-        }
-        setIsLoading(false)
-    }
+    // const updateBox = async () => {
+    //     setIsLoading(true)
+    //     try {
+    //         await updateSyron().then(async (res) => await updateBalance())
+    //     } catch (error) {
+    //         console.error(error)
+    //     }
+    //     setIsLoading(false)
+    // }
 
     const handleConfirm = React.useCallback(async () => {
         setIsLoading(true)
@@ -667,7 +654,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                     textDecoration: 'underline',
                                 }}
                             >
-                                @tyronDAO
+                                @TyronDAO
                             </a>
                         </p>
 
@@ -696,7 +683,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                     textDecoration: 'underline',
                                 }}
                             >
-                                @tyronDAO
+                                @TyronDAO
                             </a>
                         </p>
                         <p style={{ color: 'red' }}>
