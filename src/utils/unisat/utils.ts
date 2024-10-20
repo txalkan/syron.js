@@ -24,8 +24,15 @@ export function getStringByteCount(str: string) {
 }
 
 export const extractRejectText = (error: string) => {
+    // Check for specific error messages
+    if (error.includes('NoNewUtxos')) {
+        return 'No new UTXOs'
+    }
+
     //const match = error.match(/value: (.*?), src/)
-    const match = error.match(/(?:value:|with message:)\s(.*?),\s?src/)
+    const match =
+        error.match(/(?:value:|with message:)\s(.*?),\s?src/) ||
+        error.match(/"error_message":"(.*?)"/)
 
     let rejectMsg = match ? match[1] : error
 
