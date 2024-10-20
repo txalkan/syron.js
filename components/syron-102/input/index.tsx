@@ -140,7 +140,7 @@ export const BoxInput: React.FC<Prop> = ({
                                 </span>
                             </div>
                             <div className={styles.info}>
-                                | UniSat balance:
+                                | Wallet balance:
                                 <span className={styles.infoPurple}>
                                     {isNaN(Number(bal))
                                         ? 'Connect Wallet'
@@ -155,9 +155,26 @@ export const BoxInput: React.FC<Prop> = ({
                                                         }
                                                     )
                                           } ${token?.symbol}`}
-                                </span>
+                                </span>{' '}
+                                {Number(bal) != 0 && (
+                                    <>
+                                        =
+                                        <span className={styles.infoPurple}>
+                                            $
+                                            {Number(worth_) == 0
+                                                ? 0
+                                                : Number(worth_).toLocaleString(
+                                                      'en-US',
+                                                      {
+                                                          minimumFractionDigits: 2,
+                                                          maximumFractionDigits: 2,
+                                                      }
+                                                  )}
+                                        </span>
+                                    </>
+                                )}
                             </div>
-                            {Number(bal) != 0 && (
+                            {/* {Number(bal) != 0 && (
                                 <div className={styles.info}>
                                     | Worth:
                                     <span className={styles.infoPurple}>
@@ -173,7 +190,7 @@ export const BoxInput: React.FC<Prop> = ({
                                               )}
                                     </span>
                                 </div>
-                            )}
+                            )} */}
                         </>
                     )}
                 </div>
