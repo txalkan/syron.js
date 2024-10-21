@@ -22,6 +22,7 @@ import {
     transaction_status,
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
+import { WithdrawModal } from '..'
 Big.PE = 999
 const _0 = Big(0)
 
@@ -416,16 +417,28 @@ function Component() {
         updateSession()
     }
 
-    const updateWithdraw = async () => {}
-    return (
-        <div className={styles.container}>
-            {walletConnected && (
-                <>
-                    {sdb ? (
-                        <div className={styles.boxWrapper}>
-                            <p className={styles.boxTitle}>
-                                Your Safety Deposit ₿ox
-                                {/* <span @review
+    const [showWithdrawModal, setWithdrawModal] = React.useState(false)
+    const updateWithdraw = async () => {
+        setWithdrawModal(true)
+    }
+
+    if (showWithdrawModal) {
+        return (
+            <WithdrawModal
+                show={showWithdrawModal}
+                onClose={() => setWithdrawModal(false)}
+            />
+        )
+    } else {
+        return (
+            <div className={styles.container}>
+                {walletConnected && (
+                    <>
+                        {sdb ? (
+                            <div className={styles.boxWrapper}>
+                                <p className={styles.boxTitle}>
+                                    Your Safety Deposit ₿ox
+                                    {/* <span @review
                                         onClick={updateBitcoinVault}
                                         style={{
                                             cursor: 'pointer',
@@ -443,206 +456,212 @@ function Component() {
                                             />
                                         )}
                                     </span> */}
-                            </p>
+                                </p>
 
-                            <p
-                                style={{
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    textOverflow: 'ellipsis',
-                                    whiteSpace: 'nowrap',
-                                    overflow: 'hidden',
-                                }}
-                            >
-                                <Image
-                                    src={icoShield}
-                                    alt={'SDB'}
-                                    height="22"
-                                    width="22"
-                                />
-                                <span className={styles.plain}>SDB:</span>
-                                <span
-                                    onClick={() =>
-                                        window.open(
-                                            `https://mempool.space/address/${syron?.sdb}`
-                                        )
-                                    }
-                                    className={styles.sdb}
+                                <p
+                                    style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        textOverflow: 'ellipsis',
+                                        whiteSpace: 'nowrap',
+                                        overflow: 'hidden',
+                                    }}
                                 >
-                                    {syron?.sdb}
+                                    <Image
+                                        src={icoShield}
+                                        alt={'SDB'}
+                                        height="22"
+                                        width="22"
+                                    />
+                                    <span className={styles.plain}>SDB:</span>
                                     <span
-                                        style={{
-                                            marginLeft: '5px',
-                                            fontSize: '1rem',
-                                        }}
+                                        onClick={() =>
+                                            window.open(
+                                                `https://mempool.space/address/${syron?.sdb}`
+                                            )
+                                        }
+                                        className={styles.sdb}
                                     >
-                                        ↗
+                                        {syron?.sdb}
+                                        <span
+                                            style={{
+                                                marginLeft: '5px',
+                                                fontSize: '1rem',
+                                            }}
+                                        >
+                                            ↗
+                                        </span>
                                     </span>
-                                </span>
-                            </p>
+                                </p>
 
-                            <p className={styles.info}>
-                                <Image
-                                    src={icoBalance}
-                                    alt={'Deposit'}
-                                    height="22"
-                                    width="22"
-                                />
-                                <span className={styles.plain}>
-                                    BTC Deposited:{' '}
-                                    <span className={styles.yellow}>
-                                        {Number(btcSatoshi.div(1e8))}
+                                <p className={styles.info}>
+                                    <Image
+                                        src={icoBalance}
+                                        alt={'Deposit'}
+                                        height="22"
+                                        width="22"
+                                    />
+                                    <span className={styles.plain}>
+                                        BTC Deposited:{' '}
+                                        <span className={styles.yellow}>
+                                            {Number(btcSatoshi.div(1e8))}
+                                        </span>
                                     </span>
-                                </span>
-                                <Image
-                                    src={icoBTC}
-                                    alt={'BTC'}
-                                    height="22"
-                                    width="22"
-                                />
-                            </p>
+                                    <Image
+                                        src={icoBTC}
+                                        alt={'BTC'}
+                                        height="22"
+                                        width="22"
+                                    />
+                                </p>
 
-                            <p className={styles.info}>
-                                <Image
-                                    src={icoThunder}
-                                    alt={'Loan'}
-                                    height="22"
-                                    width="22"
-                                />
-                                <span className={styles.plain}>
-                                    SYRON Borrowed:{' '}
-                                    <span className={styles.yellow}>
-                                        {loan === '0.00' ? '0' : loan}
+                                <p className={styles.info}>
+                                    <Image
+                                        src={icoThunder}
+                                        alt={'Loan'}
+                                        height="22"
+                                        width="22"
+                                    />
+                                    <span className={styles.plain}>
+                                        SYRON Borrowed:{' '}
+                                        <span className={styles.yellow}>
+                                            {loan === '0.00' ? '0' : loan}
+                                        </span>
                                     </span>
-                                </span>
-                                <Image
-                                    src={icoSUSD}
-                                    alt={'SUSD'}
-                                    height="22"
-                                    width="22"
-                                />
+                                    <Image
+                                        src={icoSUSD}
+                                        alt={'SUSD'}
+                                        height="22"
+                                        width="22"
+                                    />
 
-                                {/* add button to call update balance */}
-                                <button onClick={updateBalance}>Update</button>
-                            </p>
+                                    {/* add button to call update balance */}
+                                    <button onClick={updateBalance}>
+                                        Update
+                                    </button>
+                                </p>
 
-                            <p className={styles.info}>
-                                <Image
-                                    src={icoThunder}
-                                    alt={'Balance'}
-                                    height="22"
-                                    width="22"
-                                />
-                                <span className={styles.plain}>
-                                    Balance:{' '}
-                                    <span className={styles.yellow}>
-                                        {susd_balance === '0.00'
-                                            ? '0'
-                                            : susd_balance}
+                                <p className={styles.info}>
+                                    <Image
+                                        src={icoThunder}
+                                        alt={'Balance'}
+                                        height="22"
+                                        width="22"
+                                    />
+                                    <span className={styles.plain}>
+                                        Balance:{' '}
+                                        <span className={styles.yellow}>
+                                            {susd_balance === '0.00'
+                                                ? '0'
+                                                : susd_balance}
+                                        </span>
                                     </span>
-                                </span>
-                                <Image
-                                    src={icoSUSD}
-                                    alt={'SUSD'}
-                                    height="22"
-                                    width="22"
-                                />
+                                    <Image
+                                        src={icoSUSD}
+                                        alt={'SUSD'}
+                                        height="22"
+                                        width="22"
+                                    />
 
-                                <button onClick={updateWithdraw}>
-                                    Withdraw
+                                    <button onClick={updateWithdraw}>
+                                        Withdraw
+                                    </button>
+                                </p>
+
+                                <button
+                                    style={{
+                                        width: '50%',
+                                        height: '40px',
+                                        display: 'flex',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        marginTop: '1rem',
+                                        cursor: 'pointer',
+                                        borderRadius: '22px',
+                                        // @design-shadow-3d
+                                        backgroundImage:
+                                            'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
+                                        boxShadow:
+                                            // 3D effect
+                                            '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)',
+
+                                        //'0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)',
+                                    }}
+                                    disabled={isLoading}
+                                    onClick={handleRedeem}
+                                >
+                                    <div className={styles.txt}>redeem btc</div>
                                 </button>
-                            </p>
+                            </div>
+                        ) : (
+                            <div className={styles.boxWrapper}>
+                                Loading your Safety Deposit ₿ox...
+                            </div>
+                        )}
+                    </>
+                )}
 
-                            <button
-                                style={{
-                                    width: '50%',
-                                    height: '40px',
-                                    display: 'flex',
-                                    justifyContent: 'center',
-                                    alignItems: 'center',
-                                    marginTop: '1rem',
-                                    cursor: 'pointer',
-                                    borderRadius: '22px',
-                                    // @design-shadow-3d
-                                    backgroundImage:
-                                        'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
-                                    boxShadow:
-                                        // 3D effect
-                                        '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)',
-
-                                    //'0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)',
-                                }}
-                                disabled={isLoading}
-                                onClick={handleRedeem}
-                            >
-                                <div className={styles.txt}>redeem btc</div>
-                            </button>
+                {/* @dev: trade */}
+                <div className={styles.cardActiveWrapper}>
+                    <div className={styles.tabWrapper}>
+                        <div
+                            onClick={() => toggleActive('GetSyron')}
+                            className={
+                                active === 'GetSyron'
+                                    ? styles.cardSelect
+                                    : styles.card
+                            }
+                        >
+                            Borrow Syron
                         </div>
-                    ) : (
-                        <div className={styles.boxWrapper}>
-                            Loading your Safety Deposit ₿ox...
+                        <div
+                            onClick={() => toggleActive('LiquidSyron')}
+                            className={
+                                active === 'LiquidSyron'
+                                    ? styles.cardSelect
+                                    : styles.card
+                            }
+                        >
+                            Earn Bitcoin
                         </div>
-                    )}
-                </>
-            )}
-
-            {/* @dev: trade */}
-            <div className={styles.cardActiveWrapper}>
-                <div className={styles.tabWrapper}>
-                    <div
-                        onClick={() => toggleActive('GetSyron')}
-                        className={
-                            active === 'GetSyron'
-                                ? styles.cardSelect
-                                : styles.card
-                        }
-                    >
-                        Borrow Syron
                     </div>
                     <div
-                        onClick={() => toggleActive('LiquidSyron')}
                         className={
-                            active === 'LiquidSyron'
-                                ? styles.cardSelect
-                                : styles.card
+                            active === 'GetSyron' || active === 'LiquidSyron'
+                                ? styles.cardTitle
+                                : styles.cardBeYourBank
                         }
                     >
-                        Earn Bitcoin
-                    </div>
-                </div>
-                <div
-                    className={
-                        active === 'GetSyron' || active === 'LiquidSyron'
-                            ? styles.cardTitle
-                            : styles.cardBeYourBank
-                    }
-                >
-                    <div className={styles.title}>₿e Your ₿ank</div>
+                        <div className={styles.title}>₿e Your ₿ank</div>
 
-                    {/* <div className={styles.icoWrapper}>
+                        {/* <div className={styles.icoWrapper}>
                         <Image
                             src={active === 'GetSyron' ? icoUp : icoDown}
                             alt="toggle-ico"
                         />
                     </div> */}
+                    </div>
+                    {active === 'GetSyron' && (
+                        <div className={styles.cardSub}>
+                            <div className={styles.wrapper}>
+                                <SyronForm type="get" startPair={start_pair} />
+                            </div>
+                        </div>
+                    )}
+                    {active === 'LiquidSyron' && (
+                        <div className={styles.cardSub}>
+                            <div className={styles.wrapper}>
+                                <SyronForm
+                                    type="liquid"
+                                    startPair={start_pair}
+                                />
+                            </div>
+                        </div>
+                    )}
                 </div>
-                {active === 'GetSyron' && (
-                    <div className={styles.cardSub}>
-                        <div className={styles.wrapper}>
-                            <SyronForm type="get" startPair={start_pair} />
-                        </div>
-                    </div>
-                )}
-                {active === 'LiquidSyron' && (
-                    <div className={styles.cardSub}>
-                        <div className={styles.wrapper}>
-                            <SyronForm type="liquid" startPair={start_pair} />
-                        </div>
-                    </div>
-                )}
             </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default Component
