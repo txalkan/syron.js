@@ -109,6 +109,36 @@ function useICPHook() {
         }
     }
 
+    const syronWithdrawal = async (ssi: string, txid: string, amt: number) => {
+        try {
+            console.log('Loading Syron Withdrawal...')
+            const txId = await syron.syron_withdrawal(
+                { ssi, op: { getsyron: null } },
+                txid,
+                72000000,
+                0, // @mainnet
+                amt
+            )
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+            //console.log('txId response: ', JSON.stringify(txId, null, 2))
+
+            if (txId.Err) {
+                throw new Error(txIdStringified)
+            }
+
+            return txId
+        } catch (err) {
+            console.error('Syron Withdrawal: ', err)
+            throw err
+        }
+    }
+
     const redemptionGas = async (ssi: string) => {
         try {
             console.log('Loading Redemption Gas')
@@ -164,6 +194,7 @@ function useICPHook() {
         getBox,
         updateSyronBalance,
         getSUSD,
+        syronWithdrawal,
         redemptionGas,
         redeemBTC,
         getServiceProviders,
