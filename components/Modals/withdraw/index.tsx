@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useStore } from 'effector-react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
@@ -15,15 +15,34 @@ import c2 from '../../../src/assets/icons/checkpoint_2_dark.svg'
 import c3 from '../../../src/assets/icons/checkpoint_3_dark.svg'
 import cs from '../../../src/assets/icons/checkpoint_selected_dark.svg'
 import Close from '../../../src/assets/icons/ic_cross_black.svg'
+import { SyronInput } from '../../syron-102/input/syron-input'
+import Big from 'big.js'
+import { CryptoState } from '../../../src/types/vault'
+import ThreeDots from '../../Spinner/ThreeDots'
+import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
 
 type Prop = {
+    ssi: string
+    sdb: string
+    balance: Big
     show: boolean
     onClose: () => void
 }
 
-var ThisModal: React.FC<Prop> = function ({ show, onClose }) {
-    const { t } = useTranslation()
+const token: CryptoState = {
+    name: 'Syron USD',
+    symbol: 'SYRON',
+    decimals: 8,
+}
 
+var ThisModal: React.FC<Prop> = function ({
+    ssi,
+    sdb,
+    balance,
+    show,
+    onClose,
+}) {
+    const { t } = useTranslation()
     const [active, setActive] = useState(0)
     const [checkedStep, setCheckedStep] = useState(Array())
 
@@ -43,6 +62,36 @@ var ThisModal: React.FC<Prop> = function ({ show, onClose }) {
             return false
         }
     }
+
+    const [amount, setAmount] = React.useState(balance)
+
+    const handleOnInput = React.useCallback((value: Big) => {
+        setAmount(value)
+    }, [])
+
+    const [disabled, setDisabled] = React.useState(false)
+    useEffect(() => {
+        if (balance.eq(0)) {
+            setDisabled(true)
+        } else {
+            setDisabled(false)
+        }
+    }, [balance])
+
+    const [isLoading, setIsLoading] = React.useState(false)
+
+    const { syron_withdrawal } = useSyronWithdrawal()
+
+    const handleConfirm = React.useCallback(async () => {
+        setIsLoading(true)
+        setDisabled(true)
+        try {
+            console.log('amount', String(amount))
+            await syron_withdrawal(ssi, sdb, Number(amount))
+        } catch (error) {}
+        setIsLoading(false)
+        setDisabled(false)
+    }, [amount])
 
     return (
         <Modal show={show} onClose={onClose}>
@@ -306,6 +355,28 @@ var ThisModal: React.FC<Prop> = function ({ show, onClose }) {
                                     </div>
                                 )}
                             </div>
+                        </div>
+                    </div>
+                    <SyronInput
+                        balance={balance}
+                        token={token}
+                        onInput={handleOnInput}
+                        disabled={disabled}
+                    />
+                    <div className={styles.btnConfirmWrapper}>
+                        <div
+                            className={
+                                disabled
+                                    ? styles.btnConfirmDisabled
+                                    : styles.btnConfirm
+                            }
+                            onClick={handleConfirm}
+                        >
+                            {isLoading ? (
+                                <ThreeDots color="yellow" />
+                            ) : (
+                                <div className={styles.txt}>CONFIRM</div>
+                            )}
                         </div>
                     </div>
                 </div>
