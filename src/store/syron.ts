@@ -17,3 +17,13 @@ export const $walletConnected = new Store<{ isConnected: boolean }>({
 export function updateWalletConnected(args: boolean) {
     $walletConnected.setState({ isConnected: args })
 }
+
+export const $inscriptionTx = new Store<string | null>(null)
+export function updateInscriptionTx(args: string) {
+    $inscriptionTx.setState(args)
+}
+
+export const $icpTx = new Store<boolean | null>(null)
+export function updateIcpTx(args: boolean) {
+    $icpTx.setState(args)
+}
