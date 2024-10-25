@@ -39,6 +39,7 @@ type Prop = {
 }
 
 Big.PE = 999
+const _0 = Big(0)
 
 const vault = new SSIVault()
 
@@ -70,7 +71,6 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const [selectedData, setSelectedData] = React.useState<any>(null)
     const [incriptionTx, setInscTx] = React.useState<any>(null)
 
-    const _0 = Big(0)
     const [amount, setAmount] = React.useState(_0)
 
     const direction = React.useMemo(() => {
@@ -242,6 +242,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     }
 
     const unisat = (window as any).unisat
+
     const handleVerify = async () => {
         setLoading(true)
         try {
@@ -554,7 +555,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         styles.selectInfoStatusVerifiedText
                                     }
                                 >
-                                    Liquidator&apos;s SUSD balance has been
+                                    Liquidator&apos;s SYRON balance has been
                                     verified.
                                 </div>
                             ) : (
@@ -572,7 +573,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         <> </>
                                     ) : (
                                         <>
-                                            Insufficient SUSD balance in the
+                                            Insufficient SYRON deposit in the
                                             liquidator&apos;s SDB.
                                         </>
                                     )}

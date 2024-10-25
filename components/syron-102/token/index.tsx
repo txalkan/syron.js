@@ -9,7 +9,7 @@ import classNames from 'classnames'
 import { TokenState } from '../../../src/types/token'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 //@ssibrowser
-import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
@@ -34,7 +34,7 @@ export const TokenInput: React.FC<Prop> = ({
                         // onClick={onSelect}
                     >
                         <Image
-                            src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
+                            src={token.symbol === 'BTC' ? icoBTC : icoSYRON}
                             alt="tokens-logo"
                             height="35"
                             width="35"

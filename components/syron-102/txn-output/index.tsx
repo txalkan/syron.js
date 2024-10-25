@@ -5,7 +5,7 @@ import Image from 'next/image'
 import tydradexSvg from '../../../src/assets/icons/ssi_tydradex.svg'
 import { CryptoState } from '../../../src/types/vault'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
-import icoSUSD from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 
 Big.PE = 999
@@ -24,7 +24,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                     <div className={styles.output}>
                         <Image
                             className={styles.tokenImage}
-                            src={token.symbol === 'BTC' ? icoBTC : icoSUSD}
+                            src={token.symbol === 'BTC' ? icoBTC : icoSYRON}
                             alt={token.symbol}
                             key={token.symbol}
                         />
@@ -43,7 +43,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                             className={styles.outputAmt}
                         />
                     </div>
-                    <div className={styles.tokenInfo}>| SUSD</div>
+                    <div className={styles.tokenInfo}>| SYRON</div>
                 </div>
             </div>
         </div>

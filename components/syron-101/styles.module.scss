@@ -115,7 +115,7 @@
     box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.3);
     // border-left: 1px solid #ffff32;
 
-    //@mobile
+    //@mobile-first
     font-size: 12px;
     @media only screen and (min-width: 375px) {
         font-size: 17px;
@@ -225,7 +225,7 @@
     padding: 11px;
     display: flex;
     flex-direction: column;
-    text-align: left;
+    justify-content: flex-start;
 
     box-shadow: 2px 3px 6px rgba(248, 248, 248, 0.6); // @design-shadow-sdb
 
@@ -235,13 +235,10 @@
 }
 
 .boxTitle {
-    padding-left: 4px;
-    padding-top: 4%;
+    padding-top: 2rem;
     color: #ffff32;
 
-    //font-family: 'Fragment Mono', monospace;
-
-    //@mobile
+    //@mobile-first
     font-size: 17px;
     @media only screen and (min-width: 375px) {
         font-size: 19px;
@@ -252,19 +249,8 @@
     }
 }
 
-.info {
-    display: flex;
-    align-items: center;
-    font-size: 17px;
-    @media only screen and (max-width: 767px) {
-        font-size: 14px;
-    }
-}
-
+.info,
 .txt {
-    font-family: 'GeistMono', monospace;
-    color: #ffff32;
-
     //@mobile-first
     font-size: 10px;
     @media only screen and (min-width: 375px) {
@@ -276,13 +262,22 @@
     }
 }
 
+.info {
+    display: flex;
+    align-items: center;
+}
+
+.txt {
+    color: #ffff32;
+}
+
 .sdb,
 .plain,
 .yellow {
     padding-left: 8px;
     padding-right: 4px;
 
-    //@mobile
+    //@mobile-first
     font-size: 14px;
     @media only screen and (min-width: 375px) {
         font-size: 17px;

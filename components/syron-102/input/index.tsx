@@ -5,7 +5,7 @@ import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
-import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
@@ -216,14 +216,7 @@ export const BoxInput: React.FC<Prop> = ({
                                                 }
                                                 onClick={() => handlePercent(n)}
                                             >
-                                                {/* <div
-                                            className={
-                                                n === selectedPercent
-                                                    ? styles.percentTxtActive
-                                                    : styles.percentTxt
-                                            }
-                                        > */}
-                                                {n}%{/* </div> */}
+                                                {n}%
                                             </div>
                                         ))}
                                     </div>
@@ -250,7 +243,7 @@ export const BoxInput: React.FC<Prop> = ({
                                         src={
                                             token.symbol === 'BTC'
                                                 ? icoBTC
-                                                : icoSU$D
+                                                : icoSYRON
                                         }
                                         alt="tokens-logo"
                                     />
