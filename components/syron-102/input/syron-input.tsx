@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import icoToken from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
 import { $btc_wallet, $syron } from '../../../src/store/syron'
@@ -32,25 +32,37 @@ export const SyronInput: React.FC<Prop> = ({
 }) => {
     const [val_, setVal_] = useState<Big>(balance)
 
+    useEffect(() => {
+        setVal_(balance)
+    }, [balance])
+
     const [selectedPercent, setSelectedPercent] = useState(0)
 
-    const handlePercent = useCallback(async (n: number) => {
-        if (balance) {
-            setSelectedPercent(n)
-            const percent = Big(n)
+    const handlePercent = useCallback(
+        async (n: number) => {
+            if (balance) {
+                setSelectedPercent(n)
+                const percent = Big(n)
 
-            let input = balance.mul(percent).div(100).round(2)
-            onInput(input)
-            setVal_(input)
-        }
-    }, [])
+                let input = balance.mul(percent).div(100).round(2)
+                onInput(input)
+                setVal_(input)
+            }
+        },
+        [balance, onInput]
+    )
 
     const handleOnInput = useCallback(
         (event: React.FormEvent<HTMLInputElement>) => {
             const target = event.target as HTMLInputElement
             try {
                 if (target.value) {
-                    const input = Big(target.value).round(2)
+                    let input = Big(target.value).round(2)
+
+                    if (input.gt(balance)) {
+                        input = balance
+                    }
+
                     setVal_(input)
                     onInput(input)
                 } else {
@@ -60,7 +72,7 @@ export const SyronInput: React.FC<Prop> = ({
                 console.error('HandleOnInput', err)
             }
         },
-        [onInput]
+        [balance, onInput]
     )
 
     const handleOnBlur = useCallback(
@@ -146,7 +158,7 @@ export const SyronInput: React.FC<Prop> = ({
                                 {token && (
                                     <Image
                                         className={styles.tokenImage}
-                                        src={icoToken}
+                                        src={icoSYRON}
                                         alt="token-logo"
                                     />
                                 )}

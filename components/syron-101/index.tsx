@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { SyronForm } from '../syron-102'
 import icoBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import icoBTC from '../../src/assets/icons/bitcoin.png'
-import icoSUSD from '../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import Big from 'big.js'
@@ -23,6 +23,7 @@ import {
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal } from '..'
+
 Big.PE = 999
 const _0 = Big(0)
 
@@ -36,22 +37,22 @@ function Component() {
     const [sdb, setSDB] = useState('')
     const [btcSatoshi, setBtcSatoshi] = useState(_0)
     const [loan, setLoan] = useState('')
-    const [susd_balance, setBalance] = useState('')
+    const [syron_balance, setBalance] = useState('')
 
     useEffect(() => {
         if (syron !== null) {
-            console.log('Syron', JSON.stringify(syron, null, 2))
+            console.log('Syron State: ', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
             setBtcSatoshi(syron.sdb_btc)
 
-            const loan_ = syron.syron_usd_loan.div(1e8).toFixed(2).toString()
+            const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
             setLoan(loan_)
-            console.log('loan', loan_)
+            console.log('SYRON Borrowed: ', loan_)
 
-            const bal_ = syron.syron_usd_bal.div(1e8).toFixed(2).toString()
+            const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
             setBalance(bal_)
-            console.log('SUSD Balance', bal_)
+            console.log('SYRON Balance: ', bal_)
         }
     }, [syron])
 
@@ -240,6 +241,7 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
+                            .
                         </p>
                         <p style={{ color: 'red' }}>
                             {err && (err as Error).message
@@ -255,6 +257,9 @@ function Component() {
             } else {
                 toast.error(
                     <div className={styles.error}>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(err))}
+                        </p>
                         <p>
                             For assistance with this error, please join us on
                             Telegram{' '}
@@ -269,9 +274,7 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
-                        </p>
-                        <p style={{ color: 'red' }}>
-                            {extractRejectText(String(err))}
+                            .
                         </p>
                     </div>,
                     { autoClose: false }
@@ -376,8 +379,8 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
+                            .
                         </p>
-
                         <p style={{ color: 'red' }}>
                             {error && (error as Error).message
                                 ? (error as Error).message
@@ -391,6 +394,9 @@ function Component() {
             } else {
                 toast.error(
                     <div className={styles.error}>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(error))}
+                        </p>
                         <p>
                             For assistance with this error, please join us on
                             Telegram{' '}
@@ -405,9 +411,7 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
-                        </p>
-                        <p style={{ color: 'red' }}>
-                            {extractRejectText(String(error))}
+                            .
                         </p>
                     </div>,
                     { autoClose: false }
@@ -425,6 +429,9 @@ function Component() {
     if (showWithdrawModal) {
         return (
             <WithdrawModal
+                ssi={btc_wallet?.btc_addr!}
+                sdb={sdb}
+                balance={syron_balance ? Big(syron_balance) : _0}
                 show={showWithdrawModal}
                 onClose={() => setWithdrawModal(false)}
             />
@@ -513,6 +520,17 @@ function Component() {
                                         height="22"
                                         width="22"
                                     />
+                                    <button
+                                        style={{
+                                            marginLeft: '2rem',
+                                            fontFamily: 'GeistMono, monospace',
+                                            fontSize: 'small',
+                                        }}
+                                        onClick={handleRedeem}
+                                        className={'button secondary'}
+                                    >
+                                        redeem
+                                    </button>
                                 </p>
 
                                 <p className={styles.info}>
@@ -529,15 +547,23 @@ function Component() {
                                         </span>
                                     </span>
                                     <Image
-                                        src={icoSUSD}
+                                        src={icoSYRON}
                                         alt={'SUSD'}
                                         height="22"
                                         width="22"
                                     />
 
                                     {/* add button to call update balance */}
-                                    <button onClick={updateBalance}>
-                                        Update
+                                    <button
+                                        onClick={updateBalance}
+                                        style={{
+                                            marginLeft: '2rem',
+                                            fontFamily: 'GeistMono, monospace',
+                                            fontSize: 'small',
+                                        }}
+                                        className={'button secondary'}
+                                    >
+                                        update
                                     </button>
                                 </p>
 
@@ -551,24 +577,31 @@ function Component() {
                                     <span className={styles.plain}>
                                         Balance:{' '}
                                         <span className={styles.yellow}>
-                                            {susd_balance === '0.00'
+                                            {syron_balance === '0.00'
                                                 ? '0'
-                                                : susd_balance}
+                                                : syron_balance}
                                         </span>
                                     </span>
                                     <Image
-                                        src={icoSUSD}
+                                        src={icoSYRON}
                                         alt={'SUSD'}
                                         height="22"
                                         width="22"
                                     />
-
-                                    <button onClick={updateWithdraw}>
+                                    <button
+                                        style={{
+                                            marginLeft: '2rem',
+                                            fontFamily: 'GeistMono, monospace',
+                                            fontSize: 'small',
+                                        }}
+                                        onClick={updateWithdraw}
+                                        className={'button secondary'}
+                                    >
                                         Withdraw
                                     </button>
                                 </p>
 
-                                <button
+                                {/* <button
                                     style={{
                                         width: '50%',
                                         height: '40px',
@@ -591,7 +624,7 @@ function Component() {
                                     onClick={handleRedeem}
                                 >
                                     <div className={styles.txt}>redeem btc</div>
-                                </button>
+                                </button> */}
                             </div>
                         ) : (
                             <div className={styles.boxWrapper}>

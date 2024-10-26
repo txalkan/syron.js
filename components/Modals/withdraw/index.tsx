@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import { useStore } from 'effector-react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
 import Image from 'next/image'
@@ -20,6 +19,11 @@ import Big from 'big.js'
 import { CryptoState } from '../../../src/types/vault'
 import ThreeDots from '../../Spinner/ThreeDots'
 import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
+import { $icpTx, $inscriptionTx, updateIcpTx } from '../../../src/store/syron'
+import { useStore } from 'react-stores'
+import Spinner from '../../Spinner'
+import useICPHook from '../../../src/hooks/useICP'
+import { toast } from 'react-toastify'
 
 type Prop = {
     ssi: string
@@ -42,6 +46,10 @@ var ThisModal: React.FC<Prop> = function ({
     show,
     onClose,
 }) {
+    useEffect(() => {
+        if (show) updateIcpTx(null)
+    }, [show])
+
     const { t } = useTranslation()
     const [active, setActive] = useState(0)
     const [checkedStep, setCheckedStep] = useState(Array())
@@ -69,29 +77,87 @@ var ThisModal: React.FC<Prop> = function ({
         setAmount(value)
     }, [])
 
-    const [disabled, setDisabled] = React.useState(false)
+    const [isDisabled, setIsDisabled] = React.useState(false)
+    const icpTx = useStore($icpTx)
+
     useEffect(() => {
-        if (balance.eq(0)) {
-            setDisabled(true)
+        if (balance.eq(0) || icpTx.value === false) {
+            setIsDisabled(true)
         } else {
-            setDisabled(false)
+            setIsDisabled(false)
         }
-    }, [balance])
+    }, [balance, icpTx])
 
     const [isLoading, setIsLoading] = React.useState(false)
 
     const { syron_withdrawal } = useSyronWithdrawal()
+    const { getBox } = useICPHook()
 
     const handleConfirm = React.useCallback(async () => {
+        if (isLoading) return
+
         setIsLoading(true)
-        setDisabled(true)
+
         try {
-            console.log('amount', String(amount))
-            await syron_withdrawal(ssi, sdb, Number(amount))
-        } catch (error) {}
+            if (amount.lt(0.2)) {
+                throw new Error('Insufficient Amount')
+            }
+            await syron_withdrawal(ssi, sdb, amount)
+            await getBox(ssi, false)
+        } catch (error) {
+            console.error('Withdraw Modal: ', error)
+
+            if (error == 'Error: Insufficient Amount') {
+                toast.error(
+                    <div className={styles.error}>
+                        The minimum amount for withdrawal is 20 cents. Please
+                        adjust your request accordingly. If you need assistance,
+                        feel free to reach out on Telegram{' '}
+                        <a
+                            href="https://t.me/tyrondao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: 'blue',
+                                textDecoration: 'underline',
+                            }}
+                        >
+                            @TyronDAO
+                        </a>
+                        .
+                    </div>,
+                    {
+                        autoClose: false,
+                    }
+                )
+            }
+        }
+
         setIsLoading(false)
-        setDisabled(false)
-    }, [amount])
+    }, [amount, isLoading])
+
+    let inscriptionTx = useStore($inscriptionTx)
+    const retryWithdrawal = React.useCallback(async () => {
+        if (isLoading) return
+
+        setIsLoading(true)
+
+        //inscriptionTx = 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc'
+
+        try {
+            await syron_withdrawal(
+                ssi,
+                sdb,
+                amount,
+                typeof inscriptionTx === 'string' ? inscriptionTx : undefined
+            )
+            await getBox(ssi, false)
+        } catch (error) {
+            console.error('Withdraw Modal: ', error)
+        }
+
+        setIsLoading(false)
+    }, [amount, isLoading, inscriptionTx])
 
     return (
         <Modal show={show} onClose={onClose}>
@@ -107,15 +173,16 @@ var ThisModal: React.FC<Prop> = function ({
                             />
                         </div>
                         <div className={styles.headerTxt}>
-                            <Image
+                            {/* <Image
                                 alt="power-ico"
                                 src={PowerIcon}
                                 width={30}
                                 height={30}
-                            />
+                            /> */}
                             {t('Withdraw SYRON')}
                         </div>
                     </div>
+
                     <div className={styles.contentWrapper}>
                         <div className={styles.rowWrapper}>
                             <div
@@ -141,7 +208,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Info')}
+                                        {t('Deposit Bitcoin')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -169,7 +236,9 @@ var ThisModal: React.FC<Prop> = function ({
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Info')}
+                                            {t(
+                                                'Send BTC into your Safety Deposit Box.'
+                                            )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -178,11 +247,11 @@ var ThisModal: React.FC<Prop> = function ({
                                                     {t('Info')}
                                                 </li>
                                             </ul>
-                                            <ul className={styles.ul}>
+                                            {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t('Info')}
                                                 </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
@@ -190,11 +259,14 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Info')}
+                                        {t(
+                                            'Send BTC into your Safety Deposit Box.'
+                                        )}
                                     </div>
                                 )}
                             </div>
                         </div>
+
                         <div className={styles.rowWrapper}>
                             <div
                                 onClick={() => menuActive(2)}
@@ -219,7 +291,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Info')}
+                                        {t('Borrow SYRON')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -247,7 +319,7 @@ var ThisModal: React.FC<Prop> = function ({
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Info')}
+                                            {t('Update your SYRON balance.')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -256,11 +328,11 @@ var ThisModal: React.FC<Prop> = function ({
                                                     {t('Info')}
                                                 </li>
                                             </ul>
-                                            <ul className={styles.ul}>
+                                            {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t('Info')}
                                                 </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
@@ -268,11 +340,12 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Info')}
+                                        {t('Update your SYRON balance.')}
                                     </div>
                                 )}
                             </div>
                         </div>
+
                         <div className={styles.rowWrapper}>
                             <div
                                 onClick={() => menuActive(3)}
@@ -297,7 +370,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Info')}
+                                        {t('Withdraw SYRON')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -325,7 +398,9 @@ var ThisModal: React.FC<Prop> = function ({
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t('Info')}
+                                            {t(
+                                                'Transfer SYRON from your balance to your wallet.'
+                                            )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
@@ -334,7 +409,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                     {t('Info')}
                                                 </li>
                                             </ul>
-                                            <ul className={styles.ul}>
+                                            {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t('Info')}
                                                 </li>
@@ -343,7 +418,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                 <li className={styles.li}>
                                                     {t('Info')}
                                                 </li>
-                                            </ul>
+                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
@@ -351,22 +426,25 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t('Info')}
+                                        {t(
+                                            'Transfer SYRON from your balance to your wallet.'
+                                        )}
                                     </div>
                                 )}
                             </div>
                         </div>
                     </div>
+
                     <SyronInput
                         balance={balance}
                         token={token}
                         onInput={handleOnInput}
-                        disabled={disabled}
+                        disabled={isDisabled}
                     />
                     <div className={styles.btnConfirmWrapper}>
                         <div
                             className={
-                                disabled
+                                isDisabled || isLoading
                                     ? styles.btnConfirmDisabled
                                     : styles.btnConfirm
                             }
@@ -379,6 +457,102 @@ var ThisModal: React.FC<Prop> = function ({
                             )}
                         </div>
                     </div>
+                    {icpTx.value === false ? (
+                        <div className={styles.failedWithdrawal}>
+                            {/* <div className={styles.icoColor}>
+                                <Image
+                                    alt="warning-ico"
+                                    src={Warning}
+                                    width={20}
+                                    height={20}
+                                />
+                            </div> */}
+                            <div className={styles.withdrawalTxt}>
+                                We are very sorry, but your withdrawal request
+                                has failed, possibly due to technical issues
+                                with the Internet Computer.
+                            </div>
+                            <div className={styles.withdrawalTxt}>
+                                Please try again after a moment. If the problem
+                                persists, do not hesitate to contact us for
+                                support on Telegram{' '}
+                                <a
+                                    href="https://t.me/tyrondao"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    style={{
+                                        color: 'blue',
+                                        textDecoration: 'underline',
+                                    }}
+                                >
+                                    @TyronDAO
+                                </a>
+                                .
+                            </div>
+                            <div className={styles.withdrawalTxt}>
+                                We appreciate your patience and understanding!
+                            </div>
+                            <button
+                                style={{
+                                    fontFamily: 'GeistMono, monospace',
+                                    fontSize: 'small',
+                                    backgroundColor: 'rgb(75, 0, 130)',
+                                }}
+                                onClick={retryWithdrawal}
+                                className={'button secondary'}
+                            >
+                                {isLoading ? (
+                                    <ThreeDots color="yellow" />
+                                ) : (
+                                    <div className={styles.txt}>retry</div>
+                                )}
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            {isLoading ? (
+                                <div>
+                                    <div className={styles.withdrawalTxt}>
+                                        Your withdrawal request is currently
+                                        being processed. Please allow a few
+                                        moments for completion. Thank you for
+                                        your patience!
+                                    </div>
+                                    <Spinner />
+                                </div>
+                            ) : (
+                                <>
+                                    {icpTx.value === true ? (
+                                        <div
+                                            className={
+                                                styles.succeededWithdrawal
+                                            }
+                                        >
+                                            <div
+                                                className={styles.withdrawalTxt}
+                                            >
+                                                Congratulations! Your withdrawal
+                                                was successful, and{' '}
+                                                {String(amount)} SYRON has been
+                                                sent to your wallet.
+                                            </div>
+                                            <div
+                                                className={styles.withdrawalTxt}
+                                            >
+                                                You can check your wallet to
+                                                verify the transaction.
+                                            </div>
+                                            <div
+                                                className={styles.withdrawalTxt}
+                                            >
+                                                Thank you for using Tyron!
+                                            </div>
+                                        </div>
+                                    ) : null}
+                                </>
+                            )}
+                        </>
+                    )}
                 </div>
             </div>
         </Modal>
