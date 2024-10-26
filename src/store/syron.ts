@@ -18,12 +18,14 @@ export function updateWalletConnected(args: boolean) {
     $walletConnected.setState({ isConnected: args })
 }
 
-export const $inscriptionTx = new Store<string | null>(null)
-export function updateInscriptionTx(args: string) {
-    $inscriptionTx.setState(args)
+export const $inscriptionTx = new Store<{ value: string | null }>({
+    value: null,
+})
+export function updateInscriptionTx(args: string | null) {
+    $inscriptionTx.setState({ value: args })
 }
 
-export const $icpTx = new Store<boolean | null>(null)
-export function updateIcpTx(args: boolean) {
-    $icpTx.setState(args)
+export const $icpTx = new Store<{ value: boolean | null }>({ value: null })
+export function updateIcpTx(args: boolean | null) {
+    $icpTx.setState({ value: args })
 }
