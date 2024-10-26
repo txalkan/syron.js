@@ -164,6 +164,10 @@ export interface _SERVICE {
     >
     sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
+    syron_withdrawal: ActorMethod<
+        [GetBoxAddressArgs, string, bigint, bigint, bigint],
+        { Ok: string } | { Err: UpdateBalanceError }
+    >
     update_ssi_balance: ActorMethod<
         [GetBoxAddressArgs],
         { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }

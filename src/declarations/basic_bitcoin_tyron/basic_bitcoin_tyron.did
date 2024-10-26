@@ -251,6 +251,8 @@ service : (network, MinterArg) -> {
     //   [get_box_address] endpoint.
     "withdraw_susd": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
     
+    "syron_withdrawal": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64, amount: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    
     "get_subaccount": (nonce: nat64, ssi: bitcoin_address) -> (blob) query;
 
     "susd_balance_of": (ssi: bitcoin_address, nonce: nat64) -> (nat64);

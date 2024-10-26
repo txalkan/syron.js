@@ -177,6 +177,11 @@ export const idlFactory = ({ IDL }) => {
             [IDL.Nat64],
             []
         ),
+        syron_withdrawal: IDL.Func(
+            [GetBoxAddressArgs, IDL.Text, IDL.Nat64, IDL.Nat64, IDL.Nat64],
+            [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
+            []
+        ),
         update_ssi_balance: IDL.Func(
             [GetBoxAddressArgs],
             [
