@@ -111,7 +111,7 @@ function useICPHook() {
 
     const syronWithdrawal = async (ssi: string, txid: string, amt: number) => {
         try {
-            console.log('Loading Syron Withdrawal...')
+            console.log('Initiating Syron Withdrawal...')
             const txId = await syron.syron_withdrawal(
                 { ssi, op: { getsyron: null } },
                 txid,

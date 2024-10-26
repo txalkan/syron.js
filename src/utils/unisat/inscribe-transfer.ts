@@ -45,7 +45,10 @@ export const inscribe_transfer = async (
     const txId = await unisat
         .sendBitcoin(order.payAddress, order.amount, order.feeRate)
         .then(async (txId1) => {
-            console.log('Inscribe-Transfer Transaction ID #1', txId1)
+            console.log(
+                'Inscribe-Transfer: Unconfirmed - Transaction ID #1',
+                txId1
+            )
 
             await transaction_status(txId1)
             const order_ = await fetch(
@@ -67,6 +70,11 @@ export const inscribe_transfer = async (
             const txId = inscription_id.slice(0, -2)
 
             await transaction_status(txId)
+            console.log(
+                'Inscribe-Transfer: Confirmed - Transaction ID #2',
+                txId1
+            )
+
             return txId
         })
 
