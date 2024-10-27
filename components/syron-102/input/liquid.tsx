@@ -164,7 +164,9 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                                         />
                                     )}
                                 </div>
-                                <div className={styles.tokenInfo}>| SYRON</div>
+                                <div className={styles.tokenInfo}>
+                                    | SYRON USD
+                                </div>
                             </div>
                         </div>
                     </div>

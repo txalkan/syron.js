@@ -43,7 +43,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                             className={styles.outputAmt}
                         />
                     </div>
-                    <div className={styles.tokenInfo}>| SYRON</div>
+                    <div className={styles.tokenInfo}>| SYRON USD</div>
                 </div>
             </div>
         </div>

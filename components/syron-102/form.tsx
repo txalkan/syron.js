@@ -492,7 +492,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             <div className={styles.titleForm2}>
                                 Pay with
                                 <span className={styles.txtTitle}>
-                                    &nbsp;Syron ᛞ
+                                    &nbsp;SYRON
                                 </span>
                             </div>
                         </div>
@@ -522,7 +522,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                             {sdb}
                                         </>
                                     ) : (
-                                        <>Connect SDB</>
+                                        <>Connect Wallet</>
                                     )}
                                 </span>
                             </div>

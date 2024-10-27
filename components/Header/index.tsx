@@ -233,11 +233,8 @@ function Header() {
         script.setAttribute('data-text-color', '#dbe4eb')
         script.setAttribute('data-button-color', '#4B0082')
         script.setAttribute('data-button-text-color', '#dbe4eb')
-        script.setAttribute('data-title', 'TyronDAO')
-        script.setAttribute(
-            'data-description',
-            "Tyron's Decentralized Autonomous Organization ᛞ ₿e Your ₿ank"
-        )
+        script.setAttribute('data-title', 'tyronDAO')
+        script.setAttribute('data-description', 'SYRON ᛞ ₿e Your ₿ank')
         script.setAttribute(
             'data-icon',
             'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
