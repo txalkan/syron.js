@@ -3,8 +3,8 @@ import { mempoolFeeRate, transaction_status } from './httpUtils'
 
 export const inscribe_transfer = async (
     sdb: string,
-    devFee: number,
-    amt: number
+    amt: number,
+    collateral?: number
 ): Promise<string> => {
     if (sdb === '') {
         throw new Error('SDB Loading Error')
@@ -12,9 +12,19 @@ export const inscribe_transfer = async (
 
     const ticker = 'SYRON' // @mainnet
 
-    const receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET! // @mainnet the receiver address
+    let receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET! // @mainnet
     if (!receiveAddress) {
         throw new Error('The receiver address is not defined')
+    }
+
+    let devAddress
+    let devFee
+    if (!collateral) {
+        devAddress = receiveAddress // the Syron Minter
+        devFee = 1000 // the gas fee to withdraw SYRON
+    } else {
+        devAddress = sdb // deposit the collateral into the SDB
+        devFee = collateral
     }
 
     // @dev The transaction fee rate in sat/vB @mainnet
@@ -26,7 +36,7 @@ export const inscribe_transfer = async (
 
     // @dev Inscribe-transfer order
     const order: InscribeOrderData = await fetch(
-        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${feeRate}&devAddress=${receiveAddress}&devFee=${devFee}&brc20Ticker=${ticker}&brc20Amount=${amt}`
+        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${feeRate}&devAddress=${devAddress}&devFee=${devFee}&brc20Ticker=${ticker}&brc20Amount=${amt}`
     )
         .then((response) => {
             if (!response.ok) {
@@ -72,7 +82,7 @@ export const inscribe_transfer = async (
             await transaction_status(txId)
             console.log(
                 'Inscribe-Transfer: Confirmed - Transaction ID #2',
-                txId1
+                txId
             )
 
             return txId

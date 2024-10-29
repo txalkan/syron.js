@@ -10,7 +10,40 @@ import {
 Big.PE = 999
 
 function useSyronWithdrawal() {
-    const { syronWithdrawal } = useICPHook()
+    const { getSUSD, syronWithdrawal } = useICPHook()
+
+    const btc_to_syron = async (
+        ssi: string,
+        sdb: string,
+        amt?: Big,
+        collateral?: number,
+        tx_id?: string
+    ) => {
+        let txId: string
+        if (tx_id) {
+            txId = tx_id
+        } else {
+            // @dev Inscribe-transfer transaction ID
+            txId = await inscribe_transfer(sdb, Number(amt), collateral)
+            updateInscriptionTx(txId)
+        }
+
+        console.log('Inscribe-Transfer Transaction ID: ', txId)
+
+        await addInscriptionInfo(txId)
+
+        try {
+            const res = await getSUSD(ssi, txId)
+            updateIcpTx(true)
+            await updateInscriptionInfo(txId)
+
+            // updateInscriptionTx(null)
+            return res
+        } catch (error) {
+            updateIcpTx(false)
+            throw error
+        }
+    }
 
     const syron_withdrawal = async (
         ssi: string,
@@ -23,8 +56,7 @@ function useSyronWithdrawal() {
             txId = tx_id
         } else {
             // @dev Inscribe-transfer transaction ID
-            const devFee = 0
-            txId = await inscribe_transfer(sdb, devFee, Number(amt))
+            txId = await inscribe_transfer(sdb, Number(amt))
             updateInscriptionTx(txId)
         }
 
@@ -43,10 +75,11 @@ function useSyronWithdrawal() {
             return res
         } catch (error) {
             updateIcpTx(false)
+            throw error
         }
     }
 
-    return { syron_withdrawal }
+    return { btc_to_syron, syron_withdrawal }
 }
 
 export default useSyronWithdrawal
