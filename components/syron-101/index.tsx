@@ -24,6 +24,7 @@ import {
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal } from '..'
+import ThreeDots from '../Spinner/ThreeDots'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -374,6 +375,7 @@ function Component() {
     }
 
     const updateBalance = async () => {
+        setIsLoading(true)
         try {
             await updateSyronBalance(btc_wallet?.btc_addr!)
         } catch (error) {
@@ -434,6 +436,7 @@ function Component() {
             }
         }
         updateSession()
+        setIsLoading(false)
     }
 
     const [showWithdrawModal, setWithdrawModal] = React.useState(false)
@@ -576,9 +579,15 @@ function Component() {
                                             fontFamily: 'GeistMono, monospace',
                                             fontSize: 'small',
                                         }}
-                                        className={'button secondary'}
+                                        className={`button ${
+                                            isLoading ? 'disabled' : 'secondary'
+                                        }`}
                                     >
-                                        update
+                                        {isLoading ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            <>update</>
+                                        )}
                                     </button>
                                 </p>
 
