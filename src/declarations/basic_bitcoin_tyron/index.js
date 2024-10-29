@@ -12,11 +12,11 @@ export { idlFactory } from './basic_bitcoin_tyron.did.js'
 export const canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
 
 export const createActor = (canisterId, options = {}) => {
-    console.log('Options:', options)
+    // console.log('Options:', options)
 
     const agent = options.agent || new HttpAgent({ ...options.agentOptions })
 
-    console.log('Agent:', agent)
+    // console.log('Agent:', agent)
 
     //let newReplicaTime = Date.now() + 60000
     //newReplicaTime = new Date(newReplicaTime).toUTCString()
@@ -46,7 +46,7 @@ export const createActor = (canisterId, options = {}) => {
         ...options.actorOptions,
     })
 
-    console.log('Actor:', actor)
+    // console.log('Actor:', actor)
     return actor
 }
 
