@@ -61,9 +61,18 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
     useEffect(() => {
-        if (unisat) {
-            setUnisatInstalled(true)
+        const checkUnisatInstallation = () => {
+            if ((window as any).unisat) {
+                setUnisatInstalled(true)
+                clearInterval(intervalId) // Clear the interval once unisat is found
+            }
         }
+
+        // Check for unisat every 100ms, up to 10 times
+        const intervalId = setInterval(checkUnisatInstallation, 100)
+        setTimeout(() => clearInterval(intervalId), 1000) // Stop checking after 1 second
+
+        return () => clearInterval(intervalId) // Cleanup interval on component unmount
     }, [])
 
     const walletConnected = useStore($walletConnected).isConnected
