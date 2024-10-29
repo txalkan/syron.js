@@ -560,12 +560,17 @@ var ThisModal: React.FC<Prop> = function ({
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'You can withdraw SYRON dollars based on the amount of BTC you HODL in your Safety Deposit ₿ox. Your SYRON USD are BRC-20 tokens that you can use as you want on the Bitcoin mainnet.'
+                                                        'You can withdraw SYRON dollars based on the amount of BTC you HODL in your Safety Deposit ₿ox.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
                                                     {t(
                                                         'Your SYRON USD are BRC-20 tokens that you can use freely on the Bitcoin mainnet.'
+                                                    )}
+                                                </li>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Bridge your SYRON to other networks, such as Bitlayer, using the Omnity Network.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
