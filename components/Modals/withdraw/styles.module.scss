@@ -9,7 +9,7 @@
 .rowContentTxt,
 .txt,
 .withdrawalTxt {
-    //font-family: 'GeistMono', monospace; @review (ui)
+    //font-family: 'GeistMono', monospace; //@review (UI)
 
     //@mobile-first
     font-size: 12px;
@@ -25,13 +25,16 @@
 .rowContentTxt {
     //text-transform: uppercase;
     color: #000;
-    display: flex;
     justify-content: flex-start;
     margin-left: 1rem;
+    margin-right: 1rem;
 }
 
 .txt {
-    color: #fff;
+    text-transform: capitalize;
+    color: #f8f8f8;
+    font-weight: 500;
+    letter-spacing: normal;
 }
 
 .ul {
@@ -45,6 +48,7 @@
     display: inline-block;
     width: 1em;
     margin-left: -1em;
+    margin-top: 1rem;
 }
 
 .outerWrapper {
@@ -87,6 +91,8 @@
 }
 
 .headerTxt {
+    font-family: 'GeistMono', monospace;
+
     color: rgb(75, 0, 130);
     text-decoration: underline;
     text-decoration-color: rgb(75, 0, 130);
@@ -131,12 +137,11 @@
 }
 
 .rowHeaderTitle {
-    font-size: medium;
+    font-family: 'GeistMono', monospace;
+
     margin-left: 22px;
-    margin-top: -3%;
+    margin-top: -3%; // @review (ui)
     color: #000;
-    text-decoration: underline;
-    text-decoration-color: silver;
 
     font-size: 14px;
     @media only screen and (min-width: 375px) {
@@ -331,16 +336,18 @@
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }
 
-.failedWithdrawal {
+.failedWithdrawal,
+.succeededWithdrawal {
     margin-top: 1rem;
-    border: 1px solid red;
     padding: 2rem;
 }
 
+.failedWithdrawal {
+    border: 1px solid red;
+}
+
 .succeededWithdrawal {
-    margin-top: 1rem;
     border: 1px solid #ffff32;
-    padding: 2rem;
 }
 
 .withdrawalTxt {
@@ -349,12 +356,20 @@
 }
 
 .error {
-    margin-top: 14px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
     max-width: 350px; // Set a maximum width for the toast content
     max-height: 500px; // Set a fixed maximum height for the toast content
     overflow-y: auto; // Enable vertical scrolling if content exceeds the height
     white-space: normal; // Allow text to wrap normally
-    font-size: 14px; // Set a readable font size
+    font-size: 16px; // Set a readable font size
     line-height: 1.5; // Improve readability with better line spacing
-    word-break: break-word; // Break long words or URLs properly
+    word-break: break-word !important; // Break long words or URLs properly
+}
+
+.sdb {
+    display: flex;
+    margin-top: 2rem;
+    color: rgb(75, 0, 130);
+    cursor: pointer;
 }

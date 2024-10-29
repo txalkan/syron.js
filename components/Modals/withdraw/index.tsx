@@ -24,6 +24,7 @@ import { useStore } from 'react-stores'
 import Spinner from '../../Spinner'
 import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
+import { extractRejectText } from '../../../src/utils/unisat/utils'
 
 type Prop = {
     ssi: string
@@ -78,7 +79,7 @@ var ThisModal: React.FC<Prop> = function ({
     }, [])
 
     const [isDisabled, setIsDisabled] = React.useState(false)
-    const icpTx = useStore($icpTx)
+    const icpTx = useStore($icpTx) //{ value: false } //
 
     useEffect(() => {
         if (balance.eq(0) || icpTx.value === false) {
@@ -93,8 +94,10 @@ var ThisModal: React.FC<Prop> = function ({
     const { syron_withdrawal } = useSyronWithdrawal()
     const { getBox } = useICPHook()
 
+    const [txError, setTxError] = React.useState('')
+
     const handleConfirm = React.useCallback(async () => {
-        if (isLoading) return
+        if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
 
         setIsLoading(true)
 
@@ -102,10 +105,24 @@ var ThisModal: React.FC<Prop> = function ({
             if (amount.lt(0.2)) {
                 throw new Error('Insufficient Amount')
             }
-            await syron_withdrawal(ssi, sdb, amount)
+
+            // @test
+            // const inscriptionTx = {
+            //     value: 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc',
+            // }
+
+            await syron_withdrawal(
+                ssi,
+                sdb,
+                amount,
+                typeof inscriptionTx.value === 'string'
+                    ? inscriptionTx.value
+                    : undefined
+            )
             await getBox(ssi, false)
         } catch (error) {
-            console.error('Withdraw Modal: ', error)
+            console.error('Syron Withdrawal', error)
+            setTxError(extractRejectText(String(error)))
 
             if (error == 'Error: Insufficient Amount') {
                 toast.error(
@@ -125,10 +142,60 @@ var ThisModal: React.FC<Prop> = function ({
                             @TyronDAO
                         </a>
                         .
-                    </div>,
-                    {
-                        autoClose: false,
-                    }
+                    </div>
+                )
+            } else if (
+                typeof error === 'object' &&
+                Object.keys(error!).length !== 0
+            ) {
+                toast.error(
+                    <div className={styles.error}>
+                        <div>
+                            Your request was rejected. For assistance, please
+                            let us know on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @TyronDAO
+                            </a>
+                            .
+                        </div>
+                        <br />
+                        <div style={{ color: 'red', paddingTop: '1rem' }}>
+                            {error && (error as Error).message
+                                ? (error as Error).message
+                                : JSON.stringify(error, null, 2)}
+                        </div>
+                    </div>
+                )
+            } else {
+                toast.error(
+                    <div className={styles.error}>
+                        <div>
+                            Please let us know about this error on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @TyronDAO
+                            </a>
+                            .
+                        </div>
+                        <div style={{ color: 'red', paddingTop: '1rem' }}>
+                            {extractRejectText(String(error))}
+                        </div>
+                    </div>
                 )
             }
         }
@@ -142,22 +209,90 @@ var ThisModal: React.FC<Prop> = function ({
 
         setIsLoading(true)
 
-        //inscriptionTx = 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc'
-
         try {
+            // @test
+            // const inscriptionTx = {
+            //     value: 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc',
+            // }
+
+            if (!inscriptionTx.value) {
+                throw new Error('The inscribe-transfer transaction is missing.')
+            }
+
+            updateIcpTx(null)
             await syron_withdrawal(
                 ssi,
                 sdb,
                 amount,
-                typeof inscriptionTx === 'string' ? inscriptionTx : undefined
+                typeof inscriptionTx.value === 'string'
+                    ? inscriptionTx.value
+                    : undefined
             )
             await getBox(ssi, false)
         } catch (error) {
-            console.error('Withdraw Modal: ', error)
+            console.error('Retry Syron Withdrawal', error)
+            setTxError(extractRejectText(String(error)))
+
+            if (typeof error === 'object' && Object.keys(error!).length !== 0) {
+                toast.error(
+                    <div className={styles.error}>
+                        <div>
+                            Your request was rejected. For assistance, please
+                            let us know on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @TyronDAO
+                            </a>
+                            .
+                        </div>
+                        <br />
+                        <div style={{ color: 'red', paddingTop: '1rem' }}>
+                            {error && (error as Error).message
+                                ? (error as Error).message
+                                : JSON.stringify(error, null, 2)}
+                        </div>
+                    </div>
+                )
+            } else {
+                toast.error(
+                    <div className={styles.error}>
+                        <div>
+                            Please let us know about this error on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: 'blue',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @TyronDAO
+                            </a>
+                            .
+                        </div>
+                        <div style={{ color: 'red', paddingTop: '1rem' }}>
+                            {extractRejectText(String(error))}
+                        </div>
+                    </div>
+                )
+            }
         }
 
         setIsLoading(false)
     }, [amount, isLoading, inscriptionTx])
+
+    const copyToClipboard = (text) => {
+        navigator.clipboard.writeText(text)
+        toast.info('SDB address copied to clipboard!')
+    }
 
     return (
         <Modal show={show} onClose={onClose}>
@@ -208,7 +343,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Deposit Bitcoin')}
+                                        {t(
+                                            'Deposit BTC in your Safety Deposit ₿ox'
+                                        )}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -236,22 +373,33 @@ var ThisModal: React.FC<Prop> = function ({
                                             style={{ marginBottom: '2rem' }}
                                             className={styles.rowContentTxt}
                                         >
-                                            {t(
-                                                'Send BTC into your Safety Deposit Box.'
-                                            )}
+                                            {t('Send bitcoin into your SDB.')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    {t('Info')}
+                                                    {t(
+                                                        'You can easily transfer BTC from any wallet to your SDB address. Just copy your SDB address below and follow the transfer instructions in your wallet. If you have any questions, feel free to reach out on Telegram @TyronDAO.'
+                                                    )}
+                                                </li>
+                                                <span
+                                                    className={styles.sdb}
+                                                    onClick={() =>
+                                                        copyToClipboard(sdb)
+                                                    }
+                                                >
+                                                    {sdb.slice(0, 10)}...
+                                                    {sdb.slice(-10)}
+                                                </span>
+                                            </ul>
+                                            <ul className={styles.ul}>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        "During this testing phase, please limit your deposits to a maximum of 5,000 sats (0.00005 BTC). This amount is covered by TyronDAO's insurance, but please do not exceed it. Thanks for your cooperation!"
+                                                    )}
                                                 </li>
                                             </ul>
-                                            {/* <ul className={styles.ul}>
-                                                <li className={styles.li}>
-                                                    {t('Info')}
-                                                </li>
-                                            </ul> */}
                                         </div>
                                     </>
                                 ) : (
@@ -259,9 +407,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ marginBottom: '2rem' }}
                                         className={styles.rowContentTxt}
                                     >
-                                        {t(
-                                            'Send BTC into your Safety Deposit Box.'
-                                        )}
+                                        {t('Send bitcoin into your SDB.')}
                                     </div>
                                 )}
                             </div>
@@ -291,7 +437,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Borrow SYRON')}
+                                        {t('Print SYRON')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -325,7 +471,14 @@ var ThisModal: React.FC<Prop> = function ({
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    {t('Info')}
+                                                    {t(
+                                                        'To keep your balance up to date, click the UPDATE button in your Safety Deposit ₿ox. This will show you how much SYRON dollars you can withdraw. Remember to click UPDATE each time you make a BTC deposit into your SDB address!'
+                                                    )}
+                                                </li>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Remember to click UPDATE each time you make a BTC deposit into your SDB address!'
+                                                    )}
                                                 </li>
                                             </ul>
                                             {/* <ul className={styles.ul}>
@@ -406,7 +559,19 @@ var ThisModal: React.FC<Prop> = function ({
                                             <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
-                                                    {t('Info')}
+                                                    {t(
+                                                        'You can withdraw SYRON dollars based on the amount of BTC you HODL in your Safety Deposit ₿ox. Your SYRON USD are BRC-20 tokens that you can use as you want on the Bitcoin mainnet.'
+                                                    )}
+                                                </li>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Your SYRON USD are BRC-20 tokens that you can use freely on the Bitcoin mainnet.'
+                                                    )}
+                                                </li>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'And very soon, you will also be able to send lightning-fast payments powered by the Internet Computer!'
+                                                    )}
                                                 </li>
                                             </ul>
                                             {/* <ul className={styles.ul}>
@@ -441,6 +606,7 @@ var ThisModal: React.FC<Prop> = function ({
                         onInput={handleOnInput}
                         disabled={isDisabled}
                     />
+
                     <div className={styles.btnConfirmWrapper}>
                         <div
                             className={
@@ -453,10 +619,11 @@ var ThisModal: React.FC<Prop> = function ({
                             {isLoading ? (
                                 <ThreeDots color="yellow" />
                             ) : (
-                                <div className={styles.txt}>CONFIRM</div>
+                                <div className={styles.txt}>confirm</div>
                             )}
                         </div>
                     </div>
+
                     {icpTx.value === false ? (
                         <div className={styles.failedWithdrawal}>
                             {/* <div className={styles.icoColor}>
@@ -469,11 +636,20 @@ var ThisModal: React.FC<Prop> = function ({
                             </div> */}
                             <div className={styles.withdrawalTxt}>
                                 We are very sorry, but your withdrawal request
-                                has failed, possibly due to technical issues
-                                with the Internet Computer.
+                                has failed.
                             </div>
+                            {txError !== '' && (
+                                <div
+                                    style={{
+                                        color: 'red',
+                                        wordBreak: 'break-word',
+                                    }}
+                                >
+                                    Error: {txError}
+                                </div>
+                            )}
                             <div className={styles.withdrawalTxt}>
-                                Please try again after a moment. If the problem
+                                Please try again after a moment. If the error
                                 persists, do not hesitate to contact us for
                                 support on Telegram{' '}
                                 <a
