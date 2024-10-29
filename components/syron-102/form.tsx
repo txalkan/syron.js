@@ -32,6 +32,7 @@ import {
     transaction_status,
 } from '../../src/utils/unisat/httpUtils'
 import ThreeDots from '../Spinner/ThreeDots'
+import { BtcToSyron } from '../btc-to-syron'
 
 type Prop = {
     startPair: VaultPair[]
@@ -200,10 +201,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 value={vault_pair[0].value}
                                 token={vault_pair[0].meta}
                                 disabled={disabled}
-                                onSelect={() => setModal0(true)}
                                 onInput={handleOnInput}
-                                onMax={handleOnInput}
-                                onSwap={handleForm}
                             />
                         </div>
                         {/* <div className={styles.contentWrapper2}>
@@ -226,14 +224,15 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 amount={amount}
                                 token={vault_pair[1].meta}
                             />
-                            <ConfirmBox
+                            <BtcToSyron pair={vault_pair} />
+                            {/* <ConfirmBox
                                 show={confirmModal}
                                 pair={vault_pair}
                                 direction={direction}
                                 // onClose={() => {
                                 //     setConfirmModal(false)
                                 // }}
-                            />
+                            /> */}
                         </div>
                     </form>
                 ) : null}

@@ -36,7 +36,7 @@ export const SyronInput: React.FC<Prop> = ({
         setVal_(balance)
     }, [balance])
 
-    const [selectedPercent, setSelectedPercent] = useState(0)
+    const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 
     const handlePercent = useCallback(
         async (n: number) => {
@@ -54,6 +54,7 @@ export const SyronInput: React.FC<Prop> = ({
 
     const handleOnInput = useCallback(
         (event: React.FormEvent<HTMLInputElement>) => {
+            setSelectedPercent(null)
             const target = event.target as HTMLInputElement
             try {
                 if (target.value) {

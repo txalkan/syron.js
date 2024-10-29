@@ -10,23 +10,21 @@ import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $btc_wallet, $syron } from '../../../src/store/syron'
+import { $btc_wallet } from '../../../src/store/syron'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
+import { useMempoolHook } from '../../../src/hooks/useMempool'
 
 Big.PE = 999
 const _0 = Big(0)
+const dec = 1e8
 
 type Prop = {
     token: CryptoState
     value: Big
     disabled?: boolean
-    noSwap?: boolean
     onInput?: (value: Big) => void
-    onSelect?: () => void
-    onMax?: (b: Big) => void
-    onSwap?: () => void
 }
 
 const list = [10, 25, 50, 75]
@@ -35,61 +33,76 @@ export const BoxInput: React.FC<Prop> = ({
     value: value_,
     token,
     disabled,
-    noSwap = false,
     onInput = () => null,
-    onSelect = () => null,
-    onMax = () => null,
-    onSwap = () => {},
 }) => {
-    const syron = useStore($syron)
     const btc_wallet = useStore($btc_wallet)
     const xr = useStore($xr)
 
     const addr_name = token?.symbol.toLowerCase()
-    let balance = _0
-    let bal = _0
-    let val = _0
-    let worth_ = _0
 
-    if (addr_name == 'btc') {
-        const dec = 1e8
-        val = value_.div(dec)
+    const [satsBalance, setSatsBalance] = useState(_0)
+    const [btcBalance, setBtcBalance] = useState(_0)
+    const [inputVal, setInputVal] = useState(_0)
+    const [balWorth, setBalWorth] = useState(_0)
 
-        if (btc_wallet?.btc_balance) balance = btc_wallet.btc_balance
-        bal = balance.div(dec)
+    const { getXR } = useMempoolHook()
+    useEffect(() => {
+        if (addr_name == 'btc') {
+            setInputVal(value_.div(dec))
 
-        if (xr != null) worth_ = bal.mul(xr.rate)
-    }
-    // else {
-    //     const _currency = tyron.Currency.default.tyron(addr_name)
-    //     // bal = balance.div(Big(_currency.decimals))
-    // }
+            const sats = btc_wallet?.btc_balance
+            if (sats) {
+                setSatsBalance(sats)
 
-    const [selectedPercent, setSelectedPercent] = useState(0)
+                const btcBal = sats.div(dec)
+                setBtcBalance(btcBal)
+
+                if (xr != null) {
+                    setBalWorth(btcBal.mul(xr.rate))
+                }
+            }
+        }
+    }, [btc_wallet?.btc_balance, xr])
+
+    // @dev Update BTC exchange rate every 2 minutes
+    useEffect(() => {
+        async function updateXR() {
+            await getXR()
+        }
+
+        updateXR()
+
+        const intervalId = setInterval(updateXR, 2 * 60 * 1000)
+
+        return () => clearInterval(intervalId) // Cleanup on unmount
+    }, [])
+
+    const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 
     const handlePercent = useCallback(
         async (n: number) => {
-            if (balance) {
+            if (satsBalance) {
                 setSelectedPercent(n)
                 const percent = Big(n)
 
-                let input = balance.mul(percent).div(100)
+                let input = satsBalance.mul(percent).div(100)
 
-                //@review (dec)
-                // const decimals = token.decimals)
-                onMax(input)
+                onInput(input)
+                setInputVal(input.div(dec).round(8, 0))
             }
         },
-        [syron, token, onMax]
+        [satsBalance, onInput]
     )
 
     const handleOnInput = useCallback(
         (event: React.FormEvent<HTMLInputElement>) => {
+            setSelectedPercent(null)
             const target = event.target as HTMLInputElement
             try {
                 if (target.value) {
-                    const input = Big(target.value).mul(1e8)
+                    const input = Big(target.value).mul(dec)
                     onInput(input)
+                    setInputVal(input.div(dec).round(8, 0))
                 } else {
                     onInput(_0)
                 }
@@ -142,34 +155,32 @@ export const BoxInput: React.FC<Prop> = ({
                             <div className={styles.info}>
                                 | Wallet balance:
                                 <span className={styles.infoPurple}>
-                                    {isNaN(Number(bal))
+                                    {isNaN(Number(btcBalance))
                                         ? 'Connect Wallet'
                                         : `${
-                                              Number(bal) == 0
+                                              Number(btcBalance) == 0
                                                   ? 0
-                                                  : Number(bal).toLocaleString(
-                                                        'en-US',
-                                                        {
-                                                            minimumFractionDigits: 8,
-                                                            maximumFractionDigits: 8,
-                                                        }
-                                                    )
+                                                  : Number(
+                                                        btcBalance
+                                                    ).toLocaleString('en-US', {
+                                                        minimumFractionDigits: 8,
+                                                        maximumFractionDigits: 8,
+                                                    })
                                           } ${token?.symbol}`}
                                 </span>{' '}
-                                {Number(bal) != 0 && (
+                                {Number(btcBalance) != 0 && (
                                     <>
                                         =
                                         <span className={styles.infoPurple}>
                                             $
-                                            {Number(worth_) == 0
+                                            {Number(balWorth) == 0
                                                 ? 0
-                                                : Number(worth_).toLocaleString(
-                                                      'en-US',
-                                                      {
-                                                          minimumFractionDigits: 2,
-                                                          maximumFractionDigits: 2,
-                                                      }
-                                                  )}
+                                                : Number(
+                                                      balWorth
+                                                  ).toLocaleString('en-US', {
+                                                      minimumFractionDigits: 2,
+                                                      maximumFractionDigits: 2,
+                                                  })}
                                         </span>
                                     </>
                                 )}
@@ -231,7 +242,7 @@ export const BoxInput: React.FC<Prop> = ({
                                     type="number"
                                     placeholder="0"
                                     onInput={handleOnInput}
-                                    value={Number(val)}
+                                    value={Number(inputVal)}
                                     disabled={disabled}
                                     step="0.00000001"
                                     min="0"

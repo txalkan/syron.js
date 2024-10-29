@@ -20,6 +20,7 @@ import { extractRejectText } from '../../src/utils/unisat/utils'
 import {
     mempoolFeeRate,
     transaction_status,
+    unisatBalance,
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal } from '..'
@@ -35,26 +36,40 @@ function Component() {
     const [active, setActive] = useState('GetSyron')
 
     const [sdb, setSDB] = useState('')
-    const [btcSatoshi, setBtcSatoshi] = useState(_0)
+    const [satsDeposited, setSatsDeposited] = useState(_0)
     const [loan, setLoan] = useState('')
-    const [syron_balance, setBalance] = useState('')
+    const [syronBal, setSyronBal] = useState('')
 
     useEffect(() => {
         if (syron !== null) {
             console.log('Syron State: ', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
-            setBtcSatoshi(syron.sdb_btc)
+            setSatsDeposited(syron.sdb_btc)
 
             const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
             setLoan(loan_)
-            console.log('SYRON Borrowed: ', loan_)
+            console.log('SYRON Printed: ', loan_)
 
             const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
-            setBalance(bal_)
+            setSyronBal(bal_)
             console.log('SYRON Balance: ', bal_)
         }
-    }, [syron])
+    }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal])
+
+    // @dev Read for new BTC deposits every minute
+    useEffect(() => {
+        async function readDeposits() {
+            const balance = await unisatBalance(syron?.sdb!)
+            setSatsDeposited(Big(balance))
+        }
+
+        readDeposits()
+
+        const intervalId = setInterval(readDeposits, 1 * 60 * 1000)
+
+        return () => clearInterval(intervalId) // Cleanup on unmount
+    }, [])
 
     const toggleActive = (id: string) => {
         resetState()
@@ -81,7 +96,7 @@ function Component() {
             value: _0,
             meta: {
                 name: 'Syron USD',
-                symbol: 'SUSD',
+                symbol: 'SYRON',
                 decimals: 8,
             },
         },
@@ -431,7 +446,7 @@ function Component() {
             <WithdrawModal
                 ssi={btc_wallet?.btc_addr!}
                 sdb={sdb}
-                balance={syron_balance ? Big(syron_balance) : _0}
+                balance={syronBal ? Big(syronBal) : _0}
                 show={showWithdrawModal}
                 onClose={() => setWithdrawModal(false)}
             />
@@ -511,7 +526,7 @@ function Component() {
                                     <span className={styles.plain}>
                                         BTC Deposited:{' '}
                                         <span className={styles.yellow}>
-                                            {Number(btcSatoshi.div(1e8))}
+                                            {Number(satsDeposited.div(1e8))}
                                         </span>
                                     </span>
                                     <Image
@@ -541,7 +556,7 @@ function Component() {
                                         width="22"
                                     />
                                     <span className={styles.plain}>
-                                        SYRON Borrowed:{' '}
+                                        SYRON USD Printed:{' '}
                                         <span className={styles.yellow}>
                                             {loan === '0.00' ? '0' : loan}
                                         </span>
@@ -577,9 +592,9 @@ function Component() {
                                     <span className={styles.plain}>
                                         Balance:{' '}
                                         <span className={styles.yellow}>
-                                            {syron_balance === '0.00'
+                                            {syronBal === '0.00'
                                                 ? '0'
-                                                : syron_balance}
+                                                : syronBal}
                                         </span>
                                     </span>
                                     <Image
@@ -645,7 +660,7 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            Borrow Syron
+                            Print Syron
                         </div>
                         <div
                             onClick={() => toggleActive('LiquidSyron')}
