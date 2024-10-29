@@ -9,15 +9,14 @@ export function useBTCWalletHook() {
         network: string
     ) => {
         try {
-            console.log('Satoshis', balance)
+            console.log(`Wallet Balance: ${balance} satoshis`)
+            console.log(`Wallet Address: ${ssi}`)
 
-            if (balance != 0) {
-                updateBTCWallet({
-                    network: network,
-                    btc_addr: ssi,
-                    btc_balance: Big(balance),
-                })
-            }
+            updateBTCWallet({
+                network: network,
+                btc_addr: ssi,
+                btc_balance: Big(balance),
+            })
         } catch (err) {
             console.error(err)
         }

@@ -24,6 +24,7 @@ import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import useSyronWithdrawal from '../../src/utils/icp/syron_withdrawal'
 import Spinner from '../Spinner'
 import { VaultPair } from '../../src/types/vault'
+import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -37,10 +38,17 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
 
-    const syron = useStore($syron)
-    const btc_wallet = useStore($btc_wallet)
-    const ssi: string = btc_wallet?.btc_addr!
+    const btcWallet = useStore($btc_wallet)
+    const btcAddr = btcWallet?.btc_addr
 
+    const [userSSI, setSSI] = useState('')
+    useEffect(() => {
+        if (btcAddr) {
+            setSSI(btcAddr)
+        }
+    }, [btcAddr])
+
+    const syron = useStore($syron)
     const [sdb, setSDB] = useState('')
     useEffect(() => {
         if (syron !== null) {
@@ -52,6 +60,20 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
+    useEffect(() => {
+        const checkUnisatInstallation = () => {
+            if ((window as any).unisat) {
+                setUnisatInstalled(true)
+                clearInterval(intervalId) // Clear the interval once unisat is found
+            }
+        }
+
+        // Check for unisat every 100ms, up to 10 times
+        const intervalId = setInterval(checkUnisatInstallation, 100)
+        setTimeout(() => clearInterval(intervalId), 1000) // Stop checking after 1 second
+
+        return () => clearInterval(intervalId) // Cleanup interval on component unmount
+    }, [])
 
     const walletConnected = useStore($walletConnected).isConnected
 
@@ -84,20 +106,22 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
         )
     }, [isLoading, syron, icpTx])
 
-    // @review (wallet)
     const updateWalletBalance = async () => {
+        if (!unisat) return
+
         const [address] = await unisat.getAccounts()
+
         const balance = await unisat.getBalance()
+
         const network = await unisat.getNetwork()
 
         if (balance)
             await updateWallet(address, Number(balance.confirmed), network)
 
-        console.log('Wallet balance updated')
+        return address
     }
-
     const updateUserBalance = async () => {
-        await updateWalletBalance()
+        const ssi = await updateWalletBalance()
         await getBox(ssi, false)
         console.log('User balance updated')
     }
@@ -117,13 +141,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 throw new Error('Minting is paused')
             }
 
-            if (!btc_wallet?.btc_addr) {
+            if (userSSI === '') {
                 throw new Error('Please wait for your wallet to connect.')
             }
 
-            if (btc_wallet?.network != 'livenet') {
+            if (btcWallet?.network != 'livenet') {
                 // @mainnet
-                console.log('Network:', btc_wallet?.network)
+                console.log('Network:', btcWallet?.network)
                 throw new Error('Use Bitcoin Mainnet')
             }
 
@@ -146,7 +170,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 toastId: 1,
             })
 
-            await btc_to_syron(btc_wallet.btc_addr, sdb, Big(amt), collateral)
+            await btc_to_syron(userSSI, sdb, Big(amt), collateral)
 
             toast.dismiss(1)
             toast.info(`You have received ${amt} SYRON in your wallet!`, {
@@ -229,7 +253,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             }
         }
         setIsLoading(false)
-    }, [ssi, sdb, collateral, amt])
+    }, [userSSI, sdb, collateral, amt])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],
@@ -248,7 +272,10 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
         }
     }
 
+    const [shouldCheckUnisat, setShouldCheckUnisat] = useState(false)
     useEffect(() => {
+        //@review (wallet) functionality of this useEffect
+
         async function checkUnisat() {
             let unisat = (window as any).unisat
 
@@ -256,10 +283,6 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 await new Promise((resolve) => setTimeout(resolve, 100 * i))
                 unisat = (window as any).unisat
             }
-
-            if (unisat) {
-                setUnisatInstalled(true)
-            } else if (!unisat) return
 
             unisat.getAccounts().then((accounts: string[]) => {
                 handleAccountsChanged(accounts)
@@ -272,8 +295,8 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             }
         }
 
-        checkUnisat().then()
-    }, [])
+        if (shouldCheckUnisat) checkUnisat().then()
+    }, [shouldCheckUnisat])
 
     // @dev Once the inscribe-transfer transaction is confirmed, update the display of wallet balance
     useEffect(() => {
@@ -281,32 +304,36 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             await updateWalletBalance()
         }
 
-        updateWalletBal()
+        if (inscriptionTx.value) updateWalletBal()
     }, [inscriptionTx.value])
 
     const handleButtonClick = async () => {
-        if (!unisatInstalled) {
-            window.open('https://unisat.io', '_blank')
-        } else if (!walletConnected) {
-            const result = await unisat.requestAccounts()
-            handleAccountsChanged(result)
+        try {
+            if (!unisatInstalled) {
+                window.open('https://unisat.io', '_blank')
+            } else if (!walletConnected) {
+                setShouldCheckUnisat(true)
 
-            toast.info('Your wallet is now connected! 🎉', {
-                position: 'top-center',
-                autoClose: 2000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                toastId: 6,
-            })
+                const network = await unisat.getNetwork()
+                if (network != UnisatNetworkType.mainnet) {
+                    await unisat.switchNetwork(UnisatNetworkType.mainnet)
+                }
 
-            // @review (syronjs) we need to update the tyron data (otherwise tyron = null) => see dashboard update()
-            // In the meantime, reload page
-            setTimeout(() => window.location.reload(), 2 * 1000) // 2 seconds
-        } else {
-            handleConfirm()
+                const result = await unisat.requestAccounts()
+                handleAccountsChanged(result)
+
+                toast.info('Your wallet is now connected! 🎉')
+
+                // @reload page
+                // setTimeout(() => window.location.reload(), 2 * 1000)
+
+                await updateUserBalance()
+            } else {
+                handleConfirm()
+            }
+        } catch (error) {
+            console.error('Error connecting wallet:', error)
+            toast.error('Failed to connect wallet')
         }
     }
 
@@ -324,11 +351,11 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 throw new Error('The inscribe-transfer transaction is missing.')
             }
             await btc_to_syron(
-                ssi,
+                userSSI,
                 sdb,
                 typeof inscriptionTx === 'string' ? inscriptionTx : undefined
             )
-            await getBox(ssi, false)
+            await updateUserBalance()
         } catch (error) {
             console.error('BTC to SYRON Retry', error)
 
@@ -386,53 +413,52 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
         }
 
         setIsLoading(false)
-    }, [ssi, sdb, isLoading, inscriptionTx])
+    }, [userSSI, sdb, isLoading, inscriptionTx])
 
     return (
-        <>
-            <div className={styles.container}>
-                <div className={styles.info}>
-                    <div className={styles.column}>
-                        <div className={styles.txtRow}>
-                            | Collateral Ratio = 1.5:1
-                        </div>
-                        <br />
+        <div className={styles.container}>
+            <div className={styles.info}>
+                <div className={styles.column}>
+                    <div className={styles.txtRow}>
+                        | Collateral Ratio = 1.5:1
                     </div>
+                    <br />
                 </div>
-                <div
-                    style={{
-                        width: '100%',
-                        height: '40px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '1rem',
-                        marginBottom: '3rem',
-                        cursor: 'pointer',
-                        borderRadius: '22px',
-                        backgroundColor: 'rgb(75,0,130)',
-                        // @design-shadow-3d
-                        backgroundImage:
-                            'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
-                        boxShadow:
-                            '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)', // Added 3D effect
-                    }}
-                    className={`button ${disabled ? 'disabled' : 'primary'}`}
-                    onClick={handleButtonClick}
-                >
-                    {!unisatInstalled ? (
-                        <div className={styles.txt}>{t('Install UniSat')}</div>
-                    ) : !walletConnected ? (
-                        <div className={styles.txt}>{t('CONNECT')}</div>
-                    ) : disabled ? (
-                        <ThreeDots color="yellow" />
-                    ) : (
-                        <div className={styles.txt}>confirm</div>
-                    )}
-                </div>
-                {icpTx.value === false ? (
-                    <div className={styles.failedWithdrawal}>
-                        {/* <div className={styles.icoColor}>
+            </div>
+            <div
+                style={{
+                    width: '100%',
+                    height: '40px',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    marginTop: '1rem',
+                    marginBottom: '3rem',
+                    cursor: 'pointer',
+                    borderRadius: '22px',
+                    backgroundColor: 'rgb(75,0,130)',
+                    // @design-shadow-3d
+                    backgroundImage:
+                        'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
+                    boxShadow:
+                        '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)', // Added 3D effect
+                }}
+                className={`button ${disabled ? 'disabled' : 'primary'}`}
+                onClick={handleButtonClick}
+            >
+                {!unisatInstalled ? (
+                    <div className={styles.txt}>{t('Install UniSat')}</div>
+                ) : !walletConnected ? (
+                    <div className={styles.txt}>{t('CONNECT')}</div>
+                ) : disabled ? (
+                    <ThreeDots color="yellow" />
+                ) : (
+                    <div className={styles.txt}>confirm</div>
+                )}
+            </div>
+            {icpTx.value === false ? (
+                <div className={styles.failedWithdrawal}>
+                    {/* <div className={styles.icoColor}>
                                 <Image
                                     alt="warning-ico"
                                     src={Warning}
@@ -440,93 +466,91 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                     height={20}
                                 />
                             </div> */}
-                        <div className={styles.withdrawalTxt}>
-                            We are very sorry, but your withdrawal request has
-                            failed, possibly due to technical issues with the
-                            Internet Computer.
-                        </div>
-                        <div className={styles.withdrawalTxt}>
-                            Please try again after a moment. If the problem
-                            persists, do not hesitate to contact us for support
-                            on Telegram{' '}
-                            <a
-                                href="https://t.me/tyrondao"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
-                            >
-                                @TyronDAO
-                            </a>
-                            .
-                        </div>
-                        <div className={styles.withdrawalTxt}>
-                            We appreciate your patience and understanding!
-                        </div>
-                        <button
-                            style={{
-                                fontFamily: 'GeistMono, monospace',
-                                fontSize: 'small',
-                                backgroundColor: 'rgb(75, 0, 130)',
-                            }}
-                            onClick={retryWithdrawal}
-                            className={'button secondary'}
-                        >
-                            {isLoading ? (
-                                <ThreeDots color="yellow" />
-                            ) : (
-                                <div className={styles.txt}>retry</div>
-                            )}
-                        </button>
+                    <div className={styles.withdrawalTxt}>
+                        We are very sorry, but your withdrawal request has
+                        failed, possibly due to technical issues with the
+                        Internet Computer.
                     </div>
-                ) : (
-                    <>
+                    <div className={styles.withdrawalTxt}>
+                        Please try again after a moment. If the problem
+                        persists, do not hesitate to contact us for support on
+                        Telegram{' '}
+                        <a
+                            href="https://t.me/tyrondao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: 'blue',
+                                textDecoration: 'underline',
+                            }}
+                        >
+                            @TyronDAO
+                        </a>
+                        .
+                    </div>
+                    <div className={styles.withdrawalTxt}>
+                        We appreciate your patience and understanding!
+                    </div>
+                    <button
+                        style={{
+                            fontFamily: 'GeistMono, monospace',
+                            fontSize: 'small',
+                            backgroundColor: 'rgb(75, 0, 130)',
+                        }}
+                        onClick={retryWithdrawal}
+                        className={'button secondary'}
+                    >
                         {isLoading ? (
-                            <div>
-                                <div className={styles.withdrawalTxt}>
-                                    Your request is currently being processed...
-                                </div>
-                                {!inscriptionTx.value ? (
-                                    <div className={styles.withdrawalTxt}>
-                                        Please do not close this window. This
-                                        process will finish in about two Bitcoin
-                                        blocks. Thank you for your patience!
-                                    </div>
-                                ) : (
-                                    <div className={styles.withdrawalTxt}>
-                                        Your BTC deposit has been confirmed!
-                                        Tyron is now processing your SYRON
-                                        withdrawal to your wallet. Thank you for
-                                        your patience!
-                                    </div>
-                                )}
-                                <Spinner />
-                            </div>
+                            <ThreeDots color="yellow" />
                         ) : (
-                            <>
-                                {icpTx.value === true ? (
-                                    <div className={styles.succeededWithdrawal}>
-                                        <div className={styles.withdrawalTxt}>
-                                            Congratulations! Your withdrawal was
-                                            successful, and {amt} SYRON has been
-                                            sent to your wallet.
-                                        </div>
-                                        <div className={styles.withdrawalTxt}>
-                                            You can check your wallet to verify
-                                            the transaction.
-                                        </div>
-                                        <div className={styles.withdrawalTxt}>
-                                            Thank you for using Tyron!
-                                        </div>
-                                    </div>
-                                ) : null}
-                            </>
+                            <div className={styles.txt}>retry</div>
                         )}
-                    </>
-                )}
-            </div>
-        </>
+                    </button>
+                </div>
+            ) : (
+                <>
+                    {isLoading ? (
+                        <div>
+                            <div className={styles.withdrawalTxt}>
+                                Your request is currently being processed...
+                            </div>
+                            {!inscriptionTx.value ? (
+                                <div className={styles.withdrawalTxt}>
+                                    Please do not close this window. This
+                                    process will finish in about two Bitcoin
+                                    blocks. Thank you for your patience!
+                                </div>
+                            ) : (
+                                <div className={styles.withdrawalTxt}>
+                                    Your BTC deposit has been confirmed! Tyron
+                                    is now processing your SYRON withdrawal to
+                                    your wallet. Thank you for your patience!
+                                </div>
+                            )}
+                            <Spinner />
+                        </div>
+                    ) : (
+                        <>
+                            {icpTx.value === true ? (
+                                <div className={styles.succeededWithdrawal}>
+                                    <div className={styles.withdrawalTxt}>
+                                        Congratulations! Your withdrawal was
+                                        successful, and {amt} SYRON has been
+                                        sent to your wallet.
+                                    </div>
+                                    <div className={styles.withdrawalTxt}>
+                                        You can check your wallet to verify the
+                                        transaction.
+                                    </div>
+                                    <div className={styles.withdrawalTxt}>
+                                        Thank you for using Tyron!
+                                    </div>
+                                </div>
+                            ) : null}
+                        </>
+                    )}
+                </>
+            )}
+        </div>
     )
 }
