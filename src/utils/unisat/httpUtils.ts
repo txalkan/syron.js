@@ -331,7 +331,7 @@ export async function unisatBalance(address: string) {
         const data = await response.json()
         //console.log(JSON.stringify(data, null, 2))
 
-        return data.data.btcSatoshi
+        if (data.data) return data.data.btcSatoshi
     } catch (error) {
         console.error('UniSat Error:', error)
         checkError(error)

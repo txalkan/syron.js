@@ -257,9 +257,13 @@ export var ConfirmBox: React.FC<Prop> = function ({
         const [address] = await unisat.getAccounts()
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
-        await updateWallet(address, Number(balance.confirmed), network)
+
+        if (balance)
+            await updateWallet(address, Number(balance.confirmed), network)
+
         await getBox(address, false)
-        console.log('balance updated')
+
+        console.log('Balance updated')
     }
 
     // @dev 2) Receive Syron

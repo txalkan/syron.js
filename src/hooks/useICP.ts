@@ -82,7 +82,7 @@ function useICPHook() {
 
     const getSUSD = async (ssi: string, txid: string) => {
         try {
-            console.log('Loading SUSD Issuance...')
+            console.log('Loading SYRON Issuance...')
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
@@ -104,7 +104,7 @@ function useICPHook() {
 
             return txId
         } catch (err) {
-            console.error('Get SYRON: ', err)
+            console.error('Get SYRON Call', err)
             throw err
         }
     }
@@ -133,9 +133,9 @@ function useICPHook() {
             }
 
             return txId
-        } catch (err) {
-            console.error('Syron Withdrawal: ', err)
-            throw err
+        } catch (error) {
+            console.error('Syron Withdrawal Call', error)
+            throw error
         }
     }
 

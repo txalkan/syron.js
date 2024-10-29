@@ -51,11 +51,13 @@
 }
 
 .txtConnect {
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
-
+    font-family: 'GeistMono', monospace; // @review (ui)
     white-space: nowrap;
-    color: #f8f8f8;
 
+    font-weight: 500;
+    letter-spacing: normal;
+
+    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
     background-color: rgb(75, 0, 130);
     border-radius: 22px;
 

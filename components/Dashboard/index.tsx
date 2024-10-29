@@ -157,8 +157,14 @@ function Component() {
 
     useEffect(() => {
         async function update() {
-            console.log('@dev update wallet info')
-            await updateWallet(address_, Number(balance_.confirmed), network_) //@review (mainnet) showcase unconfirmed too
+            if (balance_)
+                await updateWallet(
+                    address_,
+                    Number(balance_.confirmed),
+                    network_
+                ) //@review (mainnet) showcase unconfirmed too
+
+            console.log('Wallet balance updated')
         }
         update()
     }, [address_, balance_, network_])
