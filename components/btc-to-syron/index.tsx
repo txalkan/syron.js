@@ -490,7 +490,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 </div>
                                 {!inscriptionTx.value ? (
                                     <div className={styles.withdrawalTxt}>
-                                        Please don't close this window. This
+                                        Please do not close this window. This
                                         process will finish in about two Bitcoin
                                         blocks. Thank you for your patience!
                                     </div>
