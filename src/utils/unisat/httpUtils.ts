@@ -255,18 +255,18 @@ export async function mempoolFeeRate() {
         }
 
         const data = await response.json()
-        //console.log(JSON.stringify(data, null, 2))
+        // console.log(JSON.stringify(data, null, 2))
+        // console.log(data.length)
 
-        // Extract gas fees for the 75th percentile from the last 100 blocks
-        const lastBlocks = data.slice(-100)
+        // Extract gas fees for the 50th percentile from the last 150 blocks
+        const lastBlocks = data.slice(-150)
         const percentiles = lastBlocks
-            .map((block: { avgFee_75 }) => {
-                const fee = block.avgFee_75
+            .map((block: { avgFee_50 }) => {
+                const fee = block.avgFee_50
                 return fee === 0 ? undefined : fee // Exclude zero values
             })
             .filter((value) => value !== undefined) as number[] // Filter out undefined values
 
-        // console.log(JSON.stringify(percentiles))
         // Calculate the average
         const sum = percentiles.reduce((acc, value) => acc + value, 0)
         const average = Math.ceil(sum / percentiles.length)
