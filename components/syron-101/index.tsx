@@ -375,9 +375,10 @@ function Component() {
     }
 
     const updateBalance = async () => {
-        setIsLoading(true)
         try {
+            setIsLoading(true)
             await updateSyronBalance(btc_wallet?.btc_addr!)
+            await updateSession()
         } catch (error) {
             if (typeof error === 'object' && Object.keys(error!).length !== 0) {
                 toast.error(
@@ -434,9 +435,9 @@ function Component() {
                     { autoClose: false }
                 )
             }
+        } finally {
+            setIsLoading(false)
         }
-        updateSession()
-        setIsLoading(false)
     }
 
     const [showWithdrawModal, setWithdrawModal] = React.useState(false)
