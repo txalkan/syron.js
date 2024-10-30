@@ -95,13 +95,14 @@ var ThisModal: React.FC<Prop> = function ({
     const { getBox } = useICPHook()
 
     const [txError, setTxError] = React.useState('')
+    let inscriptionTx = useStore($inscriptionTx)
 
     const handleConfirm = React.useCallback(async () => {
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
 
-        setIsLoading(true)
-
         try {
+            setIsLoading(true)
+
             if (amount.lt(0.2)) {
                 throw new Error('Insufficient Amount')
             }
@@ -198,18 +199,17 @@ var ThisModal: React.FC<Prop> = function ({
                     </div>
                 )
             }
+        } finally {
+            setIsLoading(false)
         }
+    }, [ssi, sdb, amount, inscriptionTx, isLoading, isDisabled])
 
-        setIsLoading(false)
-    }, [amount, isLoading])
-
-    let inscriptionTx = useStore($inscriptionTx)
     const retryWithdrawal = React.useCallback(async () => {
         if (isLoading) return
 
-        setIsLoading(true)
-
         try {
+            setIsLoading(true)
+
             // @test
             // const inscriptionTx = {
             //     value: 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc',
@@ -284,12 +284,12 @@ var ThisModal: React.FC<Prop> = function ({
                     </div>
                 )
             }
+        } finally {
+            setIsLoading(false)
         }
+    }, [ssi, sdb, amount, isLoading, inscriptionTx])
 
-        setIsLoading(false)
-    }, [amount, isLoading, inscriptionTx])
-
-    const copyToClipboard = (text) => {
+    const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text)
         toast.info('SDB address copied to clipboard!')
     }
