@@ -25,23 +25,23 @@ function useSyronWithdrawal() {
         } else {
             // @dev Inscribe-transfer transaction ID
             txId = await inscribe_transfer(sdb, Number(amt), collateral)
-            updateInscriptionTx(txId)
         }
 
         console.log('Inscribe-Transfer Transaction ID: ', txId)
 
-        await addInscriptionInfo(txId)
-
         try {
+            updateInscriptionTx(txId)
+            await addInscriptionInfo(txId)
+
             const res = await getSUSD(ssi, txId)
             updateIcpTx(true)
-            await updateInscriptionInfo(txId)
 
-            // updateInscriptionTx(null)
             return res
         } catch (error) {
             updateIcpTx(false)
             throw error
+        } finally {
+            await updateInscriptionInfo(txId)
         }
     }
 
@@ -57,25 +57,28 @@ function useSyronWithdrawal() {
         } else {
             // @dev Inscribe-transfer transaction ID
             txId = await inscribe_transfer(sdb, Number(amt))
-            updateInscriptionTx(txId)
         }
 
         console.log('Inscribe-Transfer Transaction ID: ', txId)
 
-        await addInscriptionInfo(txId)
-
         try {
+            updateInscriptionTx(txId)
+            await addInscriptionInfo(txId)
+
             const dec = 1e8
             const amount = Number(amt.mul(dec))
             console.log('Withdrawal amount: ', amount)
+
             const res = await syronWithdrawal(ssi, txId, amount)
             updateIcpTx(true)
-            await updateInscriptionInfo(txId)
+
             updateInscriptionTx(null)
             return res
         } catch (error) {
             updateIcpTx(false)
             throw error
+        } finally {
+            await updateInscriptionInfo(txId)
         }
     }
 

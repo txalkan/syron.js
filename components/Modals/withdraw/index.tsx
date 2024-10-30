@@ -218,24 +218,12 @@ var ThisModal: React.FC<Prop> = function ({
         try {
             setIsLoading(true)
 
-            // @test
-            // const inscriptionTx = {
-            //     value: 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc',
-            // }
-
             if (!inscriptionTx.value) {
                 throw new Error('The inscribe-transfer transaction is missing.')
             }
 
             updateIcpTx(null)
-            await syron_withdrawal(
-                ssi,
-                sdb,
-                amount,
-                typeof inscriptionTx.value === 'string'
-                    ? inscriptionTx.value
-                    : undefined
-            )
+            await syron_withdrawal(ssi, sdb, amount, inscriptionTx.value)
             await getBox(ssi, false)
         } catch (error) {
             console.error('Retry Syron Withdrawal', error)
