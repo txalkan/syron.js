@@ -80,14 +80,15 @@ function useICPHook() {
     //     }
     // }
 
-    const getSUSD = async (ssi: string, txid: string) => {
+    const getSUSD = async (ssi: string, txid: string, fee: number) => {
         try {
-            console.log('Loading SYRON Issuance...')
+            console.log(`Initiating SYRON Issuance with fee (${fee})...`)
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
-                0 // @mainnet
+                0, // @mainnet
+                fee * 1000
             )
 
             // Convert BigInt values to strings
@@ -109,15 +110,23 @@ function useICPHook() {
         }
     }
 
-    const syronWithdrawal = async (ssi: string, txid: string, amt: number) => {
+    const syronWithdrawal = async (
+        ssi: string,
+        txid: string,
+        amt: number,
+        fee: number
+    ) => {
         try {
-            console.log('Initiating Syron Withdrawal...')
+            console.log(
+                `Initiating SYRON Withdrawal of amount (${amt}) with fee (${fee})...`
+            )
             const txId = await syron.syron_withdrawal(
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
                 0, // @mainnet
-                amt
+                amt,
+                fee * 1000
             )
 
             // Convert BigInt values to strings

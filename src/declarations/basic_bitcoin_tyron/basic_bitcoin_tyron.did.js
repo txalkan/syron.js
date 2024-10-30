@@ -153,7 +153,7 @@ export const idlFactory = ({ IDL }) => {
             ['query']
         ),
         liquidate: IDL.Func(
-            [GetBoxAddressArgs, IDL.Text, IDL.Text],
+            [GetBoxAddressArgs, IDL.Text, IDL.Text, IDL.Nat64],
             [IDL.Variant({ Ok: IDL.Vec(IDL.Text), Err: UpdateBalanceError })],
             []
         ),
@@ -178,7 +178,14 @@ export const idlFactory = ({ IDL }) => {
             []
         ),
         syron_withdrawal: IDL.Func(
-            [GetBoxAddressArgs, IDL.Text, IDL.Nat64, IDL.Nat64, IDL.Nat64],
+            [
+                GetBoxAddressArgs,
+                IDL.Text,
+                IDL.Nat64,
+                IDL.Nat64,
+                IDL.Nat64,
+                IDL.Nat64,
+            ],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
             []
         ),
@@ -193,7 +200,7 @@ export const idlFactory = ({ IDL }) => {
             []
         ),
         withdraw_susd: IDL.Func(
-            [GetBoxAddressArgs, IDL.Text, IDL.Nat64, IDL.Nat64],
+            [GetBoxAddressArgs, IDL.Text, IDL.Nat64, IDL.Nat64, IDL.Nat64],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
             []
         ),

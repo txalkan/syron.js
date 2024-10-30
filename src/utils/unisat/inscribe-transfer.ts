@@ -1,9 +1,10 @@
 import { InscribeOrderData } from './api-types'
-import { mempoolFeeRate, transaction_status } from './httpUtils'
+import { transaction_status } from './httpUtils'
 
 export const inscribe_transfer = async (
     sdb: string,
     amt: number,
+    fee: number,
     collateral?: number
 ): Promise<string> => {
     if (sdb === '') {
@@ -27,16 +28,9 @@ export const inscribe_transfer = async (
         devFee = collateral
     }
 
-    // @dev The transaction fee rate in sat/vB @mainnet
-    let feeRate = await mempoolFeeRate()
-    console.log('Fee Rate', feeRate)
-    if (!feeRate) {
-        feeRate = 5
-    }
-
     // @dev Inscribe-transfer order
     const order: InscribeOrderData = await fetch(
-        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${feeRate}&devAddress=${devAddress}&devFee=${devFee}&brc20Ticker=${ticker}&brc20Amount=${amt}`
+        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${fee}&devAddress=${devAddress}&devFee=${devFee}&brc20Ticker=${ticker}&brc20Amount=${amt}`
     )
         .then((response) => {
             if (!response.ok) {

@@ -242,7 +242,8 @@ export async function mempoolTxId(address: string) {
     }
 }
 
-export async function mempoolFeeRate() {
+// @dev The transaction fee rate in sat/vB @mainnet
+export async function mempoolFeeRate(): Promise<number> {
     try {
         const url = 'https://mempool.space/api/v1/fees/recommended' //'https://mempool.space/api/v1/mining/blocks/fee-rates/24h' //'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h' @mainnet
 
@@ -259,7 +260,7 @@ export async function mempoolFeeRate() {
         // @dev recommended fees
         console.log('RecommendedFees', JSON.stringify(data, null, 2))
 
-        const res = data.fastestFee
+        let fee = data.fastestFee
 
         // @dev fee rates
         // console.log(
@@ -281,10 +282,16 @@ export async function mempoolFeeRate() {
         // const sum = percentiles.reduce((acc, value) => acc + value, 0)
         // const res = Math.ceil(sum / percentiles.length)
 
-        return res
+        console.log('Fee Rate', fee)
+        if (!fee) {
+            fee = 5
+        }
+
+        return fee
     } catch (error) {
         console.error('Mempool Error:', error)
         checkError(error)
+        return 5
     }
 }
 

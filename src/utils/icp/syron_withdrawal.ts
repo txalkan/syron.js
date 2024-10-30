@@ -6,6 +6,7 @@ import {
     addInscriptionInfo,
     updateInscriptionInfo,
 } from '../unisat/inscription-info'
+import { mempoolFeeRate } from '../unisat/httpUtils'
 
 Big.PE = 999
 
@@ -23,8 +24,10 @@ function useSyronWithdrawal() {
         if (tx_id) {
             txId = tx_id
         } else {
+            const fee = await mempoolFeeRate()
+
             // @dev Inscribe-transfer transaction ID
-            txId = await inscribe_transfer(sdb, Number(amt), collateral)
+            txId = await inscribe_transfer(sdb, Number(amt), fee, collateral)
         }
 
         console.log('Inscribe-Transfer Transaction ID: ', txId)
@@ -33,7 +36,8 @@ function useSyronWithdrawal() {
             updateInscriptionTx(txId)
             await addInscriptionInfo(txId)
 
-            const res = await getSUSD(ssi, txId)
+            const fee = await mempoolFeeRate()
+            const res = await getSUSD(ssi, txId, fee)
             updateIcpTx(true)
 
             return res
@@ -55,8 +59,10 @@ function useSyronWithdrawal() {
         if (tx_id) {
             txId = tx_id
         } else {
+            const fee = await mempoolFeeRate()
+
             // @dev Inscribe-transfer transaction ID
-            txId = await inscribe_transfer(sdb, Number(amt))
+            txId = await inscribe_transfer(sdb, Number(amt), fee)
         }
 
         console.log('Inscribe-Transfer Transaction ID: ', txId)
@@ -67,9 +73,9 @@ function useSyronWithdrawal() {
 
             const dec = 1e8
             const amount = Number(amt.mul(dec))
-            console.log('Withdrawal amount: ', amount)
 
-            const res = await syronWithdrawal(ssi, txId, amount)
+            const fee = await mempoolFeeRate()
+            const res = await syronWithdrawal(ssi, txId, amount, fee)
             updateIcpTx(true)
 
             updateInscriptionTx(null)

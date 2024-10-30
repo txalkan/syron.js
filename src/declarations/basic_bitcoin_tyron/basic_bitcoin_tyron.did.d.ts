@@ -151,7 +151,7 @@ export interface _SERVICE {
         Uint8Array | number[]
     >
     liquidate: ActorMethod<
-        [GetBoxAddressArgs, string, string],
+        [GetBoxAddressArgs, string, string, bigint],
         { Ok: Array<string> } | { Err: UpdateBalanceError }
     >
     redeem_btc: ActorMethod<
@@ -165,7 +165,7 @@ export interface _SERVICE {
     sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     syron_withdrawal: ActorMethod<
-        [GetBoxAddressArgs, string, bigint, bigint, bigint],
+        [GetBoxAddressArgs, string, bigint, bigint, bigint, bigint],
         { Ok: string } | { Err: UpdateBalanceError }
     >
     update_ssi_balance: ActorMethod<
@@ -173,7 +173,7 @@ export interface _SERVICE {
         { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
     >
     withdraw_susd: ActorMethod<
-        [GetBoxAddressArgs, string, bigint, bigint],
+        [GetBoxAddressArgs, string, bigint, bigint, bigint],
         { Ok: string } | { Err: UpdateBalanceError }
     >
 }

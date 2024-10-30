@@ -287,7 +287,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 JSON.stringify(add_data, null, 2)
             )
 
-            await getSUSD(btc_wallet?.btc_addr!, tx_id)
+            await getSUSD(btc_wallet?.btc_addr!, tx_id, 5)
 
             // @dev Update inscription info in the Tyron indexer
             const update = await fetch(
