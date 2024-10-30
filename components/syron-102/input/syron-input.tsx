@@ -30,11 +30,7 @@ export const SyronInput: React.FC<Prop> = ({
     disabled,
     onInput = () => null,
 }) => {
-    const [val_, setVal_] = useState<Big>(balance)
-
-    useEffect(() => {
-        setVal_(balance)
-    }, [balance])
+    const [val_, setVal_] = useState<Big>(_0)
 
     const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 

@@ -255,11 +255,14 @@ export async function mempoolFeeRate() {
         }
 
         const data = await response.json()
-        // console.log(JSON.stringify(data, null, 2))
-        // console.log(data.length)
+        console.log(
+            'Fees of last 6 blocks',
+            JSON.stringify(data.slice(-6), null, 2)
+        )
 
-        // Extract gas fees for the 50th percentile from the last 150 blocks
-        const lastBlocks = data.slice(-150)
+        // Extract gas fees for the 50th percentile from the last 2 blocks (20min approx)
+        const lastBlocks = data.slice(-2)
+
         const percentiles = lastBlocks
             .map((block: { avgFee_50 }) => {
                 const fee = block.avgFee_50

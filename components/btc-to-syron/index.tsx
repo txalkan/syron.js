@@ -129,17 +129,17 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     const { btc_to_syron } = useSyronWithdrawal()
 
     const handleConfirm = React.useCallback(async () => {
-        setIsLoading(true)
-        toast.dismiss(400)
-
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
         try {
             // @pause
             // use environment variable to pause the minting process
             if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
-                throw new Error('Minting is paused')
+                throw new Error('Withdrawing SYRON is currently paused.')
             }
+
+            setIsLoading(true)
+            toast.dismiss(400)
 
             if (userSSI === '') {
                 throw new Error('Please wait for your wallet to connect.')
@@ -170,7 +170,20 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 toastId: 1,
             })
 
-            await btc_to_syron(userSSI, sdb, Big(amt), collateral)
+            // @test
+            // const inscriptionTx = {
+            //     value: 'e93bef47349172691cf810af296776c8467a966979d0ed7e2c3dc4c1dc051281',
+            // }
+
+            await btc_to_syron(
+                userSSI,
+                sdb,
+                Big(amt),
+                collateral,
+                typeof inscriptionTx.value === 'string'
+                    ? inscriptionTx.value
+                    : undefined
+            )
 
             toast.dismiss(1)
             toast.info(`You have received ${amt} SYRON in your wallet!`, {
@@ -186,8 +199,8 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             toast.dismiss(1)
             // dispatch(setTxStatusLoading('rejected'))
 
-            if (error == 'Error: Coming soon!') {
-                toast.info('Coming soon!', { autoClose: 2000 })
+            if (error == 'Error: Withdrawing SYRON is currently paused.') {
+                toast.info('Withdrawing SYRON is currently paused.')
             } else if ((error as Error).message.includes('Your BTC deposit')) {
                 toast.error((error as Error).message, { autoClose: 4000 })
             } else if (

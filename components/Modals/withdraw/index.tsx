@@ -26,6 +26,9 @@ import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
 import { extractRejectText } from '../../../src/utils/unisat/utils'
 
+Big.PE = 999
+const _0 = Big(0)
+
 type Prop = {
     ssi: string
     sdb: string
@@ -72,7 +75,7 @@ var ThisModal: React.FC<Prop> = function ({
         }
     }
 
-    const [amount, setAmount] = React.useState(balance)
+    const [amount, setAmount] = React.useState(_0)
 
     const handleOnInput = React.useCallback((value: Big) => {
         setAmount(value)
@@ -101,6 +104,9 @@ var ThisModal: React.FC<Prop> = function ({
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
 
         try {
+            if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
+                throw new Error('Withdrawing SYRON is currently paused.')
+            }
             setIsLoading(true)
 
             if (amount.lt(0.2)) {
@@ -109,7 +115,7 @@ var ThisModal: React.FC<Prop> = function ({
 
             // @test
             // const inscriptionTx = {
-            //     value: 'b1fcf5ac8a5c8013a52e24458c8298b7e97a7431f9f1db1cc90fb8c98f90fcfc',
+            //     value: 'e93bef47349172691cf810af296776c8467a966979d0ed7e2c3dc4c1dc051281',
             // }
 
             await syron_withdrawal(
@@ -125,7 +131,9 @@ var ThisModal: React.FC<Prop> = function ({
             console.error('Syron Withdrawal', error)
             setTxError(extractRejectText(String(error)))
 
-            if (error == 'Error: Insufficient Amount') {
+            if (error == 'Error: Withdrawing SYRON is currently paused.') {
+                toast.info('Withdrawing SYRON is currently paused.')
+            } else if (error == 'Error: Insufficient Amount') {
                 toast.error(
                     <div className={styles.error}>
                         The minimum amount for withdrawal is 20 cents. Please
