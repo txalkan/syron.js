@@ -250,8 +250,6 @@ function Header() {
             window.onload = injectScript
         }
 
-        document.body.appendChild(script)
-
         return () => {
             if (document.body.contains(script)) {
                 document.body.removeChild(script)
