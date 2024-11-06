@@ -23,6 +23,7 @@ import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { $walletConnected, updateWalletConnected } from '../../src/store/syron'
+import { toast } from 'react-toastify'
 
 // Provide a default value appropriate for your AuthContext
 const defaultValue = {
@@ -116,6 +117,21 @@ function Component() {
     // @dev (unisat)
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
+    useEffect(() => {
+        const checkUnisatInstallation = () => {
+            if ((window as any).unisat) {
+                setUnisatInstalled(true)
+                clearInterval(intervalId) // Clear the interval once unisat is found
+            }
+        }
+
+        // Check for unisat every 100ms, up to 10 times
+        const intervalId = setInterval(checkUnisatInstallation, 100)
+        setTimeout(() => clearInterval(intervalId), 1000) // Stop checking after 1 second
+
+        return () => clearInterval(intervalId) // Cleanup interval on component unmount
+    }, [])
+
     const [accounts, setAccounts] = useState<string[]>([])
     const [publicKey, setPublicKey] = useState('')
     const [address_, setAddress] = useState('')
@@ -124,7 +140,7 @@ function Component() {
         unconfirmed: 0,
         total: 0,
     })
-    const [network_, setNetwork] = useState('testnet')
+    const [network_, setNetwork] = useState('livenet') //@mainnet
     const walletConnected = useStore($walletConnected).isConnected
 
     const getBasicInfo = async () => {
@@ -132,20 +148,20 @@ function Component() {
             const unisat = (window as any).unisat
 
             const [address] = await unisat.getAccounts()
-            console.log('SSI', address)
+            console.log('Wallet Address: ', address)
             setAddress(address)
 
             const publicKey = await unisat.getPublicKey()
             setPublicKey(publicKey)
 
             const balance = await unisat.getBalance()
-            console.log('Balance', JSON.stringify(balance, null, 2))
+            console.log('Wallet Balance: ', JSON.stringify(balance, null, 2))
 
             setBalance(balance)
 
             const network = await unisat.getNetwork()
 
-            console.log('Bitcoin', network) // @mainnet
+            console.log('Bitcoin Network: ', network) // @mainnet
             if (network != UnisatNetworkType.mainnet) {
                 await unisat.switchNetwork(UnisatNetworkType.mainnet)
             }
@@ -157,10 +173,17 @@ function Component() {
 
     useEffect(() => {
         async function update() {
-            console.log('@dev update wallet info')
-            await updateWallet(address_, Number(balance_.confirmed), network_) //@review (mainnet) showcase unconfirmed too
+            if (balance_)
+                await updateWallet(
+                    address_,
+                    Number(balance_.confirmed),
+                    network_
+                ) //@review (mainnet) showcase unconfirmed too
+
+            console.log('Wallet balance updated') // @review (wallet) no needed when connecting for the first time
         }
-        update()
+
+        if (address_ !== '') update()
     }, [address_, balance_, network_])
 
     useEffect(() => {
@@ -197,6 +220,8 @@ function Component() {
         setNetwork(network)
         getBasicInfo()
     }
+
+    const [shouldCheckUnisat, setShouldCheckUnisat] = useState(false)
     useEffect(() => {
         async function checkUnisat() {
             let unisat = (window as any).unisat
@@ -205,10 +230,6 @@ function Component() {
                 await new Promise((resolve) => setTimeout(resolve, 100 * i))
                 unisat = (window as any).unisat
             }
-
-            if (unisat) {
-                setUnisatInstalled(true)
-            } else if (!unisat) return
 
             unisat.getAccounts().then((accounts: string[]) => {
                 handleAccountsChanged(accounts)
@@ -223,8 +244,27 @@ function Component() {
             }
         }
 
-        checkUnisat().then()
-    }, [])
+        if (shouldCheckUnisat) checkUnisat().then()
+    }, [shouldCheckUnisat])
+
+    const handleButtonClick = async () => {
+        try {
+            setShouldCheckUnisat(true)
+
+            const network = await unisat.getNetwork()
+            if (network != UnisatNetworkType.mainnet) {
+                await unisat.switchNetwork(UnisatNetworkType.mainnet)
+            }
+
+            const result = await unisat.requestAccounts()
+            handleAccountsChanged(result)
+
+            toast.info('Your wallet is now connected! 🎉')
+        } catch (error) {
+            console.error('Error connecting wallet:', error)
+            toast.error('Failed to connect wallet')
+        }
+    }
 
     return (
         <AuthContext.Provider value={{ user }}>
@@ -301,61 +341,48 @@ function Component() {
                             </div>
                         ) : (
                             <>
-                                {
-                                    !walletConnected ? (
-                                        <>
-                                            {!unisatInstalled ? (
+                                {!walletConnected ? (
+                                    <>
+                                        {!unisatInstalled ? (
+                                            <div
+                                                className={styles.wrapperIcon}
+                                                onClick={() => {
+                                                    window.open(
+                                                        'https://unisat.io',
+                                                        '_blank'
+                                                    )
+                                                }}
+                                            >
                                                 <div
                                                     className={
-                                                        styles.wrapperIcon
+                                                        styles.txtConnect
                                                     }
-                                                    onClick={() => {
-                                                        window.open(
-                                                            'https://unisat.io',
-                                                            '_blank'
-                                                        )
-                                                    }}
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.txtConnect
-                                                        }
-                                                    >
-                                                        {t('Install UniSat')}
-                                                    </div>
+                                                    {t('Install UniSat')}
                                                 </div>
-                                            ) : (
+                                            </div>
+                                        ) : (
+                                            <div
+                                                className={styles.wrapperIcon}
+                                                onClick={handleButtonClick}
+                                            >
                                                 <div
                                                     className={
-                                                        styles.wrapperIcon
+                                                        styles.txtConnect
                                                     }
-                                                    onClick={async () => {
-                                                        const result =
-                                                            await unisat.requestAccounts()
-                                                        handleAccountsChanged(
-                                                            result
-                                                        )
-                                                    }}
                                                 >
-                                                    <div
-                                                        className={
-                                                            styles.txtConnect
-                                                        }
-                                                    >
-                                                        {t('CONNECT')}
-                                                    </div>
+                                                    {t('CONNECT')}
                                                 </div>
-                                            )}
-                                        </>
-                                    ) : null
-                                    // (
-                                    //     <div className={styles.wrapperIcon}>
-                                    //         <div className={styles.txtConnected}>
-                                    //             {t('CONNECTED')}
-                                    //         </div>
-                                    //     </div>
-                                    // )
-                                }
+                                            </div>
+                                        )}
+                                    </>
+                                ) : (
+                                    <div className={styles.wrapperIcon}>
+                                        <div className={styles.txtConnected}>
+                                            {t('CONNECTED')}
+                                        </div>
+                                    </div>
+                                )}
                                 {/* <div
                                     className={styles.wrapperIcon}
                                     onClick={onSignIn}

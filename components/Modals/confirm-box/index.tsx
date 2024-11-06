@@ -18,7 +18,7 @@ import { $bitcoin_addresses } from '../../../src/store/bitcoin-addresses'
 import { VaultPair } from '../../../src/types/vault'
 import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 
-import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import { $xr } from '../../../src/store/xr'
 import {
     $btc_wallet,
@@ -257,9 +257,13 @@ export var ConfirmBox: React.FC<Prop> = function ({
         const [address] = await unisat.getAccounts()
         const balance = await unisat.getBalance()
         const network = await unisat.getNetwork()
-        await updateWallet(address, Number(balance.confirmed), network)
+
+        if (balance)
+            await updateWallet(address, Number(balance.confirmed), network)
+
         await getBox(address, false)
-        console.log('balance updated')
+
+        console.log('Balance updated')
     }
 
     // @dev 2) Receive Syron
@@ -268,7 +272,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         console.log('Read Transaction', tx_id)
 
         try {
-            // @dev Add inscription info to Tyron indexer
+            // @dev Add inscription info to the Tyron indexer
             const add = await fetch(
                 `/api/get-unisat-inscription-info?id=${tx_id + 'i0'}`
             )
@@ -278,11 +282,14 @@ export var ConfirmBox: React.FC<Prop> = function ({
             }
 
             const add_data = await add.json()
-            console.log(JSON.stringify(add_data, null, 2))
+            console.log(
+                'Add transfer inscription to the Tyron indexer: ',
+                JSON.stringify(add_data, null, 2)
+            )
 
-            await getSUSD(btc_wallet?.btc_addr!, tx_id)
+            await getSUSD(btc_wallet?.btc_addr!, tx_id, 5)
 
-            // @dev Update inscription info in Tyron indexer
+            // @dev Update inscription info in the Tyron indexer
             const update = await fetch(
                 `/api/update-unisat-inscription-info?id=${tx_id + 'i0'}`
             )
@@ -292,7 +299,10 @@ export var ConfirmBox: React.FC<Prop> = function ({
             }
 
             const update_data = await update.json()
-            console.log(JSON.stringify(update_data, null, 2))
+            console.log(
+                'Update transfer inscription in the Tyron indexer: ',
+                JSON.stringify(update_data, null, 2)
+            )
 
             await updateBalance()
         } catch (error) {
@@ -558,7 +568,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             await unisat
                 .sendBitcoin(order.payAddress, order.amount, order.feeRate)
                 .then(async (txId) => {
-                    console.log('Deposit Transaction ID #1', txId)
+                    console.log('Deposit Transaction ID', txId)
                     // dispatch(setTxId(txId))
                     // dispatch(setTxStatusLoading('submitted'))
 
@@ -609,7 +619,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                     toast.dismiss(3)
 
                                     toast.info(
-                                        `You have received ${amt} SUSD in your wallet!`,
+                                        `You have received ${amt} SYRON in your wallet.`,
                                         { autoClose: false }
                                     )
                                     window.open(
@@ -806,7 +816,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                                         pair[1].meta.symbol ===
                                                         'BTC'
                                                             ? icoBTC
-                                                            : icoSU$D
+                                                            : icoSYRON
                                                     }
                                                     alt={pair[1].meta.symbol}
                                                     lazyRoot={
@@ -830,7 +840,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                         src={
                                             pair[1].meta.symbol === 'BTC'
                                                 ? icoBTC
-                                                : icoSU$D
+                                                : icoSYRON
                                         }
                                         alt={pair[1].meta.symbol}
                                         lazyRoot={lazyRoot as unknown as string}

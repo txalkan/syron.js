@@ -242,9 +242,10 @@ export async function mempoolTxId(address: string) {
     }
 }
 
-export async function mempoolFeeRate() {
+// @dev The transaction fee rate in sat/vB @mainnet
+export async function mempoolFeeRate(): Promise<number> {
     try {
-        const url = 'https://mempool.space/api/v1/mining/blocks/fee-rates/24h' //'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h' @mainnet
+        const url = 'https://mempool.space/api/v1/fees/recommended' //'https://mempool.space/api/v1/mining/blocks/fee-rates/24h' //'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h' @mainnet
 
         const response = await fetch(url, {
             method: 'GET',
@@ -255,26 +256,42 @@ export async function mempoolFeeRate() {
         }
 
         const data = await response.json()
-        //console.log(JSON.stringify(data, null, 2))
 
-        // Extract gas fees for the 75th percentile from the last 100 blocks
-        const lastBlocks = data.slice(-100)
-        const percentiles = lastBlocks
-            .map((block: { avgFee_75 }) => {
-                const fee = block.avgFee_75
-                return fee === 0 ? undefined : fee // Exclude zero values
-            })
-            .filter((value) => value !== undefined) as number[] // Filter out undefined values
+        // @dev recommended fees
+        console.log('RecommendedFees', JSON.stringify(data, null, 2))
 
-        // console.log(JSON.stringify(percentiles))
-        // Calculate the average
-        const sum = percentiles.reduce((acc, value) => acc + value, 0)
-        const average = Math.ceil(sum / percentiles.length)
+        let fee = data.fastestFee
 
-        return average
+        // @dev fee rates
+        // console.log(
+        //     'Fees of last 6 blocks',
+        //     JSON.stringify(data.slice(-6), null, 2)
+        // )
+
+        // Extract gas fees for the 50th percentile from the last 2 blocks (20min approx)
+        // const lastBlocks = data.slice(-2)
+
+        // const percentiles = lastBlocks
+        //     .map((block: { avgFee_50 }) => {
+        //         const fee = block.avgFee_50
+        //         return fee === 0 ? undefined : fee // Exclude zero values
+        //     })
+        //     .filter((value) => value !== undefined) as number[] // Filter out undefined values
+
+        // // Calculate the average
+        // const sum = percentiles.reduce((acc, value) => acc + value, 0)
+        // const res = Math.ceil(sum / percentiles.length)
+
+        console.log('Fee Rate', fee)
+        if (!fee) {
+            fee = 5
+        }
+
+        return fee
     } catch (error) {
         console.error('Mempool Error:', error)
         checkError(error)
+        return 5
     }
 }
 
@@ -331,7 +348,7 @@ export async function unisatBalance(address: string) {
         const data = await response.json()
         //console.log(JSON.stringify(data, null, 2))
 
-        return data.data.btcSatoshi
+        if (data.data) return data.data.btcSatoshi
     } catch (error) {
         console.error('UniSat Error:', error)
         checkError(error)

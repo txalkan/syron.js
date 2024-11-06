@@ -1,0 +1,161 @@
+@import '../../styles/scss/mixins.scss';
+
+.container {
+    // padding: 1px;
+    // padding-left: 17px;
+
+    & > button {
+        width: 100%;
+        padding: 17px;
+
+        font-size: medium;
+        text-transform: uppercase;
+
+        margin-block-end: 0.6em;
+        margin-block-start: 0.6em;
+
+        background: var(--primary-color);
+        color: var(--button-color);
+    }
+}
+
+.info {
+    //ref:ssibrowser
+    padding-bottom: 0.75rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--card-color);
+
+    @include border-radius(17px);
+}
+
+.column {
+    @include flex-column;
+
+    &:global(.muted > div) {
+        & > p {
+            color: var(--muted-color);
+        }
+    }
+
+    &:first-child {
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--notification-color);
+    }
+
+    &:last-child {
+        padding-top: 10px;
+    }
+}
+
+.row {
+    margin-top: 7px;
+    margin-bottom: 7px;
+    @include flex-between-row;
+
+    & > p {
+        margin: 0;
+        font-weight: 400;
+        font-size: 11px;
+        font-family: 'Light';
+        margin-block-end: 3px;
+        margin-block-start: 3px;
+        max-width: 200px;
+    }
+}
+
+.txtRow {
+    text-transform: uppercase;
+    text-align: left;
+    margin-left: 14%;
+    color: #6e6e6e;
+
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 375px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
+}
+
+.txtRowEO {
+    font-size: medium;
+    // text-transform: uppercase;
+    text-align: left;
+    color: #dbe4eb;
+    text-decoration: overline;
+    text-decoration-color: #ffff32;
+
+    @media only screen and (max-width: 350px) {
+        font-size: 10px;
+    }
+
+    @media only screen and (max-width: 767px) and (min-width: 351px) {
+        font-size: 12px;
+    }
+}
+
+.cancel {
+    width: 100%;
+    font-size: small;
+    margin-top: 10px;
+    display: flex;
+    justify-content: center;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+
+.txt,
+.withdrawalTxt {
+    font-family: 'GeistMono', monospace; //@review (ui)
+
+    //@mobile-first
+    font-size: 12px;
+    @media only screen and (min-width: 375px) {
+        font-size: 14px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 17px;
+    }
+}
+
+.txt {
+    text-transform: capitalize;
+    color: #f8f8f8;
+    font-weight: 500;
+    letter-spacing: normal;
+}
+
+.failedWithdrawal,
+.succeededWithdrawal {
+    margin-top: 1rem;
+    padding: 2rem;
+}
+
+.failedWithdrawal {
+    border: 1px solid red;
+}
+
+.succeededWithdrawal {
+    border: 1px solid #ffff32;
+}
+
+.withdrawalTxt {
+    color: #000;
+    margin: 2rem;
+}
+
+.error {
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+    max-width: 350px; // Set a maximum width for the toast content
+    max-height: 500px; // Set a fixed maximum height for the toast content
+    overflow-y: auto; // Enable vertical scrolling if content exceeds the height
+    white-space: normal; // Allow text to wrap normally
+    font-size: 16px; // Set a readable font size
+    line-height: 1.5; // Improve readability with better line spacing
+    word-break: break-word; // Break long words or URLs properly
+}

@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { SyronForm } from '../syron-102'
 import icoBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import icoBTC from '../../src/assets/icons/bitcoin.png'
-import icoSUSD from '../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import Big from 'big.js'
@@ -20,9 +20,12 @@ import { extractRejectText } from '../../src/utils/unisat/utils'
 import {
     mempoolFeeRate,
     transaction_status,
+    unisatBalance,
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal } from '..'
+import ThreeDots from '../Spinner/ThreeDots'
+
 Big.PE = 999
 const _0 = Big(0)
 
@@ -34,26 +37,40 @@ function Component() {
     const [active, setActive] = useState('GetSyron')
 
     const [sdb, setSDB] = useState('')
-    const [btcSatoshi, setBtcSatoshi] = useState(_0)
+    const [satsDeposited, setSatsDeposited] = useState(_0)
     const [loan, setLoan] = useState('')
-    const [susd_balance, setBalance] = useState('')
+    const [syronBal, setSyronBal] = useState('')
 
     useEffect(() => {
         if (syron !== null) {
-            console.log('Syron', JSON.stringify(syron, null, 2))
+            console.log('Syron State: ', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
-            setBtcSatoshi(syron.sdb_btc)
+            setSatsDeposited(syron.sdb_btc)
 
-            const loan_ = syron.syron_usd_loan.div(1e8).toFixed(2).toString()
+            const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
             setLoan(loan_)
-            console.log('loan', loan_)
+            console.log('SYRON Printed: ', loan_)
 
-            const bal_ = syron.syron_usd_bal.div(1e8).toFixed(2).toString()
-            setBalance(bal_)
-            console.log('SUSD Balance', bal_)
+            const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
+            setSyronBal(bal_)
+            console.log('SYRON Balance: ', bal_)
         }
-    }, [syron])
+    }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal])
+
+    // @dev Read for new BTC deposits every minute
+    useEffect(() => {
+        async function readDeposits() {
+            const balance = await unisatBalance(syron?.sdb!)
+            setSatsDeposited(Big(balance))
+        }
+
+        readDeposits()
+
+        const intervalId = setInterval(readDeposits, 1 * 60 * 1000)
+
+        return () => clearInterval(intervalId) // Cleanup on unmount
+    }, [])
 
     const toggleActive = (id: string) => {
         resetState()
@@ -80,7 +97,7 @@ function Component() {
             value: _0,
             meta: {
                 name: 'Syron USD',
-                symbol: 'SUSD',
+                symbol: 'SYRON',
                 decimals: 8,
             },
         },
@@ -240,6 +257,7 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
+                            .
                         </p>
                         <p style={{ color: 'red' }}>
                             {err && (err as Error).message
@@ -255,6 +273,9 @@ function Component() {
             } else {
                 toast.error(
                     <div className={styles.error}>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(err))}
+                        </p>
                         <p>
                             For assistance with this error, please join us on
                             Telegram{' '}
@@ -269,9 +290,7 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
-                        </p>
-                        <p style={{ color: 'red' }}>
-                            {extractRejectText(String(err))}
+                            .
                         </p>
                     </div>,
                     { autoClose: false }
@@ -357,7 +376,9 @@ function Component() {
 
     const updateBalance = async () => {
         try {
+            setIsLoading(true)
             await updateSyronBalance(btc_wallet?.btc_addr!)
+            await updateSession()
         } catch (error) {
             if (typeof error === 'object' && Object.keys(error!).length !== 0) {
                 toast.error(
@@ -376,8 +397,8 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
+                            .
                         </p>
-
                         <p style={{ color: 'red' }}>
                             {error && (error as Error).message
                                 ? (error as Error).message
@@ -391,6 +412,9 @@ function Component() {
             } else {
                 toast.error(
                     <div className={styles.error}>
+                        <p style={{ color: 'red' }}>
+                            {extractRejectText(String(error))}
+                        </p>
                         <p>
                             For assistance with this error, please join us on
                             Telegram{' '}
@@ -405,16 +429,15 @@ function Component() {
                             >
                                 @TyronDAO
                             </a>
-                        </p>
-                        <p style={{ color: 'red' }}>
-                            {extractRejectText(String(error))}
+                            .
                         </p>
                     </div>,
                     { autoClose: false }
                 )
             }
+        } finally {
+            setIsLoading(false)
         }
-        updateSession()
     }
 
     const [showWithdrawModal, setWithdrawModal] = React.useState(false)
@@ -425,6 +448,9 @@ function Component() {
     if (showWithdrawModal) {
         return (
             <WithdrawModal
+                ssi={btc_wallet?.btc_addr!}
+                sdb={sdb}
+                balance={syronBal ? Big(syronBal) : _0}
                 show={showWithdrawModal}
                 onClose={() => setWithdrawModal(false)}
             />
@@ -504,7 +530,7 @@ function Component() {
                                     <span className={styles.plain}>
                                         BTC Deposited:{' '}
                                         <span className={styles.yellow}>
-                                            {Number(btcSatoshi.div(1e8))}
+                                            {Number(satsDeposited.div(1e8))}
                                         </span>
                                     </span>
                                     <Image
@@ -513,6 +539,17 @@ function Component() {
                                         height="22"
                                         width="22"
                                     />
+                                    <button
+                                        style={{
+                                            marginLeft: '2rem',
+                                            fontFamily: 'GeistMono, monospace',
+                                            fontSize: 'small',
+                                        }}
+                                        onClick={handleRedeem}
+                                        className={'button secondary'}
+                                    >
+                                        redeem
+                                    </button>
                                 </p>
 
                                 <p className={styles.info}>
@@ -523,21 +560,35 @@ function Component() {
                                         width="22"
                                     />
                                     <span className={styles.plain}>
-                                        SYRON Borrowed:{' '}
+                                        SYRON USD Printed:{' '}
                                         <span className={styles.yellow}>
                                             {loan === '0.00' ? '0' : loan}
                                         </span>
                                     </span>
                                     <Image
-                                        src={icoSUSD}
+                                        src={icoSYRON}
                                         alt={'SUSD'}
                                         height="22"
                                         width="22"
                                     />
 
                                     {/* add button to call update balance */}
-                                    <button onClick={updateBalance}>
-                                        Update
+                                    <button
+                                        onClick={updateBalance}
+                                        style={{
+                                            marginLeft: '2rem',
+                                            fontFamily: 'GeistMono, monospace',
+                                            fontSize: 'small',
+                                        }}
+                                        className={`button ${
+                                            isLoading ? 'disabled' : 'secondary'
+                                        }`}
+                                    >
+                                        {isLoading ? (
+                                            <ThreeDots color="yellow" />
+                                        ) : (
+                                            <>update</>
+                                        )}
                                     </button>
                                 </p>
 
@@ -551,24 +602,31 @@ function Component() {
                                     <span className={styles.plain}>
                                         Balance:{' '}
                                         <span className={styles.yellow}>
-                                            {susd_balance === '0.00'
+                                            {syronBal === '0.00'
                                                 ? '0'
-                                                : susd_balance}
+                                                : syronBal}
                                         </span>
                                     </span>
                                     <Image
-                                        src={icoSUSD}
+                                        src={icoSYRON}
                                         alt={'SUSD'}
                                         height="22"
                                         width="22"
                                     />
-
-                                    <button onClick={updateWithdraw}>
+                                    <button
+                                        style={{
+                                            marginLeft: '2rem',
+                                            fontFamily: 'GeistMono, monospace',
+                                            fontSize: 'small',
+                                        }}
+                                        onClick={updateWithdraw}
+                                        className={'button secondary'}
+                                    >
                                         Withdraw
                                     </button>
                                 </p>
 
-                                <button
+                                {/* <button
                                     style={{
                                         width: '50%',
                                         height: '40px',
@@ -591,7 +649,7 @@ function Component() {
                                     onClick={handleRedeem}
                                 >
                                     <div className={styles.txt}>redeem btc</div>
-                                </button>
+                                </button> */}
                             </div>
                         ) : (
                             <div className={styles.boxWrapper}>
@@ -612,7 +670,7 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            Borrow Syron
+                            Print Syron
                         </div>
                         <div
                             onClick={() => toggleActive('LiquidSyron')}

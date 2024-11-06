@@ -19,23 +19,6 @@
     visibility: visible;
 }
 
-.txtConnected {
-    font-size: 11px;
-    color: #ffff32;
-    margin-left: 10px;
-    text-transform: uppercase;
-    // border: 1px solid #dbe4eb;
-    // border-radius: 5px;
-    padding: 5px;
-    cursor: none;
-}
-
-// .txtConnected:hover {
-//     color: #dbe4eb;
-//     border: 1px solid #fff;
-//     background-color: rgba($color: #fff, $alpha: 0.1);
-// }
-
 .txtLoggedIn {
     font-size: 11px;
     color: #f9e600;
@@ -51,11 +34,13 @@
 }
 
 .txtConnect {
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
-
+    font-family: 'GeistMono', monospace; // @review (ui)
     white-space: nowrap;
-    color: #f8f8f8;
 
+    font-weight: 500;
+    letter-spacing: normal;
+
+    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
     background-color: rgb(75, 0, 130);
     border-radius: 22px;
 
@@ -88,6 +73,25 @@
     box-shadow: 2px 1px 9px rgba(255, 243, 50, 0.6);
     background-color: rgba(248, 248, 248, 0.9);
 }
+
+.txtConnected {
+    font-family: 'GeistMono', monospace; // @review (ui)
+    text-transform: capitalize;
+    font-size: smaller !important;
+    color: #ffff32;
+
+    cursor: none;
+    background-color: transparent !important;
+    box-shadow: none !important;
+
+    margin-top: 1rem;
+}
+
+// .txtConnected:hover {
+//     color: #dbe4eb;
+//     border: 1px solid #fff;
+//     background-color: rgba($color: #fff, $alpha: 0.1);
+// }
 
 .tooltip {
     display: flex;

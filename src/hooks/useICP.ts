@@ -80,14 +80,15 @@ function useICPHook() {
     //     }
     // }
 
-    const getSUSD = async (ssi: string, txid: string) => {
+    const getSUSD = async (ssi: string, txid: string, fee: number) => {
         try {
-            console.log('Loading SUSD Issuance...')
+            console.log(`Initiating SYRON Issuance with fee (${fee})...`)
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
-                0 // @mainnet
+                0, // @mainnet
+                fee * 1000
             )
 
             // Convert BigInt values to strings
@@ -104,8 +105,46 @@ function useICPHook() {
 
             return txId
         } catch (err) {
-            console.error('Get SYRON: ', err)
+            console.error('Get SYRON Call', err)
             throw err
+        }
+    }
+
+    const syronWithdrawal = async (
+        ssi: string,
+        txid: string,
+        amt: number,
+        fee: number
+    ) => {
+        try {
+            console.log(
+                `Initiating SYRON Withdrawal of amount (${amt}) with fee (${fee})...`
+            )
+            const txId = await syron.syron_withdrawal(
+                { ssi, op: { getsyron: null } },
+                txid,
+                72000000,
+                0, // @mainnet
+                amt,
+                fee * 1000
+            )
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+            //console.log('txId response: ', JSON.stringify(txId, null, 2))
+
+            if (txId.Err) {
+                throw new Error(txIdStringified)
+            }
+
+            return txId
+        } catch (error) {
+            console.error('Syron Withdrawal Call', error)
+            throw error
         }
     }
 
@@ -164,6 +203,7 @@ function useICPHook() {
         getBox,
         updateSyronBalance,
         getSUSD,
+        syronWithdrawal,
         redemptionGas,
         redeemBTC,
         getServiceProviders,

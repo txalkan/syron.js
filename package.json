@@ -18,9 +18,7 @@
         "s": "next build && prettier -w ."
     },
     "dependencies": {
-        "@dfinity/agent": "^2.1.2",
-        "@dfinity/auth-client": "^2.1.2",
-        "@junobuild/core-peer": "^0.0.26",
+        "@junobuild/core-peer": "0.0.28",
         "@reduxjs/toolkit": "^1.6.0",
         "@supabase/supabase-js": "^2.43.1",
         "@testing-library/dom": "^8.11.2",

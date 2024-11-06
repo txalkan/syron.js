@@ -32,6 +32,7 @@ import {
     transaction_status,
 } from '../../src/utils/unisat/httpUtils'
 import ThreeDots from '../Spinner/ThreeDots'
+import { BtcToSyron } from '../btc-to-syron'
 
 type Prop = {
     startPair: VaultPair[]
@@ -39,6 +40,7 @@ type Prop = {
 }
 
 Big.PE = 999
+const _0 = Big(0)
 
 const vault = new SSIVault()
 
@@ -70,7 +72,6 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const [selectedData, setSelectedData] = React.useState<any>(null)
     const [incriptionTx, setInscTx] = React.useState<any>(null)
 
-    const _0 = Big(0)
     const [amount, setAmount] = React.useState(_0)
 
     const direction = React.useMemo(() => {
@@ -200,10 +201,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 value={vault_pair[0].value}
                                 token={vault_pair[0].meta}
                                 disabled={disabled}
-                                onSelect={() => setModal0(true)}
                                 onInput={handleOnInput}
-                                onMax={handleOnInput}
-                                onSwap={handleForm}
                             />
                         </div>
                         {/* <div className={styles.contentWrapper2}>
@@ -226,14 +224,15 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 amount={amount}
                                 token={vault_pair[1].meta}
                             />
-                            <ConfirmBox
+                            <BtcToSyron pair={vault_pair} />
+                            {/* <ConfirmBox
                                 show={confirmModal}
                                 pair={vault_pair}
                                 direction={direction}
                                 // onClose={() => {
                                 //     setConfirmModal(false)
                                 // }}
-                            />
+                            /> */}
                         </div>
                     </form>
                 ) : null}
@@ -242,6 +241,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     }
 
     const unisat = (window as any).unisat
+
     const handleVerify = async () => {
         setLoading(true)
         try {
@@ -491,7 +491,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             <div className={styles.titleForm2}>
                                 Pay with
                                 <span className={styles.txtTitle}>
-                                    &nbsp;Syron ᛞ
+                                    &nbsp;SYRON
                                 </span>
                             </div>
                         </div>
@@ -521,7 +521,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                             {sdb}
                                         </>
                                     ) : (
-                                        <>Connect SDB</>
+                                        <>Connect Wallet</>
                                     )}
                                 </span>
                             </div>
@@ -554,7 +554,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         styles.selectInfoStatusVerifiedText
                                     }
                                 >
-                                    Liquidator&apos;s SUSD balance has been
+                                    Liquidator&apos;s SYRON balance has been
                                     verified.
                                 </div>
                             ) : (
@@ -572,7 +572,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                         <> </>
                                     ) : (
                                         <>
-                                            Insufficient SUSD balance in the
+                                            Insufficient SYRON deposit in the
                                             liquidator&apos;s SDB.
                                         </>
                                     )}

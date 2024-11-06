@@ -5,7 +5,7 @@ import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
-import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
@@ -159,12 +159,14 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                                     {token && (
                                         <Image
                                             className={styles.tokenImage}
-                                            src={icoSU$D}
+                                            src={icoSYRON}
                                             alt="tokens-logo"
                                         />
                                     )}
                                 </div>
-                                <div className={styles.tokenInfo}>| SUSD</div>
+                                <div className={styles.tokenInfo}>
+                                    | SYRON USD
+                                </div>
                             </div>
                         </div>
                     </div>

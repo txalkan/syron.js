@@ -6,7 +6,7 @@ import { Modal, ModalHeader } from '../../modal'
 import Image from 'next/image'
 import CloseIcon from '../../../src/assets/icons/ic_cross_black.svg'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
-import icoSU$D from '../../../src/assets/icons/ssi_SU$D_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../../../src/utils/firebase/firebaseConfig'
 import Spinner from '../../Spinner'
@@ -168,7 +168,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                                                     className={
                                                         styles.tokenImage
                                                     }
-                                                    src={icoSU$D}
+                                                    src={icoSYRON}
                                                     alt="tokens-logo"
                                                 />
                                                 <div className={styles.susdTxt}>

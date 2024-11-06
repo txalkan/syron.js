@@ -249,7 +249,9 @@ service : (network, MinterArg) -> {
     //
     // * A BTC deposit was made to the address returned by the
     //   [get_box_address] endpoint.
-    "withdraw_susd": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "withdraw_susd": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64, fee: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    
+    "syron_withdrawal": (args: GetBoxAddressArgs, txid: text, cycles_cost: nat64, provider: nat64, amount: nat64, fee: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
     
     "get_subaccount": (nonce: nat64, ssi: bitcoin_address) -> (blob) query;
 
@@ -263,5 +265,5 @@ service : (network, MinterArg) -> {
 
     "get_account": (ssi: bitcoin_address, dummy: bool) -> (variant { Ok: CollateralizedAccount; Err: UpdateBalanceError });
 
-    "liquidate": (args: GetBoxAddressArgs, id: text, txid: text) -> (variant { Ok: vec text; Err: UpdateBalanceError });
+    "liquidate": (args: GetBoxAddressArgs, id: text, txid: text, fee: nat64) -> (variant { Ok: vec text; Err: UpdateBalanceError });
 }

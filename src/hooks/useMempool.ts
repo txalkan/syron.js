@@ -7,7 +7,7 @@ export function useMempoolHook() {
             const xr = await mempoolPrice()
             updateXR({ rate: Number(xr.USD) })
 
-            console.log('Rates', JSON.stringify(xr, null, 2))
+            console.log('BTC exchange rates', JSON.stringify(xr, null, 2))
         } catch (err) {
             console.error(err)
         }
