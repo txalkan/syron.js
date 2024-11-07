@@ -236,16 +236,16 @@ function Header() {
             script.setAttribute('data-button-color', '#4B0082')
             script.setAttribute('data-button-text-color', '#dbe4eb')
             script.setAttribute('data-title', 'tyronDAO')
-            script.setAttribute('data-description', 'SYRON ᛞ ₿e Your ₿ank')
+            script.setAttribute('data-description', 'SYRON ᛞ Be Your ₿ank')
             script.setAttribute(
                 'data-icon',
                 'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
             )
             script.setAttribute('data-site', 'https://www.tyrondao.org/')
-    
+
             document.body.appendChild(script)
         }
-    
+
         if (typeof window !== 'undefined') {
             window.onload = injectScript
         }
@@ -256,7 +256,6 @@ function Header() {
             }
         }
     }, [])
-    
 
     return (
         <>

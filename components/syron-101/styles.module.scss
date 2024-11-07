@@ -221,13 +221,13 @@
     margin-bottom: 33px;
     width: 100%;
     background-color: rgba(51, 51, 51, 0.8);
-    border: 1px solid #ffff32;
+    // border: 1px solid #ffff32;
     padding: 11px;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
 
-    box-shadow: 2px 3px 6px rgba(248, 248, 248, 0.6); // @design-shadow-sdb
+    box-shadow: 2px 3px 6px rgba(255, 255, 50, 0.5); // @design-shadow-sdb
 
     /* Metallic @design-shadow-purple */
     // 0 5px 14px rgba(75, 0, 130, 0.5),
@@ -235,8 +235,9 @@
 }
 
 .boxTitle {
-    padding-top: 2rem;
-    color: #ffff32;
+    text-align: left;
+    padding-top: 1rem;
+    color: #dbe4eb;
 
     //@mobile-first
     font-size: 17px;

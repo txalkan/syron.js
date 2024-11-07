@@ -207,8 +207,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 (error as Error).message.includes('SDB Loading Error') //"Cannot read properties of null (reading 'sdb')"
             ) {
                 toast.info(
-                    'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.',
-                    { autoClose: 2000, toastId: 400 }
+                    'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.'
                 )
             } else if (
                 typeof error === 'object' &&

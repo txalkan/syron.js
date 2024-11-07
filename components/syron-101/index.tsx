@@ -463,7 +463,10 @@ function Component() {
                         {sdb ? (
                             <div className={styles.boxWrapper}>
                                 <p className={styles.boxTitle}>
-                                    Your Safety Deposit ₿ox
+                                    Your{' '}
+                                    <span style={{ color: '#ffff32' }}>
+                                        Safety Deposit ₿ox
+                                    </span>
                                     {/* <span @review
                                         onClick={updateBitcoinVault}
                                         style={{
@@ -690,7 +693,7 @@ function Component() {
                                 : styles.cardBeYourBank
                         }
                     >
-                        <div className={styles.title}>₿e Your ₿ank</div>
+                        <div className={styles.title}>Be Your ₿ank</div>
 
                         {/* <div className={styles.icoWrapper}>
                         <Image
