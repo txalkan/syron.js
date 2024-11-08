@@ -10,7 +10,7 @@ import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $btc_wallet } from '../../../src/store/syron'
+import { $btc_wallet, $walletConnected } from '../../../src/store/syron'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
@@ -135,6 +135,8 @@ export const BoxInput: React.FC<Prop> = ({
         []
     )
 
+    const walletConnected = useStore($walletConnected).isConnected
+
     return (
         <label>
             <div className={classNames(styles.container)}>
@@ -157,7 +159,7 @@ export const BoxInput: React.FC<Prop> = ({
                                 <span className={styles.infoPurple}>
                                     {isNaN(Number(btcBalance))
                                         ? 'Connect Wallet'
-                                        : `${
+                                        : !walletConnected ? '0' : `${
                                               Number(btcBalance) == 0
                                                   ? 0
                                                   : Number(
@@ -168,7 +170,7 @@ export const BoxInput: React.FC<Prop> = ({
                                                     })
                                           } ${token?.symbol}`}
                                 </span>{' '}
-                                {Number(btcBalance) != 0 && (
+                                {Number(btcBalance) != 0 && walletConnected && (
                                     <>
                                         =
                                         <span className={styles.infoPurple}>
