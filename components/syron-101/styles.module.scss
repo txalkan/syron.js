@@ -32,6 +32,8 @@
 
 .title {
     color: #ffff32;
+    text-shadow: 0 0 1px rgba(255, 255, 50, 0.4),
+        0 0 2px rgba(255, 255, 50, 0.3), 0 0 3px rgba(255, 255, 50, 0.2);
     padding-left: 10px;
     padding-top: 7px;
 
@@ -96,6 +98,9 @@
 
 .card,
 .cardSelect {
+    text-shadow: 0 0 1px rgba(248, 248, 248, 0.4),
+        0 0 2px rgba(248, 248, 248, 0.3), 0 0 3px rgba(248, 248, 248, 0.2);
+
     font-weight: bolder;
     text-transform: uppercase;
     white-space: nowrap;

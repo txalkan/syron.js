@@ -159,7 +159,9 @@ export const BoxInput: React.FC<Prop> = ({
                                 <span className={styles.infoPurple}>
                                     {isNaN(Number(btcBalance))
                                         ? 'Connect Wallet'
-                                        : !walletConnected ? '0' : `${
+                                        : !walletConnected
+                                        ? '0'
+                                        : `${
                                               Number(btcBalance) == 0
                                                   ? 0
                                                   : Number(

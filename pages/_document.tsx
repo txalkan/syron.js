@@ -19,7 +19,7 @@ class MyDocument extends Document {
                     <meta name="title" content="TYRON" />
                     <meta
                         name="description"
-                        content="SYRON ᛞ Be Your ₿ank | HODL $BTC as digital gold & Print SYRON BRC20, a digital USD, overcollateralized with Bitcoin for the Americas 🌎"
+                        content="Be Your Own ₿ank | Hodl $BTC to print Syron USD 🌎 - Overcollateralized with Bitcoin L1 for digital payments across the Americas"
                     />
                     <meta property="og:image" content="ssi_tyron.png" />
                     <meta property="og:title" content="TYRON" />
