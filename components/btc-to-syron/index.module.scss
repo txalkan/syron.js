@@ -64,19 +64,19 @@
 }
 
 .txtRow {
-    text-transform: uppercase;
     text-align: left;
     margin-left: 14%;
+    margin-right: 10%;
     color: #6e6e6e;
 
     //@mobile-first
-    font-size: 12px;
+    font-size: 10px;
     @media only screen and (min-width: 375px) {
-        font-size: 14px;
+        font-size: 12px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
+        font-size: 14px;
     }
 }
 

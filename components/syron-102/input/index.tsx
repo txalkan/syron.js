@@ -154,27 +154,10 @@ export const BoxInput: React.FC<Prop> = ({
                                     )}
                                 </span>
                             </div>
-                            <div className={styles.info}>
-                                | Wallet balance:
-                                <span className={styles.infoPurple}>
-                                    {isNaN(Number(btcBalance))
-                                        ? 'Connect Wallet'
-                                        : !walletConnected
-                                        ? '0'
-                                        : `${
-                                              Number(btcBalance) == 0
-                                                  ? 0
-                                                  : Number(
-                                                        btcBalance
-                                                    ).toLocaleString('en-US', {
-                                                        minimumFractionDigits: 8,
-                                                        maximumFractionDigits: 8,
-                                                    })
-                                          } ${token?.symbol}`}
-                                </span>{' '}
-                                {Number(btcBalance) != 0 && walletConnected && (
-                                    <>
-                                        =
+                            {walletConnected && (
+                                <div className={styles.info}>
+                                    | Wallet Balance
+                                    <span className={styles.infoBalance}>
                                         <span className={styles.infoPurple}>
                                             $
                                             {Number(balWorth) == 0
@@ -186,9 +169,25 @@ export const BoxInput: React.FC<Prop> = ({
                                                       maximumFractionDigits: 2,
                                                   })}
                                         </span>
-                                    </>
-                                )}
-                            </div>
+
+                                        {!isNaN(Number(btcBalance)) &&
+                                            Number(btcBalance) !== 0 && (
+                                                <span
+                                                    className={styles.infoColor}
+                                                >
+                                                    ≈ ₿
+                                                    {Number(
+                                                        btcBalance
+                                                    ).toLocaleString('en-US', {
+                                                        minimumFractionDigits: 8,
+                                                        maximumFractionDigits: 8,
+                                                    })}
+                                                </span>
+                                            )}
+                                    </span>
+                                </div>
+                            )}
+
                             {/* {Number(bal) != 0 && (
                                 <div className={styles.info}>
                                     | Worth:

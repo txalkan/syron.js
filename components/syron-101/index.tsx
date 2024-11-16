@@ -132,7 +132,7 @@ function Component() {
                     .then(async (response) => {
                         const res = await response.json()
                         console.log(
-                            'outcall response - SDB SUSD balance',
+                            'outcall response - SDB Syron USD balance',
                             JSON.stringify(res, null, 2)
                         )
 
@@ -502,7 +502,9 @@ function Component() {
                                         height="22"
                                         width="22"
                                     />
-                                    <span className={styles.plain}>SDB:</span>
+                                    <span className={styles.plain}>
+                                        SDB Address
+                                    </span>
                                     <span
                                         onClick={() =>
                                             window.open(
@@ -570,7 +572,7 @@ function Component() {
                                     </span>
                                     <Image
                                         src={icoSYRON}
-                                        alt={'SUSD'}
+                                        alt={'Syron USD'}
                                         height="22"
                                         width="22"
                                     />
@@ -612,7 +614,7 @@ function Component() {
                                     </span>
                                     <Image
                                         src={icoSYRON}
-                                        alt={'SUSD'}
+                                        alt={'Syron USD'}
                                         height="22"
                                         width="22"
                                     />

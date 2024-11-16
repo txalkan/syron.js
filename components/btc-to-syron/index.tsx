@@ -432,7 +432,9 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             <div className={styles.info}>
                 <div className={styles.column}>
                     <div className={styles.txtRow}>
-                        | Collateral Ratio = 1.5:1
+                        Syron is secured with 150% Bitcoin collateral: Your
+                        Safety Deposit ₿ox will hodl $1.5 in BTC for every SYRON
+                        dollar that you can withdraw.
                     </div>
                     <br />
                 </div>
@@ -447,7 +449,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     marginTop: '1rem',
                     marginBottom: '3rem',
                     cursor: 'pointer',
-                    borderRadius: '22px',
+                    borderRadius: '11px',
                     backgroundColor: 'rgb(75,0,130)',
                     // @design-shadow-3d
                     backgroundImage:
@@ -459,7 +461,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 onClick={handleButtonClick}
             >
                 {!unisatInstalled ? (
-                    <div className={styles.txt}>{t('Install UniSat')}</div>
+                    <div className={styles.txt}>{t('CONNECT')}</div>
                 ) : !walletConnected ? (
                     <div className={styles.txt}>{t('CONNECT')}</div>
                 ) : disabled ? (
