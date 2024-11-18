@@ -1241,7 +1241,12 @@ button.secondary,
 .button.secondary {
     width: fit-content;
     background-color: rgba(255, 255, 255, 0.2);
-    font-weight: 600;
+    font-weight: 400;
+    font-family: 'GeistMono', monospace;
+    font-size: small;
+    box-shadow: none;
+    height: 2.5rem;
+    line-height: 2.5rem;
 }
 
 .button.secondary:hover {
