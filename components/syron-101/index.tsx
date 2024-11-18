@@ -11,6 +11,7 @@ import icoBTC from '../../src/assets/icons/bitcoin.png'
 import icoSYRON from '../../src/assets/icons/ssi_SYRON_iso.svg'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
+import icoCopy from '../../src/assets/icons/copy.svg'
 import Big from 'big.js'
 import { $btc_wallet, $syron, $walletConnected } from '../../src/store/syron'
 import { useStore } from 'react-stores'
@@ -445,6 +446,16 @@ function Component() {
         setWithdrawModal(true)
     }
 
+    const handleCopy = async () => {
+        try {
+          await navigator.clipboard.writeText(syron?.sdb as string);
+    
+          alert('Copied to clipboard')
+        } catch (error) {
+          console.error('Failed to copy text:', error);
+        }
+      };
+
     if (showWithdrawModal) {
         return (
             <WithdrawModal
@@ -487,149 +498,173 @@ function Component() {
                                     </span> */}
                                 </p>
 
-                                <p
-                                    style={{
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        textOverflow: 'ellipsis',
-                                        whiteSpace: 'nowrap',
-                                        overflow: 'hidden',
-                                    }}
+                                <div
+                                    className={styles.boxWrapperInner}
                                 >
-                                    <Image
-                                        src={icoShield}
-                                        alt={'SDB'}
-                                        height="22"
-                                        width="22"
-                                    />
-                                    <span className={styles.plain}>
-                                        SDB Address
-                                    </span>
-                                    <span
-                                        onClick={() =>
-                                            window.open(
-                                                `https://mempool.space/address/${syron?.sdb}`
-                                            )
-                                        }
-                                        className={styles.sdb}
-                                    >
-                                        {syron?.sdb}
+                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                        <Image
+                                            src={icoShield}
+                                            alt={'SDB'}
+                                            height="22"
+                                            width="22"
+                                        />
+                                        <span className={styles.plain}>
+                                            SDB
+                                        </span>
+                                    </div>
+                                    <div style={{display: 'flex', alignItems: 'center', marginTop: '2rem'}}>
                                         <span
-                                            style={{
-                                                marginLeft: '5px',
-                                                fontSize: '1rem',
-                                            }}
+                                            onClick={() =>
+                                                window.open(
+                                                    `https://mempool.space/address/${syron?.sdb}`
+                                                )
+                                            }
+                                            className={styles.sdb}
                                         >
-                                            ↗
+                                            {syron?.sdb}
+                                            <span
+                                                style={{
+                                                    marginLeft: '5px',
+                                                    fontSize: '1rem',
+                                                }}
+                                            >
+                                                ↗
+                                            </span>
                                         </span>
-                                    </span>
-                                </p>
+                                        <div onClick={handleCopy} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
+                                            <Image
+                                                src={icoCopy}
+                                                alt={'copy'}
+                                                height="20"
+                                                width="20"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <p className={styles.info}>
-                                    <Image
-                                        src={icoBalance}
-                                        alt={'Deposit'}
-                                        height="22"
-                                        width="22"
-                                    />
-                                    <span className={styles.plain}>
-                                        BTC Deposited:{' '}
-                                        <span className={styles.yellow}>
-                                            {Number(satsDeposited.div(1e8))}
+                                <div className={styles.boxWrapperInner}>
+                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                        <Image
+                                            src={icoBalance}
+                                            alt={'Deposit'}
+                                            height="22"
+                                            width="22"
+                                        />
+                                        <span className={styles.plain}>
+                                            BTC Deposited:
                                         </span>
-                                    </span>
-                                    <Image
-                                        src={icoBTC}
-                                        alt={'BTC'}
-                                        height="22"
-                                        width="22"
-                                    />
-                                    <button
-                                        style={{
-                                            marginLeft: '2rem',
-                                            fontFamily: 'GeistMono, monospace',
-                                            fontSize: 'small',
-                                        }}
-                                        onClick={handleRedeem}
-                                        className={'button secondary'}
-                                    >
-                                        redeem
-                                    </button>
-                                </p>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2rem', paddingRight: '2rem', marginTop: '2rem'}}>
+                                        <button
+                                            onClick={handleRedeem}
+                                            className={'button secondary'}
+                                        >
+                                            redeem
+                                        </button>
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            <span style={{marginRight: '1rem'}} className={styles.yellow}>
+                                                {Number(satsDeposited.div(1e8))}
+                                            </span>
+                                            <Image
+                                                src={icoBTC}
+                                                alt={'BTC'}
+                                                height="22"
+                                                width="22"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
 
-                                <p className={styles.info}>
-                                    <Image
-                                        src={icoThunder}
-                                        alt={'Loan'}
-                                        height="22"
-                                        width="22"
-                                    />
-                                    <span className={styles.plain}>
-                                        SYRON USD Printed:{' '}
-                                        <span className={styles.yellow}>
-                                            {loan === '0.00' ? '0' : loan}
+                                <div className={styles.boxWrapperInner}>
+                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                        <Image
+                                            src={icoThunder}
+                                            alt={'Loan'}
+                                            height="22"
+                                            width="22"
+                                        />
+                                        <span className={styles.plain}>
+                                            SYRON USD Printed:
                                         </span>
-                                    </span>
-                                    <Image
-                                        src={icoSYRON}
-                                        alt={'Syron USD'}
-                                        height="22"
-                                        width="22"
-                                    />
-
-                                    {/* add button to call update balance */}
-                                    <button
-                                        onClick={updateBalance}
-                                        style={{
-                                            marginLeft: '2rem',
-                                            fontFamily: 'GeistMono, monospace',
-                                            fontSize: 'small',
-                                        }}
-                                        className={`button ${
-                                            isLoading ? 'disabled' : 'secondary'
-                                        }`}
-                                    >
-                                        {isLoading ? (
-                                            <ThreeDots color="yellow" />
-                                        ) : (
-                                            <>update</>
-                                        )}
-                                    </button>
-                                </p>
-
-                                <p className={styles.info}>
-                                    <Image
-                                        src={icoThunder}
-                                        alt={'Balance'}
-                                        height="22"
-                                        width="22"
-                                    />
-                                    <span className={styles.plain}>
-                                        Balance:{' '}
-                                        <span className={styles.yellow}>
-                                            {syronBal === '0.00'
-                                                ? '0'
-                                                : syronBal}
-                                        </span>
-                                    </span>
-                                    <Image
-                                        src={icoSYRON}
-                                        alt={'Syron USD'}
-                                        height="22"
-                                        width="22"
-                                    />
-                                    <button
-                                        style={{
-                                            marginLeft: '2rem',
-                                            fontFamily: 'GeistMono, monospace',
-                                            fontSize: 'small',
-                                        }}
-                                        onClick={updateWithdraw}
-                                        className={'button secondary'}
-                                    >
-                                        Withdraw
-                                    </button>
-                                </p>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2rem', paddingRight: '2rem', marginTop: '2rem'}}>
+                                        {/* <button
+                                            onClick={handleRedeem}
+                                            className={'button secondary'}
+                                        >
+                                            update
+                                        </button> */}
+                                        <div style={{fontSize: '17px', color: '#FFFFFFBF'}}>Printed</div>
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            <span style={{marginRight: '1rem'}} className={styles.yellow}>
+                                                {loan === '0.00' ? '0' : loan}
+                                            </span>
+                                            <Image
+                                                src={icoSYRON}
+                                                alt={'Syron USD'}
+                                                height="22"
+                                                width="22"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
+                                        <button
+                                            onClick={updateBalance}
+                                            style={{
+                                                marginLeft: '2rem',
+                                            }}
+                                            className={`button ${
+                                                isLoading ? 'disabled' : 'secondary'
+                                            }`}
+                                        >
+                                            {isLoading ? (
+                                                <ThreeDots color="yellow" />
+                                            ) : (
+                                                <>update</>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2rem', paddingRight: '2rem', marginTop: '2rem'}}>
+                                        {/* <button
+                                            onClick={handleRedeem}
+                                            className={'button secondary'}
+                                        >
+                                            update
+                                        </button> */}
+                                        <div style={{fontSize: '17px', color: '#FFFFFFBF'}}>Balance</div>
+                                        <div style={{display: 'flex', alignItems: 'center'}}>
+                                            <span style={{marginRight: '1rem'}} className={styles.yellow}>
+                                                {syronBal === '0.00'
+                                                    ? '0'
+                                                    : syronBal}
+                                            </span>
+                                            <Image
+                                                src={icoSYRON}
+                                                alt={'Syron USD'}
+                                                height="22"
+                                                width="22"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center', marginTop: '1rem'}}>
+                                        <button
+                                            style={{
+                                                marginLeft: '2rem',
+                                                marginRight: '2rem',
+                                            }}
+                                            onClick={updateWithdraw}
+                                            className={'button secondary'}
+                                        >
+                                            Withdraw
+                                        </button>
+                                        <button
+                                            onClick={handleRedeem}
+                                            className={'button secondary'}
+                                        >
+                                            send
+                                        </button>
+                                    </div>
+                                </div>
 
                                 {/* <button
                                     style={{
