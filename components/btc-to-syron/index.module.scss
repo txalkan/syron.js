@@ -64,19 +64,24 @@
 }
 
 .txtRow {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     text-align: left;
     margin-left: 14%;
     margin-right: 10%;
     color: #6e6e6e;
 
+    padding: 2rem;
+
     //@mobile-first
-    font-size: 10px;
+    font-size: 12px;
     @media only screen and (min-width: 375px) {
-        font-size: 12px;
+        font-size: 14px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 14px;
+        font-size: 17px;
     }
 }
 

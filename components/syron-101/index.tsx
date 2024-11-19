@@ -106,15 +106,15 @@ function Component() {
 
     const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
         useICPHook()
-    const [isLoading, setIsLoading] = useState(false)
 
     const btc_wallet = useStore($btc_wallet)
 
     const unisat = (window as any).unisat
-    const handleRedeem = async () => {
-        setIsLoading(true)
 
+    const [isRedeeming, setIsRedeeming] = useState(false)
+    const handleRedeem = async () => {
         try {
+            setIsRedeeming(true)
             // await redeemBitcoin(
             //     'c56d3e6d6aaf79a7adf25e9241b13c73dd60c307ed1e89b66696ae8d4b111019'
             // )
@@ -298,6 +298,8 @@ function Component() {
                 )
             }
             setIsLoading(false)
+        } finally {
+            setIsRedeeming(false)
         }
     }
 
@@ -375,6 +377,7 @@ function Component() {
         console.log('Session updated.')
     }
 
+    const [isLoading, setIsLoading] = useState(false)
     const updateBalance = async () => {
         try {
             setIsLoading(true)
@@ -448,13 +451,15 @@ function Component() {
 
     const handleCopy = async () => {
         try {
-          await navigator.clipboard.writeText(syron?.sdb as string);
-    
-          alert('Copied to clipboard')
+            await navigator.clipboard.writeText(syron?.sdb as string)
+
+            toast.info(
+                `Your Safety Deposit ₿ox (SDB) address has been copied to your clipboard.`
+            )
         } catch (error) {
-          console.error('Failed to copy text:', error);
+            console.error('Failed to copy text:', error)
         }
-      };
+    }
 
     if (showWithdrawModal) {
         return (
@@ -473,8 +478,8 @@ function Component() {
                     <>
                         {sdb ? (
                             <div className={styles.boxWrapper}>
-                                <p className={styles.boxTitle}>
-                                    Your{' '}
+                                <div className={styles.boxTitle}>
+                                    <span>Your</span>
                                     <span style={{ color: '#ffff32' }}>
                                         Safety Deposit ₿ox
                                     </span>
@@ -496,144 +501,184 @@ function Component() {
                                             />
                                         )}
                                     </span> */}
-                                </p>
+                                </div>
 
-                                <div
-                                    className={styles.boxWrapperInner}
-                                >
-                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                <div className={styles.boxWrapperInner}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                        }}
+                                    >
                                         <Image
                                             src={icoShield}
                                             alt={'SDB'}
-                                            height="22"
-                                            width="22"
+                                            height="28"
+                                            width="28"
                                         />
                                         <span className={styles.plain}>
-                                            SDB
+                                            SDB Address
                                         </span>
                                     </div>
-                                    <div style={{display: 'flex', alignItems: 'center', marginTop: '2rem'}}>
-                                        <span
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            flexDirection: 'column',
+                                            textAlign: 'left',
+                                            width: '100%',
+                                        }}
+                                    >
+                                        <div className={styles.sdb}>
+                                            <div
+                                                onClick={handleCopy}
+                                                style={{
+                                                    marginRight: '0.5rem',
+                                                    cursor: 'pointer',
+                                                    display: 'flex',
+                                                    alignItems: 'center',
+                                                    gap: '0.5rem',
+                                                }}
+                                            >
+                                                <Image
+                                                    src={icoCopy}
+                                                    alt={'copy'}
+                                                    height="20"
+                                                    width="20"
+                                                />
+                                                {syron?.sdb}
+                                            </div>
+                                        </div>
+                                        <div
+                                            style={{
+                                                fontSize: '1rem',
+                                                color: '#ffff32',
+                                                padding: '1rem 3rem',
+                                                display: 'flex',
+                                            }}
                                             onClick={() =>
                                                 window.open(
                                                     `https://mempool.space/address/${syron?.sdb}`
                                                 )
                                             }
-                                            className={styles.sdb}
                                         >
-                                            {syron?.sdb}
-                                            <span
-                                                style={{
-                                                    marginLeft: '5px',
-                                                    fontSize: '1rem',
-                                                }}
-                                            >
-                                                ↗
-                                            </span>
-                                        </span>
-                                        <div onClick={handleCopy} style={{cursor: 'pointer', display: 'flex', alignItems: 'center'}}>
-                                            <Image
-                                                src={icoCopy}
-                                                alt={'copy'}
-                                                height="20"
-                                                width="20"
-                                            />
+                                            History ↗
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
-                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                        }}
+                                    >
                                         <Image
                                             src={icoBalance}
                                             alt={'Deposit'}
-                                            height="22"
-                                            width="22"
+                                            height="28"
+                                            width="28"
                                         />
                                         <span className={styles.plain}>
-                                            BTC Deposited:
+                                            BTC Deposited
                                         </span>
                                     </div>
-                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2rem', paddingRight: '2rem', marginTop: '2rem'}}>
+                                    <div className={styles.subsection}>
                                         <button
                                             onClick={handleRedeem}
-                                            className={'button secondary'}
+                                            className={`button ${
+                                                isRedeeming
+                                                    ? 'disabled'
+                                                    : 'secondary'
+                                            }`}
                                         >
-                                            redeem
+                                            {isRedeeming ? (
+                                                <div className={styles.loading}>
+                                                    Loading
+                                                    <ThreeDots color="yellow" />
+                                                </div>
+                                            ) : (
+                                                <>redeem</>
+                                            )}
                                         </button>
-                                        <div style={{display: 'flex', alignItems: 'center'}}>
-                                            <span style={{marginRight: '1rem'}} className={styles.yellow}>
+                                        <div className={styles.value}>
+                                            <span
+                                                style={{ color: '#f8931a' }}
+                                                className={styles.yellow}
+                                            >
                                                 {Number(satsDeposited.div(1e8))}
                                             </span>
                                             <Image
                                                 src={icoBTC}
                                                 alt={'BTC'}
-                                                height="22"
-                                                width="22"
+                                                height="28"
+                                                width="28"
                                             />
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
-                                    <div style={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                                    <div
+                                        style={{
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            width: '100%',
+                                        }}
+                                    >
                                         <Image
                                             src={icoThunder}
                                             alt={'Loan'}
-                                            height="22"
-                                            width="22"
+                                            height="28"
+                                            width="28"
                                         />
                                         <span className={styles.plain}>
-                                            SYRON USD Printed:
+                                            SYRON USD
                                         </span>
                                     </div>
-                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2rem', paddingRight: '2rem', marginTop: '2rem'}}>
-                                        {/* <button
-                                            onClick={handleRedeem}
-                                            className={'button secondary'}
-                                        >
-                                            update
-                                        </button> */}
-                                        <div style={{fontSize: '17px', color: '#FFFFFFBF'}}>Printed</div>
-                                        <div style={{display: 'flex', alignItems: 'center'}}>
-                                            <span style={{marginRight: '1rem'}} className={styles.yellow}>
+                                    <div className={styles.subsection}>
+                                        <div className={styles.info}>
+                                            | PRINTED
+                                        </div>
+                                        <div className={styles.value}>
+                                            <span className={styles.yellow}>
                                                 {loan === '0.00' ? '0' : loan}
                                             </span>
                                             <Image
                                                 src={icoSYRON}
                                                 alt={'Syron USD'}
-                                                height="22"
-                                                width="22"
+                                                height="28"
+                                                width="28"
                                             />
                                         </div>
                                     </div>
-                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', marginTop: '1rem'}}>
+                                    <div className={styles.buttons}>
                                         <button
                                             onClick={updateBalance}
-                                            style={{
-                                                marginLeft: '2rem',
-                                            }}
                                             className={`button ${
-                                                isLoading ? 'disabled' : 'secondary'
+                                                isLoading
+                                                    ? 'disabled'
+                                                    : 'secondary'
                                             }`}
                                         >
                                             {isLoading ? (
-                                                <ThreeDots color="yellow" />
+                                                <div className={styles.loading}>
+                                                    Loading
+                                                    <ThreeDots color="yellow" />
+                                                </div>
                                             ) : (
                                                 <>update</>
                                             )}
                                         </button>
                                     </div>
-                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', justifyContent: 'space-between', alignItems: 'center', paddingLeft: '2rem', paddingRight: '2rem', marginTop: '2rem'}}>
-                                        {/* <button
-                                            onClick={handleRedeem}
-                                            className={'button secondary'}
-                                        >
-                                            update
-                                        </button> */}
-                                        <div style={{fontSize: '17px', color: '#FFFFFFBF'}}>Balance</div>
-                                        <div style={{display: 'flex', alignItems: 'center'}}>
-                                            <span style={{marginRight: '1rem'}} className={styles.yellow}>
+                                    <div className={styles.subsection}>
+                                        <div className={styles.info}>
+                                            | BALANCE
+                                        </div>
+                                        <div className={styles.value}>
+                                            <span className={styles.yellow}>
                                                 {syronBal === '0.00'
                                                     ? '0'
                                                     : syronBal}
@@ -641,24 +686,22 @@ function Component() {
                                             <Image
                                                 src={icoSYRON}
                                                 alt={'Syron USD'}
-                                                height="22"
-                                                width="22"
+                                                height="28"
+                                                width="28"
                                             />
                                         </div>
                                     </div>
-                                    <div style={{display: 'flex', flexDirection: 'row', width: '100%', alignItems: 'center', marginTop: '1rem'}}>
+                                    <div className={styles.buttons}>
                                         <button
-                                            style={{
-                                                marginLeft: '2rem',
-                                                marginRight: '2rem',
-                                            }}
                                             onClick={updateWithdraw}
                                             className={'button secondary'}
                                         >
                                             Withdraw
                                         </button>
                                         <button
-                                            onClick={handleRedeem}
+                                            onClick={() =>
+                                                toast.info('Coming soon...')
+                                            }
                                             className={'button secondary'}
                                         >
                                             send
@@ -701,9 +744,34 @@ function Component() {
 
                 {/* @dev: trade */}
                 <div className={styles.cardActiveWrapper}>
+                    <div
+                        className={
+                            active === 'GetSyron' || active === 'LiquidSyron'
+                                ? styles.cardTitle
+                                : styles.cardBeYourBank
+                        }
+                    >
+                        <div className={styles.title}>
+                            Be{' '}
+                            <span style={{ color: '#ffff32' }}>
+                                Your Own ₿ank
+                            </span>
+                        </div>
+
+                        {/* <div className={styles.icoWrapper}>
+                        <Image
+                            src={active === 'GetSyron' ? icoUp : icoDown}
+                            alt="toggle-ico"
+                        />
+                    </div> */}
+                    </div>
                     <div className={styles.tabWrapper}>
                         <div
-                            onClick={() => toggleActive('GetSyron')}
+                            onClick={() =>
+                                active !== 'GetSyron'
+                                    ? toggleActive('GetSyron')
+                                    : null
+                            }
                             className={
                                 active === 'GetSyron'
                                     ? styles.cardSelect
@@ -713,7 +781,10 @@ function Component() {
                             Print Syron
                         </div>
                         <div
-                            onClick={() => toggleActive('LiquidSyron')}
+                            onClick={
+                                () => toast.info('Coming soon...')
+                                // toggleActive('LiquidSyron')
+                            }
                             className={
                                 active === 'LiquidSyron'
                                     ? styles.cardSelect
@@ -723,22 +794,7 @@ function Component() {
                             Earn Bitcoin
                         </div>
                     </div>
-                    <div
-                        className={
-                            active === 'GetSyron' || active === 'LiquidSyron'
-                                ? styles.cardTitle
-                                : styles.cardBeYourBank
-                        }
-                    >
-                        <div className={styles.title}>Be Your Own ₿ank</div>
 
-                        {/* <div className={styles.icoWrapper}>
-                        <Image
-                            src={active === 'GetSyron' ? icoUp : icoDown}
-                            alt="toggle-ico"
-                        />
-                    </div> */}
-                    </div>
                     {active === 'GetSyron' && (
                         <div className={styles.cardSub}>
                             <div className={styles.wrapper}>

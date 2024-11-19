@@ -154,13 +154,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
     letter-spacing: normal;
 
     // @mobile-first
-    font-size: 12px;
+    font-size: 14px;
     @media only screen and (min-width: 375px) {
-        font-size: 14px;
+        font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
+        font-size: 19px;
     }
 }
 
@@ -192,13 +192,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
     background-color: transparent;
 
     // @design-mobile
-    font-size: 14px;
+    font-size: 22px;
     @media only screen and (min-width: 375px) {
-        font-size: 17px;
+        font-size: 25px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 19px;
+        font-size: 29px;
     }
 }
 
@@ -240,22 +240,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
     justify-content: center;
     width: 60px;
     height: 22px;
-    margin-right: 10px;
+    margin-right: 1rem;
 
     cursor: pointer;
-
-    // @design-mobile
-    font-size: 8px;
-    padding: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 10px;
-        padding: 11px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 12px;
-        padding: 0;
-    }
+    padding: 1rem 2rem;
+    font-size: 1rem;
 }
 
 .percent:hover,
@@ -343,15 +332,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     color: #6e6e6e;
     letter-spacing: normal;
-    font-size: 12px;
 
+    font-size: 14px;
     @media only screen and (min-width: 375px) {
         // @design-mobile
-        font-size: 14px;
+        font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
+        font-size: 19px;
     }
 }
 

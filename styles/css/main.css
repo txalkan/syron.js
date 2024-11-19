@@ -1,6 +1,3 @@
-@import url(fontawesome-all.min.css);
-@import url('https://fonts.googleapis.com/css?family=Noto+Sans+Mono');
-
 /*
 	Dimension by HTML5 UP
 	html5up.net | @ajlkn
@@ -87,7 +84,6 @@ video {
     font-size: 100%;
     font: inherit;
     vertical-align: baseline;
-    /* font-family: 'Noto Sans Mono'; */
 }
 
 article,
@@ -251,7 +247,7 @@ html {
     }
 }
 
-@media screen and (max-width: 736px) {
+@media screen and (max-width: 768px) {
     html {
         font-size: 11pt;
     }
@@ -374,7 +370,7 @@ h6 {
     font-size: 0.6rem;
 }
 
-@media screen and (max-width: 736px) {
+@media screen and (max-width: 768px) {
     h1 {
         font-size: 1.75rem;
         line-height: 1.4;
@@ -860,7 +856,7 @@ input[type='radio'] + label:before {
     width: 100%;
 }
 
-@media screen and (max-width: 736px) {
+@media screen and (max-width: 768px) {
     .image.main {
         margin: 2rem 0;
     }
@@ -1241,9 +1237,9 @@ button.secondary,
 .button.secondary {
     width: fit-content;
     background-color: rgba(255, 255, 255, 0.2);
-    font-weight: 400;
+    font-weight: 100;
     font-family: 'GeistMono', monospace;
-    font-size: small;
+    font-size: medium;
     box-shadow: none;
     height: 2.5rem;
     line-height: 2.5rem;
@@ -1310,6 +1306,8 @@ button.disabled,
 button:disabled,
 .button.disabled,
 .button:disabled {
+    font-family: 'GeistMono', monospace;
+    font-size: medium;
     pointer-events: none;
     cursor: default;
     opacity: 0.25;
@@ -1755,7 +1753,7 @@ body.is-preload #bglight:before {
     }
 }
 
-@media screen and (max-width: 736px) {
+@media screen and (max-width: 768px) {
     #wrapper {
         padding: 2rem 1rem;
     }
@@ -1984,7 +1982,7 @@ body.is-preload #header .content .inner {
     }
 }
 
-@media screen and (max-width: 736px) {
+@media screen and (max-width: 768px) {
     #header > * {
         margin-top: 2rem;
     }
