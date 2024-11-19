@@ -474,7 +474,7 @@ function Component() {
     } else {
         return (
             <div className={styles.container}>
-                {walletConnected && (
+                {walletConnected ? (
                     <>
                         {sdb ? (
                             <div className={styles.boxWrapper}>
@@ -521,31 +521,18 @@ function Component() {
                                             SDB Address
                                         </span>
                                     </div>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            flexDirection: 'column',
-                                            textAlign: 'left',
-                                            width: '100%',
-                                        }}
-                                    >
-                                        <div className={styles.sdb}>
-                                            <div
-                                                onClick={handleCopy}
-                                                style={{
-                                                    marginRight: '0.5rem',
-                                                    cursor: 'pointer',
-                                                    display: 'flex',
-                                                    alignItems: 'center',
-                                                    gap: '0.5rem',
-                                                }}
-                                            >
-                                                <Image
-                                                    src={icoCopy}
-                                                    alt={'copy'}
-                                                    height="20"
-                                                    width="20"
-                                                />
+                                    <div className={styles.sdbAddr}>
+                                        <div
+                                            className={styles.sdb}
+                                            onClick={handleCopy}
+                                        >
+                                            <Image
+                                                src={icoCopy}
+                                                alt={'copy'}
+                                                height="25"
+                                                width="25"
+                                            />
+                                            <div className={styles.sdbText}>
                                                 {syron?.sdb}
                                             </div>
                                         </div>
@@ -553,7 +540,7 @@ function Component() {
                                             style={{
                                                 fontSize: '1rem',
                                                 color: '#ffff32',
-                                                padding: '1rem 3rem',
+                                                padding: '0 3rem',
                                                 display: 'flex',
                                             }}
                                             onClick={() =>
@@ -562,7 +549,7 @@ function Component() {
                                                 )
                                             }
                                         >
-                                            History ↗
+                                            Wallet Activity ↗
                                         </div>
                                     </div>
                                 </div>
@@ -740,6 +727,10 @@ function Component() {
                             </div>
                         )}
                     </>
+                ) : (
+                    <div className={styles.boxWrapper}>
+                        Connect your wallet to access your Safety Deposit ₿ox
+                    </div>
                 )}
 
                 {/* @dev: trade */}

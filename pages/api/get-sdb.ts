@@ -36,9 +36,18 @@ export default async function handler(
         const dummy_ = dummy === 'true'
 
         console.log('@dev get data from Firebase')
-        const querySnapshot = await getDocs(
-            collection(db, 'sdb-qczt5-riaaa-aaaam-qbfkq-cai')
-        )
+
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        let canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
+
+        if (version === '2') {
+            canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_2
+        }
+        let name = `sdb-${canisterId}`
+
+        console.log(` @dev database: ${name}`)
+
+        const querySnapshot = await getDocs(collection(db, name))
         const dataList = querySnapshot.docs.map((doc) => ({
             ...(doc.data() as any),
             docId: doc.id,
@@ -122,11 +131,7 @@ export default async function handler(
         if (data) {
             console.log('@dev update document')
             // @dev Update the document if found
-            const docRef = doc(
-                db,
-                'sdb-qczt5-riaaa-aaaam-qbfkq-cai',
-                data.docId
-            )
+            const docRef = doc(db, name, data.docId)
             await updateDoc(docRef, {
                 timestamp: new Date().getTime(),
                 address,
@@ -139,7 +144,7 @@ export default async function handler(
         } else {
             console.log('@dev add document')
             // @dev Create a new document if not found
-            await addDoc(collection(db, 'sdb-qczt5-riaaa-aaaam-qbfkq-cai'), {
+            await addDoc(collection(db, name), {
                 id,
                 timestamp: new Date().getTime(),
                 address,
