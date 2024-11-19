@@ -1,5 +1,5 @@
 .rowContent {
-    padding: 2rem;
+    padding: 1rem;
     border-left: 1px solid #333333;
     margin-left: 12px;
     display: flex;
@@ -7,10 +7,7 @@
 }
 
 .rowContentTxt,
-.txt,
 .withdrawalTxt {
-    //font-family: 'GeistMono', monospace; //@review (UI)
-
     //@mobile-first
     font-size: 12px;
     @media only screen and (min-width: 375px) {
@@ -23,18 +20,11 @@
 }
 
 .rowContentTxt {
-    //text-transform: uppercase;
-    color: #000;
-    justify-content: flex-start;
-    margin-left: 1rem;
-    margin-right: 1rem;
-}
-
-.txt {
-    text-transform: capitalize;
+    display: flex;
+    flex-direction: column;
     color: #f8f8f8;
-    font-weight: 500;
-    letter-spacing: normal;
+    justify-content: flex-start;
+    padding: 0 1rem 1rem;
 }
 
 .ul {
@@ -51,51 +41,34 @@
     margin-top: 1rem;
 }
 
-.outerWrapper {
-    top: 0%;
-    left: 0%;
+.container {
     display: flex;
-    position: absolute;
-    max-width: 100%;
-    width: 100%;
-    max-height: 100%;
-    height: 100%;
-    transition: z-index linear 0s 0.3s;
-}
-
-.container,
-.container2 {
-    display: flex;
+    justify-content: center;
     position: relative;
-    max-width: 900px;
-    width: 100%;
+
     height: fit-content;
     z-index: 1;
 }
 
 .innerContainer {
-    display: flex;
-    position: relative;
-    width: 100%;
     background: #dbe4eb;
     border: 1px solid #000;
     flex-direction: column;
     padding: 5%;
-    border-radius: 10px;
+    border-radius: 22px;
 }
 
 .headerWrapper {
     display: flexbox;
-    margin-top: 22px;
-    // align-items: center;
 }
 
 .headerTxt {
-    font-family: 'GeistMono', monospace;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
 
+    padding: 1rem 1rem 2rem;
     color: rgb(75, 0, 130);
-    text-decoration: underline;
-    text-decoration-color: rgb(75, 0, 130);
 
     //@mobile-first
     font-size: 17px;
@@ -109,8 +82,10 @@
 }
 
 .contentWrapper {
-    margin-top: 30px;
-    margin-bottom: 30px;
+    padding: 2rem 2rem;
+    margin-bottom: 2rem;
+    background-color: #2525258c;
+    border-radius: 22px;
 }
 
 .rowWrapper {
@@ -118,12 +93,11 @@
     flex-direction: column;
     text-align: left;
     width: 100%;
-    margin-top: 5px;
-    margin-bottom: 5px;
 }
 
 .rowHeader {
     display: flex;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
     cursor: pointer;
@@ -133,14 +107,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 2%;
 }
 
 .rowHeaderTitle {
-    font-family: 'GeistMono', monospace;
+    padding: 0 1rem;
 
-    margin-left: 22px;
-    margin-top: -3%; // @review (ui)
     color: #000;
 
     font-size: 14px;
@@ -208,86 +179,6 @@
 .icoColor {
     display: none;
     margin-left: -20px;
-}
-
-@media only screen and (max-width: 375px) {
-    .container {
-        top: 120%;
-        width: 90%;
-        margin-top: 0vh;
-    }
-
-    .container2 {
-        top: 120%;
-        width: 90%;
-        margin-top: -30vh;
-    }
-}
-
-@media only screen and (min-width: 375px) {
-    .container {
-        top: 115%;
-        width: 90%;
-        margin-top: 0vh;
-    }
-
-    .container2 {
-        top: 115%;
-        width: 90%;
-        margin-top: -30vh;
-    }
-}
-
-@media only screen and (min-width: 425px) {
-    .container {
-        top: 100%;
-        width: 90%;
-        margin-top: 0vh;
-    }
-
-    .container2 {
-        top: 100%;
-        width: 90%;
-        margin-top: -30vh;
-    }
-}
-
-@media only screen and (min-width: 550px) {
-    .container {
-        top: 90%;
-        width: 90%;
-        margin-top: 0vh;
-    }
-
-    .container2 {
-        top: 90%;
-        width: 90%;
-        margin-top: -30vh;
-    }
-}
-
-@media only screen and (min-width: 750px) {
-    .container {
-        top: 90%;
-        width: 90%;
-        margin-top: 0vh;
-    }
-
-    .container2 {
-        top: 90%;
-        width: 90%;
-        margin-top: -25vh;
-    }
-}
-
-@media only screen and (min-width: 1400px) {
-    .container {
-        margin-top: -2%;
-    }
-
-    .container2 {
-        margin-top: -15%;
-    }
 }
 
 @media only screen and (max-width: 767px) {
@@ -368,8 +259,43 @@
 }
 
 .sdb {
+    width: 80%;
+    //@mobile-first
+    font-size: 14px;
+    @media only screen and (min-width: 375px) {
+        font-size: 17px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 19px;
+    }
+
     display: flex;
-    margin-top: 2rem;
-    color: rgb(75, 0, 130);
+    flex-direction: row;
+    margin-top: 1rem;
+    align-items: center;
+
+    gap: 0.5rem;
+    padding: 0 2rem;
+
     cursor: pointer;
+    // text-decoration: underline;
+    color: #1e90ff;
+
+    //@mobile-first
+    font-size: 17px;
+    @media only screen and (min-width: 375px) {
+        font-size: 19px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        font-size: 22px;
+    }
+}
+
+.sdbText {
+    flex: 1; /* Allow the text to take up available space */
+    text-overflow: ellipsis; /* Ensure ellipsis is shown */
+    white-space: nowrap; /* Prevent text from wrapping */
+    overflow: hidden; /* Hide overflowed text */
 }

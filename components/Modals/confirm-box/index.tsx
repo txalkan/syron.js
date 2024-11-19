@@ -759,7 +759,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
             const result = await unisat.requestAccounts()
             handleAccountsChanged(result)
 
-            toast.info('Your wallet is now connected! 🎉', {
+            toast.info('Your wallet is now connected.', {
                 position: 'top-center',
                 autoClose: 2000,
                 hideProgressBar: false,

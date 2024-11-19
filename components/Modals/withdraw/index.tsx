@@ -25,6 +25,8 @@ import Spinner from '../../Spinner'
 import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
 import { extractRejectText } from '../../../src/utils/unisat/utils'
+import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
+import icoCopy from '../../../src/assets/icons/copy.svg'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -287,7 +289,9 @@ var ThisModal: React.FC<Prop> = function ({
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text)
-        toast.info('SDB address copied to clipboard!')
+        toast.info(
+            `Your Safety Deposit ₿ox (SDB) address has been copied to your clipboard.`
+        )
     }
 
     return (
@@ -303,14 +307,15 @@ var ThisModal: React.FC<Prop> = function ({
                                 height={15}
                             />
                         </div>
+
                         <div className={styles.headerTxt}>
-                            {/* <Image
-                                alt="power-ico"
-                                src={PowerIcon}
-                                width={30}
-                                height={30}
-                            /> */}
-                            {t('Withdraw SYRON')}
+                            <Image
+                                src={icoThunder}
+                                alt={'Loan'}
+                                height="32"
+                                width="32"
+                            />
+                            {t('Withdraw Syron USD')}
                         </div>
                     </div>
 
@@ -339,9 +344,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t(
-                                            'Deposit BTC in your Safety Deposit ₿ox'
-                                        )}
+                                        {t('Deposit BTC in your')}
+                                        <br />
+                                        {t('Safety Deposit ₿ox')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -365,29 +370,37 @@ var ThisModal: React.FC<Prop> = function ({
                             <div className={styles.rowContent}>
                                 {active === 1 ? (
                                     <>
-                                        <div
-                                            style={{ marginBottom: '2rem' }}
-                                            className={styles.rowContentTxt}
-                                        >
+                                        <div className={styles.rowContentTxt}>
                                             {t('Send bitcoin into your SDB.')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
-                                            <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'You can easily transfer BTC from any wallet to your SDB address. Just copy your SDB address below and follow the transfer instructions in your wallet. If you have any questions, feel free to reach out on Telegram @TyronDAO.'
+                                                        'You can easily transfer BTC from any wallet to your SDB address. Just copy your SDB address below and follow the transfer instructions in your wallet.'
                                                     )}
                                                 </li>
-                                                <span
+
+                                                <div
                                                     className={styles.sdb}
                                                     onClick={() =>
                                                         copyToClipboard(sdb)
                                                     }
                                                 >
-                                                    {sdb.slice(0, 10)}...
-                                                    {sdb.slice(-10)}
-                                                </span>
+                                                    <Image
+                                                        src={icoCopy}
+                                                        alt={'copy'}
+                                                        height="25"
+                                                        width="25"
+                                                    />
+                                                    <div
+                                                        className={
+                                                            styles.sdbText
+                                                        }
+                                                    >
+                                                        {sdb}
+                                                    </div>
+                                                </div>
                                             </ul>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
@@ -399,10 +412,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         </div>
                                     </>
                                 ) : (
-                                    <div
-                                        style={{ marginBottom: '2rem' }}
-                                        className={styles.rowContentTxt}
-                                    >
+                                    <div className={styles.rowContentTxt}>
                                         {t('Send bitcoin into your SDB.')}
                                     </div>
                                 )}
@@ -457,23 +467,24 @@ var ThisModal: React.FC<Prop> = function ({
                             <div className={styles.rowContent}>
                                 {active === 2 ? (
                                     <>
-                                        <div
-                                            style={{ marginBottom: '2rem' }}
-                                            className={styles.rowContentTxt}
-                                        >
+                                        <div className={styles.rowContentTxt}>
                                             {t('Update your SYRON balance.')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
-                                            <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'To keep your balance up to date, click the UPDATE button in your Safety Deposit ₿ox. This will show you how much SYRON dollars you can withdraw. Remember to click UPDATE each time you make a BTC deposit into your SDB address!'
+                                                        'To keep your balance up to date, click the UPDATE button in your Safety Deposit ₿ox.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Remember to click UPDATE each time you make a BTC deposit into your SDB address!'
+                                                        'This will show you how much SYRON dollars you can withdraw.'
+                                                    )}
+                                                </li>
+                                                <li className={styles.li}>
+                                                    {t(
+                                                        'Remember to click UPDATE each time you make a BTC deposit into your Safety Deposit ₿ox.'
                                                     )}
                                                 </li>
                                             </ul>
@@ -485,10 +496,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         </div>
                                     </>
                                 ) : (
-                                    <div
-                                        style={{ marginBottom: '2rem' }}
-                                        className={styles.rowContentTxt}
-                                    >
+                                    <div className={styles.rowContentTxt}>
                                         {t('Update your SYRON balance.')}
                                     </div>
                                 )}
@@ -543,16 +551,12 @@ var ThisModal: React.FC<Prop> = function ({
                             <div className={styles.rowContent}>
                                 {active === 3 ? (
                                     <>
-                                        <div
-                                            style={{ marginBottom: '2rem' }}
-                                            className={styles.rowContentTxt}
-                                        >
+                                        <div className={styles.rowContentTxt}>
                                             {t(
                                                 'Transfer SYRON from your balance to your wallet.'
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
-                                            <br />
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
@@ -561,7 +565,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                 </li>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Your SYRON USD are BRC-20 tokens that you can use freely on the Bitcoin mainnet.'
+                                                        'Your SYRON USD are BRC-20 tokens that you can use freely on Bitcoin mainnet.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -588,10 +592,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         </div>
                                     </>
                                 ) : (
-                                    <div
-                                        style={{ marginBottom: '2rem' }}
-                                        className={styles.rowContentTxt}
-                                    >
+                                    <div className={styles.rowContentTxt}>
                                         {t(
                                             'Transfer SYRON from your balance to your wallet.'
                                         )}
@@ -620,7 +621,7 @@ var ThisModal: React.FC<Prop> = function ({
                             {isLoading ? (
                                 <ThreeDots color="yellow" />
                             ) : (
-                                <div className={styles.txt}>confirm</div>
+                                <>Confirm</>
                             )}
                         </div>
                     </div>
@@ -681,7 +682,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 {isLoading ? (
                                     <ThreeDots color="yellow" />
                                 ) : (
-                                    <div className={styles.txt}>retry</div>
+                                    <>retry</>
                                 )}
                             </button>
                         </div>
