@@ -10,7 +10,7 @@ import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $btc_wallet } from '../../../src/store/syron'
+import { $btc_wallet, $walletConnected } from '../../../src/store/syron'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
@@ -135,6 +135,8 @@ export const BoxInput: React.FC<Prop> = ({
         []
     )
 
+    const walletConnected = useStore($walletConnected).isConnected
+
     return (
         <label>
             <div className={classNames(styles.container)}>
@@ -152,25 +154,10 @@ export const BoxInput: React.FC<Prop> = ({
                                     )}
                                 </span>
                             </div>
-                            <div className={styles.info}>
-                                | Wallet balance:
-                                <span className={styles.infoPurple}>
-                                    {isNaN(Number(btcBalance))
-                                        ? 'Connect Wallet'
-                                        : `${
-                                              Number(btcBalance) == 0
-                                                  ? 0
-                                                  : Number(
-                                                        btcBalance
-                                                    ).toLocaleString('en-US', {
-                                                        minimumFractionDigits: 8,
-                                                        maximumFractionDigits: 8,
-                                                    })
-                                          } ${token?.symbol}`}
-                                </span>{' '}
-                                {Number(btcBalance) != 0 && (
-                                    <>
-                                        =
+                            {walletConnected && (
+                                <div className={styles.info}>
+                                    | Wallet Balance
+                                    <span className={styles.infoBalance}>
                                         <span className={styles.infoPurple}>
                                             $
                                             {Number(balWorth) == 0
@@ -182,9 +169,25 @@ export const BoxInput: React.FC<Prop> = ({
                                                       maximumFractionDigits: 2,
                                                   })}
                                         </span>
-                                    </>
-                                )}
-                            </div>
+
+                                        {!isNaN(Number(btcBalance)) &&
+                                            Number(btcBalance) !== 0 && (
+                                                <span
+                                                    className={styles.infoColor}
+                                                >
+                                                    ≈ ₿
+                                                    {Number(
+                                                        btcBalance
+                                                    ).toLocaleString('en-US', {
+                                                        minimumFractionDigits: 8,
+                                                        maximumFractionDigits: 8,
+                                                    })}
+                                                </span>
+                                            )}
+                                    </span>
+                                </div>
+                            )}
+
                             {/* {Number(bal) != 0 && (
                                 <div className={styles.info}>
                                     | Worth:

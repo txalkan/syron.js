@@ -64,10 +64,15 @@
 }
 
 .txtRow {
-    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
     text-align: left;
     margin-left: 14%;
+    margin-right: 10%;
     color: #6e6e6e;
+
+    padding: 2rem;
 
     //@mobile-first
     font-size: 12px;

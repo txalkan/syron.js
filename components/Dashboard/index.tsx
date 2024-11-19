@@ -358,7 +358,7 @@ function Component() {
                                                         styles.txtConnect
                                                     }
                                                 >
-                                                    {t('Install UniSat')}
+                                                    {t('CONNECT')}
                                                 </div>
                                             </div>
                                         ) : (

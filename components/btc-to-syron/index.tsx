@@ -207,8 +207,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 (error as Error).message.includes('SDB Loading Error') //"Cannot read properties of null (reading 'sdb')"
             ) {
                 toast.info(
-                    'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.',
-                    { autoClose: 2000, toastId: 400 }
+                    'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.'
                 )
             } else if (
                 typeof error === 'object' &&
@@ -430,14 +429,23 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.info}>
-                <div className={styles.column}>
-                    <div className={styles.txtRow}>
-                        | Collateral Ratio = 1.5:1
+            <div className={styles.txtRow}>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div>ᛞ</div>
+                    <div>
+                        Syron USD is an asset-backed stablecoin, secured with
+                        150% Bitcoin collateral.
                     </div>
-                    <br />
+                </div>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                    <div>ᛞ</div>
+                    <div>
+                        Your Safety Deposit ₿ox will hold $1.50 in BTC for every
+                        SYRON dollar you withdraw.
+                    </div>
                 </div>
             </div>
+
             <div
                 style={{
                     width: '100%',
@@ -448,7 +456,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     marginTop: '1rem',
                     marginBottom: '3rem',
                     cursor: 'pointer',
-                    borderRadius: '22px',
+                    borderRadius: '11px',
                     backgroundColor: 'rgb(75,0,130)',
                     // @design-shadow-3d
                     backgroundImage:
@@ -460,7 +468,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 onClick={handleButtonClick}
             >
                 {!unisatInstalled ? (
-                    <div className={styles.txt}>{t('Install UniSat')}</div>
+                    <div className={styles.txt}>{t('CONNECT')}</div>
                 ) : !walletConnected ? (
                     <div className={styles.txt}>{t('CONNECT')}</div>
                 ) : disabled ? (

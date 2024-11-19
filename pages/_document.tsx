@@ -19,7 +19,7 @@ class MyDocument extends Document {
                     <meta name="title" content="TYRON" />
                     <meta
                         name="description"
-                        content="₿e Your ₿ank | Trustless stablecoin metaprotocol to increase your BTC capital efficiency on Bitcoin Layer 1"
+                        content="Be Your Own ₿ank | Hodl $BTC to print Syron USD 🌎 - Overcollateralized with Bitcoin L1 for digital payments across the Americas"
                     />
                     <meta property="og:image" content="ssi_tyron.png" />
                     <meta property="og:title" content="TYRON" />

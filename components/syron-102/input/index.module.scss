@@ -145,26 +145,41 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .info,
-.infoPurple {
+.infoPurple,
+.infoColor {
+    padding-bottom: 1rem;
     margin-left: 9%;
     text-transform: uppercase;
     color: #000;
     letter-spacing: normal;
 
     // @mobile-first
-    font-size: 12px;
+    font-size: 14px;
     @media only screen and (min-width: 375px) {
-        font-size: 14px;
+        font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
+        font-size: 19px;
     }
 }
 
+.infoBalance {
+    display: block;
+    margin-left: 3rem;
+    padding-top: 0.5rem;
+}
 .infoPurple {
     color: rgb(75, 0, 130);
-    margin-left: 2%;
+    margin-left: 0.5rem;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.infoColor {
+    display: block;
+    margin-left: 0.5rem;
+    color: #f8931a;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
 .inputAmt {
@@ -177,13 +192,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
     background-color: transparent;
 
     // @design-mobile
-    font-size: 14px;
+    font-size: 22px;
     @media only screen and (min-width: 375px) {
-        font-size: 17px;
+        font-size: 25px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 19px;
+        font-size: 29px;
     }
 }
 
@@ -216,7 +231,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .percentActive {
     color: #f8f8f8; // @design chrome #dbe4eb;
 
-    background-color: rgb(75, 0, 130);
+    background-color: #f8931a; // @bitcoin color
     box-shadow: 2px 1px 6px rgba(0, 0, 0, 0.6); // @design-shadow-percent
 
     border-radius: 22px;
@@ -225,22 +240,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
     justify-content: center;
     width: 60px;
     height: 22px;
-    margin-right: 10px;
+    margin-right: 1rem;
 
     cursor: pointer;
-
-    // @design-mobile
-    font-size: 8px;
-    padding: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 10px;
-        padding: 11px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 12px;
-        padding: 0;
-    }
+    padding: 1rem 2rem;
+    font-size: 1rem;
 }
 
 .percent:hover,
@@ -328,15 +332,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
     color: #6e6e6e;
     letter-spacing: normal;
-    font-size: 12px;
 
+    font-size: 14px;
     @media only screen and (min-width: 375px) {
         // @design-mobile
-        font-size: 14px;
+        font-size: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
+        font-size: 19px;
     }
 }
 
