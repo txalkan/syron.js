@@ -56,10 +56,20 @@
     flex-direction: column;
     padding: 5%;
     border-radius: 22px;
+
+    @media only screen and (max-width: 600px) {
+        margin-top: 5rem;
+    }
+}
+
+.closeIcon {
+    margin: 0px;
 }
 
 .headerWrapper {
-    display: flexbox;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .headerTxt {
@@ -291,6 +301,10 @@
     @media only screen and (min-width: 768px) {
         font-size: 22px;
     }
+
+    @media only screen and (max-width: 600px) {
+        width: 100%;
+    }
 }
 
 .sdbText {
@@ -298,4 +312,9 @@
     text-overflow: ellipsis; /* Ensure ellipsis is shown */
     white-space: nowrap; /* Prevent text from wrapping */
     overflow: hidden; /* Hide overflowed text */
+
+    @media only screen and (max-width: 600px) {
+        max-width: 120px;
+        font-size: 14px;
+    }
 }

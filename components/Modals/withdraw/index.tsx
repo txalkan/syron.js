@@ -299,14 +299,6 @@ var ThisModal: React.FC<Prop> = function ({
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
-                        <div onClick={onClose} className="closeIcon">
-                            <Image
-                                alt="ico-close"
-                                src={Close}
-                                width={15}
-                                height={15}
-                            />
-                        </div>
 
                         <div className={styles.headerTxt}>
                             <Image
@@ -316,6 +308,14 @@ var ThisModal: React.FC<Prop> = function ({
                                 width="32"
                             />
                             {t('Withdraw Syron USD')}
+                        </div>
+                        <div onClick={onClose} className={styles.closeIcon}>
+                            <Image
+                                alt="ico-close"
+                                src={Close}
+                                width={15}
+                                height={15}
+                            />
                         </div>
                     </div>
 
