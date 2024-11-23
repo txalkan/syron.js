@@ -299,7 +299,6 @@ var ThisModal: React.FC<Prop> = function ({
             <div className={styles.container}>
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
-
                         <div className={styles.headerTxt}>
                             <Image
                                 src={icoThunder}
@@ -377,7 +376,7 @@ var ThisModal: React.FC<Prop> = function ({
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'You can easily transfer BTC from any wallet to your SDB address. Just copy your SDB address below and follow the transfer instructions in your wallet.'
+                                                        'You can easily transfer BTC from any wallet to your SDB address. Just copy your SDB address below & follow the instructions in your wallet.'
                                                     )}
                                                 </li>
 
@@ -405,14 +404,18 @@ var ThisModal: React.FC<Prop> = function ({
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        "During this testing phase, please limit your deposits to a maximum of 5,000 sats (0.00005 BTC). This amount is covered by TyronDAO's insurance, but please do not exceed it. Thanks for your cooperation!"
+                                                        "During this testing phase, please limit your deposits to a maximum of 5,000 sats (0.00005 BTC). Small amounts are covered by TyronDAO's insurance."
                                                     )}
                                                 </li>
                                             </ul>
                                         </div>
                                     </>
                                 ) : (
-                                    <div className={styles.rowContentTxt}>
+                                    <div
+                                        className={styles.rowContentTxt}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => menuActive(1)}
+                                    >
                                         {t('Send bitcoin into your SDB.')}
                                     </div>
                                 )}
@@ -496,7 +499,11 @@ var ThisModal: React.FC<Prop> = function ({
                                         </div>
                                     </>
                                 ) : (
-                                    <div className={styles.rowContentTxt}>
+                                    <div
+                                        className={styles.rowContentTxt}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => menuActive(2)}
+                                    >
                                         {t('Update your SYRON balance.')}
                                     </div>
                                 )}
@@ -527,7 +534,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Withdraw SYRON')}
+                                        {t('Withdraw')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -553,29 +560,77 @@ var ThisModal: React.FC<Prop> = function ({
                                     <>
                                         <div className={styles.rowContentTxt}>
                                             {t(
-                                                'Transfer SYRON from your balance to your wallet.'
+                                                'Withdrawal Overview for Syron USD'
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
+                                                    <span
+                                                        style={{
+                                                            color: 'rgb(75, 0, 130)',
+                                                        }}
+                                                    >
+                                                        {t('Transfer Process:')}
+                                                    </span>{' '}
                                                     {t(
-                                                        'You can withdraw SYRON dollars based on the amount of BTC you HODL in your Safety Deposit ₿ox.'
+                                                        'You can withdraw dollars from your SYRON balance to your wallet.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
+                                                    <span
+                                                        style={{
+                                                            color: 'rgb(75, 0, 130)',
+                                                        }}
+                                                    >
+                                                        {t(
+                                                            'Withdrawal Limits:'
+                                                        )}
+                                                    </span>{' '}
                                                     {t(
-                                                        'Your SYRON USD are BRC-20 tokens that you can use freely on Bitcoin mainnet.'
+                                                        'Withdrawals of Syron USD are based on the balance in your Safety Deposit ₿ox.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
+                                                    <span
+                                                        style={{
+                                                            color: 'rgb(75, 0, 130)',
+                                                        }}
+                                                    >
+                                                        {t(
+                                                            'Token Implementation:'
+                                                        )}
+                                                    </span>{' '}
                                                     {t(
-                                                        'Bridge your SYRON to other networks, such as Bitlayer, using the Omnity Network.'
+                                                        'Syron USD is implemented as a BRC-20 token named SYRON, which can be used freely on Bitcoin mainnet.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
+                                                    <span
+                                                        style={{
+                                                            color: 'rgb(75, 0, 130)',
+                                                        }}
+                                                    >
+                                                        {t(
+                                                            'Cross-Network Bridging:'
+                                                        )}
+                                                    </span>{' '}
                                                     {t(
-                                                        'And very soon, you will also be able to send lightning-fast payments powered by the Internet Computer!'
+                                                        'You can bridge Syron USD to other networks, such as Bitlayer, using the Omnity Network.'
+                                                    )}
+                                                </li>
+                                                <li className={styles.li}>
+                                                    <span
+                                                        style={{
+                                                            color: 'rgb(75, 0, 130)',
+                                                        }}
+                                                    >
+                                                        {t(
+                                                            'Future Enhancements:'
+                                                        )}
+                                                    </span>{' '}
+                                                    {t(
+                                                        'Soon, we will be able to send lightning-fast payments powered by the Internet Computer!'
                                                     )}
                                                 </li>
                                             </ul>
@@ -592,9 +647,13 @@ var ThisModal: React.FC<Prop> = function ({
                                         </div>
                                     </>
                                 ) : (
-                                    <div className={styles.rowContentTxt}>
+                                    <div
+                                        className={styles.rowContentTxt}
+                                        style={{ cursor: 'pointer' }}
+                                        onClick={() => menuActive(3)}
+                                    >
                                         {t(
-                                            'Transfer SYRON from your balance to your wallet.'
+                                            'Transfer Syron USD from your balance to your wallet.'
                                         )}
                                     </div>
                                 )}
@@ -672,8 +731,6 @@ var ThisModal: React.FC<Prop> = function ({
                             </div>
                             <button
                                 style={{
-                                    fontFamily: 'GeistMono, monospace',
-                                    fontSize: 'small',
                                     backgroundColor: 'rgb(75, 0, 130)',
                                 }}
                                 onClick={retryWithdrawal}

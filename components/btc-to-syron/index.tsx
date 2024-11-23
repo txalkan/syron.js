@@ -334,7 +334,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 const result = await unisat.requestAccounts()
                 handleAccountsChanged(result)
 
-                toast.info('Your wallet is now connected! 🎉')
+                toast.info('Your wallet is now connected')
 
                 // @reload page
                 // setTimeout(() => window.location.reload(), 2 * 1000)
@@ -430,19 +430,23 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     return (
         <div className={styles.container}>
             <div className={styles.txtRow}>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <div>ᛞ</div>
-                    <div>
-                        Syron USD is an asset-backed stablecoin, secured with
-                        150% Bitcoin collateral.
-                    </div>
+                <div style={{ color: '#f8931a' }}>ᛞ</div>
+                <div>
+                    Syron is an asset-backed stablecoin secured with 150%
+                    Bitcoin collateral.
                 </div>
-                <div style={{ display: 'flex', gap: '1rem' }}>
-                    <div>ᛞ</div>
-                    <div>
-                        Your Safety Deposit ₿ox will hold $1.50 in BTC for every
-                        SYRON dollar you withdraw.
-                    </div>
+            </div>
+            <div className={styles.txtRow}>
+                <div style={{ color: '#f8931a' }}>ᛞ</div>
+                <div>
+                    You can print two-thirds of your BTC deposits in SYRON.
+                </div>
+            </div>
+            <div className={styles.txtRow}>
+                <div style={{ color: '#f8931a' }}>ᛞ</div>
+                <div>
+                    Your Safety Deposit ₿ox (SDB) holds $1.50 in BTC for every
+                    Syron USD that you print.
                 </div>
             </div>
 
@@ -453,8 +457,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     display: 'flex',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    marginTop: '1rem',
-                    marginBottom: '3rem',
+                    marginTop: '2rem',
                     cursor: 'pointer',
                     borderRadius: '11px',
                     backgroundColor: 'rgb(75,0,130)',
@@ -476,6 +479,23 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 ) : (
                     <div className={styles.txt}>confirm</div>
                 )}
+            </div>
+            <div className={styles.txtRowTerms}>
+                By clicking the button above, you agree to the{' '}
+                <span
+                    className={styles.terms}
+                    onClick={() => toast.info('Coming soon')}
+                >
+                    Terms of Service
+                </span>{' '}
+                &{' '}
+                <span
+                    className={styles.terms}
+                    onClick={() => toast.info('Coming soon')}
+                >
+                    Privacy Policy
+                </span>
+                .
             </div>
             {icpTx.value === false ? (
                 <div className={styles.failedWithdrawal}>

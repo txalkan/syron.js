@@ -235,7 +235,7 @@ function Header() {
             script.setAttribute('data-text-color', '#dbe4eb')
             script.setAttribute('data-button-color', '#4B0082')
             script.setAttribute('data-button-text-color', '#dbe4eb')
-            // script.setAttribute('data-title', 'tyronDAO')
+            script.setAttribute('data-title', 'tyronDAO')
             script.setAttribute('data-description', 'Be Your Own ₿ank')
             script.setAttribute(
                 'data-icon',
