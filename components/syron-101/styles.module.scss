@@ -65,7 +65,7 @@
     // background-color: #ffffff2e;
     box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.3);
 
-    border-radius: 22px 22px 0 0;
+    border-radius: 11px 11px 0 0;
     margin-bottom: 5px;
 }
 
@@ -162,7 +162,7 @@
     padding: 7px;
     margin-bottom: 17px;
     box-shadow: 2px 3px 6px rgba(75, 0, 130, 0.6); // @design-shadow-sdb
-    border-radius: 0 0 22px 22px;
+    border-radius: 0 0 11px 11px;
 }
 
 // .cardSub::before {
@@ -244,36 +244,19 @@
 
     //@mobile-first
     padding: 1.4rem 0;
-    font-size: 17px;
     display: flex;
     flex-direction: column;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
 
     @media only screen and (min-width: 768px) {
-        font-size: 22px;
         flex-direction: row;
         gap: 1rem;
-    }
-}
-
-.info,
-.txt {
-    //@mobile-first
-    font-size: 10px;
-    @media only screen and (min-width: 375px) {
-        font-size: 12px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 14px;
     }
 }
 
 .info {
     display: flex;
     align-items: center;
+    font-size: 0.8;
 }
 
 .sdbAddr {
@@ -283,30 +266,14 @@
     gap: 0.5rem;
 }
 
-.sdb,
-.plain,
-.yellow {
-    padding-left: 0.5rem;
-
-    //@mobile-first
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
-}
-
 .sdb {
     display: flex;
     flex-direction: row;
     margin-top: 1rem;
     align-items: center;
 
-    gap: 0.5rem;
     padding: 0 2rem;
+    gap: 0.5rem;
 
     cursor: pointer;
     // text-decoration: underline;
@@ -324,13 +291,14 @@
 }
 
 .sdbText {
+    text-align: left;
     flex: 1; /* Allow the text to take up available space */
     text-overflow: ellipsis; /* Ensure ellipsis is shown */
     white-space: nowrap; /* Prevent text from wrapping */
     overflow: hidden; /* Hide overflowed text */
 }
 
-.yellow {
+.color {
     color: #ffff32;
     margin-right: 0.5rem;
 
@@ -421,4 +389,25 @@
     @media only screen and (min-width: 768px) {
         font-size: 19px;
     }
+}
+
+.walletAct {
+    font-size: 1rem;
+    color: #1e90ff;
+    padding: 0 3rem;
+    display: flex;
+    cursor: pointer;
+
+    text-decoration: underline;
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.subtitle {
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem;
 }

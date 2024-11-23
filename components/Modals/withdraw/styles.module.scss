@@ -6,25 +6,13 @@
     flex-direction: column;
 }
 
-.rowContentTxt,
-.withdrawalTxt {
-    //@mobile-first
-    font-size: 12px;
-    @media only screen and (min-width: 375px) {
-        font-size: 14px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 17px;
-    }
-}
-
 .rowContentTxt {
     display: flex;
     flex-direction: column;
-    color: #f8f8f8;
+    color: #333333;
     justify-content: flex-start;
     padding: 0 1rem 1rem;
+    font-size: 0.8rem;
 }
 
 .ul {
@@ -51,15 +39,25 @@
 }
 
 .innerContainer {
-    background: #dbe4eb;
-    border: 1px solid #000;
+    box-shadow: 2px 3px 6px rgba(255, 255, 50, 0.5);
+    background: #dbdbdb; //#2525258c;
+
     flex-direction: column;
     padding: 5%;
     border-radius: 22px;
+
+    margin-top: 5rem;
+}
+
+.closeIcon {
+    margin: 0px;
+    cursor: pointer;
 }
 
 .headerWrapper {
-    display: flexbox;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .headerTxt {
@@ -69,22 +67,12 @@
 
     padding: 1rem 1rem 2rem;
     color: rgb(75, 0, 130);
-
-    //@mobile-first
-    font-size: 17px;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 21px;
-    }
 }
 
 .contentWrapper {
     padding: 2rem 2rem;
     margin-bottom: 2rem;
-    background-color: #2525258c;
+    background-color: #f8f8f8;
     border-radius: 22px;
 }
 
@@ -97,6 +85,7 @@
 
 .rowHeader {
     display: flex;
+    line-height: 1rem;
     align-items: center;
     justify-content: space-between;
     width: 100%;
@@ -110,18 +99,9 @@
 }
 
 .rowHeaderTitle {
-    padding: 0 1rem;
-
+    padding: 0 1rem 0.1rem;
     color: #000;
-
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
+    font-size: 0.9rem;
 }
 
 .linkColor {
@@ -244,6 +224,7 @@
 .withdrawalTxt {
     color: #000;
     margin: 2rem;
+    font-size: 0.8rem;
 }
 
 .error {
@@ -253,22 +234,12 @@
     max-height: 500px; // Set a fixed maximum height for the toast content
     overflow-y: auto; // Enable vertical scrolling if content exceeds the height
     white-space: normal; // Allow text to wrap normally
-    font-size: 16px; // Set a readable font size
     line-height: 1.5; // Improve readability with better line spacing
     word-break: break-word !important; // Break long words or URLs properly
 }
 
 .sdb {
     width: 80%;
-    //@mobile-first
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
 
     display: flex;
     flex-direction: row;
@@ -282,14 +253,8 @@
     // text-decoration: underline;
     color: #1e90ff;
 
-    //@mobile-first
-    font-size: 17px;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 22px;
+    @media only screen and (max-width: 7680px) {
+        width: 100%;
     }
 }
 
@@ -298,4 +263,17 @@
     text-overflow: ellipsis; /* Ensure ellipsis is shown */
     white-space: nowrap; /* Prevent text from wrapping */
     overflow: hidden; /* Hide overflowed text */
+
+    @media only screen and (max-width: 1000px) {
+        max-width: 180px;
+    }
+    @media only screen and (max-width: 768px) {
+        max-width: 160px;
+    }
+    @media only screen and (max-width: 500px) {
+        max-width: 120px;
+    }
+    @media only screen and (max-width: 376px) {
+        max-width: 100px;
+    }
 }

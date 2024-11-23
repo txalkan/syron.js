@@ -504,22 +504,14 @@ function Component() {
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            width: '100%',
-                                        }}
-                                    >
+                                    <div className={styles.subtitle}>
                                         <Image
                                             src={icoShield}
                                             alt={'SDB'}
                                             height="28"
                                             width="28"
                                         />
-                                        <span className={styles.plain}>
-                                            SDB Address
-                                        </span>
+                                        SDB Address
                                     </div>
                                     <div className={styles.sdbAddr}>
                                         <div
@@ -538,11 +530,13 @@ function Component() {
                                         </div>
                                         <div
                                             style={{
-                                                fontSize: '1rem',
-                                                color: '#ffff32',
+                                                fontSize: '0.8rem',
+                                                color: '#1e90ff',
                                                 padding: '0 3rem',
                                                 display: 'flex',
+                                                cursor: 'pointer',
                                             }}
+                                            className={styles.walletAct}
                                             onClick={() =>
                                                 window.open(
                                                     `https://mempool.space/address/${syron?.sdb}`
@@ -555,22 +549,14 @@ function Component() {
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            width: '100%',
-                                        }}
-                                    >
+                                    <div className={styles.subtitle}>
                                         <Image
                                             src={icoBalance}
                                             alt={'Deposit'}
                                             height="28"
                                             width="28"
                                         />
-                                        <span className={styles.plain}>
-                                            BTC Deposited
-                                        </span>
+                                        <span>BTC Deposited</span>
                                     </div>
                                     <div className={styles.subsection}>
                                         <button
@@ -593,7 +579,7 @@ function Component() {
                                         <div className={styles.value}>
                                             <span
                                                 style={{ color: '#f8931a' }}
-                                                className={styles.yellow}
+                                                className={styles.color}
                                             >
                                                 {Number(satsDeposited.div(1e8))}
                                             </span>
@@ -608,29 +594,21 @@ function Component() {
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
-                                    <div
-                                        style={{
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            width: '100%',
-                                        }}
-                                    >
+                                    <div className={styles.subtitle}>
                                         <Image
                                             src={icoThunder}
                                             alt={'Loan'}
                                             height="28"
                                             width="28"
                                         />
-                                        <span className={styles.plain}>
-                                            SYRON USD
-                                        </span>
+                                        <span>SYRON USD</span>
                                     </div>
                                     <div className={styles.subsection}>
                                         <div className={styles.info}>
                                             | PRINTED
                                         </div>
                                         <div className={styles.value}>
-                                            <span className={styles.yellow}>
+                                            <span className={styles.color}>
                                                 {loan === '0.00' ? '0' : loan}
                                             </span>
                                             <Image
@@ -665,7 +643,7 @@ function Component() {
                                             | BALANCE
                                         </div>
                                         <div className={styles.value}>
-                                            <span className={styles.yellow}>
+                                            <span className={styles.color}>
                                                 {syronBal === '0.00'
                                                     ? '0'
                                                     : syronBal}
@@ -728,8 +706,11 @@ function Component() {
                         )}
                     </>
                 ) : (
-                    <div className={styles.boxWrapper}>
-                        Connect your wallet to access your Safety Deposit ₿ox
+                    <div
+                        className={styles.boxWrapper}
+                        style={{ fontSize: '0.8rem' }}
+                    >
+                        Connect Wallet to access your Safety Deposit ₿ox
                     </div>
                 )}
 

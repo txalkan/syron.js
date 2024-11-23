@@ -1,8 +1,7 @@
 @import '../../styles/scss/mixins.scss';
 
 .container {
-    // padding: 1px;
-    // padding-left: 17px;
+    margin-top: 2rem;
 
     & > button {
         width: 100%;
@@ -63,25 +62,39 @@
     }
 }
 
-.txtRow {
+.txtRow,
+.txtRowTerms {
+    font-size: 0.8rem;
     display: flex;
-    flex-direction: column;
-    gap: 1rem;
+    align-items: center;
+    gap: 0.5rem;
     text-align: left;
-    margin-left: 14%;
-    margin-right: 10%;
+
     color: #6e6e6e;
 
-    padding: 2rem;
-
-    //@mobile-first
-    font-size: 12px;
+    padding: 0.5rem 1rem 0.5rem 2rem;
     @media only screen and (min-width: 375px) {
-        font-size: 14px;
+        padding-left: 3rem;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
+        padding-left: 4rem;
+    }
+}
+
+.txtRowTerms {
+    padding-left: 1rem;
+    display: block;
+    font-size: 0.7rem;
+}
+
+.terms {
+    color: #1e90ff;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
     }
 }
 
