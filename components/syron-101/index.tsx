@@ -26,6 +26,8 @@ import {
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
+import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
+import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -479,7 +481,7 @@ function Component() {
                         {sdb ? (
                             <div className={styles.boxWrapper}>
                                 <div className={styles.boxTitle}>
-                                    <span>Your</span>
+                                    Your
                                     <span style={{ color: '#ffff32' }}>
                                         Safety Deposit ₿ox
                                     </span>
@@ -505,12 +507,13 @@ function Component() {
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        <Image
-                                            src={icoShield}
-                                            alt={'SDB'}
-                                            height="28"
-                                            width="28"
-                                        />
+                                        <div className={styles.iconContainer}>
+                                            <Image
+                                                src={icoShield}
+                                                alt={'sdb-address'}
+                                                className={styles.icon}
+                                            />
+                                        </div>
                                         SDB Address
                                     </div>
                                     <div className={styles.sdbAddr}>
@@ -518,12 +521,15 @@ function Component() {
                                             className={styles.sdb}
                                             onClick={handleCopy}
                                         >
-                                            <Image
-                                                src={icoCopy}
-                                                alt={'copy'}
-                                                height="25"
-                                                width="25"
-                                            />
+                                            <div
+                                                className={styles.iconContainer}
+                                            >
+                                                <Image
+                                                    src={icoCopy}
+                                                    alt={'copy-sdb'}
+                                                    className={styles.icon}
+                                                />
+                                            </div>
                                             <div className={styles.sdbText}>
                                                 {syron?.sdb}
                                             </div>
@@ -550,13 +556,14 @@ function Component() {
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        <Image
-                                            src={icoBalance}
-                                            alt={'Deposit'}
-                                            height="28"
-                                            width="28"
-                                        />
-                                        <span>BTC Deposited</span>
+                                        <div className={styles.iconContainer}>
+                                            <Image
+                                                src={icoBalance}
+                                                alt={'btc-deposited'}
+                                                className={styles.icon}
+                                            />
+                                        </div>
+                                        BTC Deposited
                                     </div>
                                     <div className={styles.subsection}>
                                         <button
@@ -583,25 +590,31 @@ function Component() {
                                             >
                                                 {Number(satsDeposited.div(1e8))}
                                             </span>
-                                            <Image
-                                                src={icoBTC}
-                                                alt={'BTC'}
-                                                height="28"
-                                                width="28"
-                                            />
+                                            <div
+                                                className={
+                                                    styles.iconTokenContainer
+                                                }
+                                            >
+                                                <Image
+                                                    src={icoBTC}
+                                                    alt={'btc-token'}
+                                                    className={styles.icon}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        <Image
-                                            src={icoThunder}
-                                            alt={'Loan'}
-                                            height="28"
-                                            width="28"
-                                        />
-                                        <span>SYRON USD</span>
+                                        <div className={styles.iconContainer}>
+                                            <Image
+                                                src={icoThunder}
+                                                alt={'syron-usd'}
+                                                className={styles.icon}
+                                            />
+                                        </div>
+                                        Syron USD
                                     </div>
                                     <div className={styles.subsection}>
                                         <div className={styles.info}>
@@ -611,12 +624,17 @@ function Component() {
                                             <span className={styles.color}>
                                                 {loan === '0.00' ? '0' : loan}
                                             </span>
-                                            <Image
-                                                src={icoSYRON}
-                                                alt={'Syron USD'}
-                                                height="28"
-                                                width="28"
-                                            />
+                                            <div
+                                                className={
+                                                    styles.iconTokenContainer
+                                                }
+                                            >
+                                                <Image
+                                                    src={icoSYRON}
+                                                    alt={'syron-token'}
+                                                    className={styles.icon}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className={styles.buttons}>
@@ -648,12 +666,17 @@ function Component() {
                                                     ? '0'
                                                     : syronBal}
                                             </span>
-                                            <Image
-                                                src={icoSYRON}
-                                                alt={'Syron USD'}
-                                                height="28"
-                                                width="28"
-                                            />
+                                            <div
+                                                className={
+                                                    styles.iconTokenContainer
+                                                }
+                                            >
+                                                <Image
+                                                    src={icoSYRON}
+                                                    alt={'syron-token'}
+                                                    className={styles.icon}
+                                                />
+                                            </div>
                                         </div>
                                     </div>
                                     <div className={styles.buttons}>
@@ -720,7 +743,7 @@ function Component() {
                         className={
                             active === 'GetSyron' || active === 'LiquidSyron'
                                 ? styles.cardTitle
-                                : styles.cardBeYourBank
+                                : styles.cardNoTitle
                         }
                     >
                         <div className={styles.title}>
@@ -750,12 +773,21 @@ function Component() {
                                     : styles.card
                             }
                         >
+                            <div className={styles.iconGoldContainer}>
+                                <Image
+                                    src={icoPrint}
+                                    alt={'print-syron'}
+                                    className={styles.icon}
+                                />
+                            </div>
                             Print Syron
                         </div>
                         <div
-                            onClick={
-                                () => toast.info('Coming soon...')
-                                // toggleActive('LiquidSyron')
+                            onClick={() =>
+                                // toast.info('Coming soon')
+                                active !== 'LiquidSyron'
+                                    ? toggleActive('LiquidSyron')
+                                    : null
                             }
                             className={
                                 active === 'LiquidSyron'
@@ -763,6 +795,13 @@ function Component() {
                                     : styles.card
                             }
                         >
+                            <div className={styles.iconGoldContainer}>
+                                <Image
+                                    src={icoEarn}
+                                    alt={'earn-bitcoin'}
+                                    className={styles.icon}
+                                />
+                            </div>
                             Earn Bitcoin
                         </div>
                     </div>

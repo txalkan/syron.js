@@ -513,7 +513,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                                 style={{
                                                     fontWeight: 'bold',
                                                     color: 'white',
-                                                    marginRight: '1rem',
+                                                    marginRight: '0.5rem',
                                                 }}
                                             >
                                                 Your SDB:

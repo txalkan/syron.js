@@ -2,7 +2,8 @@
 
 .container {
     margin-top: 2rem;
-
+    display: flex;
+    flex-direction: column;
     & > button {
         width: 100%;
         padding: 17px;
@@ -62,35 +63,40 @@
     }
 }
 
-.txtRow,
-.txtRowTerms {
+.txtRow {
+    width: 100%;
     font-size: 0.8rem;
     display: flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.4rem;
     text-align: left;
 
     color: #6e6e6e;
 
-    padding: 0.5rem 1rem 0.5rem 2rem;
-    @media only screen and (min-width: 375px) {
-        padding-left: 3rem;
-    }
+    padding: 0.5rem 20%;
+}
 
-    @media only screen and (min-width: 768px) {
-        padding-left: 4rem;
-    }
+.confirmContainer {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    width: 100%;
 }
 
 .txtRowTerms {
-    padding-left: 1rem;
+    width: 70%;
+    padding: 1rem 5%;
     display: block;
     font-size: 0.7rem;
+    align-items: center;
+    text-align: center;
+    color: #6e6e6e;
 }
 
 .terms {
     color: #1e90ff;
     cursor: pointer;
+    white-space: nowrap;
     text-decoration: underline;
 
     &:hover {
@@ -125,25 +131,13 @@
     text-transform: uppercase;
 }
 
-.txt,
-.withdrawalTxt {
-    font-family: 'GeistMono', monospace; //@review (ui)
-
-    //@mobile-first
-    font-size: 12px;
-    @media only screen and (min-width: 375px) {
-        font-size: 14px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 17px;
-    }
-}
-
 .txt {
+    font-size: 0.9rem;
+    font-weight: 300;
+
     text-transform: capitalize;
     color: #f8f8f8;
-    font-weight: 500;
+
     letter-spacing: normal;
 }
 
@@ -162,8 +156,10 @@
 }
 
 .withdrawalTxt {
-    color: #000;
-    margin: 2rem;
+    color: #333333;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    text-align: left;
 }
 
 .error {
@@ -176,4 +172,14 @@
     font-size: 16px; // Set a readable font size
     line-height: 1.5; // Improve readability with better line spacing
     word-break: break-word; // Break long words or URLs properly
+}
+
+.link {
+    cursor: pointer;
+    color: #1e90ff;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
 }

@@ -148,7 +148,9 @@ export const BoxInput: React.FC<Prop> = ({
                             <div className={styles.info}>
                                 {/* &nbsp; */}| BTC Price:
                                 <span className={styles.infoPurple}>
-                                    $
+                                    <span style={{ paddingRight: '0.2rem' }}>
+                                        $
+                                    </span>
                                     {Number(Big(xr!.rate)).toLocaleString(
                                         'en-US'
                                     )}
@@ -159,7 +161,13 @@ export const BoxInput: React.FC<Prop> = ({
                                     | Wallet Balance
                                     <span className={styles.infoBalance}>
                                         <span className={styles.infoPurple}>
-                                            $
+                                            <span
+                                                style={{
+                                                    paddingRight: '0.2rem',
+                                                }}
+                                            >
+                                                $
+                                            </span>
                                             {Number(balWorth) == 0
                                                 ? 0
                                                 : Number(
@@ -175,7 +183,17 @@ export const BoxInput: React.FC<Prop> = ({
                                                 <span
                                                     className={styles.infoColor}
                                                 >
-                                                    ≈ ₿
+                                                    ≈
+                                                    <span
+                                                        style={{
+                                                            paddingLeft:
+                                                                '0.2rem',
+                                                            paddingRight:
+                                                                '0.2rem',
+                                                        }}
+                                                    >
+                                                        ₿
+                                                    </span>
                                                     {Number(
                                                         btcBalance
                                                     ).toLocaleString('en-US', {

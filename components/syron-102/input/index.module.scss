@@ -140,33 +140,23 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: column;
     text-align: left;
-    padding-top: 4%;
-    padding-bottom: 4%;
+    padding: 0.5rem 0;
 }
 
 .info,
 .infoPurple,
 .infoColor {
-    padding-bottom: 1rem;
+    font-size: 0.9rem;
     margin-left: 9%;
+    padding-bottom: 0.5rem;
     text-transform: uppercase;
-    color: #000;
+    color: #333333;
     letter-spacing: normal;
-
-    // @mobile-first
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
 }
 
 .infoBalance {
     display: block;
-    margin-left: 3rem;
+    margin-left: 2rem;
     padding-top: 0.5rem;
 }
 .infoPurple {
@@ -183,7 +173,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .inputAmt {
-    font-family: 'GeistMono', monospace;
     color: #333333 !important;
 
     border: 0px !important;
@@ -191,15 +180,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
     background-color: transparent;
 
-    // @design-mobile
-    font-size: 22px;
-    @media only screen and (min-width: 375px) {
-        font-size: 25px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 29px;
-    }
+    font-size: 1.4rem;
 }
 
 .inputAmt:focus {
@@ -207,7 +188,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .inputAmtSusd {
-    font-family: 'GeistMono', monospace;
     color: rgb(75, 0, 130) !important;
 
     border: 0px !important;
@@ -215,16 +195,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 100%;
     background-color: transparent;
 
-    font-size: 14px;
-
-    @media only screen and (min-width: 375px) {
-        // @design-mobile
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
+    font-size: 1.4rem;
 }
 
 .percent,
@@ -325,21 +296,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .tokenInfo {
-    width: 40%;
+    font-size: 0.9rem;
     text-align: left;
-    padding-left: 2%;
-
+    padding: 0 0 0 0.5rem;
     color: #6e6e6e;
     letter-spacing: normal;
 
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        // @design-mobile
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
+    width: 35%;
+    @media only screen and (min-width: 500px) {
+        width: 25%;
     }
 }
 

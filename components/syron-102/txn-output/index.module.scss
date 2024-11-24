@@ -10,7 +10,6 @@
     width: 100%;
 
     height: 30px;
-
     @media only screen and (min-width: 375px) {
         height: 33px;
     }
@@ -28,8 +27,8 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    margin-top: 11px;
-    margin-bottom: 18px;
+    margin-top: 0.5rem;
+    margin-bottom: 1rem;
 }
 
 .formInactive {
@@ -104,20 +103,11 @@
 }
 
 .outputAmt {
-    font-family: 'GeistMono', monospace;
     color: rgb(75, 0, 130) !important;
 
     border: none !important;
 
-    // @design-mobile
-    font-size: 22px;
-    @media only screen and (min-width: 375px) {
-        font-size: 25px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 29px;
-    }
+    font-size: 1.4rem;
 }
 
 .btnSubmitSwap {
@@ -191,21 +181,16 @@
 }
 
 .tokenInfo {
-    width: 40%;
+    font-size: 0.9rem;
     text-align: left;
-    padding-left: 2%;
+    padding: 0 0 0 0.5rem;
 
     color: #6e6e6e;
     letter-spacing: normal;
 
-    // @design-mobile
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
+    width: 40%;
+    @media only screen and (min-width: 500px) {
+        width: 25%;
     }
 }
 

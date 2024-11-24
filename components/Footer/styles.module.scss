@@ -1,9 +1,9 @@
 .tyronLg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    text-align: left;
     cursor: pointer;
+
+    position: absolute;
+    top: 1rem;
+    left: 2rem;
 
     width: 110px;
     height: auto;
@@ -16,16 +16,15 @@
         width: 170px;
     }
 
-    //@design-mobile
-    margin-top: -24px;
-
-    @media only screen and (min-width: 375px) {
-        margin-top: -34px;
+    @media only screen and (min-width: 768px) and (max-width: 1680px) {
+        top: 1.2rem;
     }
 
-    @media only screen and (min-width: 768px) {
-        margin-top: -38px;
-        left: 22px;
+    @media only screen and (max-width: 1000px) {
+        left: 1.5rem;
+    }
+    @media only screen and (max-width: 768px) {
+        left: 1rem;
     }
 }
 

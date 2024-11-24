@@ -12,38 +12,25 @@
     display: flex;
     flex-direction: column;
     position: relative;
-    width: 70%;
-
+    width: 100%;
+    max-width: 800px;
     height: fit-content;
-
-    @media only screen and (max-width: 768px) {
-        width: 100%;
-    }
 }
 
 .tabWrapper {
     display: flex;
     flex-direction: row;
-
     // @media only screen and (max-width: 168px) {
     //     width: 92%;
     // }
 }
 
 .title {
-    padding: 1.1rem 0;
-    font-size: 17px;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 22px;
-    }
-
+    font-size: 1.1rem;
     text-transform: none;
     text-align: center;
     width: 100%;
+    margin: 3rem 0rem;
 }
 
 .title2 {
@@ -57,30 +44,12 @@
     }
 }
 
-.cardTitle {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    // background-color: #ffffff2e;
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.3);
-
-    border-radius: 11px 11px 0 0;
-    margin-bottom: 5px;
-}
-
-// .cardTitle::before {
-//     content: '';
-//     position: absolute;
-//     top: 0;
-//     left: 0;
-//     height: 100%;
-//     width: 1px;
-//     background-color: #ffff32;
-// }
-
 .card,
 .cardSelect {
+    font-size: 1rem;
+    height: 3rem;
+    gap: 0.5rem;
+
     text-shadow: 0 0 1px rgba(248, 248, 248, 0.4),
         0 0 2px rgba(248, 248, 248, 0.3), 0 0 3px rgba(248, 248, 248, 0.2);
 
@@ -91,7 +60,7 @@
     cursor: pointer;
     display: flex;
     width: 50%;
-    padding: 1rem 2rem;
+    padding: 0 2rem;
 
     align-items: center; // vertically center the text
     justify-content: center;
@@ -99,16 +68,6 @@
 
     box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.3);
     // border-left: 1px solid #ffff32;
-
-    //@mobile-first
-    font-size: 17px;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 22px;
-    }
 }
 
 .card {
@@ -159,8 +118,7 @@
     position: relative;
     background-color: rgba(248, 248, 248, 0.8); // @design #F8F8F8
     //border-radius: 4px;
-    padding: 7px;
-    margin-bottom: 17px;
+    padding: 0 1rem;
     box-shadow: 2px 3px 6px rgba(75, 0, 130, 0.6); // @design-shadow-sdb
     border-radius: 0 0 11px 11px;
 }
@@ -203,9 +161,6 @@
 }
 
 .boxWrapper {
-    margin-top: 11px;
-    margin-bottom: 33px;
-
     background-color: rgba(51, 51, 51, 0.8);
     // border: 1px solid #ffff32;
     padding: 24px 36px;
@@ -219,10 +174,7 @@
     // 0 5px 14px rgba(75, 0, 130, 0.5),
     //     /* Main shadow */ 0 6px 6px rgba(75, 0, 130, 0.3); /* Softer shadow for depth */
 
-    width: 70%;
-    @media only screen and (max-width: 768px) {
-        width: 100%;
-    }
+    width: 100%;
 }
 
 .boxWrapperInner {
@@ -239,6 +191,7 @@
 }
 
 .boxTitle {
+    font-size: 1rem;
     text-align: left;
     color: #dbe4eb;
 
@@ -256,7 +209,8 @@
 .info {
     display: flex;
     align-items: center;
-    font-size: 0.8;
+    font-size: 0.9rem !important;
+    color: #dbdbdb !important;
 }
 
 .sdbAddr {
@@ -278,19 +232,10 @@
     cursor: pointer;
     // text-decoration: underline;
     color: #1e90ff;
-
-    //@mobile-first
-    font-size: 17px;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 22px;
-    }
 }
 
 .sdbText {
+    font-size: 1.2rem;
     text-align: left;
     flex: 1; /* Allow the text to take up available space */
     text-overflow: ellipsis; /* Ensure ellipsis is shown */
@@ -301,16 +246,7 @@
 .color {
     color: #ffff32;
     margin-right: 0.5rem;
-
-    //@mobile-first
-    font-size: 22px;
-    @media only screen and (min-width: 375px) {
-        font-size: 25px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 29px;
-    }
+    font-size: 1.4rem;
 }
 
 .subsection {
@@ -332,7 +268,7 @@
 .value {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
+    gap: 0.5rem;
 
     margin-top: 1.5rem;
     margin-left: 1rem;
@@ -379,16 +315,7 @@
     padding-bottom: 1rem;
     text-transform: uppercase;
     color: #ffffffbf;
-
-    // @mobile-first
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
+    font-size: 0.9rem;
 }
 
 .walletAct {
@@ -405,9 +332,50 @@
 }
 
 .subtitle {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    max-height: 0.9rem;
     display: flex;
     align-items: center;
     width: 100%;
     gap: 0.5rem;
+    color: #dbe4eb;
+}
+
+.iconContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    max-width: 1.1rem;
+    min-width: 1.1rem;
+    max-height: 1.1rem;
+    min-height: 1.1rem;
+}
+
+.iconTokenContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    max-width: 1.5rem;
+    min-width: 1.5rem;
+    max-height: 1.5rem;
+    min-height: 1.5rem;
+}
+
+.iconGoldContainer {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: auto;
+    max-width: 1.3rem;
+    min-width: 1.3rem;
+    max-height: 1.2rem;
+    min-height: 1.2rem;
+}
+
+.icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain; /* Ensure the image scales correctly */
 }

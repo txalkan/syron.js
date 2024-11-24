@@ -1241,8 +1241,8 @@ button.secondary,
     font-family: 'GeistMono', monospace;
     font-size: medium;
     box-shadow: none;
-    height: 2.5rem;
-    line-height: 2.5rem;
+    height: 1.8rem;
+    line-height: 1rem;
 }
 
 .button.secondary:hover {
