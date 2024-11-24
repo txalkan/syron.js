@@ -34,7 +34,7 @@
 }
 
 .txtConnect {
-    font-family: 'GeistMono', monospace; // @review (ui)
+    font-size: 0.8rem;
     white-space: nowrap;
 
     font-weight: 500;
@@ -44,26 +44,25 @@
     background-color: rgb(75, 0, 130);
     border-radius: 11px;
 
-    padding: 4%;
-    padding-left: 10%;
-    padding-right: 10%;
+    padding: 0.5rem 1rem;
 
     position: relative;
     // @design-mobile
-    right: 1rem;
-    font-size: 11px;
-    margin-top: 8px;
+    right: 0.8rem !important;
+    margin-top: 0.2rem !important;
 
     @media only screen and (min-width: 375px) {
-        font-size: 14px;
-        margin-top: 7px;
-        right: 17px;
+        margin-top: 0.5rem !important;
     }
 
     @media only screen and (min-width: 768px) {
-        font-size: 17px;
-        margin-top: 5px;
-        right: 22px;
+        margin-top: 0.4rem !important;
+    }
+
+    @media only screen and (min-width: 1680px) {
+        right: 0 !important;
+        margin-top: 0.15rem !important;
+        padding: 0.3rem 1rem;
     }
 }
 

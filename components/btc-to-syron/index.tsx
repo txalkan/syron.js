@@ -222,10 +222,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -248,10 +245,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -381,10 +375,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -407,10 +398,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -449,54 +437,60 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     Syron USD that you print.
                 </div>
             </div>
+            <div className={styles.confirmContainer}>
+                <div
+                    style={{
+                        display: 'flex',
+                        width: '70%',
+                        height: '1.8rem',
+                        lineHeight: '1rem',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        marginTop: '2rem',
+                        cursor: 'pointer',
+                        borderRadius: '11px',
+                        backgroundColor: 'rgb(75,0,130)',
+                        // @design-shadow-3d
+                        backgroundImage:
+                            'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
+                        boxShadow:
+                            '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)', // Added 3D effect
+                    }}
+                    className={`button ${disabled ? 'disabled' : 'primary'}`}
+                    onClick={handleButtonClick}
+                >
+                    {!unisatInstalled ? (
+                        <div className={styles.txt}>{t('CONNECT')}</div>
+                    ) : !walletConnected ? (
+                        <div className={styles.txt}>{t('CONNECT')}</div>
+                    ) : disabled ? (
+                        <ThreeDots color="yellow" />
+                    ) : (
+                        <div className={styles.txt}>confirm</div>
+                    )}
+                </div>
+            </div>
+            <div className={styles.confirmContainer}>
+                <div className={styles.txtRowTerms}>
+                    By clicking the button above, you agree to the
+                    <br />
+                    <span
+                        className={styles.terms}
+                        onClick={() => toast.info('Coming soon')}
+                    >
+                        Terms of Service
+                    </span>{' '}
+                    &{' '}
+                    <span
+                        className={styles.terms}
+                        onClick={() => toast.info('Coming soon')}
+                    >
+                        Privacy Policy
+                    </span>
+                    .
+                </div>
+            </div>
 
-            <div
-                style={{
-                    width: '100%',
-                    height: '40px',
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: '2rem',
-                    cursor: 'pointer',
-                    borderRadius: '11px',
-                    backgroundColor: 'rgb(75,0,130)',
-                    // @design-shadow-3d
-                    backgroundImage:
-                        'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
-                    boxShadow:
-                        '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)', // Added 3D effect
-                }}
-                className={`button ${disabled ? 'disabled' : 'primary'}`}
-                onClick={handleButtonClick}
-            >
-                {!unisatInstalled ? (
-                    <div className={styles.txt}>{t('CONNECT')}</div>
-                ) : !walletConnected ? (
-                    <div className={styles.txt}>{t('CONNECT')}</div>
-                ) : disabled ? (
-                    <ThreeDots color="yellow" />
-                ) : (
-                    <div className={styles.txt}>confirm</div>
-                )}
-            </div>
-            <div className={styles.txtRowTerms}>
-                By clicking the button above, you agree to the{' '}
-                <span
-                    className={styles.terms}
-                    onClick={() => toast.info('Coming soon')}
-                >
-                    Terms of Service
-                </span>{' '}
-                &{' '}
-                <span
-                    className={styles.terms}
-                    onClick={() => toast.info('Coming soon')}
-                >
-                    Privacy Policy
-                </span>
-                .
-            </div>
             {icpTx.value === false ? (
                 <div className={styles.failedWithdrawal}>
                     {/* <div className={styles.icoColor}>
@@ -520,10 +514,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                             href="https://t.me/tyrondao"
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                                color: 'blue',
-                                textDecoration: 'underline',
-                            }}
+                            className={styles.link}
                         >
                             @TyronDAO
                         </a>
@@ -534,8 +525,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     </div>
                     <button
                         style={{
-                            fontFamily: 'GeistMono, monospace',
-                            fontSize: 'small',
+                            marginTop: '1rem',
                             backgroundColor: 'rgb(75, 0, 130)',
                         }}
                         onClick={retryWithdrawal}

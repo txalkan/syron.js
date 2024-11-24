@@ -156,19 +156,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .titleForm2 {
-    color: black;
-    margin-left: 4%;
+    font-size: 1rem;
+    color: #333333;
     text-align: left;
-
-    //@mobile
-    font-size: 17px;
-    @media only screen and (min-width: 375px) {
-        font-size: 19px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 21px;
-    }
 }
 
 .contentWrapper {
@@ -190,6 +180,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .icoWrapper {
     display: flex;
     align-items: center;
+    gap: 1rem;
 }
 
 .settings {
@@ -404,13 +395,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
     width: 14px;
 
     @media only screen and (min-width: 375px) {
-        height: 19px;
-        width: 19px;
+        height: 17px;
+        width: 17px;
     }
 
     @media only screen and (min-width: 768px) {
-        height: 25px;
-        width: 25px;
+        height: 22px;
+        width: 22px;
     }
 }
 

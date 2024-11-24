@@ -3,6 +3,7 @@ import styles from './styles.module.scss'
 // import stylesLight from '../../styles/css/FooterLight.module.css'
 import Image from 'next/image'
 import TyronLogo from '../../src/assets/logos/tyron_chrome_h.svg'
+import TyronDAOLogo from '../../src/assets/logos/tyrondao_logotype_chrome.svg'
 // import upDown from '../../src/assets/icons/up_down_arrow.svg'
 // import { useState } from 'react'
 import { RootState } from '../../src/app/reducers'
@@ -163,8 +164,8 @@ function Footer() {
             >
                 <Image
                     priority={true}
-                    src={TyronLogo}
-                    alt="tyron-logo"
+                    src={TyronDAOLogo}
+                    alt="tyrondao-logo"
                     className={styles.tyronImg}
                 />
             </div>
