@@ -225,34 +225,45 @@ function Header() {
     // }, [replaceLangPath])
 
     useEffect(() => {
-        let script
-        const injectScript = () => {
-            script = document.createElement('script')
-            script.src =
-                'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
-            script.async = true
-            script.setAttribute('data-background-color', '#383838')
-            script.setAttribute('data-text-color', '#dbe4eb')
-            script.setAttribute('data-button-color', '#4B0082')
-            script.setAttribute('data-button-text-color', '#dbe4eb')
-            script.setAttribute('data-title', 'tyronDAO')
-            script.setAttribute('data-description', 'Be Your Own ₿ank')
-            script.setAttribute(
-                'data-icon',
-                'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
-            )
-            script.setAttribute('data-site', 'https://www.tyrondao.org/')
+        let script =
+            // const injectScript = () => {
+            //     script =
+            document.createElement('script')
+        script.src =
+            // 'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
+            'https://cdn.jsdelivr.net/ghost/signup-form@~0.2/umd/signup-form.min.js'
+        script.async = true
+        //script.setAttribute('data-background-color', '#383838')
+        script.setAttribute('data-text-color', '#dbe4eb')
+        script.setAttribute('data-button-color', '#4B0082')
+        script.setAttribute('data-button-text-color', '#dbe4eb')
+        // script.setAttribute('data-title', 'tyronDAO')
+        // script.setAttribute('data-description', 'Be Your Own ₿ank')
+        // script.setAttribute(
+        //     'data-icon',
+        //     'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
+        // )
+        script.setAttribute('data-site', 'https://www.tyrondao.org/')
+        script.setAttribute('data-locale', 'en')
 
-            document.body.appendChild(script)
-        }
+        const scriptContainer = document.createElement('div')
+        scriptContainer.id = 'script-container'
+        scriptContainer.style.display = 'flex'
+        scriptContainer.style.maxWidth = '100%'
+        scriptContainer.style.justifyContent = 'center'
+        scriptContainer.style.height = '20%'
 
-        if (typeof window !== 'undefined') {
-            window.onload = injectScript
-        }
+        document.body.appendChild(scriptContainer)
+        scriptContainer.appendChild(script)
+        // }
+
+        // if (typeof window !== 'undefined') {
+        //     window.onload = injectScript
+        // }
 
         return () => {
-            if (document.body.contains(script)) {
-                document.body.removeChild(script)
+            if (document.body.contains(scriptContainer)) {
+                document.body.removeChild(scriptContainer)
             }
         }
     }, [])
@@ -283,9 +294,7 @@ function Header() {
                 <div id={headerClassName}>
                     <div
                         style={{
-                            marginTop: '7%', //searchBarMargin,
-                            marginBottom: '1%',
-                            width: '100%',
+                            marginTop: '5%',
                         }}
                         className={contentClassName}
                     >
@@ -367,6 +376,7 @@ function Header() {
                         )}
                 </div>
             )}
+            <div id="script-container" />
         </>
     )
 }

@@ -64,23 +64,23 @@
 }
 
 .txtRow {
-    width: 80%;
+    width: 100%;
     font-size: 0.8rem;
     display: flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: 0.5rem;
-    text-align: justify;
+    gap: 0.4rem;
+    text-align: left;
 
     color: #6e6e6e;
 
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    @media only screen and (min-width: 375px) {
-        padding: 0.5rem 3rem 0.5rem 3rem;
-    }
+    padding: 0.5rem 20%;
+}
 
-    @media only screen and (min-width: 768px) {
-        padding: 0.5rem 4rem 0.5rem 4rem;
-    }
+.confirmContainer {
+    display: flex;
+    justify-content: center; /* Center the button horizontally */
+    width: 100%;
 }
 
 .confirmContainer {
@@ -91,7 +91,7 @@
 
 .txtRowTerms {
     width: 70%;
-    padding: 1rem 0;
+    padding: 1rem 5%;
     display: block;
     font-size: 0.7rem;
     align-items: center;
@@ -102,6 +102,7 @@
 .terms {
     color: #1e90ff;
     cursor: pointer;
+    white-space: nowrap;
     text-decoration: underline;
 
     &:hover {

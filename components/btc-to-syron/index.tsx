@@ -472,8 +472,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             </div>
             <div className={styles.confirmContainer}>
                 <div className={styles.txtRowTerms}>
-                    By clicking the button above, you agree to the
-                    <br />
+                    By clicking the button above, you agree to the{' '}
                     <span
                         className={styles.terms}
                         onClick={() => toast.info('Coming soon')}
