@@ -20,32 +20,40 @@ function useSyronWithdrawal() {
         collateral?: number,
         tx_id?: string
     ) => {
-        let txId: string
-        if (tx_id) {
-            txId = tx_id
-        } else {
-            const fee = await mempoolFeeRate()
-
-            // @dev Inscribe-transfer transaction ID
-            txId = await inscribe_transfer(sdb, Number(amt), fee, collateral)
-        }
-
-        console.log('Inscribe-Transfer Transaction ID: ', txId)
-
         try {
+            let txId: string
+            if (tx_id) {
+                txId = tx_id
+            } else {
+                const fee = await mempoolFeeRate()
+
+                if (!amt)
+                    throw new Error('The inscribed amount cannot be missing')
+                // @dev Inscribe-transfer transaction ID
+                txId = await inscribe_transfer(
+                    sdb,
+                    Number(amt),
+                    fee,
+                    collateral
+                )
+            }
+
+            console.log('Inscribe-Transfer Transaction ID: ', txId)
+
             updateInscriptionTx(txId)
             await addInscriptionInfo(txId)
 
             const fee = await mempoolFeeRate()
+
             const res = await getSUSD(ssi, txId, fee)
             updateIcpTx(true)
 
+            await updateInscriptionInfo(txId)
+            updateInscriptionTx(null)
             return res
         } catch (error) {
             updateIcpTx(false)
             throw error
-        } finally {
-            await updateInscriptionInfo(txId)
         }
     }
 
@@ -78,13 +86,12 @@ function useSyronWithdrawal() {
             const res = await syronWithdrawal(ssi, txId, amount, fee)
             updateIcpTx(true)
 
+            await updateInscriptionInfo(txId)
             updateInscriptionTx(null)
             return res
         } catch (error) {
             updateIcpTx(false)
             throw error
-        } finally {
-            await updateInscriptionInfo(txId)
         }
     }
 

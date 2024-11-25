@@ -5,7 +5,7 @@ export const addInscriptionInfo = async (tx_id: string) => {
     )
 
     if (!add.ok) {
-        throw new Error(`Indexer error! Status: 501`)
+        throw new Error(`Indexer error! Status: 501 - id: ${tx_id + 'i0'}`)
     }
 
     const add_data = await add.json()
@@ -24,7 +24,7 @@ export const updateInscriptionInfo = async (tx_id: string) => {
     )
 
     if (!update.ok) {
-        throw new Error(`Indexer error! Status: 502`)
+        throw new Error(`Indexer error! Status: 502 - id: ${tx_id + 'i0'}`)
     }
 
     const update_data = await update.json()

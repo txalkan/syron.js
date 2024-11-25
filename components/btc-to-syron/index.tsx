@@ -356,10 +356,16 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             if (!inscriptionTx.value) {
                 throw new Error('The inscribe-transfer transaction is missing.')
             }
+
+            let collateral = undefined
             await btc_to_syron(
                 userSSI,
                 sdb,
-                typeof inscriptionTx === 'string' ? inscriptionTx : undefined
+                Big(amt),
+                collateral,
+                typeof inscriptionTx.value === 'string'
+                    ? inscriptionTx.value
+                    : undefined
             )
             await updateUserBalance()
         } catch (error) {
