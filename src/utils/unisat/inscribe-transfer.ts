@@ -13,10 +13,14 @@ export const inscribe_transfer = async (
 
     const ticker = 'SYRON' // @mainnet
 
-    let receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET! // @mainnet
-    if (!receiveAddress) {
-        throw new Error('The receiver address is not defined')
+    const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+    // Choose minter id based on version
+    let minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET
+    if (version === '2') {
+        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2
     }
+    let receiveAddress = minterId! // @mainnet
+    if (!receiveAddress) throw new Error('The receiver address is not defined')
 
     let devAddress
     let devFee
