@@ -18,9 +18,16 @@ if (version === '2') {
 
 export const createActor = (canisterId, options = {}) => {
     // console.log('Options:', options)
+    const agentOptions = {
+        ...options.agentOptions,
+        host: 'https://icp-api.io',
+    }
 
-    const agent = options.agent || new HttpAgent({ ...options.agentOptions })
-
+    // const agent = options.agent || new HttpAgent({ ...options.agentOptions })
+    const agent = new HttpAgent({
+        ...agentOptions,
+        identity: options.identity,
+    })
     // console.log('Agent:', agent)
 
     //let newReplicaTime = Date.now() + 60000
@@ -55,10 +62,17 @@ export const createActor = (canisterId, options = {}) => {
     return actor
 }
 
-export const basic_bitcoin_syron = canisterId
-    ? createActor(canisterId, {
-          agentOptions: {
-              host: 'https://icp-api.io', //'https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/',
-          },
-      })
-    : undefined
+// export const basic_bitcoin_syron = canisterId
+//     ? createActor(canisterId, {
+//           agentOptions: {
+//               host: 'https://icp-api.io', //'https://a4gq6-oaaaa-aaaab-qaa4q-cai.raw.icp0.io/',
+//           },
+//       })
+//     : undefined
+
+export const basic_bitcoin_syron = (identity) =>
+    canisterId
+        ? createActor(canisterId, {
+              identity,
+          })
+        : undefined

@@ -1,11 +1,15 @@
-import { basic_bitcoin_syron as syron } from '../declarations/basic_bitcoin_tyron'
+import { basic_bitcoin_syron } from '../declarations/basic_bitcoin_tyron'
+
 import { updateSyronSSI } from '../store/syron'
 import Big from 'big.js'
 import { updateXR } from '../store/xr'
+import { useSiwbIdentity } from 'ic-use-siwb-identity'
 
 Big.PE = 999
 
 function useICPHook() {
+    const { identity } = useSiwbIdentity()
+
     const getBox = async (ssi: string, dummy: boolean) => {
         try {
             console.log('Loading SDB')
@@ -46,6 +50,8 @@ function useICPHook() {
     const updateSyronBalance = async (ssi: string) => {
         try {
             console.log('Calling Syron update...')
+
+            const syron = basic_bitcoin_syron()
             const txId = await syron.update_ssi_balance({
                 ssi,
                 op: { getsyron: null },
@@ -83,6 +89,7 @@ function useICPHook() {
     const getSUSD = async (ssi: string, txid: string, fee: number) => {
         try {
             console.log(`Initiating SYRON Issuance with fee (${fee})...`)
+            const syron = basic_bitcoin_syron()
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
@@ -120,6 +127,7 @@ function useICPHook() {
             console.log(
                 `Initiating SYRON Withdrawal of amount (${amt}) with fee (${fee})...`
             )
+            const syron = basic_bitcoin_syron()
             const txId = await syron.syron_withdrawal(
                 { ssi, op: { getsyron: null } },
                 txid,
@@ -148,9 +156,41 @@ function useICPHook() {
         }
     }
 
+    const sendSyron = async (ssi: string, recipient: string, amt: number) => {
+        try {
+            console.log(
+                `Initiating SYRON payment of amount (${amt}) to recipient (${recipient})...`
+            )
+            const syron = basic_bitcoin_syron(identity)
+            const txId = await syron.send_syron(
+                { ssi, op: { payment: null } },
+                recipient,
+                amt
+            )
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+            //console.log('txId response: ', JSON.stringify(txId, null, 2))
+
+            if (txId.Err) {
+                throw new Error(txIdStringified)
+            }
+
+            return txId
+        } catch (error) {
+            console.error('Syron Payment Call', error)
+            throw error
+        }
+    }
+
     const redemptionGas = async (ssi: string) => {
         try {
             console.log('Loading Redemption Gas')
+            const syron = basic_bitcoin_syron()
             const gas = await syron.redemption_gas({
                 ssi,
                 op: { redeembitcoin: null },
@@ -170,6 +210,7 @@ function useICPHook() {
     const redeemBTC = async (ssi: string, txid: string) => {
         try {
             console.log('Loading BTC Redemption')
+            const syron = basic_bitcoin_syron()
             const txId = await syron.redeem_btc(
                 {
                     ssi,
@@ -191,6 +232,7 @@ function useICPHook() {
     const getServiceProviders = async () => {
         try {
             console.log('Loading Service Providers')
+            const syron = basic_bitcoin_syron()
             const res = await syron.getServiceProviderMap()
             console.log('Service Providers', res)
             return res
@@ -204,6 +246,7 @@ function useICPHook() {
         updateSyronBalance,
         getSUSD,
         syronWithdrawal,
+        sendSyron,
         redemptionGas,
         redeemBTC,
         getServiceProviders,

@@ -24,10 +24,12 @@ import {
     unisatBalance,
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
-import { WithdrawModal } from '..'
+import { WithdrawModal, SendModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
 import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
+import AuthGuard from '../../pages/AuthGuard'
+import { useSiwbIdentity } from 'ic-use-siwb-identity'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -463,6 +465,13 @@ function Component() {
         }
     }
 
+    // const { setWalletProvider } = useSiwbIdentity()
+
+    const [showSendModal, setSendModal] = React.useState(false)
+    const updateSend = async () => {
+        setSendModal(true)
+    }
+
     if (showWithdrawModal) {
         return (
             <WithdrawModal
@@ -471,6 +480,16 @@ function Component() {
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showWithdrawModal}
                 onClose={() => setWithdrawModal(false)}
+            />
+        )
+    } else if (showSendModal) {
+        return (
+            <SendModal
+                ssi={btc_wallet?.btc_addr!}
+                sdb={sdb}
+                balance={syronBal ? Big(syronBal) : _0}
+                show={showSendModal}
+                onClose={() => setSendModal(false)}
             />
         )
     } else {
@@ -686,14 +705,14 @@ function Component() {
                                         >
                                             Withdraw
                                         </button>
-                                        <button
-                                            onClick={() =>
-                                                toast.info('Coming soon...')
-                                            }
-                                            className={'button secondary'}
-                                        >
-                                            send
-                                        </button>
+                                        <AuthGuard>
+                                            <button
+                                                onClick={updateSend}
+                                                className={'button secondary'}
+                                            >
+                                                send
+                                            </button>
+                                        </AuthGuard>
                                     </div>
                                 </div>
 

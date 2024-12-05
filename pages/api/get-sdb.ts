@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import nextCors from 'nextjs-cors'
 import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore'
 import { db } from '../../src/utils/firebase/firebaseConfig'
-import { basic_bitcoin_syron as syron } from '../../src/declarations/basic_bitcoin_tyron'
+import { basic_bitcoin_syron } from '../../src/declarations/basic_bitcoin_tyron'
 import { unisatBalance } from '../../src/utils/unisat/httpUtils'
 
 // export const config = {
@@ -107,6 +107,7 @@ export default async function handler(
 
         console.log('@dev get data from ICP')
 
+        const syron = basic_bitcoin_syron()
         if (address === '') {
             address = await syron.get_box_address({
                 ssi: id,

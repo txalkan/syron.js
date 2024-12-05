@@ -11,7 +11,7 @@ import { mempoolFeeRate } from '../unisat/httpUtils'
 Big.PE = 999
 
 function useSyronWithdrawal() {
-    const { getSUSD, syronWithdrawal } = useICPHook()
+    const { getSUSD, syronWithdrawal, sendSyron } = useICPHook()
 
     const btc_to_syron = async (
         ssi: string,
@@ -95,7 +95,20 @@ function useSyronWithdrawal() {
         }
     }
 
-    return { btc_to_syron, syron_withdrawal }
+    const send_syron = async (ssi: string, recipient: string, amt: Big) => {
+        try {
+            const dec = 1e8
+            const amount = Number(amt.mul(dec))
+
+            const res = await sendSyron(ssi, recipient, amount)
+
+            return res
+        } catch (error) {
+            throw error
+        }
+    }
+
+    return { btc_to_syron, syron_withdrawal, send_syron }
 }
 
 export default useSyronWithdrawal

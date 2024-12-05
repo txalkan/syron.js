@@ -1,5 +1,13 @@
 /** @type {import('next').NextConfig} */
 const { i18n } = require('./next-i18next.config')
+const withTM = require('next-transpile-modules')([
+    'rc-util', // Add any other modules that need to be transpiled
+    'antd',
+    'rc-pagination',
+    'rc-picker',
+    'rc-input',
+    '@ant-design/icons-svg',
+])
 
 const securityHeaders = [
     {
@@ -24,7 +32,7 @@ const securityHeaders = [
     },
 ]
 
-const nextConfig = {
+const nextConfig = withTM({
     reactStrictMode: true,
     transpilePackages: ['geist'],
     webpack5: true,
@@ -60,6 +68,6 @@ const nextConfig = {
             },
         ]
     },
-}
+})
 
 module.exports = nextConfig
