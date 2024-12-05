@@ -1,8 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from 'react'
 
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
-import ConnectDialog from '../components/ConnectDialog'
+import ConnectDialog from './ConnectDialog'
 import { Button } from 'antd'
 
 type AuthGuardProps = {
@@ -11,6 +10,7 @@ type AuthGuardProps = {
 
 export default function AuthGuard({ children }: AuthGuardProps) {
     const { isInitializing, identity } = useSiwbIdentity()
+    const [connectDialogOpen, setConnectDialogOpen] = useState(false)
 
     useEffect(() => {
         console.log({ isInitializing, identity })
@@ -26,26 +26,24 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         return null
     }
 
-    const [connectDialogOpen, setConnectDialogOpen] = useState(false)
-
     const handleClick = async () => {
         setConnectDialogOpen(true)
     }
 
     // If wallet is not connected or there is no identity, show login page.
-    //if (!isInitializing && !identity) {
-    return (
-        <>
-            <Button className={'button secondary'} onClick={handleClick}>
-                Sign in
-            </Button>
-            <ConnectDialog
-                isOpen={connectDialogOpen}
-                setIsOpen={() => setConnectDialogOpen(false)}
-            />
-        </>
-    )
-    //}
+    if (!isInitializing && !identity) {
+        return (
+            <>
+                <Button className={'button secondary'} onClick={handleClick}>
+                    Sign in
+                </Button>
+                <ConnectDialog
+                    isOpen={connectDialogOpen}
+                    setIsOpen={() => setConnectDialogOpen(false)}
+                />
+            </>
+        )
+    }
 
     return <>{children}</>
 }

@@ -14,9 +14,8 @@ import { store, persistor } from '../src/app/store'
 import { appWithTranslation } from 'next-i18next'
 // import { GeistSans } from 'geist/font/sans'
 import { GeistMono } from 'geist/font/mono'
-import AuthGuard from './AuthGuard'
-import type { _SERVICE as siwbService } from './idls/ic_siwb_provider.d.ts'
-import { idlFactory as siwbIdl } from './idls/ic_siwb_provider.idl'
+import type { _SERVICE as siwbService } from '../src/idls/ic_siwb_provider'
+import { idlFactory as siwbIdl } from '../src/idls/ic_siwb_provider.idl'
 import { SiwbIdentityProvider } from 'ic-use-siwb-identity'
 
 function TyronApp({ Component, pageProps }: AppProps) {
