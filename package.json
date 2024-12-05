@@ -2,7 +2,7 @@
     "name": "ssibrowser",
     "private": true,
     "description": "Tyron's web application",
-    "version": "4.0.0",
+    "version": "4.1.0",
     "homepage": "https://tyrondao.org",
     "repository": {
         "type": "git",
