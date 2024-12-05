@@ -19,8 +19,6 @@ import Big from 'big.js'
 import { CryptoState } from '../../../src/types/vault'
 import ThreeDots from '../../Spinner/ThreeDots'
 import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
-import { $icpTx, $inscriptionTx, updateIcpTx } from '../../../src/store/syron'
-import { useStore } from 'react-stores'
 import Spinner from '../../Spinner'
 import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -52,13 +50,23 @@ var ThisModal: React.FC<Prop> = function ({
     show,
     onClose,
 }) {
-    useEffect(() => {
-        if (show) updateIcpTx(null)
-    }, [show])
-
     const { t } = useTranslation()
+    const { send_syron } = useSyronWithdrawal()
+    const { getBox } = useICPHook()
+
     const [active, setActive] = useState(0)
     const [checkedStep, setCheckedStep] = useState(Array())
+    const [isDisabled, setIsDisabled] = React.useState(false)
+    const [isLoading, setIsLoading] = React.useState(false)
+    const [recipient, setRecipient] = useState('')
+
+    useEffect(() => {
+        if (balance.eq(0)) {
+            setIsDisabled(true)
+        } else {
+            setIsDisabled(false)
+        }
+    }, [balance])
 
     const menuActive = (id) => {
         setCheckedStep([...checkedStep, active])
@@ -78,29 +86,19 @@ var ThisModal: React.FC<Prop> = function ({
     }
 
     const [amount, setAmount] = React.useState(_0)
-
     const handleOnInput = React.useCallback((value: Big) => {
         setAmount(value)
     }, [])
 
-    const [isDisabled, setIsDisabled] = React.useState(false)
-    const icpTx = useStore($icpTx) //{ value: false } //
-
-    useEffect(() => {
-        if (balance.eq(0) || icpTx.value === false) {
-            setIsDisabled(true)
-        } else {
-            setIsDisabled(false)
+    const handleRecipient = (event: { target: { value: any } }) => {
+        let addr = event.target.value
+        try {
+            // addr_input = zcrypto.fromBech32Address(addr_input)
+            setRecipient(addr)
+        } catch (error) {
+            toast.warn('Wrong address format.')
         }
-    }, [balance, icpTx])
-
-    const [isLoading, setIsLoading] = React.useState(false)
-
-    const { send_syron } = useSyronWithdrawal()
-    const { getBox } = useICPHook()
-
-    const [txError, setTxError] = React.useState('')
-    let inscriptionTx = useStore($inscriptionTx)
+    }
 
     const handleConfirm = React.useCallback(async () => {
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
@@ -108,29 +106,41 @@ var ThisModal: React.FC<Prop> = function ({
         try {
             setIsLoading(true)
 
+            if (recipient === '') {
+                throw new Error('The recipient address is missing')
+            }
+
             if (amount.lt(0.2)) {
                 throw new Error('Insufficient Amount')
             }
 
-            // @test
-            // const inscriptionTx = {
-            //     value: 'e93bef47349172691cf810af296776c8467a966979d0ed7e2c3dc4c1dc051281',
-            // }
+            await send_syron(ssi, recipient, amount)
+            toast.info('Your SYRON payment was sent successfully.')
 
-            await send_syron(
-                ssi,
-                'bc1p87zj4agmace6056fu4dgsq9t9dcalgf5lc2h7p7ty6ehu8j9ed7s9z0q77',
-                amount
-            )
             await getBox(ssi, false)
         } catch (error) {
             console.error('Syron Payment', error)
-            setTxError(extractRejectText(String(error)))
 
             if (error == 'Error: Withdrawing SYRON is currently paused.') {
                 toast.info('Withdrawing SYRON is currently paused.')
+            } else if (error == 'Error: The recipient address is missing') {
+                toast.warn(
+                    <div className={styles.error}>
+                        The recipient address is missing. If you need
+                        assistance, feel free to reach out on Telegram{' '}
+                        <a
+                            href="https://t.me/tyrondao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className={styles.link}
+                        >
+                            @TyronDAO
+                        </a>
+                        .
+                    </div>
+                )
             } else if (error == 'Error: Insufficient Amount') {
-                toast.error(
+                toast.warn(
                     <div className={styles.error}>
                         The minimum amount for withdrawal is 20 cents. Please
                         adjust your request accordingly. If you need assistance,
@@ -139,10 +149,7 @@ var ThisModal: React.FC<Prop> = function ({
                             href="https://t.me/tyrondao"
                             target="_blank"
                             rel="noopener noreferrer"
-                            style={{
-                                color: 'blue',
-                                textDecoration: 'underline',
-                            }}
+                            className={styles.link}
                         >
                             @TyronDAO
                         </a>
@@ -163,7 +170,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: 'blue',
+                                    color: '#1e90ff',
                                     textDecoration: 'underline',
                                 }}
                             >
@@ -189,7 +196,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: 'blue',
+                                    color: '#1e90ff',
                                     textDecoration: 'underline',
                                 }}
                             >
@@ -206,84 +213,7 @@ var ThisModal: React.FC<Prop> = function ({
         } finally {
             setIsLoading(false)
         }
-    }, [ssi, sdb, amount, inscriptionTx, isLoading, isDisabled])
-
-    const retryWithdrawal = React.useCallback(async () => {
-        if (isLoading) return
-
-        try {
-            setIsLoading(true)
-
-            if (!inscriptionTx.value) {
-                throw new Error('The inscribe-transfer transaction is missing.')
-            }
-
-            updateIcpTx(null)
-            await send_syron(
-                ssi,
-                'bc1p87zj4agmace6056fu4dgsq9t9dcalgf5lc2h7p7ty6ehu8j9ed7s9z0q77',
-                amount
-            )
-            await getBox(ssi, false)
-        } catch (error) {
-            console.error('Retry Syron Withdrawal', error)
-            setTxError(extractRejectText(String(error)))
-
-            if (typeof error === 'object' && Object.keys(error!).length !== 0) {
-                toast.error(
-                    <div className={styles.error}>
-                        <div>
-                            Your request was rejected. For assistance, please
-                            let us know on Telegram{' '}
-                            <a
-                                href="https://t.me/tyrondao"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
-                            >
-                                @TyronDAO
-                            </a>
-                            .
-                        </div>
-                        <br />
-                        <div style={{ color: 'red', paddingTop: '1rem' }}>
-                            {error && (error as Error).message
-                                ? (error as Error).message
-                                : JSON.stringify(error, null, 2)}
-                        </div>
-                    </div>
-                )
-            } else {
-                toast.error(
-                    <div className={styles.error}>
-                        <div>
-                            Please let us know about this error on Telegram{' '}
-                            <a
-                                href="https://t.me/tyrondao"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
-                            >
-                                @TyronDAO
-                            </a>
-                            .
-                        </div>
-                        <div style={{ color: 'red', paddingTop: '1rem' }}>
-                            {extractRejectText(String(error))}
-                        </div>
-                    </div>
-                )
-            }
-        } finally {
-            setIsLoading(false)
-        }
-    }, [ssi, sdb, amount, isLoading, inscriptionTx])
+    }, [ssi, sdb, amount, isLoading, isDisabled])
 
     // const copyToClipboard = (text: string) => {
     //     navigator.clipboard.writeText(text)
@@ -644,6 +574,13 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div> */}
 
+                    <input
+                        type="text"
+                        className={styles.input}
+                        placeholder={t('Paste recipient address')}
+                        onChange={handleRecipient}
+                    />
+
                     <SyronInput
                         balance={balance}
                         token={token}
@@ -668,109 +605,16 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div>
 
-                    {icpTx.value === false ? (
-                        <div className={styles.failedWithdrawal}>
-                            {/* <div className={styles.icoColor}>
-                                <Image
-                                    alt="warning-ico"
-                                    src={Warning}
-                                    width={20}
-                                    height={20}
-                                />
-                            </div> */}
+                    {isLoading ? (
+                        <div>
                             <div className={styles.withdrawalTxt}>
-                                We are very sorry, but your withdrawal request
-                                has failed.
+                                Your Syron USD payment is being processed.
+                                Please allow a few moments for completion. Thank
+                                you for your patience!
                             </div>
-                            {txError !== '' && (
-                                <div
-                                    style={{
-                                        color: 'red',
-                                        wordBreak: 'break-word',
-                                    }}
-                                >
-                                    Error: {txError}
-                                </div>
-                            )}
-                            <div className={styles.withdrawalTxt}>
-                                Please try again after a moment. If the error
-                                persists, do not hesitate to contact us for
-                                support on Telegram{' '}
-                                <a
-                                    href="https://t.me/tyrondao"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{
-                                        color: 'blue',
-                                        textDecoration: 'underline',
-                                    }}
-                                >
-                                    @TyronDAO
-                                </a>
-                                .
-                            </div>
-                            <div className={styles.withdrawalTxt}>
-                                We appreciate your patience and understanding!
-                            </div>
-                            <button
-                                style={{
-                                    backgroundColor: 'rgb(75, 0, 130)',
-                                }}
-                                onClick={retryWithdrawal}
-                                className={'button secondary'}
-                            >
-                                {isLoading ? (
-                                    <ThreeDots color="yellow" />
-                                ) : (
-                                    <>retry</>
-                                )}
-                            </button>
+                            <Spinner />
                         </div>
-                    ) : (
-                        <>
-                            {isLoading ? (
-                                <div>
-                                    <div className={styles.withdrawalTxt}>
-                                        Your withdrawal request is currently
-                                        being processed. Please allow a few
-                                        moments for completion. Thank you for
-                                        your patience!
-                                    </div>
-                                    <Spinner />
-                                </div>
-                            ) : (
-                                <>
-                                    {icpTx.value === true ? (
-                                        <div
-                                            className={
-                                                styles.succeededWithdrawal
-                                            }
-                                        >
-                                            <div
-                                                className={styles.withdrawalTxt}
-                                            >
-                                                Congratulations! Your withdrawal
-                                                was successful, and{' '}
-                                                {String(amount)} SYRON has been
-                                                sent to your wallet.
-                                            </div>
-                                            <div
-                                                className={styles.withdrawalTxt}
-                                            >
-                                                You can check your wallet to
-                                                verify the transaction.
-                                            </div>
-                                            <div
-                                                className={styles.withdrawalTxt}
-                                            >
-                                                Thank you for using Tyron!
-                                            </div>
-                                        </div>
-                                    ) : null}
-                                </>
-                            )}
-                        </>
-                    )}
+                    ) : null}
                 </div>
             </div>
         </Modal>

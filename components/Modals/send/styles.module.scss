@@ -67,7 +67,7 @@
 }
 
 .headerTxt {
-    font-size: 0.9rem;
+    font-size: 1.1rem;
     display: flex;
     gap: 1rem;
     align-items: center;
@@ -282,5 +282,22 @@
     }
     @media only screen and (max-width: 376px) {
         max-width: 100px;
+    }
+}
+
+.input {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 1.5rem;
+    background-color: #808080 !important;
+}
+
+.link {
+    color: #1e90ff;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
     }
 }

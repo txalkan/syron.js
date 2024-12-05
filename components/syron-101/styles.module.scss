@@ -379,3 +379,16 @@
     height: 100%;
     object-fit: contain; /* Ensure the image scales correctly */
 }
+
+.link {
+    color: #1e90ff;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.customButton {
+    color: #ffff32 !important; /* Ensure the color is applied */
+}

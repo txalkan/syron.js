@@ -10,8 +10,6 @@ export default function ConnectDialog({
     isOpen: boolean
     setIsOpen: (isOpen: boolean) => void
 }) {
-    //   const { connect, connectors, error, isPending, variables, reset } = useConnect();
-    //   const { isConnected } = useAccount();
     const {
         prepareLogin,
         isPrepareLoginIdle,
@@ -123,7 +121,7 @@ export default function ConnectDialog({
                     Xverse Wallet
                 </Button> */}
             </div>
-            {loading && <Spin fullscreen />}
+            {loading && <Spin />}
         </Modal>
     )
 }

@@ -28,8 +28,7 @@ import { WithdrawModal, SendModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
 import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
-import AuthGuard from '../../pages/AuthGuard'
-import { useSiwbIdentity } from 'ic-use-siwb-identity'
+import AuthGuard from '../AuthGuard'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -255,10 +254,7 @@ function Component() {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -288,10 +284,7 @@ function Component() {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -398,10 +391,7 @@ function Component() {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -430,10 +420,7 @@ function Component() {
                                 href="https://t.me/tyrondao"
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                style={{
-                                    color: 'blue',
-                                    textDecoration: 'underline',
-                                }}
+                                className={styles.link}
                             >
                                 @TyronDAO
                             </a>
@@ -708,7 +695,7 @@ function Component() {
                                         <AuthGuard>
                                             <button
                                                 onClick={updateSend}
-                                                className={'button secondary'}
+                                                className={`button secondary ${styles.customButton}`}
                                             >
                                                 send
                                             </button>
