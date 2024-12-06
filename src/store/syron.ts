@@ -29,3 +29,10 @@ export const $icpTx = new Store<{ value: boolean | null }>({ value: null })
 export function updateIcpTx(args: boolean | null) {
     $icpTx.setState({ value: args })
 }
+
+export const $siwb = new Store<{ isConnected: boolean }>({
+    isConnected: false,
+})
+export function updateSiwb(args: boolean) {
+    $siwb.setState({ isConnected: args })
+}

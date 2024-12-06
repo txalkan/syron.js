@@ -3,6 +3,8 @@ import React, { useEffect, useState } from 'react'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import ConnectDialog from './ConnectDialog'
 import { Button } from 'antd'
+import { useStore } from 'react-stores'
+import { $siwb } from '../src/store/syron'
 
 type AuthGuardProps = {
     children: React.ReactNode
@@ -11,6 +13,8 @@ type AuthGuardProps = {
 export default function AuthGuard({ children }: AuthGuardProps) {
     const { isInitializing, identity } = useSiwbIdentity()
     const [connectDialogOpen, setConnectDialogOpen] = useState(false)
+    const [connected, setConnected] = useState(false)
+    const siwb = useStore($siwb)
 
     useEffect(() => {
         console.log({ isInitializing, identity })
@@ -30,8 +34,12 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         setConnectDialogOpen(true)
     }
 
+    useEffect(() => {
+        setConnected(siwb.isConnected)
+    }, [siwb])
+
     // If wallet is not connected or there is no identity, show login page.
-    if (!isInitializing && !identity) {
+    if (!connected) {
         return (
             <>
                 <Button className={'button secondary'} onClick={handleClick}>
