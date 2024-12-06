@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Button, Modal, Spin, Typography } from 'antd'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { toast } from 'react-toastify'
+import { updateSiwb } from '../src/store/syron'
 
 export default function ConnectDialog({
     isOpen,
@@ -24,16 +25,17 @@ export default function ConnectDialog({
 
     const [loading, setLoading] = useState<boolean>(false)
     const [manually, setManually] = useState<boolean>(false)
+    const [addressRes, setAddressRes] = useState<string>("")
 
     /**
      * Preload a Siwb message on every address change.
      */
-    useEffect(() => {
+    const signInAction = async () => {
         if (!isPrepareLoginIdle) return
-        const address = getAddress()
-        console.log({ address })
+        const address = await getAddress()
 
         if (address) {
+            setAddressRes(address)
             prepareLogin()
             if (connectedBtcAddress && !identity && manually) {
                 ;(async () => {
@@ -42,17 +44,25 @@ export default function ConnectDialog({
                         const res = await login()
 
                         if (res) {
+                            updateSiwb(true)
                             setManually(false)
                             setIsOpen(false)
+                            setAddressRes("")
                         }
                     } catch (error) {
                         toast.error('Login failed')
+                        setAddressRes("")
+                        updateSiwb(false)
                     } finally {
                         setLoading(false)
                     }
                 })()
             }
         }
+    }
+    
+    useEffect(() => {
+        signInAction()
     }, [
         prepareLogin,
         isPrepareLoginIdle,
@@ -73,6 +83,18 @@ export default function ConnectDialog({
      * Show an error toast if the login call fails.
      */
     useEffect(() => {}, [loginError])
+
+    const connect = async () => {
+        setLoading(true)
+        setManually(true)
+        await setWalletProvider('unisat')
+        setTimeout(async () => {
+            if (addressRes.length === 0) {
+                await setWalletProvider('unisat')
+                setManually(true)
+            }
+        }, 100);
+    }
 
     return (
         <Modal
@@ -100,10 +122,7 @@ export default function ConnectDialog({
             <div>
                 <Button
                     key="unisat"
-                    onClick={async () => {
-                        setManually(true)
-                        await setWalletProvider('unisat')
-                    }}
+                    onClick={connect}
                     disabled={loading}
                     block
                 >
