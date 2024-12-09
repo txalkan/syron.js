@@ -72,11 +72,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         manually,
     ])
 
-    // @todo
-    // If the user is not connected, clear the session.
-    // If user switches to an unsupported network, clear the session.
-    // If the user switches to a different address, clear the session. Preload a Siwb message on every address change.
-
     useEffect(() => {
         if (prepareLoginError) {
             console.error('Failed to prepare login')
@@ -112,7 +107,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         return null
     }
 
-    // If wallet is not connected or there is no identity, show login page.
     if (!isInitializing && !identity) {
         return (
             <>
@@ -125,10 +119,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                 >
                     {!loading ? <>Sign in</> : <Spinner />}
                 </Button>
-                {/* <ConnectDialog
-                    isOpen={connectDialogOpen}
-                    setIsOpen={() => setConnectDialogOpen(false)}
-                /> */}
             </>
         )
     }
