@@ -68,6 +68,7 @@ export const BoxInput: React.FC<Prop> = ({
     useEffect(() => {
         async function updateXR() {
             await getXR()
+            // @review update wallet balance too
         }
 
         updateXR()
@@ -160,7 +161,37 @@ export const BoxInput: React.FC<Prop> = ({
                                 <div className={styles.info}>
                                     | Wallet Balance
                                     <span className={styles.infoBalance}>
+                                        {!isNaN(Number(btcBalance)) &&
+                                            Number(btcBalance) !== 0 && (
+                                                <span
+                                                    className={styles.infoColor}
+                                                >
+                                                    <span
+                                                        style={{
+                                                            paddingRight:
+                                                                '0.2rem',
+                                                        }}
+                                                    >
+                                                        ₿
+                                                    </span>
+                                                    {Number(
+                                                        btcBalance
+                                                    ).toLocaleString('en-US', {
+                                                        minimumFractionDigits: 8,
+                                                        maximumFractionDigits: 8,
+                                                    })}
+                                                </span>
+                                            )}
                                         <span className={styles.infoPurple}>
+                                            {Number(balWorth) != 0 && (
+                                                <span
+                                                    style={{
+                                                        paddingRight: '0.2rem',
+                                                    }}
+                                                >
+                                                    ≈
+                                                </span>
+                                            )}
                                             <span
                                                 style={{
                                                     paddingRight: '0.2rem',
@@ -177,31 +208,6 @@ export const BoxInput: React.FC<Prop> = ({
                                                       maximumFractionDigits: 2,
                                                   })}
                                         </span>
-
-                                        {!isNaN(Number(btcBalance)) &&
-                                            Number(btcBalance) !== 0 && (
-                                                <span
-                                                    className={styles.infoColor}
-                                                >
-                                                    ≈
-                                                    <span
-                                                        style={{
-                                                            paddingLeft:
-                                                                '0.2rem',
-                                                            paddingRight:
-                                                                '0.2rem',
-                                                        }}
-                                                    >
-                                                        ₿
-                                                    </span>
-                                                    {Number(
-                                                        btcBalance
-                                                    ).toLocaleString('en-US', {
-                                                        minimumFractionDigits: 8,
-                                                        maximumFractionDigits: 8,
-                                                    })}
-                                                </span>
-                                            )}
                                     </span>
                                 </div>
                             )}

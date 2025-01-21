@@ -161,7 +161,8 @@ export async function unisatInscriptionInfo(id: string) {
         return data
     } catch (error) {
         console.error('UniSat Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
@@ -192,7 +193,8 @@ export async function coinGeckoApi() {
         return data
     } catch (error) {
         console.error('CoinGecko Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
@@ -214,7 +216,8 @@ export async function mempoolPrice() {
         return data
     } catch (error) {
         console.error('Mempool Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
@@ -238,7 +241,8 @@ export async function mempoolTxId(address: string) {
         return tx_id
     } catch (error) {
         console.error('Mempool Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
@@ -290,7 +294,7 @@ export async function mempoolFeeRate(): Promise<number> {
         return fee
     } catch (error) {
         console.error('Mempool Error:', error)
-        checkError(error)
+        //checkError(error)
         return 5
     }
 }
@@ -351,7 +355,8 @@ export async function unisatBalance(address: string) {
         if (data.data) return data.data.btcSatoshi
     } catch (error) {
         console.error('UniSat Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
@@ -383,7 +388,8 @@ export async function bisInscriptionInfo(id: string) {
         return data
     } catch (error) {
         console.error('BIS Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
@@ -428,16 +434,17 @@ export async function bisApi(url: string) {
         return responseData.data
     } catch (error) {
         console.error('BIS Error:', error)
-        checkError(error)
+        const e = checkError(error)
+        throw e
     }
 }
 
 // create a reusable function to check the erorr instance
 function checkError(error: any) {
     if (error instanceof Error) {
-        throw new Error('API Error: ' + error.message)
+        return new Error('API Error: ' + error.message)
     } else {
-        throw new Error('API error: ' + error)
+        return new Error('API error: ' + error)
     }
 }
 
@@ -454,7 +461,12 @@ function checkError(error: any) {
 //     await Promise.all(promises)
 // }
 
-export const transaction_status = async (txId) => {
+export const transaction_status = async (txId: string) => {
+    // Runtime validation to ensure txId is a valid string
+    if (!txId || typeof txId !== 'string') {
+        throw new Error('Invalid transaction ID parameter')
+    }
+
     // @mainnet
     const url = `https://mempool.space/api/tx/${txId}/status` //`https://mempool.space/testnet/api/tx/${txId}/status`
 

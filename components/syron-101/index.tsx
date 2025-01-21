@@ -100,7 +100,7 @@ function Component() {
         {
             value: _0,
             meta: {
-                name: 'Syron USD',
+                name: 'SYRON USD',
                 symbol: 'SYRON',
                 decimals: 8,
             },
@@ -132,17 +132,22 @@ function Component() {
             } else if (Number(loan) <= 0) {
                 throw new Error('Loan amount is invalid')
             } else {
-                let gas = await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
+                await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
                     .then(async (response) => {
                         const res = await response.json()
+                        if (res.error) {
+                            throw new Error(res.error)
+                        }
+
                         console.log(
-                            'outcall response - SDB Syron USD balance',
+                            'outcall response - SDB SYRON balance',
                             JSON.stringify(res, null, 2)
                         )
 
                         const overallBalance = parseFloat(
                             res.detail[0].overallBalance
-                        )
+                        ) // @review make sure that the balance has at least 1 confirmation
+
                         const loanAmount = parseFloat(loan)
 
                         const limit = 0.02 // @governance
@@ -151,7 +156,7 @@ function Component() {
                                 loanAmount - overallBalance
                             ).toFixed(2)
                             throw new Error(
-                                `Please deposit ${depositAmount} into your SDB before proceeding.`
+                                `You have to repay the full amount of your SYRON loan to redeem your BTC collateral. You need to deposit ${depositAmount} SYRON into your SDB before proceeding.`
                             )
                         }
 
@@ -161,18 +166,20 @@ function Component() {
                         throw error
                     })
 
-                // @dev The transaction fee rate in sat/vB @mainnet
+                // @dev Inscribe the loan amount to the SDB
+                // 1. The transaction fee rate in sat/vB @mainnet
                 let feeRate = await mempoolFeeRate()
                 if (!feeRate) {
                     feeRate = 5
                 }
                 console.log('Fee Rate', feeRate)
 
-                //let deposit = (Number(gas) + 50).toString()
+                // 2. Add a fee to cover the redeption gas from SDB - let deposit = (Number(gas) + 50).toString()
                 let deposit = (700).toString()
 
                 const tick = 'SYRON' // @mainnet
 
+                // 3. Get inscription order
                 let order = await fetch(
                     `/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&devAddress=${sdb}&devFee=${deposit}&brc20Ticker=${tick}&brc20Amount=${loan}`
                     //`/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&brc20Ticker=${tick}&brc20Amount=${loan}`
@@ -186,7 +193,7 @@ function Component() {
                         throw error
                     })
 
-                // @dev 1) Send Bitcoin transaction (#1)
+                // @dev Send inscription transaction on Bitcoin (#1)
                 await unisat
                     .sendBitcoin(order.payAddress, order.amount, order.feeRate)
                     .then(async (txId) => {
@@ -220,8 +227,7 @@ function Component() {
                                 await transaction_status(txId2).then(
                                     async () => {
                                         await redeemBitcoin(txId2)
-                                        setIsLoading(false)
-
+                                        // @review add retry option when the canister fails but the SDB received the inscription
                                         toast.info(
                                             `You have redeemed your BTC!`,
                                             { autoClose: false }
@@ -240,6 +246,11 @@ function Component() {
                 toast.info(
                     'Loading your Safety Deposit ₿ox… Please wait a moment and try again shortly.',
                     { autoClose: 2000 }
+                )
+            } else if ((err as Error).message.includes('balance is zero')) {
+                toast.warn(
+                    `Repay the SYRON loan to redeem your BTC collateral. You have to deposit ${loan} SYRON in total to your SDB.`,
+                    { autoClose: false }
                 )
             } else if (
                 typeof err === 'object' &&
@@ -278,8 +289,7 @@ function Component() {
                             {extractRejectText(String(err))}
                         </p>
                         <p>
-                            For assistance with this error, please join us on
-                            Telegram{' '}
+                            For assistance with this error, join us on Telegram{' '}
                             <a
                                 href="https://t.me/tyrondao"
                                 target="_blank"
@@ -294,7 +304,6 @@ function Component() {
                     { autoClose: false }
                 )
             }
-            setIsLoading(false)
         } finally {
             setIsRedeeming(false)
         }
@@ -620,11 +629,11 @@ function Component() {
                                                 className={styles.icon}
                                             />
                                         </div>
-                                        Syron USD
+                                        SYRON USD
                                     </div>
                                     <div className={styles.subsection}>
                                         <div className={styles.info}>
-                                            | PRINTED
+                                            | LOAN
                                         </div>
                                         <div className={styles.value}>
                                             <span className={styles.color}>
@@ -786,7 +795,7 @@ function Component() {
                                     className={styles.icon}
                                 />
                             </div>
-                            Print Syron
+                            Loan SYRON
                         </div>
                         <div
                             onClick={() =>
