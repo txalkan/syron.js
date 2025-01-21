@@ -38,7 +38,7 @@ type Prop = {
 }
 
 const token: CryptoState = {
-    name: 'Syron USD',
+    name: 'SYRON USD',
     symbol: 'SYRON',
     decimals: 8,
 }
@@ -234,7 +234,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 height="32"
                                 width="32"
                             />
-                            {t('Send Syron USD')}
+                            {t('Send SYRON USD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
                             <Image
@@ -608,9 +608,9 @@ var ThisModal: React.FC<Prop> = function ({
                     {isLoading ? (
                         <div>
                             <div className={styles.withdrawalTxt}>
-                                Your Syron USD payment is being processed.
-                                Please allow a few moments for completion. Thank
-                                you for your patience!
+                                Your SYRON payment is being processed. Please
+                                allow a few moments for completion. Thank you
+                                for your patience!
                             </div>
                             <Spinner />
                         </div>

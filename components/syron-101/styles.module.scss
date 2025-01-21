@@ -305,7 +305,7 @@
     max-height: 500px; // Set a fixed maximum height for the toast content
     overflow-y: auto; // Enable vertical scrolling if content exceeds the height
     white-space: normal; // Allow text to wrap normally
-    font-size: 14px; // Set a readable font size
+    font-size: 1rem; // Set a readable font size
     line-height: 1.5; // Improve readability with better line spacing
     word-break: break-word; // Break long words or URLs properly
 }

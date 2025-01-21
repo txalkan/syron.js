@@ -40,7 +40,7 @@ type Prop = {
 }
 
 const token: CryptoState = {
-    name: 'Syron USD',
+    name: 'SYRON USD',
     symbol: 'SYRON',
     decimals: 8,
 }
@@ -306,7 +306,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 height="32"
                                 width="32"
                             />
-                            {t('Withdraw Syron USD')}
+                            {t('Withdraw SYRON USD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
                             <Image
@@ -446,7 +446,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Print SYRON')}
+                                        {t('Loan SYRON USD')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -534,7 +534,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Withdraw')}
+                                        {t('Withdraw SYRON USD')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -559,9 +559,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 {active === 3 ? (
                                     <>
                                         <div className={styles.rowContentTxt}>
-                                            {t(
-                                                'Withdrawal Overview for Syron USD'
-                                            )}
+                                            {t('SYRON Withdrawal Overview')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
@@ -588,7 +586,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        'Withdrawals of Syron USD are based on the balance in your Safety Deposit ₿ox.'
+                                                        'SYRON withdrawals are based on the balance in your Safety Deposit ₿ox.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -602,7 +600,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        'Syron USD is implemented as a BRC-20 token named SYRON, which can be used freely on Bitcoin mainnet.'
+                                                        'SYRON USD is implemented as a BRC-20 token named SYRON, which can be used freely on Bitcoin mainnet.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -616,7 +614,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        'You can bridge Syron USD to other networks, such as Bitlayer, using the Omnity Network.'
+                                                        'You can bridge SYRON USD to other networks, such as Bitlayer, using the Omnity Network.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -653,7 +651,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => menuActive(3)}
                                     >
                                         {t(
-                                            'Transfer Syron USD from your balance to your wallet.'
+                                            'Transfer SYRON from your balance to your wallet.'
                                         )}
                                     </div>
                                 )}

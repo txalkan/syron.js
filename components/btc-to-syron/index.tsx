@@ -440,7 +440,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 <div style={{ color: '#f8931a' }}>ᛞ</div>
                 <div>
                     Your Safety Deposit ₿ox (SDB) holds $1.50 in BTC for every
-                    Syron USD that you print.
+                    SYRON USD you loan.
                 </div>
             </div>
             <div className={styles.confirmContainer}>
