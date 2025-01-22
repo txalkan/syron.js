@@ -617,7 +617,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         'You can bridge SYRON USD to other networks, such as Bitlayer, using the Omnity Network.'
                                                     )}
                                                 </li>
-                                                <li className={styles.li}>
+                                                {/* <li className={styles.li}>
                                                     <span
                                                         style={{
                                                             color: 'rgb(75, 0, 130)',
@@ -630,7 +630,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                     {t(
                                                         'Soon, we will be able to send lightning-fast payments powered by the Internet Computer!'
                                                     )}
-                                                </li>
+                                                </li> */}
                                             </ul>
                                             {/* <ul className={styles.ul}>
                                                 <li className={styles.li}>

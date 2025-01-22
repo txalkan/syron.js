@@ -1243,6 +1243,8 @@ button.secondary,
     box-shadow: none;
     height: 1.8rem;
     line-height: 1rem;
+    padding-left: 0.8rem;
+    padding-right: 0.5rem;
 }
 
 .button.secondary:hover {

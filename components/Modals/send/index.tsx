@@ -94,7 +94,7 @@ var ThisModal: React.FC<Prop> = function ({
         let addr = event.target.value
         try {
             // addr_input = zcrypto.fromBech32Address(addr_input)
-            setRecipient(addr)
+            setRecipient(addr) // @review address format
         } catch (error) {
             toast.warn('Wrong address format.')
         }

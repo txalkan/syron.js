@@ -65,8 +65,13 @@ function Component() {
     // @dev Read for new BTC deposits every minute
     useEffect(() => {
         async function readDeposits() {
-            const balance = await unisatBalance(syron?.sdb!)
-            setSatsDeposited(Big(balance))
+            await unisatBalance(syron?.sdb!)
+                .then((balance) => {
+                    setSatsDeposited(Big(balance))
+                })
+                .catch((error) => {
+                    console.error('readDeposits', error)
+                })
         }
 
         readDeposits()
@@ -667,7 +672,7 @@ function Component() {
                                                     <ThreeDots color="yellow" />
                                                 </div>
                                             ) : (
-                                                <>update</>
+                                                <>recalculate</>
                                             )}
                                         </button>
                                     </div>
