@@ -105,7 +105,7 @@ function Component() {
         {
             value: _0,
             meta: {
-                name: 'SYRON USD',
+                name: 'Syron SUSD',
                 symbol: 'SYRON',
                 decimals: 8,
             },
@@ -634,7 +634,7 @@ function Component() {
                                                 className={styles.icon}
                                             />
                                         </div>
-                                        SYRON USD
+                                        Syron SUSD
                                     </div>
                                     <div className={styles.subsection}>
                                         <div className={styles.info}>
@@ -800,7 +800,7 @@ function Component() {
                                     className={styles.icon}
                                 />
                             </div>
-                            Loan SYRON
+                            Borrow SYRON
                         </div>
                         <div
                             onClick={() =>

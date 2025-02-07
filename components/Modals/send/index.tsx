@@ -38,7 +38,7 @@ type Prop = {
 }
 
 const token: CryptoState = {
-    name: 'SYRON USD',
+    name: 'Syron SUSD',
     symbol: 'SYRON',
     decimals: 8,
 }
@@ -230,11 +230,11 @@ var ThisModal: React.FC<Prop> = function ({
                         <div className={styles.headerTxt}>
                             <Image
                                 src={icoThunder}
-                                alt={'Loan'}
+                                alt={'Send Syron SUSD'}
                                 height="32"
                                 width="32"
                             />
-                            {t('Send SYRON USD')}
+                            {t('Send Syron SUSD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
                             <Image

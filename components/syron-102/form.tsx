@@ -192,7 +192,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                     className={styles.img}
                                 />
                                 <div className={styles.titleForm2}>
-                                    Deposit Bitcoin to Loan SYRON USD
+                                    Deposit Bitcoin to Borrow Syron SUSD
                                 </div>
                             </div>
 
