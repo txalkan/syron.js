@@ -138,7 +138,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         [vault_pair]
     )
 
-    //@mainnet-dex
+    //@dex-mainnet
     const onDexSwap = () => {
         const update_pair = JSON.parse(JSON.stringify(vault_pair))
 
@@ -255,7 +255,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
 
             let amt = Number(selectedData.susd) + 0.01
 
-            // @dev The transaction fee rate in sat/vB @mainnet
+            // @dev The transaction fee rate in sat/vB @gas @network
             let feeRate = await mempoolFeeRate()
             console.log('Fee Rate', feeRate)
 
@@ -285,7 +285,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                     outputValue: 546,
                     devAddress: '', // @review (mainnet) fee
                     devFee: 0,
-                    brc20Ticker: 'SYRON', //@mainnet
+                    brc20Ticker: 'SYRON', //@brc20
                     brc20Amount: String(amt),
                 })
             }
@@ -405,9 +405,9 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 Safety Deposit ₿ox
                             </div>
                             <div
-                                onClick={
-                                    () => toast.info('Coming soon!')
-                                    // setModal4(true)
+                                onClick={() =>
+                                    // toast.info('Coming soon!')
+                                    setModal4(true)
                                 }
                                 className={styles.btnTitle}
                             >

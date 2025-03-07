@@ -415,7 +415,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         [pair]
     )
 
-    //@mainnet-dex
+    //@dex-mainnet
     const onDexSwap = (val) => {
         console.log('DEX_DEFIxWALLET: ', val)
         const update_pair = JSON.parse(JSON.stringify(pair))

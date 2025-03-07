@@ -153,11 +153,11 @@ export interface _SERVICE {
         Uint8Array | number[]
     >
     liquidate: ActorMethod<
-        [GetBoxAddressArgs, string, string, bigint],
+        [GetBoxAddressArgs, string, string, bigint, bigint],
         { Ok: Array<string> } | { Err: UpdateBalanceError }
     >
     redeem_btc: ActorMethod<
-        [GetBoxAddressArgs, string],
+        [GetBoxAddressArgs, string, bigint],
         { Ok: string } | { Err: UpdateBalanceError }
     >
     redemption_gas: ActorMethod<

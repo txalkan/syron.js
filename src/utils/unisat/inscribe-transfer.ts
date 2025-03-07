@@ -11,15 +11,19 @@ export const inscribe_transfer = async (
         throw new Error('SDB Loading Error')
     }
 
-    const ticker = 'SYRON' // @mainnet
+    // @brc20
+    const ticker = 'SYRON'
 
+    //@network
     const version = process.env.NEXT_PUBLIC_SYRON_VERSION
     // Choose minter id based on version
     let minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET
     if (version === '2') {
         minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2
+    } else if (version === 'testnet') {
+        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_TESTNET
     }
-    let receiveAddress = minterId! // @mainnet
+    let receiveAddress = minterId!
     if (!receiveAddress) throw new Error('The receiver address is not defined')
 
     let devAddress

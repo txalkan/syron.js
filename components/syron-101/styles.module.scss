@@ -169,7 +169,7 @@
     justify-content: flex-start;
 
     box-shadow: 2px 3px 6px rgba(255, 255, 50, 0.5); // @design-shadow-sdb
-    border-radius: 22px;
+    border-radius: 22px 0 22px 22px;
     /* Metallic @design-shadow-purple */
     // 0 5px 14px rgba(75, 0, 130, 0.5),
     //     /* Main shadow */ 0 6px 6px rgba(75, 0, 130, 0.3); /* Softer shadow for depth */

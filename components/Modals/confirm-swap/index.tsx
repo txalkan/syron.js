@@ -364,7 +364,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         setLoading(false)
     }, [pair, exact])
 
-    //@mainnet-dex
+    //@dex-mainnet-dex
     //@ssibrowser
     const lazyRoot = React.useRef(null)
 

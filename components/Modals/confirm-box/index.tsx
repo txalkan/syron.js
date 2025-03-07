@@ -17,7 +17,6 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import { $bitcoin_addresses } from '../../../src/store/bitcoin-addresses'
 import { VaultPair } from '../../../src/types/vault'
 import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
-
 import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
 import { $xr } from '../../../src/store/xr'
 import {
@@ -49,6 +48,8 @@ import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
 import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'
 import { useTranslation } from 'next-i18next'
+
+// @deprecated file - to be removed soon
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -369,7 +370,6 @@ export var ConfirmBox: React.FC<Prop> = function ({
             }
 
             if (btc_wallet?.network != 'livenet') {
-                // @mainnet
                 console.log('Network:', btc_wallet?.network)
                 throw new Error('Use Bitcoin Mainnet')
             }
@@ -380,7 +380,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                     'Your BTC deposit is below the minimum required amount of 0.00001 BTC. Please increase your deposit.'
                 )
 
-            // @mainnet collateral cannot be more than 5000 sats
+            // collateral cannot be more than 5000 sats
             if (collateral > 30000)
                 throw new Error(
                     'Your BTC deposit exceeds the maximum allowed amount of 0.0003 BTC. Please reduce your deposit.'
@@ -391,7 +391,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 closeOnClick: true,
                 toastId: 1,
             })
-            const tick = 'SYRON' // @mainnet
+            const tick = 'SYRON' // @brc20
             const amt = Number(limitInput.round(2))
 
             console.log('BTC Collateral', collateral)
@@ -416,14 +416,14 @@ export var ConfirmBox: React.FC<Prop> = function ({
             //     },
             // ]
 
-            const receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET! // @mainnet the receiver address
+            const receiveAddress = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET! // the receiver address
 
             // const inscriptionBalance = 333 // the balance in each inscription
             // const fileCount = 1 // the fileCount
             // const fileSize = 1000 // the total size of all files
             // const contentTypeSize = 100 // the size of contentType
 
-            // @dev The transaction fee rate in sat/vB @mainnet
+            // @dev The transaction fee rate in sat/vB
             let feeRate = await mempoolFeeRate()
             console.log('Fee Rate', feeRate)
 

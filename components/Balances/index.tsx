@@ -101,7 +101,7 @@ function Component() {
     const dispatch = useDispatch()
     const styles = loginInfo.isLight ? stylesLight : stylesDark
     const selectedCurrencyDropdown = loginInfo?.selectedCurrencyDropdown
-    // @mainnet-tokens
+    // @tokens-mainnets
     // const [tokensBal, setTokensBal]=useState<TokenBalance[]>()
     // @dev: index 0 & 2 are xWALLET; 1 & 3 are ZilPay; 2 & 3 are full balance; 4 is decimals
     const [tyronS$IBal, settyronS$IBal] = useState<any>([
@@ -386,7 +386,7 @@ function Component() {
                         balanceObject.decimals,
                     ]
                     switch (token_id) {
-                        //@mainnet-tokens
+                        //@tokens-mainnet
                         case 'tyron':
                             settyronBal(bal)
                             break
