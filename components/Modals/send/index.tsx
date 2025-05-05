@@ -228,12 +228,12 @@ var ThisModal: React.FC<Prop> = function ({
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div className={styles.headerTxt}>
-                            <Image
+                            {/* <Image
                                 src={icoThunder}
                                 alt={'Send Syron SUSD'}
                                 height="32"
                                 width="32"
-                            />
+                            /> */}
                             {t('Send Syron SUSD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
@@ -589,12 +589,15 @@ var ThisModal: React.FC<Prop> = function ({
                     />
 
                     <div className={styles.btnConfirmWrapper}>
-                        <div
-                            className={
-                                isDisabled || isLoading
-                                    ? styles.btnConfirmDisabled
-                                    : styles.btnConfirm
-                            }
+                        <button
+                            // className={
+                            //     isDisabled || isLoading
+                            //         ? styles.btnConfirmDisabled
+                            //         : styles.btnConfirm
+                            // }
+                            className={`button ${
+                                isDisabled || isLoading ? 'disabled' : 'primary'
+                            }`}
                             onClick={handleConfirm}
                         >
                             {isLoading ? (
@@ -602,13 +605,13 @@ var ThisModal: React.FC<Prop> = function ({
                             ) : (
                                 <>Confirm</>
                             )}
-                        </div>
+                        </button>
                     </div>
 
                     {isLoading ? (
                         <div>
                             <div className={styles.withdrawalTxt}>
-                                Your SYRON payment is being processed. Please
+                                Your SUSD payment is being processed. Please
                                 allow a few moments for completion. Thank you
                                 for your patience!
                             </div>

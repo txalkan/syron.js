@@ -64,23 +64,14 @@
 }
 
 .txtRow {
+    list-style-type: disc !important;
+    list-style-position: inside;
     width: 100%;
     font-size: 0.8rem;
-    display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 0.5rem;
+    display: flexbox;
     text-align: left;
-
     color: #6e6e6e;
-
-    padding: 0.5rem 15%;
-}
-
-.confirmContainer {
-    display: flex;
-    justify-content: center; /* Center the button horizontally */
-    width: 100%;
+    margin-left: 1rem;
 }
 
 .confirmContainer {
@@ -100,7 +91,7 @@
 }
 
 .terms {
-    color: #1e90ff;
+    color: #0000ff;
     cursor: pointer;
     white-space: nowrap;
     text-decoration: underline;
@@ -135,16 +126,6 @@
     justify-content: center;
     cursor: pointer;
     text-transform: uppercase;
-}
-
-.txt {
-    font-size: 0.9rem;
-    font-weight: 300;
-
-    text-transform: capitalize;
-    color: #f8f8f8;
-
-    letter-spacing: normal;
 }
 
 .failedWithdrawal,
@@ -182,7 +163,7 @@
 
 .link {
     cursor: pointer;
-    color: #1e90ff;
+    color: #0000ff;
     text-decoration: underline;
 
     &:hover {

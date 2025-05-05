@@ -17,13 +17,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 @import '../../../styles/scss/mixins.scss';
 
 .container {
-    background: var(--button-color);
-    border: 1px solid transparent;
+    // background: var(--button-color);
+    // border: 1px solid transparent;
     // max-width: 430px;
     width: 100%;
-    @include border-radius(17px);
+    // @include border-radius(17px);
 
-    padding-top: 10px;
+    // padding-top: 1rem;
     // padding-left: 16px;
     // padding-right: 16px;
 
@@ -51,12 +51,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .wrapper {
+    background-color: #fff;
     //@ref ssibrowser
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 1px solid #a9a9a9;
-    border-radius: 22px;
+    border: 0.5px solid silver;
+    border-radius: 0 22px 22px 0;
     width: 100%;
 
     height: 30px;
@@ -69,14 +70,15 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-.wrapperDisabled {
+.wrapperLiq,
+.wrapperLiqOutput {
     //@ref ssibrowser
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 1px solid #a9a9a9;
-    background-color: #a9a9a9;
-    border-radius: 22px;
+    background-color: #fff;
+    border: 0.5px solid silver;
+    border-radius: 0 22px 22px 0;
     width: 100%;
 
     height: 30px;
@@ -87,9 +89,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
     @media only screen and (min-width: 768px) {
         height: 39px;
     }
+}
+
+.wrapperLiqOutput {
+    background-color: transparent !important;
 }
 
 .tokenImage {
+    cursor: not-allowed;
     height: 30px;
     width: 30px;
 
@@ -140,14 +147,13 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: column;
     text-align: left;
-    padding: 0.5rem 0;
+    padding: 2rem;
 }
 
 .info,
 .infoPurple,
 .infoColor {
     font-size: 0.9rem;
-    margin-left: 9%;
     padding-bottom: 0.5rem;
     text-transform: uppercase;
     color: #333333;
@@ -172,40 +178,34 @@ If you have any questions, comments or interest in pursuing any other use cases,
     text-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
 }
 
-.inputAmt {
-    color: #333333 !important;
-
+.inputAmt,
+.outputAmt {
+    color: #000 !important;
     border: 0px !important;
-    padding-left: 9% !important;
+    margin-left: 2rem;
     width: 100%;
     background-color: transparent;
-
     font-size: 1.4rem;
+    cursor: pointer;
 }
 
 .inputAmt:focus {
     box-shadow: none !important;
 }
 
-.inputAmtSusd {
+.outputAmt {
     color: rgb(75, 0, 130) !important;
-
-    border: 0px !important;
-    padding-left: 9% !important;
-    width: 100%;
-    background-color: transparent;
-
-    font-size: 1.4rem;
+    cursor: not-allowed;
 }
 
 .percent,
 .percentSyron,
 .percentActiveSyron,
 .percentActive {
-    color: #f8f8f8; // @design chrome #dbe4eb;
+    color: #222222; // @design chrome #dbe4eb;
 
-    background-color: #f8931a; // @bitcoin color
-    box-shadow: 2px 1px 6px rgba(0, 0, 0, 0.6); // @design-shadow-percent
+    // background-color: #f8931a; // @bitcoin color
+    box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6); // @design-shadow-percent
 
     border-radius: 22px;
     display: flex;
@@ -220,17 +220,17 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-size: 0.7rem;
 }
 
-.percentSyron {
-    background-color: rgb(75, 0, 130);
+.percentActive,
+.percentActiveSyron {
+    background-color: rgba(75, 0, 130, 0.2);
+    cursor: not-allowed;
 }
 
 .percent:hover,
 .percentSyron:hover,
 .percentActiveSyron,
 .percentActive {
-    color: #000;
-    background-color: #f8f8f8;
-    box-shadow: 2px 1px 9px rgba(255, 243, 50, 0.6);
+    box-shadow: 1px 1px 2px rgba(75, 0, 130, 0.6);
 }
 
 .btnSwapWrapper {
@@ -294,10 +294,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .flexContainer {
-    width: 100%;
     display: flex;
+    flex-direction: row;
+    width: 100%;
     align-items: center;
-    margin-top: 11px;
+    margin-top: 0.5rem;
 }
 
 .tokenInfo {
@@ -353,21 +354,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .inputTitle {
-    color: #000;
+    color: #222222;
     text-align: left;
     text-transform: none;
-    margin-left: 8%;
     margin-top: 2rem;
-
-    // @mobile-first
-    font-size: 14px;
-    @media only screen and (min-width: 375px) {
-        font-size: 17px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 19px;
-    }
+    font-size: 0.9rem;
 }
 
 .formWrapper {
@@ -375,6 +366,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .infoWrapper {
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
     display: flex;
     justify-content: space-between;
     padding: 1rem 0.5rem 0;

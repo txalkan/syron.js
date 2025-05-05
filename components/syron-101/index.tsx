@@ -501,10 +501,7 @@ function Component() {
                         {sdb ? (
                             <div className={styles.boxWrapper}>
                                 <div className={styles.boxTitle}>
-                                    Your
-                                    <span style={{ color: '#ffff32' }}>
-                                        Safety Deposit ₿ox
-                                    </span>
+                                    Your Safety Deposit ₿ox
                                     {/* <span @review
                                         onClick={updateBitcoinVault}
                                         style={{
@@ -527,13 +524,13 @@ function Component() {
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        <div className={styles.iconContainer}>
+                                        {/* <div className={styles.iconContainer}>
                                             <Image
                                                 src={icoShield}
                                                 alt={'sdb-address'}
                                                 className={styles.icon}
                                             />
-                                        </div>
+                                        </div> */}
                                         SDB Address
                                     </div>
                                     <div className={styles.sdbAddr}>
@@ -556,9 +553,11 @@ function Component() {
                                         </div>
                                         <div
                                             style={{
+                                                fontFamily:
+                                                    'Courier New, GeistMono, monospace',
                                                 fontSize: '0.8rem',
                                                 color: '#1e90ff',
-                                                padding: '0 3rem',
+                                                padding: '0 2rem',
                                                 display: 'flex',
                                                 cursor: 'pointer',
                                             }}
@@ -569,20 +568,20 @@ function Component() {
                                                 )
                                             }
                                         >
-                                            Wallet Activity ↗
+                                            History
                                         </div>
                                     </div>
                                 </div>
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        <div className={styles.iconContainer}>
+                                        {/* <div className={styles.iconContainer}>
                                             <Image
                                                 src={icoBalance}
                                                 alt={'btc-deposited'}
                                                 className={styles.icon}
                                             />
-                                        </div>
+                                        </div> */}
                                         BTC Deposited
                                     </div>
                                     <div className={styles.subsection}>
@@ -597,17 +596,14 @@ function Component() {
                                             {isRedeeming ? (
                                                 <div className={styles.loading}>
                                                     Loading
-                                                    <ThreeDots color="yellow" />
+                                                    <ThreeDots color="black" />
                                                 </div>
                                             ) : (
                                                 <>redeem</>
                                             )}
                                         </button>
                                         <div className={styles.value}>
-                                            <span
-                                                style={{ color: '#f8931a' }}
-                                                className={styles.color}
-                                            >
+                                            <span className={styles.color}>
                                                 {Number(satsDeposited.div(1e8))}
                                             </span>
                                             <div
@@ -627,13 +623,13 @@ function Component() {
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        <div className={styles.iconContainer}>
+                                        {/* <div className={styles.iconContainer}>
                                             <Image
                                                 src={icoThunder}
                                                 alt={'syron-usd'}
                                                 className={styles.icon}
                                             />
-                                        </div>
+                                        </div> */}
                                         Syron SUSD
                                     </div>
                                     <div className={styles.subsection}>
@@ -669,7 +665,7 @@ function Component() {
                                             {isLoading ? (
                                                 <div className={styles.loading}>
                                                     Loading
-                                                    <ThreeDots color="yellow" />
+                                                    <ThreeDots color="black" />
                                                 </div>
                                             ) : (
                                                 <>recalculate</>
@@ -709,7 +705,8 @@ function Component() {
                                         <AuthGuard>
                                             <button
                                                 onClick={updateSend}
-                                                className={`button secondary ${styles.customButton}`}
+                                                // className={`button secondary ${styles.customButton}`}
+                                                className={`button secondary`}
                                             >
                                                 send
                                             </button>
@@ -743,7 +740,10 @@ function Component() {
                                 </button> */}
                             </div>
                         ) : (
-                            <div className={styles.boxWrapper}>
+                            <div
+                                className={styles.boxWrapper}
+                                style={{ fontSize: '0.8rem' }}
+                            >
                                 Loading your Safety Deposit ₿ox...
                             </div>
                         )}
@@ -766,12 +766,7 @@ function Component() {
                                 : styles.cardNoTitle
                         }
                     >
-                        <div className={styles.title}>
-                            Be{' '}
-                            <span style={{ color: '#ffff32' }}>
-                                Your Own ₿ank
-                            </span>
-                        </div>
+                        <div className={styles.title}>Be Your Own ₿ank</div>
 
                         {/* <div className={styles.icoWrapper}>
                         <Image
@@ -793,13 +788,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div className={styles.iconGoldContainer}>
+                            {/* <div className={styles.iconGoldContainer}>
                                 <Image
                                     src={icoPrint}
                                     alt={'print-syron'}
                                     className={styles.icon}
                                 />
-                            </div>
+                            </div> */}
                             Borrow SYRON
                         </div>
                         <div
@@ -815,13 +810,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div className={styles.iconGoldContainer}>
+                            {/* <div className={styles.iconGoldContainer}>
                                 <Image
                                     src={icoEarn}
                                     alt={'earn-bitcoin'}
                                     className={styles.icon}
                                 />
-                            </div>
+                            </div> */}
                             Earn Bitcoin
                         </div>
                     </div>

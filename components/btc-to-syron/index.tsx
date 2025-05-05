@@ -429,51 +429,29 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     Bitcoin collateral:
                 </div>
             </div>
-            <div className={styles.txtRow}>
-                <div style={{ color: '#f8931a' }}>ᛞ</div>
-                <div>
-                    Borrow up to two-thirds of your BTC deposits in Syron SUSD.
-                </div>
-            </div>
-            <div className={styles.txtRow}>
-                <div style={{ color: '#f8931a' }}>ᛞ</div>
-                <div>
-                    Your Safety Deposit ₿ox (SDB) holds $1.50 in BTC for every
-                    $1 you borrow in Syron SUSD.
-                </div>
-            </div>
+            <ul>
+                <li className={styles.txtRow}>
+                    Borrow up to two-thirds of your BTC deposits in SUSD.
+                </li>
+                <li className={styles.txtRow}>
+                    Your SDB holds $1.50 in BTC for every $1 you borrow.
+                </li>
+            </ul>
             <div className={styles.confirmContainer}>
-                <div
-                    style={{
-                        display: 'flex',
-                        width: '70%',
-                        height: '1.8rem',
-                        lineHeight: '1rem',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        marginTop: '2rem',
-                        cursor: 'pointer',
-                        borderRadius: '11px',
-                        backgroundColor: 'rgb(75,0,130)',
-                        // @design-shadow-3d
-                        backgroundImage:
-                            'linear-gradient(to right, rgb(75,0,130), #7a28ff)', // Added gradient background
-                        boxShadow:
-                            '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)', // Added 3D effect
-                    }}
+                <button
                     className={`button ${disabled ? 'disabled' : 'primary'}`}
                     onClick={handleButtonClick}
                 >
                     {!unisatInstalled ? (
-                        <div className={styles.txt}>{t('CONNECT')}</div>
+                        <div>{t('CONNECT')}</div>
                     ) : !walletConnected ? (
-                        <div className={styles.txt}>{t('CONNECT')}</div>
+                        <div>{t('CONNECT')}</div>
                     ) : disabled ? (
-                        <ThreeDots color="yellow" />
+                        <ThreeDots color="black" />
                     ) : (
-                        <div className={styles.txt}>confirm</div>
+                        <div>confirm</div>
                     )}
-                </div>
+                </button>
             </div>
             <div className={styles.confirmContainer}>
                 <div className={styles.txtRowTerms}>

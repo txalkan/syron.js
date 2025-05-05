@@ -19,15 +19,9 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
     return (
         <div className={styles.container}>
             <div className={styles.wrapper}>
-                <Image src={icoArrow} alt="arrow-icon" className={styles.img} />
+                {/* <Image src={icoArrow} alt="arrow-icon" className={styles.img} /> */}
                 <div className={styles.outputContainer}>
                     <div className={styles.output}>
-                        <Image
-                            className={styles.tokenImage}
-                            src={token.symbol === 'BTC' ? icoBTC : icoSYRON}
-                            alt={token.symbol}
-                            key={token.symbol}
-                        />
                         <input
                             disabled
                             value={
@@ -42,8 +36,14 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
                             type="text"
                             className={styles.outputAmt}
                         />
+                        <Image
+                            className={styles.tokenImage}
+                            src={token.symbol === 'BTC' ? icoBTC : icoSYRON}
+                            alt={token.symbol}
+                            key={token.symbol}
+                        />
                     </div>
-                    <div className={styles.tokenInfo}>| SYRON</div>
+                    {/* <div className={styles.tokenInfo}>| SYRON</div> */}
                 </div>
             </div>
         </div>
