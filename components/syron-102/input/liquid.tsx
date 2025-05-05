@@ -105,70 +105,62 @@ export const BoxLiquidInput: React.FC<Prop> = ({
     return (
         <label>
             <div className={classNames(styles.container)}>
-                <div className={styles.formWrapper}>
-                    <div className={styles.inputTitle}>You&apos;ll win</div>
-                    <div className={styles.inputWrapper}>
-                        <Image
+                <div className={styles.inputTitle}>You&apos;ll win</div>
+                {/* <div className={styles.inputWrapper}> */}
+                {/* <Image
                             src={icoArrow}
                             alt="arrow-icon"
                             className={styles.img}
+                        /> */}
+                {/* <div className={styles.inputContainer}> */}
+                {/* @dev Input Box */}
+                <div className={styles.flexContainer}>
+                    <div className={styles.wrapperLiq}>
+                        <input
+                            className={styles.inputAmt}
+                            value={selectedData ? selectedData?.btc : 0}
+                            disabled={true}
                         />
-                        <div className={styles.inputContainer}>
-                            {/* @dev Input Box */}
-                            <div className={styles.flexContainer}>
-                                <div className={styles.wrapperDisabled}>
-                                    {token && (
-                                        <Image
-                                            className={styles.tokenImage}
-                                            src={icoBTC}
-                                            alt="tokens-logo"
-                                        />
-                                    )}
-                                    <input
-                                        className={styles.inputAmt}
-                                        value={
-                                            selectedData ? selectedData?.btc : 0
-                                        }
-                                        disabled={true}
-                                    />
-                                </div>
-                                <div className={styles.tokenInfo}>| BTC</div>
-                            </div>
-                        </div>
+                        {token && (
+                            <Image
+                                className={styles.tokenImage}
+                                src={icoBTC}
+                                alt="tokens-logo"
+                            />
+                        )}
                     </div>
-                    <div className={styles.inputTitle}>You&apos;ll pay</div>
-                    <div className={styles.inputWrapper}>
-                        <Image
-                            src={icoArrow}
-                            alt="arrow-icon"
-                            className={styles.img}
-                        />
-                        <div className={styles.inputContainer}>
-                            {/* @dev Input Box */}
-                            <div className={styles.flexContainer}>
-                                <div className={styles.wrapperDisabled}>
-                                    <input
-                                        className={styles.inputAmtSusd}
-                                        value={
-                                            selectedData
-                                                ? selectedData?.susd
-                                                : 0
-                                        }
-                                        disabled={true}
-                                    />
-                                    {token && (
-                                        <Image
-                                            className={styles.tokenImage}
-                                            src={icoSYRON}
-                                            alt="tokens-logo"
-                                        />
-                                    )}
-                                </div>
-                                <div className={styles.tokenInfo}>| SYRON</div>
-                            </div>
-                        </div>
-                    </div>
+                    {/* <div className={styles.tokenInfo}>| BTC</div> */}
                 </div>
+                {/* </div>
+                </div> */}
+                <div className={styles.inputTitle}>You&apos;ll pay</div>
+                {/* <div className={styles.inputWrapper}> */}
+                {/* <Image
+                            src={icoArrow}
+                            alt="arrow-icon"
+                            className={styles.img}
+                        /> */}
+                {/* <div className={styles.inputContainer}> */}
+                {/* @dev Input Box */}
+                <div className={styles.flexContainer}>
+                    <div className={styles.wrapperLiqOutput}>
+                        <input
+                            className={styles.outputAmt}
+                            value={selectedData ? selectedData?.susd : 0}
+                            disabled={true}
+                        />
+                        {token && (
+                            <Image
+                                className={styles.tokenImage}
+                                src={icoSYRON}
+                                alt="tokens-logo"
+                            />
+                        )}
+                    </div>
+                    {/* <div className={styles.tokenInfo}>| SYRON</div> */}
+                </div>
+                {/* </div> */}
+                {/* </div> */}
             </div>
         </label>
     )

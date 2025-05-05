@@ -233,11 +233,11 @@ export const BoxInput: React.FC<Prop> = ({
                     )}
                 </div>
                 <div className={styles.inputWrapper}>
-                    <Image
+                    {/* <Image
                         src={icoArrow}
                         alt="arrow-icon"
                         className={styles.img}
-                    />
+                    /> */}
                     <div className={styles.inputContainer}>
                         {/* @dev Percentage buttons */}
                         <div>
@@ -302,7 +302,7 @@ export const BoxInput: React.FC<Prop> = ({
                                     // </div>
                                 )}
                             </div>
-                            <div className={styles.tokenInfo}>| BTC</div>
+                            {/* <div className={styles.tokenInfo}>| BTC</div> */}
                         </div>
                     </div>
                 </div>

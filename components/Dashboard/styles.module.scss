@@ -40,9 +40,9 @@
     font-weight: 500;
     letter-spacing: normal;
 
-    box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
+    // box-shadow: 2px 1px 6px rgba(248, 248, 248, 0.6);
     background-color: rgb(75, 0, 130);
-    border-radius: 11px;
+    border-radius: 8px;
 
     padding: 0.5rem 1rem;
 
@@ -69,15 +69,15 @@
 .txtConnect:hover {
     cursor: pointer !important;
     color: rgb(75, 0, 130);
-    box-shadow: 2px 1px 9px rgba(255, 243, 50, 0.6);
-    background-color: rgba(248, 248, 248, 0.9);
+    box-shadow: 1px 1px 2px rgba(75, 0, 130, 0.5);
+    background-color: rgba(248, 248, 248);
 }
 
 .txtConnected {
     font-family: 'GeistMono', monospace; // @review (ui)
     text-transform: capitalize;
     font-size: smaller !important;
-    color: #ffff32;
+    color: #555555;
 
     cursor: none;
     background-color: transparent !important;

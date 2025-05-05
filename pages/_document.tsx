@@ -19,7 +19,7 @@ class MyDocument extends Document {
                     <meta name="title" content="TYRON" />
                     <meta
                         name="description"
-                        content="Be Your Own ₿ank | Hold BTC to borrow Syron SUSD, a Bitcoin-backed digital dollar for financial freedom ✊🏽"
+                        content="Be Your Own ₿ank: Tyron builds sovereign identity solutions to unlock your financial freedom."
                     />
                     <meta property="og:image" content="ssi_tyron.png" />
                     <meta property="og:title" content="TYRON" />

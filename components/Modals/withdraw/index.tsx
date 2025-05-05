@@ -300,13 +300,13 @@ var ThisModal: React.FC<Prop> = function ({
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div className={styles.headerTxt}>
-                            <Image
+                            {/* <Image
                                 src={icoThunder}
                                 alt={'Withdraw SYRON SUSD'}
                                 height="32"
                                 width="32"
-                            />
-                            {t('Withdraw SYRON SUSD')}
+                            /> */}
+                            {t('Withdraw Syron SUSD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
                             <Image
@@ -370,7 +370,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 {active === 1 ? (
                                     <>
                                         <div className={styles.rowContentTxt}>
-                                            {t('Send bitcoin into your SDB.')}
+                                            {t('Send bitcoin into your SDB:')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
@@ -404,7 +404,7 @@ var ThisModal: React.FC<Prop> = function ({
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        "During this testing phase, please limit your deposits to a maximum of 5,000 sats (0.00005 BTC). Small amounts are covered by TyronDAO's insurance."
+                                                        "During this testing phase, please limit your deposits to a maximum of 5,000 sats (0.00005 BTC). These small amounts are covered by TyronDAO's insurance."
                                                     )}
                                                 </li>
                                             </ul>
@@ -416,7 +416,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => menuActive(1)}
                                     >
-                                        {t('Send bitcoin into your SDB.')}
+                                        {t('Send bitcoin into your SDB')}
                                     </div>
                                 )}
                             </div>
@@ -471,7 +471,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 {active === 2 ? (
                                     <>
                                         <div className={styles.rowContentTxt}>
-                                            {t('Update your SYRON balance.')}
+                                            {t('Update your SUSD balance:')}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
@@ -504,7 +504,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => menuActive(2)}
                                     >
-                                        {t('Update your SYRON balance.')}
+                                        {t('Update your SUSD balance')}
                                     </div>
                                 )}
                             </div>
@@ -559,7 +559,9 @@ var ThisModal: React.FC<Prop> = function ({
                                 {active === 3 ? (
                                     <>
                                         <div className={styles.rowContentTxt}>
-                                            {t('SYRON Withdrawal Overview')}
+                                            {t(
+                                                'Transfer SUSD from your balance to your wallet:'
+                                            )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
@@ -651,7 +653,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => menuActive(3)}
                                     >
                                         {t(
-                                            'Transfer SYRON from your balance to your wallet.'
+                                            'Transfer SUSD from your balance to your wallet'
                                         )}
                                     </div>
                                 )}
@@ -667,12 +669,15 @@ var ThisModal: React.FC<Prop> = function ({
                     />
 
                     <div className={styles.btnConfirmWrapper}>
-                        <div
-                            className={
-                                isDisabled || isLoading
-                                    ? styles.btnConfirmDisabled
-                                    : styles.btnConfirm
-                            }
+                        <button
+                            // className={
+                            //     isDisabled || isLoading
+                            //         ? styles.btnConfirmDisabled
+                            //         : styles.btnConfirm
+                            // }
+                            className={`button ${
+                                isDisabled || isLoading ? 'disabled' : 'primary'
+                            }`}
                             onClick={handleConfirm}
                         >
                             {isLoading ? (
@@ -680,7 +685,7 @@ var ThisModal: React.FC<Prop> = function ({
                             ) : (
                                 <>Confirm</>
                             )}
-                        </div>
+                        </button>
                     </div>
 
                     {icpTx.value === false ? (
