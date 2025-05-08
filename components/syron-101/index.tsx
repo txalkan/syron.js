@@ -62,11 +62,12 @@ function Component() {
         }
     }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal])
 
-    // @dev Read for new BTC deposits every minute
+    // @dev Read for new BTC deposits every half minute
     useEffect(() => {
         async function readDeposits() {
             await unisatBalance(syron?.sdb!)
                 .then((balance) => {
+                    console.log('SDB BTC Deposit', balance)
                     setSatsDeposited(Big(balance))
                 })
                 .catch((error) => {
@@ -74,12 +75,12 @@ function Component() {
                 })
         }
 
-        readDeposits()
+        if (syron?.sdb) readDeposits()
 
-        const intervalId = setInterval(readDeposits, 1 * 60 * 1000)
+        const intervalId = setInterval(readDeposits, 0.5 * 60 * 1000)
 
         return () => clearInterval(intervalId) // Cleanup on unmount
-    }, [])
+    }, [syron?.sdb])
 
     const toggleActive = (id: string) => {
         resetState()
@@ -172,7 +173,7 @@ function Component() {
                     })
 
                 // @dev Inscribe the loan amount to the SDB
-                // 1. The transaction fee rate in sat/vB @mainnet
+                // 1. The transaction fee rate in sat/vB @gas @network
                 let feeRate = await mempoolFeeRate()
                 if (!feeRate) {
                     feeRate = 5
@@ -182,7 +183,7 @@ function Component() {
                 // 2. Add a fee to cover the redeption gas from SDB - let deposit = (Number(gas) + 50).toString()
                 let deposit = (700).toString()
 
-                const tick = 'SYRON' // @mainnet
+                const tick = 'SYRON' // @brc20
 
                 // 3. Get inscription order
                 let order = await fetch(
@@ -511,74 +512,79 @@ function Component() {
     } else {
         return (
             <div className={styles.container}>
-                {walletConnected ? (
-                    <>
-                        {sdb ? (
-                            <div className={styles.boxWrapper}>
-                                <div className={styles.boxTitle}>
-                                    Your Safety Deposit ₿ox
-                                    {/* <span @review
-                                        onClick={updateBitcoinVault}
-                                        style={{
-                                            cursor: 'pointer',
-                                            paddingLeft: '8px',
-                                        }}
-                                    >
-                                        {loading ? (
-                                            <Spinner />
-                                        ) : (
-                                            <Image
-                                                src={refreshIco}
-                                                alt="refresh-ico"
-                                                height="12"
-                                                width="12"
-                                            />
-                                        )}
-                                    </span> */}
-                                </div>
+                <div className={styles.boxWrapper}>
+                    {walletConnected ? (
+                        <>
+                            {sdb ? (
+                                <div>
+                                    <div className={styles.boxTitle}>
+                                        Your Safety Deposit ₿ox
+                                          {/* <span @review
+                                          onClick={updateBitcoinVault}
+                                          style={{
+                                              cursor: 'pointer',
+                                              paddingLeft: '8px',
+                                          }}
+                                      >
+                                          {loading ? (
+                                              <Spinner />
+                                          ) : (
+                                              <Image
+                                                  src={refreshIco}
+                                                  alt="refresh-ico"
+                                                  height="12"
+                                                  width="12"
+                                              />
+                                          )}
+                                      </span> */}
+                                    </div>
 
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
-                                        {/* <div className={styles.iconContainer}>
-                                            <Image
-                                                src={icoShield}
-                                                alt={'sdb-address'}
-                                                className={styles.icon}
-                                            />
-                                        </div> */}
                                         SDB Address
                                     </div>
-                                    <div className={styles.sdbAddr}>
-                                        <div
-                                            className={styles.sdb}
-                                            onClick={handleCopy}
-                                        >
+                                        <div className={styles.sdbAddr}>
                                             <div
-                                                className={styles.iconContainer}
+                                                className={styles.sdb}
+                                                onClick={handleCopy}
                                             >
-                                                <Image
-                                                    src={icoCopy}
-                                                    alt={'copy-sdb'}
-                                                    className={styles.icon}
-                                                />
+                                                <div
+                                                    className={
+                                                        styles.iconContainer
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={icoCopy}
+                                                        alt={'copy-sdb'}
+                                                        className={styles.icon}
+                                                    />
+                                                </div>
+                                                <div className={styles.sdbText}>
+                                                    {syron?.sdb}
+                                                </div>
                                             </div>
-                                            <div className={styles.sdbText}>
-                                                {syron?.sdb}
+                                            <div
+                                                className={styles.link}
+                                                onClick={() => {
+                                                    //@network defaults to mainnet
+                                                    let url: URL = new URL(
+                                                        `https://mempool.space/address/${syron?.sdb}`
+                                                    )
+                                                    const version =
+                                                        process.env
+                                                            .NEXT_PUBLIC_SYRON_VERSION
+                                                    if (version === 'testnet') {
+                                                        url = new URL(
+                                                            `https://mempool.space/testnet4/address/${syron?.sdb}`
+                                                        )
+                                                    }
+                                                    window.open(url)
+                                                }}
+                                            >
+                                                SDB History ↗
                                             </div>
-                                        </div>
-                                        <div
-                                            className={styles.link}
-                                            onClick={() =>
-                                                window.open(
-                                                    `https://mempool.space/address/${syron?.sdb}`
-                                                )
-                                            }
-                                        >
-                                            History
-                                        </div>
                                     </div>
-                                </div>
-
+                                
                                 <div className={styles.boxWrapperInner}>
                                     <div className={styles.subtitle}>
                                         {/* <div className={styles.iconContainer}>
@@ -605,24 +611,24 @@ function Component() {
                                                     <ThreeDots color="black" />
                                                 </div>
                                             ) : (
-                                                <>redeem</>
+                                                <>redeem btc</>
                                             )}
                                         </button>
                                         <div className={styles.value}>
                                             <span className={styles.color}>
                                                 {Number(satsDeposited.div(1e8))}
-                                            </span>
+                                            </span> 
                                             <div
-                                                className={
-                                                    styles.iconTokenContainer
-                                                }
-                                            >
-                                                <Image
-                                                    src={icoBTC}
-                                                    alt={'btc-token'}
-                                                    className={styles.icon}
-                                                />
-                                            </div>
+                                                    className={
+                                                        styles.iconTokenContainer
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={icoBTC}
+                                                        alt={'btc-token'}
+                                                        className={styles.icon}
+                                                    />
+                                             </div>
                                         </div>
                                     </div>
                                 </div>
@@ -638,26 +644,28 @@ function Component() {
                                         </div> */}
                                         Syron SUSD
                                     </div>
-                                    <div className={styles.subsection}>
-                                        <div className={styles.info}>
-                                            | LOAN
-                                        </div>
-                                        <div className={styles.value}>
-                                            <span className={styles.color}>
-                                                {loan === '0.00' ? '0' : loan}
-                                            </span>
-                                            <div
-                                                className={
-                                                    styles.iconTokenContainer
-                                                }
-                                            >
-                                                <Image
-                                                    src={icoSYRON}
-                                                    alt={'syron-token'}
-                                                    className={styles.icon}
-                                                />
+                                        <div className={styles.subsection}>
+                                            <div className={styles.info}>
+                                                | LOAN
                                             </div>
-                                        </div>
+                                            <div className={styles.value}>
+                                                <span className={styles.color}>
+                                                    {loan === '0.00'
+                                                        ? '0'
+                                                        : loan}
+                                                </span>
+                                                <div
+                                                    className={
+                                                        styles.iconTokenContainer
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={icoSYRON}
+                                                        alt={'syron-token'}
+                                                        className={styles.icon}
+                                                    />
+                                                </div>
+                                            </div>
                                     </div>
                                     <div className={styles.buttons}>
                                         <button
@@ -682,25 +690,27 @@ function Component() {
                                         <div className={styles.info}>
                                             | BALANCE
                                         </div>
-                                        <div className={styles.value}>
-                                            <span className={styles.color}>
-                                                {syronBal === '0.00'
-                                                    ? '0'
-                                                    : syronBal}
-                                            </span>
-                                            <div
-                                                className={
-                                                    styles.iconTokenContainer
-                                                }
-                                            >
-                                                <Image
-                                                    src={icoSYRON}
-                                                    alt={'syron-token'}
-                                                    className={styles.icon}
-                                                />
+                             
+                    
+                                            <div className={styles.value}>
+                                                <span className={styles.color}>
+                                                    {syronBal === '0.00'
+                                                        ? '0'
+                                                        : syronBal}
+                                                </span>
+                                                <div
+                                                    className={
+                                                        styles.iconTokenContainer
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={icoSYRON}
+                                                        alt={'syron-token'}
+                                                        className={styles.icon}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
                                     <div className={styles.buttons}>
                                         <button
                                             onClick={updateWithdraw}
@@ -724,34 +734,9 @@ function Component() {
                                             >
                                                 buy btc
                                             </button>
-                                        </AuthGuard>
+                                          </AuthGuard>
+                                        </div>
                                     </div>
-                                </div>
-
-                                {/* <button
-                                    style={{
-                                        width: '50%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginTop: '1rem',
-                                        cursor: 'pointer',
-                                        borderRadius: '22px',
-                                        // @design-shadow-3d
-                                        backgroundImage:
-                                            'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
-                                        boxShadow:
-                                            // 3D effect
-                                            '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)',
-
-                                        //'0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)',
-                                    }}
-                                    disabled={isLoading}
-                                    onClick={handleRedeem}
-                                >
-                                    <div className={styles.txt}>redeem btc</div>
-                                </button> */}
                             </div>
                         ) : (
                             <div

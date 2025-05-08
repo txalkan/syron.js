@@ -3,13 +3,14 @@ import axios from 'axios'
 export enum UnisatNetworkType {
     mainnet = 'livenet',
     testnet = 'testnet',
+    testnet4 = 'BITCOIN_TESTNET4',
 }
 
-let network = UnisatNetworkType.mainnet // @mainnet @review (wallet)
+// let network = UnisatNetworkType.mainnet
 
-export function setApiNetwork(type: UnisatNetworkType) {
-    network = type
-}
+// export function setApiNetwork(type: UnisatNetworkType) {
+//     network = type
+// }
 
 function unisatCreateApi(baseURL: string) {
     const api = axios.create({
@@ -20,9 +21,12 @@ function unisatCreateApi(baseURL: string) {
         },
     })
 
-    const apiKey = UnisatNetworkType.mainnet
-        ? process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
-        : process.env.NEXT_PUBLIC_API_UNISAT // localStorage.getItem('apiKey') || ''
+    //@network defaults to mainnet
+    const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+    let apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET // localStorage.getItem('apiKey') || ''
+    if (version === 'testnet') {
+        apiKey = process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+    }
 
     api.interceptors.request.use((config) => {
         if (!apiKey) {
@@ -34,11 +38,19 @@ function unisatCreateApi(baseURL: string) {
     return api
 }
 
+//@network
 const mainnetApi = unisatCreateApi('https://open-api.unisat.io')
-const testnetApi = unisatCreateApi('https://open-api-testnet.unisat.io')
+const testnetApi = unisatCreateApi('https://open-api-testnet4.unisat.io')
 
 function getApi() {
-    return network === UnisatNetworkType.testnet ? testnetApi : mainnetApi
+    //@network defaults to mainnet
+    const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+    let api = mainnetApi
+    if (version === 'testnet') {
+        api = testnetApi
+    }
+
+    return api
 }
 
 export const getUniSat = async (url: string, params?: any) => {
@@ -137,9 +149,21 @@ export const postUniSat = async (url: string, data?: any) => {
 
 export async function unisatInscriptionInfo(id: string) {
     try {
-        const url = `https://open-api-testnet.unisat.io/v1/indexer/inscription/info/${id}`
+        // @network defaults to mainnet
+        let url: URL = new URL(
+            `https://open-api.unisat.io/v1/indexer/inscription/info/${id}`
+        )
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        if (version === 'testnet') {
+            url = new URL(
+                `https://open-api-testnet4.unisat.io/v1/indexer/inscription/info/${id}`
+            )
+        }
 
-        const apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET // @mainnet
+        const apiKey = UnisatNetworkType.mainnet
+            ? process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
+            : process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+
         if (!apiKey) {
             throw new Error('input apiKey and reload page')
         }
@@ -246,10 +270,19 @@ export async function mempoolTxId(address: string) {
     }
 }
 
-// @dev The transaction fee rate in sat/vB @mainnet
+// @dev The transaction fee rate in sat/vB
 export async function mempoolFeeRate(): Promise<number> {
     try {
-        const url = 'https://mempool.space/api/v1/fees/recommended' //'https://mempool.space/api/v1/mining/blocks/fee-rates/24h' //'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h' @mainnet
+        //'https://mempool.space/api/v1/mining/blocks/fee-rates/24h' //'https://mempool.space/testnet/api/v1/mining/blocks/fee-rates/24h'
+
+        //@network defaults to mainnet
+        let url: URL = new URL('https://mempool.space/api/v1/fees/recommended')
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        if (version === 'testnet') {
+            url = new URL(
+                'https://mempool.space/testnet4/api/v1/fees/recommended'
+            )
+        }
 
         const response = await fetch(url, {
             method: 'GET',
@@ -301,7 +334,16 @@ export async function mempoolFeeRate(): Promise<number> {
 
 export async function mempoolBalance(address: string) {
     try {
-        const url = `https://mempool.space/api/address/${address}/utxo` // @mainnet `https://mempool.space/testnet/api/address/${address}/utxo`
+        // @network defaults to mainnet
+        let url: URL = new URL(
+            `https://mempool.space/api/address/${address}/utxo`
+        )
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        if (version === 'testnet') {
+            url = new URL(
+                `https://mempool.space/testnet4/api/address/${address}/utxo`
+            )
+        }
 
         const response = await fetch(url, {
             method: 'GET',
@@ -331,9 +373,22 @@ export async function mempoolBalance(address: string) {
 
 export async function unisatBalance(address: string) {
     try {
-        const url = `https://open-api.unisat.io/v1/indexer/address/${address}/balance`
+        // @network defaults to mainnet
+        let url = new URL(
+            `https://open-api.unisat.io/v1/indexer/address/${address}/balance`
+        )
+        let apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        if (version === 'testnet') {
+            url = new URL(
+                `https://open-api-testnet4.unisat.io/v1/indexer/address/${address}/balance`
+            )
+            apiKey = process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+        }
+        // const apiKey = UnisatNetworkType.mainnet
+        //     ? process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
+        //     : process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
 
-        const apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET // @mainnet
         if (!apiKey) {
             throw new Error('input apiKey and reload page')
         }
@@ -467,8 +522,12 @@ export const transaction_status = async (txId: string) => {
         throw new Error('Invalid transaction ID parameter')
     }
 
-    // @mainnet
-    const url = `https://mempool.space/api/tx/${txId}/status` //`https://mempool.space/testnet/api/tx/${txId}/status`
+    // @network defaults to mainnet
+    let url: URL = new URL(`https://mempool.space/api/tx/${txId}/status`)
+    const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+    if (version === 'testnet') {
+        url = new URL(`https://mempool.space/testnet4/api/tx/${txId}/status`)
+    }
 
     while (true) {
         try {

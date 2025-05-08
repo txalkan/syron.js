@@ -140,12 +140,26 @@ function Component() {
         unconfirmed: 0,
         total: 0,
     })
-    const [network_, setNetwork] = useState('livenet') //@mainnet
+    const [network_, setNetwork] = useState('livenet') // defaults to mainnet
     const walletConnected = useStore($walletConnected).isConnected
 
-    const getBasicInfo = async () => {
+    const getWalletInfo = async () => {
         try {
-            const unisat = (window as any).unisat
+            //@network
+            const network = await unisat.getChain().then((chain) => chain.enum)
+            console.log('Wallet Current Network: ', network)
+            const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+            const target_network =
+                version === 'testnet'
+                    ? UnisatNetworkType.testnet4
+                    : UnisatNetworkType.mainnet
+            if (network !== target_network) {
+                await unisat.switchChain(target_network)
+                setNetwork(target_network)
+                console.log(`Switched to ${target_network}`)
+            } else {
+                setNetwork(network)
+            }
 
             const [address] = await unisat.getAccounts()
             console.log('Wallet Address: ', address)
@@ -158,15 +172,8 @@ function Component() {
             console.log('Wallet Balance: ', JSON.stringify(balance, null, 2))
 
             setBalance(balance)
-
-            const network = await unisat.getNetwork()
-
-            console.log('Bitcoin Network: ', network) // @mainnet
-            if (network != UnisatNetworkType.mainnet) {
-                await unisat.switchNetwork(UnisatNetworkType.mainnet)
-            }
-            setNetwork(network)
         } catch (error) {
+            unisat.disconnect()
             console.error(error)
         }
     }
@@ -174,11 +181,7 @@ function Component() {
     useEffect(() => {
         async function update() {
             if (balance_)
-                await updateWallet(
-                    address_,
-                    Number(balance_.confirmed),
-                    network_
-                ) //@review (mainnet) showcase unconfirmed too
+                await updateWallet(address_, Number(balance_.total), network_)
 
             console.log('Wallet balance updated') // @review (wallet) no needed when connecting for the first time
         }
@@ -210,15 +213,10 @@ function Component() {
 
             setAddress(_accounts[0])
 
-            getBasicInfo()
+            getWalletInfo()
         } else {
             updateWalletConnected(false)
         }
-    }
-
-    const handleNetworkChanged = (network: string) => {
-        setNetwork(network)
-        getBasicInfo()
     }
 
     const [shouldCheckUnisat, setShouldCheckUnisat] = useState(false)
@@ -236,11 +234,11 @@ function Component() {
             })
 
             unisat.on('accountsChanged', handleAccountsChanged)
-            unisat.on('networkChanged', handleNetworkChanged)
+            unisat.on('networkChanged', getWalletInfo)
 
             return () => {
                 unisat.removeListener('accountsChanged', handleAccountsChanged)
-                unisat.removeListener('networkChanged', handleNetworkChanged)
+                unisat.removeListener('networkChanged', getWalletInfo)
             }
         }
 
@@ -251,9 +249,21 @@ function Component() {
         try {
             setShouldCheckUnisat(true)
 
-            const network = await unisat.getNetwork()
-            if (network != UnisatNetworkType.mainnet) {
-                await unisat.switchNetwork(UnisatNetworkType.mainnet)
+            const network = await unisat.getChain().then((chain) => chain.enum)
+            console.log('Wallet current network:', network)
+
+            //@network
+            const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+            const target_network =
+                version === 'testnet'
+                    ? UnisatNetworkType.testnet4
+                    : UnisatNetworkType.mainnet
+            if (network !== target_network) {
+                await unisat.switchChain(target_network)
+                setNetwork(target_network)
+                console.log(`Switched to ${target_network}`)
+            } else {
+                setNetwork(network)
             }
 
             const result = await unisat.requestAccounts()

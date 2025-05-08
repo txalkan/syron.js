@@ -145,10 +145,18 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 throw new Error('Please wait for your wallet to connect.')
             }
 
-            if (btcWallet?.network != 'livenet') {
-                // @mainnet
-                console.log('Network:', btcWallet?.network)
-                throw new Error('Use Bitcoin Mainnet')
+            // @network
+            const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+            if (version === '2') {
+                if (btcWallet?.network != 'livenet') {
+                    console.log('Network:', btcWallet?.network)
+                    throw new Error('Use Bitcoin Mainnet')
+                }
+            } else if (version === 'testnet') {
+                if (btcWallet?.network != 'BITCOIN_TESTNET4') {
+                    console.log('Network:', btcWallet?.network)
+                    throw new Error('Use Bitcoin Testnet4')
+                }
             }
 
             console.log('BTC Collateral', collateral)
@@ -159,7 +167,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     'Your BTC deposit is below the minimum required amount of 0.00001 BTC. Please increase your deposit.'
                 )
 
-            // @mainnet collateral cannot be more than 5000 sats
+            // @collateral cannot be more than 5000 sats
             if (collateral > 5000)
                 throw new Error(
                     'Your BTC deposit exceeds the maximum allowed amount of 0.00005 BTC. Please reduce your deposit.'
@@ -320,9 +328,19 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             } else if (!walletConnected) {
                 setShouldCheckUnisat(true)
 
-                const network = await unisat.getNetwork()
-                if (network != UnisatNetworkType.mainnet) {
-                    await unisat.switchNetwork(UnisatNetworkType.mainnet)
+                //@network
+                const network = await unisat
+                    .getChain()
+                    .then((chain) => chain.enum)
+                console.log('Wallet current network:', network)
+                const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+                const target_network =
+                    version === 'testnet'
+                        ? UnisatNetworkType.testnet4
+                        : UnisatNetworkType.mainnet
+                if (network !== target_network) {
+                    await unisat.switchChain(target_network)
+                    console.log(`Switched to ${target_network}`)
                 }
 
                 const result = await unisat.requestAccounts()
@@ -514,7 +532,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                         className={'button secondary'}
                     >
                         {isLoading ? (
-                            <ThreeDots color="yellow" />
+                            <Spinner />
                         ) : (
                             <div className={styles.txt}>retry</div>
                         )}

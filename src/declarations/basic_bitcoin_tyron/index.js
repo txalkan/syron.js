@@ -9,11 +9,15 @@ export { idlFactory } from './basic_bitcoin_tyron.did.js'
  * process.env.CANISTER_ID_<CANISTER_NAME_UPPERCASE>
  * beginning in dfx 0.15.0
  */
+
+// @network
 const version = process.env.NEXT_PUBLIC_SYRON_VERSION
 // Choose canister id based on version
 let canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
 if (version === '2') {
     canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_2
+} else if (version === 'testnet') {
+    canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_TESTNET
 }
 
 export const createActor = (canisterId, options = {}) => {

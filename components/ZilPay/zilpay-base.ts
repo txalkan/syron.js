@@ -271,7 +271,7 @@ export class ZilPayBase {
                 '0x' + (await tyron.Util.default.HashString(username))
 
             let addr = ''
-            // @mainnet
+            // @zil-mainnet
             let init_ = '0x2d7e1a96ac0592cd1ac2c58aa1662de6fe71c5b9'
             switch (xwallet) {
                 case 'ZIL Staking xWALLET':

@@ -37,15 +37,18 @@ export default async function handler(
 
         console.log('@dev get data from Firebase')
 
+        // @network defaults to mainnet
         const version = process.env.NEXT_PUBLIC_SYRON_VERSION
         let canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
-
         if (version === '2') {
             canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_2
+        } else if (version === 'testnet') {
+            canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_TESTNET
         }
+
         let name = `sdb-${canisterId}`
 
-        console.log(` @dev database: ${name}`)
+        console.log(`@dev database: ${name}`)
 
         const querySnapshot = await getDocs(collection(db, name))
         const dataList = querySnapshot.docs.map((doc) => ({

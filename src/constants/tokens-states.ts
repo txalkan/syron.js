@@ -1,6 +1,6 @@
 import { TokenState } from '../types/token'
 
-// @mainnet-tyron
+// @zil-mainnet tyron token and ssi dollar
 export const tyron_tokenState: TokenState = {
     decimals: 12,
     bech32: 'zil1fam2m6a0f2mv2hjys0rdzr4sm5drryt99w9c4a',

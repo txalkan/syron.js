@@ -422,8 +422,8 @@ function useFetch(resolvedInfo: User) {
     }
 
     const getNftsWallet = async (addrName: string) => {
-        //@mainnet-nft
-        //@mainnet-tydras
+        //@nfts-mainnet
+        //@tydras-mainnet
         const tydras = [
             'nawelito',
             'nawelitoonfire',

@@ -263,13 +263,13 @@ service : (network, MinterArg) -> {
 
     "sbtc_balance_of": (ssi: bitcoin_address, nonce: nat64) -> (nat64);
     
-    "redeem_btc": (args: GetBoxAddressArgs, txid: text) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "redeem_btc": (args: GetBoxAddressArgs, txid: text, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
 
     "redemption_gas": (args: GetBoxAddressArgs) -> (variant { Ok: nat64; Err: UpdateBalanceError });
 
     "get_account": (ssi: bitcoin_address, dummy: bool) -> (variant { Ok: CollateralizedAccount; Err: UpdateBalanceError });
 
-    "liquidate": (args: GetBoxAddressArgs, id: text, txid: text, fee: nat64) -> (variant { Ok: vec text; Err: UpdateBalanceError });
+    "liquidate": (args: GetBoxAddressArgs, id: text, txid: text, provider: nat64, fee: nat64) -> (variant { Ok: vec text; Err: UpdateBalanceError });
 
     "send_syron": (args: GetBoxAddressArgs, recipient: bitcoin_address, amount: nat64) -> (variant { Ok: vec nat64; Err: UpdateBalanceError });
 }

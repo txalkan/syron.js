@@ -1,4 +1,4 @@
-//@mainnet-domains
+//@domains-mainnet
 export const optionPayment = [
     {
         value: 'ZIL',
@@ -75,7 +75,7 @@ export const isValidUsernameInBatch = (domain: string) =>
     domain === 'init' ||
     domain === 'wfp'
 
-//@mainnet-nfts
+//@nfts-mainnet
 export const optionAddr = [
     {
         value: 'lexicassi',

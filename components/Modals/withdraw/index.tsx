@@ -117,7 +117,7 @@ var ThisModal: React.FC<Prop> = function ({
 
             // @test
             // const inscriptionTx = {
-            //     value: 'e93bef47349172691cf810af296776c8467a966979d0ed7e2c3dc4c1dc051281',
+            //     value: '68f079d9fd70a19ff43c5e057bceb348e8d0d9d13a53367887390ce4ab7c0c9c',
             // }
 
             await syron_withdrawal(
@@ -300,12 +300,6 @@ var ThisModal: React.FC<Prop> = function ({
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div className={styles.headerTxt}>
-                            {/* <Image
-                                src={icoThunder}
-                                alt={'Withdraw SYRON SUSD'}
-                                height="32"
-                                width="32"
-                            /> */}
                             {t('Withdraw Syron SUSD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>

@@ -10,9 +10,16 @@ Big.PE = 999
 function useICPHook() {
     const { identity } = useSiwbIdentity()
 
+    // @network
+    const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+    let provider_id = 0
+    if (version === 'testnet') {
+        provider_id = 1
+    }
+
     const getBox = async (ssi: string, dummy: boolean) => {
         try {
-            console.log('Loading SDB')
+            console.log('Loading SDB...')
             //if (balance != 0) { @review (syron) v2
             await fetch(`/api/get-sdb?id=${ssi}&dummy=${dummy}`)
                 .then(async (response) => {
@@ -90,11 +97,12 @@ function useICPHook() {
         try {
             console.log(`Initiating SYRON Issuance with fee (${fee})...`)
             const syron = basic_bitcoin_syron()
+
             const txId = await syron.withdraw_susd(
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
-                0, // @mainnet
+                provider_id,
                 fee * 1000
             )
 
@@ -128,11 +136,12 @@ function useICPHook() {
                 `Initiating SYRON Withdrawal of amount (${amt}) with fee (${fee})...`
             )
             const syron = basic_bitcoin_syron()
+
             const txId = await syron.syron_withdrawal(
                 { ssi, op: { getsyron: null } },
                 txid,
                 72000000,
-                0, // @mainnet
+                provider_id,
                 amt,
                 fee * 1000
             )
@@ -216,7 +225,8 @@ function useICPHook() {
                     ssi,
                     op: { redeembitcoin: null },
                 },
-                txid
+                txid,
+                provider_id
             )
             if (txId.Err) {
                 throw new Error(txId.Err.GenericError.error_message)

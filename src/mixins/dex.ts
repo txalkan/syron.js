@@ -84,7 +84,7 @@ const CONTRACTS: {
 }
 
 //@ssibrowser
-//@mainnet-dao
+//@dex-mainnet-dao
 const tyron_s$i_CONTRACTS: {
     [net: string]: string
 } = {
@@ -419,7 +419,7 @@ export class DragonDex {
     // }
 
     //@ssibrowser
-    //@mainnet-dex get output values
+    //@dex-mainnet get output values
     public getTydraOutput(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
         const exact = this._valueToBigInt(exactToken.value, exactToken.meta)
@@ -577,7 +577,7 @@ export class DragonDex {
         }
     }
 
-    //@mainnet-dex-direction
+    //@dex-mainnetdirection
     public getDirection(pair: SwapPair[]) {
         const [exactToken, limitToken] = pair
 
@@ -728,7 +728,7 @@ export class DragonDex {
             'ByStr20'
         )
         let beneficiary_addr = none_addr
-        //@mainnet: add defix v2
+        //@dex-mainnet: add defix v2
         if (resolvedDomain === 'tydradex' || resolvedDomain === 'tyrondex') {
             console.log('TYDRADEX_TO:', zilpayAddr)
             beneficiary_addr = await tyron.TyronZil.default.OptionParam(
@@ -1286,7 +1286,7 @@ export class DragonDex {
                 'String',
                 'xsgd'
             )
-            //@mainnet: defiv2 - add conditions
+            //@dex-mainnet: defiv2 - add conditions
             if (
                 resolvedDomain === 'tydradex' ||
                 resolvedDomain === 'tyrondex'
@@ -1878,7 +1878,7 @@ export class DragonDex {
     public calcGasLimit(direction: SwapDirection) {
         switch (direction) {
             case SwapDirection.ZilToToken:
-                return Big(5500) //@mainnet-gas 4637)
+                return Big(5500) //@gas-mainnet 4637)
             case SwapDirection.TokenToZil:
                 return Big(5163)
             case SwapDirection.TokenToTokens:
@@ -2026,7 +2026,7 @@ export class DragonDex {
             BigInt(ssiReserve),
             BigInt(tyronReserve)
         )
-        //@mainnet-fairlaunch
+        //@dex-fairlaunch
         // const output = this._tyronOutputForFairLaunch(ssi_amount)
         console.log('TRADE_OUTPUT: TYRON', output)
         return output
