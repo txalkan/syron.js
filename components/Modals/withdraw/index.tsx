@@ -661,6 +661,26 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div>
 
+                    <div className={styles.diagramContainer}>
+                        <p className={styles.diagramLineLabel}>
+                            YOUR SDB (Sender)
+                        </p>
+                        <p className={styles.diagramFlowSymbol}>|</p>
+                        <p className={styles.diagramFlowSymbol}>SUSD</p>
+                        <p className={styles.diagramFlowSymbol}>|</p>
+                        <p className={styles.diagramFlowSymbol}>▼</p>
+                        <p className={styles.diagramLineLabel}>
+                            YOUR BITCOIN WALLET (Receiver)
+                        </p>
+                        <p className={styles.diagramCaption}>
+                            SYRON BRC-20 will be sent to your connected Bitcoin
+                            Wallet Address.
+                        </p>
+                    </div>
+
+                    <div className={styles.label}>
+                        amount to withdraw (susd)
+                    </div>
                     <SyronInput
                         balance={balance}
                         token={token}

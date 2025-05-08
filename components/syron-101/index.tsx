@@ -24,7 +24,7 @@ import {
     unisatBalance,
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
-import { WithdrawModal, SendModal } from '..'
+import { WithdrawModal, SendModal, BuyModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
 import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
@@ -473,6 +473,11 @@ function Component() {
         setSendModal(true)
     }
 
+    const [showBuyModal, setBuyModal] = React.useState(false)
+    const updateBuy = async () => {
+        setBuyModal(true)
+    }
+
     if (showWithdrawModal) {
         return (
             <WithdrawModal
@@ -491,6 +496,16 @@ function Component() {
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showSendModal}
                 onClose={() => setSendModal(false)}
+            />
+        )
+    } else if (showBuyModal) {
+        return (
+            <BuyModal
+                ssi={btc_wallet?.btc_addr!}
+                sdb={sdb}
+                balance={syronBal ? Big(syronBal) : _0}
+                show={showBuyModal}
+                onClose={() => setBuyModal(false)}
             />
         )
     } else {
@@ -552,16 +567,7 @@ function Component() {
                                             </div>
                                         </div>
                                         <div
-                                            style={{
-                                                fontFamily:
-                                                    'Courier New, GeistMono, monospace',
-                                                fontSize: '0.8rem',
-                                                color: '#1e90ff',
-                                                padding: '0 2rem',
-                                                display: 'flex',
-                                                cursor: 'pointer',
-                                            }}
-                                            className={styles.walletAct}
+                                            className={styles.link}
                                             onClick={() =>
                                                 window.open(
                                                     `https://mempool.space/address/${syron?.sdb}`
@@ -668,7 +674,7 @@ function Component() {
                                                     <ThreeDots color="black" />
                                                 </div>
                                             ) : (
-                                                <>recalculate</>
+                                                <>borrow susd</>
                                             )}
                                         </button>
                                     </div>
@@ -700,15 +706,23 @@ function Component() {
                                             onClick={updateWithdraw}
                                             className={'button secondary'}
                                         >
-                                            Withdraw
+                                            Withdraw SUSD
                                         </button>
+                                    </div>
+                                    <div className={styles.buttons}>
                                         <AuthGuard>
                                             <button
                                                 onClick={updateSend}
                                                 // className={`button secondary ${styles.customButton}`}
                                                 className={`button secondary`}
                                             >
-                                                send
+                                                send to sdb
+                                            </button>
+                                            <button
+                                                onClick={updateBuy}
+                                                className={`button secondary`}
+                                            >
+                                                buy btc
                                             </button>
                                         </AuthGuard>
                                     </div>

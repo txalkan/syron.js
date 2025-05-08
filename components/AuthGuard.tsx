@@ -47,14 +47,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                     setLoading(true)
                     try {
                         await login()
-                            .then((res) => {
-                                setManually(false)
-                            })
-                            .catch((error) => {
-                                console.error('Login failed', error)
-                            })
-                    } catch {
-                        console.error('Sig in failed')
+                        setManually(false)
+                    } catch (error: any) {
+                        console.error('Sign in failed - ', error)
                     } finally {
                         setAddressRes('')
                         setLoading(false)
