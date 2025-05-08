@@ -170,7 +170,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: '#1e90ff',
+                                    color: '#0000ff',
                                     textDecoration: 'underline',
                                 }}
                             >
@@ -196,7 +196,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 style={{
-                                    color: '#1e90ff',
+                                    color: '#0000ff',
                                     textDecoration: 'underline',
                                 }}
                             >
@@ -228,12 +228,12 @@ var ThisModal: React.FC<Prop> = function ({
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div className={styles.headerTxt}>
-                            <Image
+                            {/* <Image
                                 src={icoThunder}
                                 alt={'Send Syron SUSD'}
                                 height="32"
                                 width="32"
-                            />
+                            /> */}
                             {t('Send Syron SUSD')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
@@ -245,6 +245,12 @@ var ThisModal: React.FC<Prop> = function ({
                             />
                         </div>
                     </div>
+
+                    <p className={styles.subtitle}>
+                        {t(
+                            'Transfer SUSD via ICPayments: lightning-fast, gas-free transfers powered by the Internet Computer.'
+                        )}
+                    </p>
 
                     {/* <div className={styles.contentWrapper}>
                         <div className={styles.rowWrapper}>
@@ -574,13 +580,42 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div> */}
 
+                    <div className={styles.diagramContainer}>
+                        <p className={styles.diagramLineLabel}>
+                            YOUR SDB (Sender)
+                        </p>
+                        <p className={styles.diagramFlowSymbol}>|</p>
+                        <p className={styles.diagramFlowSymbol}>SUSD</p>
+                        <p className={styles.diagramFlowSymbol}>|</p>
+                        <p className={styles.diagramFlowSymbol}>▼</p>
+                        <p className={styles.diagramLineLabel}>
+                            RECIPIENT'S SDB (Receiver)
+                        </p>
+                        <p className={styles.diagramCaption}>
+                            Accessed via Recipient's BITCOIN WALLET ADDRESS
+                            entered below.
+                        </p>
+                    </div>
+
+                    <div className={styles.label}>
+                        Recipient's Bitcoin Wallet Address
+                    </div>
                     <input
                         type="text"
                         className={styles.input}
-                        placeholder={t('Paste recipient address')}
+                        placeholder={t('Paste address')}
                         onChange={handleRecipient}
                     />
 
+                    <div className={styles.txt}>
+                        SUSD will be transferred from your Safety Deposit ₿ox
+                        (SDB) to the recipient's SDB. The recipient must log in
+                        with this Bitcoin wallet to access the funds.
+                    </div>
+
+                    <div className={styles.label}>
+                        amount to transfer (susd)
+                    </div>
                     <SyronInput
                         balance={balance}
                         token={token}
@@ -589,12 +624,15 @@ var ThisModal: React.FC<Prop> = function ({
                     />
 
                     <div className={styles.btnConfirmWrapper}>
-                        <div
-                            className={
-                                isDisabled || isLoading
-                                    ? styles.btnConfirmDisabled
-                                    : styles.btnConfirm
-                            }
+                        <button
+                            // className={
+                            //     isDisabled || isLoading
+                            //         ? styles.btnConfirmDisabled
+                            //         : styles.btnConfirm
+                            // }
+                            className={`button ${
+                                isDisabled || isLoading ? 'disabled' : 'primary'
+                            }`}
                             onClick={handleConfirm}
                         >
                             {isLoading ? (
@@ -602,13 +640,13 @@ var ThisModal: React.FC<Prop> = function ({
                             ) : (
                                 <>Confirm</>
                             )}
-                        </div>
+                        </button>
                     </div>
 
                     {isLoading ? (
                         <div>
-                            <div className={styles.withdrawalTxt}>
-                                Your SYRON payment is being processed. Please
+                            <div className={styles.txt}>
+                                Your SUSD payment is being processed. Please
                                 allow a few moments for completion. Thank you
                                 for your patience!
                             </div>

@@ -185,7 +185,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                 {vault_pair.length === 2 ? (
                     <form className={styles.container} onSubmit={handleSubmit}>
                         <div className={styles.contentWrapper}>
-                            <div className={styles.icoWrapper}>
+                            {/* <div className={styles.icoWrapper}>
                                 <Image
                                     src={icoArrow}
                                     alt="arrow-icon"
@@ -194,6 +194,9 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 <div className={styles.titleForm2}>
                                     Deposit Bitcoin to Borrow Syron SUSD
                                 </div>
+                            </div> */}
+                            <div className={styles.titleForm2}>
+                                Deposit Bitcoin to Borrow Syron SUSD
                             </div>
 
                             <BoxInput
@@ -396,23 +399,23 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                 <form className={styles.container} onSubmit={handleSubmit}>
                     <div className={styles.contentWrapper}>
                         <div className={styles.icoWrapper}>
-                            <Image
+                            {/* <Image
                                 src={icoArrow}
                                 alt="arrow-icon"
                                 className={styles.img}
-                            />
+                            /> */}
                             <div className={styles.titleForm2}>
-                                Safety Deposit ₿ox
+                                1. Choose Safety Deposit ₿ox
                             </div>
-                            <div
-                                onClick={() =>
-                                    // toast.info('Coming soon!')
-                                    setModal4(true)
+                            <button
+                                onClick={
+                                    () => toast.info('Coming soon!')
+                                    // setModal4(true)
                                 }
-                                className={styles.btnTitle}
+                                className={'button secondary'}
                             >
                                 Select
-                            </div>
+                            </button>
                         </div>
 
                         <div className={styles.selectInfoWrapper}>
@@ -440,13 +443,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                             {selectedData.address}
                                         </>
                                     ) : (
-                                        <span
-                                            style={{
-                                                color: 'white',
-                                                whiteSpace: 'normal',
-                                            }}
-                                        >
-                                            Choose SDB with the button above ↑
+                                        <span>
+                                            Select SDB with the button above ↑
                                         </span>
                                     )}
                                 </span>
@@ -482,13 +480,13 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
 
                     <div style={{ width: '100%', marginTop: '3rem' }}>
                         <div className={styles.icoWrapper}>
-                            <Image
+                            {/* <Image
                                 src={icoArrow}
                                 alt="arrow-icon"
                                 className={styles.img2}
-                            />
+                            /> */}
                             <div className={styles.titleForm2}>
-                                Pay with
+                                2. Pay with
                                 <span className={styles.txtTitle}>
                                     &nbsp;SYRON
                                 </span>
@@ -507,18 +505,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                     }}
                                 >
                                     {sdb ? (
-                                        <>
-                                            <span
-                                                style={{
-                                                    fontWeight: 'bold',
-                                                    color: 'white',
-                                                    marginRight: '0.5rem',
-                                                }}
-                                            >
-                                                Your SDB:
-                                            </span>
-                                            {sdb}
-                                        </>
+                                        <>Your SDB: {sdb}</>
                                     ) : (
                                         <>Connect Wallet</>
                                     )}
@@ -527,12 +514,15 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         </div>
 
                         <div className={styles.selectInfoStatusWrapper}>
-                            <div
-                                className={
-                                    verified
-                                        ? styles.selectInfoStatusVerified
-                                        : styles.selectInfoStatusPending
-                                }
+                            <button
+                                // className={
+                                //     verified
+                                //         ? styles.selectInfoStatusVerified
+                                //         : styles.selectInfoStatusPending
+                                // }
+                                className={`button ${
+                                    verified ? 'disabled' : 'secondary'
+                                }`}
                                 onClick={() => {
                                     toast.info('Coming soon!')
 
@@ -546,7 +536,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 ) : (
                                     <>Verify</>
                                 )}
-                            </div>
+                            </button>
                             {verified ? (
                                 <div
                                     className={
@@ -580,19 +570,17 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         </div>
 
                         <div className={styles.btnConfirmWrapper}>
-                            <div
-                                className={
-                                    verified
-                                        ? styles.btnConfirm
-                                        : styles.btnConfirmDisabled
-                                }
+                            <button
+                                className={`button ${
+                                    verified ? 'primary' : 'disabled'
+                                }`}
                                 // onClick={
                                 //     handleButtonClick
                                 // }
                                 // disabled={disabled}
                             >
-                                <div className={styles.txt}>CONFIRM</div>
-                            </div>
+                                confirm
+                            </button>
                         </div>
                     </div>
                 </form>

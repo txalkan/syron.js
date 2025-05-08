@@ -24,7 +24,7 @@ import {
     unisatBalance,
 } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
-import { WithdrawModal, SendModal } from '..'
+import { WithdrawModal, SendModal, BuyModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
 import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
@@ -474,6 +474,11 @@ function Component() {
         setSendModal(true)
     }
 
+    const [showBuyModal, setBuyModal] = React.useState(false)
+    const updateBuy = async () => {
+        setBuyModal(true)
+    }
+
     if (showWithdrawModal) {
         return (
             <WithdrawModal
@@ -494,6 +499,16 @@ function Component() {
                 onClose={() => setSendModal(false)}
             />
         )
+    } else if (showBuyModal) {
+        return (
+            <BuyModal
+                ssi={btc_wallet?.btc_addr!}
+                sdb={sdb}
+                balance={syronBal ? Big(syronBal) : _0}
+                show={showBuyModal}
+                onClose={() => setBuyModal(false)}
+            />
+        )
     } else {
         return (
             <div className={styles.container}>
@@ -503,43 +518,31 @@ function Component() {
                             {sdb ? (
                                 <div>
                                     <div className={styles.boxTitle}>
-                                        Your
-                                        <span style={{ color: '#ffff32' }}>
-                                            Safety Deposit ₿ox
-                                        </span>
-                                        {/* <span @review
-                                        onClick={updateBitcoinVault}
-                                        style={{
-                                            cursor: 'pointer',
-                                            paddingLeft: '8px',
-                                        }}
-                                    >
-                                        {loading ? (
-                                            <Spinner />
-                                        ) : (
-                                            <Image
-                                                src={refreshIco}
-                                                alt="refresh-ico"
-                                                height="12"
-                                                width="12"
-                                            />
-                                        )}
-                                    </span> */}
+                                        Your Safety Deposit ₿ox
+                                          {/* <span @review
+                                          onClick={updateBitcoinVault}
+                                          style={{
+                                              cursor: 'pointer',
+                                              paddingLeft: '8px',
+                                          }}
+                                      >
+                                          {loading ? (
+                                              <Spinner />
+                                          ) : (
+                                              <Image
+                                                  src={refreshIco}
+                                                  alt="refresh-ico"
+                                                  height="12"
+                                                  width="12"
+                                              />
+                                          )}
+                                      </span> */}
                                     </div>
 
-                                    <div className={styles.boxWrapperInner}>
-                                        <div className={styles.subtitle}>
-                                            <div
-                                                className={styles.iconContainer}
-                                            >
-                                                <Image
-                                                    src={icoShield}
-                                                    alt={'sdb-address'}
-                                                    className={styles.icon}
-                                                />
-                                            </div>
-                                            SDB Address
-                                        </div>
+                                <div className={styles.boxWrapperInner}>
+                                    <div className={styles.subtitle}>
+                                        SDB Address
+                                    </div>
                                         <div className={styles.sdbAddr}>
                                             <div
                                                 className={styles.sdb}
@@ -561,14 +564,7 @@ function Component() {
                                                 </div>
                                             </div>
                                             <div
-                                                style={{
-                                                    fontSize: '0.8rem',
-                                                    color: '#1e90ff',
-                                                    padding: '0 3rem',
-                                                    display: 'flex',
-                                                    cursor: 'pointer',
-                                                }}
-                                                className={styles.walletAct}
+                                                className={styles.link}
                                                 onClick={() => {
                                                     //@network defaults to mainnet
                                                     let url: URL = new URL(
@@ -585,56 +581,44 @@ function Component() {
                                                     window.open(url)
                                                 }}
                                             >
-                                                Wallet Activity ↗
+                                                SDB History ↗
                                             </div>
-                                        </div>
                                     </div>
-
-                                    <div className={styles.boxWrapperInner}>
-                                        <div className={styles.subtitle}>
+                                
+                                <div className={styles.boxWrapperInner}>
+                                    <div className={styles.subtitle}>
+                                        {/* <div className={styles.iconContainer}>
+                                            <Image
+                                                src={icoBalance}
+                                                alt={'btc-deposited'}
+                                                className={styles.icon}
+                                            />
+                                        </div> */}
+                                        BTC Deposited
+                                    </div>
+                                    <div className={styles.subsection}>
+                                        <button
+                                            onClick={handleRedeem}
+                                            className={`button ${
+                                                isRedeeming
+                                                    ? 'disabled'
+                                                    : 'secondary'
+                                            }`}
+                                        >
+                                            {isRedeeming ? (
+                                                <div className={styles.loading}>
+                                                    Loading
+                                                    <ThreeDots color="black" />
+                                                </div>
+                                            ) : (
+                                                <>redeem btc</>
+                                            )}
+                                        </button>
+                                        <div className={styles.value}>
+                                            <span className={styles.color}>
+                                                {Number(satsDeposited.div(1e8))}
+                                            </span> 
                                             <div
-                                                className={styles.iconContainer}
-                                            >
-                                                <Image
-                                                    src={icoBalance}
-                                                    alt={'btc-deposited'}
-                                                    className={styles.icon}
-                                                />
-                                            </div>
-                                            BTC Deposited
-                                        </div>
-                                        <div className={styles.subsection}>
-                                            <button
-                                                onClick={handleRedeem}
-                                                className={`button ${
-                                                    isRedeeming
-                                                        ? 'disabled'
-                                                        : 'secondary'
-                                                }`}
-                                            >
-                                                {isRedeeming ? (
-                                                    <div
-                                                        className={
-                                                            styles.loading
-                                                        }
-                                                    >
-                                                        Loading
-                                                        <ThreeDots color="yellow" />
-                                                    </div>
-                                                ) : (
-                                                    <>redeem</>
-                                                )}
-                                            </button>
-                                            <div className={styles.value}>
-                                                <span
-                                                    style={{ color: '#f8931a' }}
-                                                    className={styles.color}
-                                                >
-                                                    {Number(
-                                                        satsDeposited.div(1e8)
-                                                    )}
-                                                </span>
-                                                <div
                                                     className={
                                                         styles.iconTokenContainer
                                                     }
@@ -644,24 +628,22 @@ function Component() {
                                                         alt={'btc-token'}
                                                         className={styles.icon}
                                                     />
-                                                </div>
-                                            </div>
+                                             </div>
                                         </div>
                                     </div>
+                                </div>
 
-                                    <div className={styles.boxWrapperInner}>
-                                        <div className={styles.subtitle}>
-                                            <div
-                                                className={styles.iconContainer}
-                                            >
-                                                <Image
-                                                    src={icoThunder}
-                                                    alt={'syron-usd'}
-                                                    className={styles.icon}
-                                                />
-                                            </div>
-                                            Syron SUSD
-                                        </div>
+                                <div className={styles.boxWrapperInner}>
+                                    <div className={styles.subtitle}>
+                                        {/* <div className={styles.iconContainer}>
+                                            <Image
+                                                src={icoThunder}
+                                                alt={'syron-usd'}
+                                                className={styles.icon}
+                                            />
+                                        </div> */}
+                                        Syron SUSD
+                                    </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
                                                 | LOAN
@@ -684,34 +666,32 @@ function Component() {
                                                     />
                                                 </div>
                                             </div>
+                                    </div>
+                                    <div className={styles.buttons}>
+                                        <button
+                                            onClick={updateBalance}
+                                            className={`button ${
+                                                isLoading
+                                                    ? 'disabled'
+                                                    : 'secondary'
+                                            }`}
+                                        >
+                                            {isLoading ? (
+                                                <div className={styles.loading}>
+                                                    Loading
+                                                    <ThreeDots color="black" />
+                                                </div>
+                                            ) : (
+                                                <>borrow susd</>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <div className={styles.subsection}>
+                                        <div className={styles.info}>
+                                            | BALANCE
                                         </div>
-                                        <div className={styles.buttons}>
-                                            <button
-                                                onClick={updateBalance}
-                                                className={`button ${
-                                                    isLoading
-                                                        ? 'disabled'
-                                                        : 'secondary'
-                                                }`}
-                                            >
-                                                {isLoading ? (
-                                                    <div
-                                                        className={
-                                                            styles.loading
-                                                        }
-                                                    >
-                                                        Loading
-                                                        <ThreeDots color="yellow" />
-                                                    </div>
-                                                ) : (
-                                                    <>borrow</>
-                                                )}
-                                            </button>
-                                        </div>
-                                        <div className={styles.subsection}>
-                                            <div className={styles.info}>
-                                                | BALANCE
-                                            </div>
+                             
+                    
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
                                                     {syronBal === '0.00'
@@ -731,61 +711,50 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={styles.buttons}>
+                                    <div className={styles.buttons}>
+                                        <button
+                                            onClick={updateWithdraw}
+                                            className={'button secondary'}
+                                        >
+                                            Withdraw SUSD
+                                        </button>
+                                    </div>
+                                    <div className={styles.buttons}>
+                                        <AuthGuard>
                                             <button
-                                                onClick={updateWithdraw}
-                                                className={'button secondary'}
+                                                onClick={updateSend}
+                                                // className={`button secondary ${styles.customButton}`}
+                                                className={`button secondary`}
                                             >
-                                                Withdraw
+                                                send to sdb
                                             </button>
-                                            <AuthGuard>
-                                                <button
-                                                    onClick={updateSend}
-                                                    className={`button secondary ${styles.customButton}`}
-                                                >
-                                                    send
-                                                </button>
-                                            </AuthGuard>
+                                            <button
+                                                onClick={updateBuy}
+                                                className={`button secondary`}
+                                            >
+                                                buy btc
+                                            </button>
+                                          </AuthGuard>
                                         </div>
                                     </div>
-
-                                    {/* <button
-                                    style={{
-                                        width: '50%',
-                                        height: '40px',
-                                        display: 'flex',
-                                        justifyContent: 'center',
-                                        alignItems: 'center',
-                                        marginTop: '1rem',
-                                        cursor: 'pointer',
-                                        borderRadius: '22px',
-                                        // @design-shadow-3d
-                                        backgroundImage:
-                                            'linear-gradient(to right, #ffffff2e, #333333)', // Added gradient background
-                                        boxShadow:
-                                            // 3D effect
-                                            '2px 1px 9px rgba(255, 243, 50, 0.5), inset 0 -2px 5px rgba(248, 248, 248, 0.5)',
-
-                                        //'0 0 14px rgba(255, 255, 50, 0.6), inset 0 -3px 7px rgba(0, 0, 0, 0.4)',
-                                    }}
-                                    disabled={isLoading}
-                                    onClick={handleRedeem}
-                                >
-                                    <div className={styles.txt}>redeem btc</div>
-                                </button> */}
-                                </div>
-                            ) : (
-                                <div style={{ fontSize: '0.8rem' }}>
-                                    Loading your Safety Deposit ₿ox...
-                                </div>
-                            )}
-                        </>
-                    ) : (
-                        <div style={{ fontSize: '0.8rem' }}>
-                            Connect Wallet to access your Safety Deposit ₿ox
-                        </div>
-                    )}
-                </div>
+                            </div>
+                        ) : (
+                            <div
+                                className={styles.boxWrapper}
+                                style={{ fontSize: '0.8rem' }}
+                            >
+                                Loading your Safety Deposit ₿ox...
+                            </div>
+                        )}
+                    </>
+                ) : (
+                    <div
+                        className={styles.boxWrapper}
+                        style={{ fontSize: '0.8rem' }}
+                    >
+                        Connect Wallet to access your Safety Deposit ₿ox
+                    </div>
+                )}
 
                 {/* @dev: trade */}
                 <div className={styles.cardActiveWrapper}>
@@ -796,12 +765,7 @@ function Component() {
                                 : styles.cardNoTitle
                         }
                     >
-                        <div className={styles.title}>
-                            Be{' '}
-                            <span style={{ color: '#ffff32' }}>
-                                Your Own ₿ank
-                            </span>
-                        </div>
+                        <div className={styles.title}>Be Your Own ₿ank</div>
 
                         {/* <div className={styles.icoWrapper}>
                         <Image
@@ -823,13 +787,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div className={styles.iconGoldContainer}>
+                            {/* <div className={styles.iconGoldContainer}>
                                 <Image
                                     src={icoPrint}
                                     alt={'print-syron'}
                                     className={styles.icon}
                                 />
-                            </div>
+                            </div> */}
                             Borrow SYRON
                         </div>
                         <div
@@ -845,13 +809,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            <div className={styles.iconGoldContainer}>
+                            {/* <div className={styles.iconGoldContainer}>
                                 <Image
                                     src={icoEarn}
                                     alt={'earn-bitcoin'}
                                     className={styles.icon}
                                 />
-                            </div>
+                            </div> */}
                             Earn Bitcoin
                         </div>
                     </div>

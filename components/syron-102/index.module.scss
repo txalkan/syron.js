@@ -19,11 +19,11 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .container {
     margin-top: 40px;
     // background-color: #ffffff2e; //var(--card-color);
-    //padding-right: 17px;
+    // padding-right: 17px;
     // padding: 1rem 1.25rem 0.5rem;
-    //box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
-    //@include border-radius(17px);
-    //max-width: 550px;
+    // box-shadow: rgba(60, 64, 67, 0.3) 0px 1px 2px 0px,rgba(60, 64, 67, 0.15) 0px 1px 3px 1px;
+    // @include border-radius(17px);
+    // max-width: 550px;
     @include flex-center-vert;
     flex-direction: column;
 
@@ -156,8 +156,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .titleForm2 {
-    font-size: 1rem;
-    color: #333333;
+    cursor: default;
+    font-size: 1.1rem;
+    color: #111111;
     text-align: left;
 }
 
@@ -285,30 +286,17 @@ If you have any questions, comments or interest in pursuing any other use cases,
     justify-content: flex-start;
     width: 100%;
     margin-top: 2rem;
-    margin-left: 7.5%;
 }
 
 .selectedInfo {
-    border-radius: 33px;
-    background-color: #a9a9a9;
-    width: 90%;
-    color: rgb(75, 0, 130);
+    cursor: not-allowed;
+    border-radius: 4px;
+    color: #333333;
     height: 50px;
     justify-content: flex-start;
     display: flex;
-    padding-left: 1.5rem;
-    padding-right: 1.5rem;
     align-items: center;
-
-    //@mobile-first
-    font-size: 12px;
-    @media only screen and (min-width: 375px) {
-        font-size: 14px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 17px;
-    }
+    font-size: 0.8rem;
 }
 
 .selectInfoStatusWrapper {
@@ -317,7 +305,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
     flex-direction: column;
     width: 100%;
     margin-top: 2rem;
-    margin-left: 7.5%;
 }
 
 .selectInfoStatusPending,
@@ -354,21 +341,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .selectInfoStatusPendingText {
-    color: #333333;
+    color: #222222;
     text-align: left;
     margin-left: 1rem;
     margin-top: 1rem;
     padding-right: 2rem;
-
-    //@mobile-first
-    font-size: 12px;
-    @media only screen and (min-width: 375px) {
-        font-size: 14px;
-    }
-
-    @media only screen and (min-width: 768px) {
-        font-size: 17px;
-    }
+    font-size: 1rem;
 }
 
 .selectInfoStatusVerifiedText {

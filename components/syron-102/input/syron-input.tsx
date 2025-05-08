@@ -95,67 +95,65 @@ export const SyronInput: React.FC<Prop> = ({
     )
 
     return (
-        <label>
-            <div className={classNames(styles.container)}>
-                <div className={styles.inputContainer}>
-                    {/* @dev Percentage buttons */}
-                    <div>
-                        {disabled ? null : (
-                            <div className={styles.percentWrapper}>
-                                <div className={styles.row}>
-                                    {list.map((n) => (
-                                        <div
-                                            key={n}
-                                            className={
-                                                n === selectedPercent
-                                                    ? styles.percentActiveSyron
-                                                    : styles.percentSyron
-                                            }
-                                            onClick={() => handlePercent(n)}
-                                        >
-                                            {n}%
-                                        </div>
-                                    ))}
-                                </div>
+        <div className={classNames(styles.container)}>
+            <div className={styles.inputContainer}>
+                {/* @dev Percentage buttons */}
+                <div>
+                    {disabled ? null : (
+                        <div className={styles.percentWrapper}>
+                            <div className={styles.row}>
+                                {list.map((n) => (
+                                    <div
+                                        key={n}
+                                        className={
+                                            n === selectedPercent
+                                                ? styles.percentActiveSyron
+                                                : styles.percentSyron
+                                        }
+                                        onClick={() => handlePercent(n)}
+                                    >
+                                        {n}%
+                                    </div>
+                                ))}
                             </div>
+                        </div>
+                    )}
+                </div>
+                {/* @dev Input Box */}
+                <div className={styles.flexContainer}>
+                    <div className={styles.wrapper}>
+                        <input
+                            className={styles.inputAmt}
+                            type="number"
+                            placeholder="0"
+                            onInput={handleOnInput}
+                            value={Number(val_)}
+                            disabled={disabled}
+                            step="0.01"
+                            min="0"
+                            onBlur={handleOnBlur}
+                        />
+                        {token && (
+                            <Image
+                                className={styles.tokenImage}
+                                src={icoSYRON}
+                                alt="token-logo"
+                            />
                         )}
                     </div>
-                    {/* @dev Input Box */}
-                    <div className={styles.flexContainer}>
-                        <div className={styles.wrapper}>
-                            <input
-                                className={styles.inputAmt}
-                                type="number"
-                                placeholder="0"
-                                onInput={handleOnInput}
-                                value={Number(val_)}
-                                disabled={disabled}
-                                step="0.01"
-                                min="0"
-                                onBlur={handleOnBlur}
-                            />
-                            {token && (
-                                <Image
-                                    className={styles.tokenImage}
-                                    src={icoSYRON}
-                                    alt="token-logo"
-                                />
-                            )}
-                        </div>
-                        {/* <div className={styles.tokenInfo}>| SYRON</div> */}
-                    </div>
-                </div>
-                <div className={styles.infoWrapper}>
-                    Available
-                    <span className={styles.infoSyron}>
-                        {Number(balance).toLocaleString('en-US', {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 2,
-                        })}{' '}
-                        {token?.symbol}
-                    </span>
+                    {/* <div className={styles.tokenInfo}>| SYRON</div> */}
                 </div>
             </div>
-        </label>
+            <div className={styles.infoWrapper}>
+                Available
+                <span className={styles.infoSyron}>
+                    {Number(balance).toLocaleString('en-US', {
+                        minimumFractionDigits: 0,
+                        maximumFractionDigits: 2,
+                    })}{' '}
+                    {token?.symbol}
+                </span>
+            </div>
+        </div>
     )
 }

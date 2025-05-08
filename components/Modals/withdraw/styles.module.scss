@@ -7,6 +7,7 @@
 }
 
 .rowContentTxt {
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
     display: flex;
     flex-direction: column;
     color: #333333;
@@ -39,14 +40,14 @@
 }
 
 .innerContainer {
-    box-shadow: 2px 3px 6px rgba(255, 255, 50, 0.5);
+    padding-top: 4rem !important;
+    box-shadow: 1px 1px 2px rgba(255, 255, 50, 0.5);
     background: #dbdbdb; //#2525258c;
 
     flex-direction: column;
-    padding: 5%;
-    border-radius: 22px;
+    padding: 7%;
+    border-radius: 11px;
 
-    margin-top: 5rem;
     @media only screen and (min-width: 768px) {
         margin-top: 2rem;
     }
@@ -67,12 +68,15 @@
 }
 
 .headerTxt {
-    font-size: 0.9rem;
+    font-weight: bold;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
     display: flex;
     gap: 1rem;
     align-items: center;
-
-    padding: 1rem 1rem 2rem;
+    margin-left: 0.3rem;
+    margin-bottom: 2rem;
     color: rgb(75, 0, 130);
 }
 
@@ -106,6 +110,7 @@
 }
 
 .rowHeaderTitle {
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
     padding: 0 1rem 0.1rem;
     color: #000;
     font-size: 0.9rem;
@@ -179,8 +184,8 @@
 .btnConfirmWrapper {
     display: flex;
     justify-content: center;
-    margin-top: 30px;
-    margin-bottom: 30px;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
 }
 
 .btnConfirm,
@@ -257,11 +262,12 @@
     padding: 0 2rem;
 
     cursor: pointer;
-    // text-decoration: underline;
-    color: #1e90ff;
 
     @media only screen and (max-width: 768px) {
         width: 100%;
+    }
+    :hover {
+        color: #0000ff;
     }
 }
 
@@ -282,5 +288,52 @@
     }
     @media only screen and (max-width: 376px) {
         max-width: 100px;
+    }
+}
+
+.label {
+    color: #000;
+    margin: 2rem 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+}
+
+.diagramContainer {
+    background-color: silver;
+    color: #000;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    font-size: 0.8rem;
+    padding: 1rem;
+    border: 1px solid #fff;
+    text-align: left;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+
+    p {
+        margin: 0.25rem 0;
+    }
+
+    .diagramLineLabel {
+        font-weight: 700;
+        text-transform: uppercase;
+        border-bottom: 1px solid #000;
+        padding-bottom: 0.2rem;
+        margin-top: 0.8rem;
+    }
+
+    .diagramFlowSymbol {
+        margin-left: 1rem;
+        font-weight: 600;
+        white-space: pre;
+    }
+
+    .diagramCaption {
+        font-weight: 600;
+        color: #fff;
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
     }
 }

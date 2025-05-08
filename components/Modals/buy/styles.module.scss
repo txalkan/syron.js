@@ -1,0 +1,151 @@
+.container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+
+    height: fit-content;
+    z-index: 1;
+}
+
+.innerContainer {
+    padding-top: 4rem !important;
+    box-shadow: 1px 1px 2px rgba(255, 255, 50, 0.5);
+    background: #dbdbdb; //#2525258c;
+
+    flex-direction: column;
+    padding: 7%;
+    border-radius: 11px;
+
+    @media only screen and (min-width: 768px) {
+        margin-top: 2rem;
+    }
+    @media only screen and (min-width: 1680px) {
+        margin-top: 1rem;
+    }
+}
+
+.closeIcon {
+    margin: 0px;
+    cursor: pointer;
+}
+
+.headerWrapper {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.headerTxt {
+    font-weight: bold;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    font-size: 1rem;
+    text-transform: uppercase;
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    margin-left: 0.3rem;
+    margin-bottom: 2rem;
+    color: rgb(75, 0, 130);
+}
+
+.withdrawalTxt {
+    color: #000;
+    margin: 2rem;
+    font-size: 0.8rem;
+}
+
+.error {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    max-width: 350px; // Set a maximum width for the toast content
+    max-height: 500px; // Set a fixed maximum height for the toast content
+    overflow-y: auto; // Enable vertical scrolling if content exceeds the height
+    white-space: normal; // Allow text to wrap normally
+    line-height: 1.5; // Improve readability with better line spacing
+    word-break: break-word !important; // Break long words or URLs properly
+}
+
+.link {
+    color: #0000ff;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: none;
+    }
+}
+
+.btnConfirmWrapper {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.label {
+    color: #000;
+    margin: 2rem 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+}
+
+.diagramContainer {
+    background-color: silver;
+    color: #000;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    font-size: 0.8rem;
+    padding: 1rem;
+    border: 1px solid #fff;
+    text-align: left;
+    line-height: 1.4;
+    letter-spacing: 0.5px;
+
+    p {
+        margin: 0.25rem 0;
+    }
+
+    .diagramLineLabel {
+        font-weight: 700;
+        text-transform: uppercase;
+        border-bottom: 1px solid #000;
+        padding-bottom: 0.2rem;
+        margin-top: 0.8rem;
+    }
+
+    .diagramFlowSymbol {
+        margin-left: 1rem;
+        font-weight: 600;
+        white-space: pre;
+    }
+
+    .diagramCaption {
+        font-weight: 600;
+        color: #fff;
+        margin-top: 0.5rem;
+        margin-left: 0.5rem;
+    }
+}
+
+.formTxtInfoWrapper {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    padding: 0 2rem;
+}
+
+.info,
+.infoPurple {
+    font-size: 0.9rem;
+    padding-bottom: 0.5rem;
+    text-transform: uppercase;
+    color: #333333;
+    letter-spacing: normal;
+}
+
+.infoPurple {
+    color: rgb(75, 0, 130);
+    margin-left: 0.5rem;
+    text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
