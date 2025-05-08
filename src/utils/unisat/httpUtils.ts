@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 export enum UnisatNetworkType {
-    mainnet = 'livenet',
+    mainnet = 'BITCOIN_MAINNET',
     testnet = 'testnet',
     testnet4 = 'BITCOIN_TESTNET4',
 }

@@ -41,7 +41,7 @@ type Prop = {
 
 const token: CryptoState = {
     name: 'Syron SUSD',
-    symbol: 'SYRON',
+    symbol: 'Syron SUSD',
     decimals: 8,
 }
 
@@ -660,7 +660,7 @@ var ThisModal: React.FC<Prop> = function ({
                             YOUR SDB (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
-                        <p className={styles.diagramFlowSymbol}>SUSD</p>
+                        <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>▼</p>
                         <p className={styles.diagramLineLabel}>
@@ -673,7 +673,7 @@ var ThisModal: React.FC<Prop> = function ({
                     </div>
 
                     <div className={styles.label}>
-                        amount to withdraw (susd)
+                        amount to withdraw (syron brc-20)
                     </div>
                     <SyronInput
                         balance={balance}

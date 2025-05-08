@@ -1172,7 +1172,7 @@ button,
     text-transform: uppercase;
     white-space: nowrap;
     font-family: 'Courier New', 'GeistMono', monospace;
-    font-size: 1rem;
+    font-size: 0.8rem;
     font-weight: 500 !important;
     box-shadow: none;
     height: 2rem;
@@ -1722,6 +1722,7 @@ body.is-preload #bglight:before {
 
 .innerWrapper {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1743,33 +1744,13 @@ body.is-preload #bglight:before {
     -ms-justify-content: space-between;
     justify-content: space-between;
     position: relative;
-    min-height: 100vh;
     width: 100%;
-    padding: 4rem 2rem;
     z-index: 3;
 }
 
 #wrapper:before {
     content: '';
     display: block;
-}
-
-@media screen and (max-width: 1680px) {
-    #wrapper {
-        padding: 3rem 2rem;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #wrapper {
-        padding: 2rem 1rem;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    #wrapper {
-        padding: 1rem;
-    }
 }
 
 /* Header */
@@ -1917,7 +1898,7 @@ body.is-preload #bglight:before {
     min-width: 7.5rem;
     height: 2.75rem;
     line-height: 2.75rem;
-    padding: 0 1.25rem 0 1.45rem;
+    /* padding: 0 1.25rem 0 1.45rem; */
     text-transform: uppercase;
     letter-spacing: 0.2rem;
     font-size: 0.8rem;
@@ -1975,86 +1956,6 @@ body.is-preload #header .content .inner {
     padding-top: 0;
     padding-bottom: 0;
     opacity: 0;
-}
-
-.sectionWrapper {
-    border: 1px solid #dbe4eb;
-    padding: 2rem;
-    border-radius: 5px;
-}
-
-@media screen and (max-width: 980px) {
-    #header .content p br {
-        display: none;
-    }
-}
-
-@media screen and (max-width: 768px) {
-    #header > * {
-        margin-top: 2rem;
-    }
-
-    #header > *:before {
-        top: calc(-2rem - 1px);
-        height: calc(2rem + 1px);
-    }
-
-    #header .logo {
-        width: 4.75rem;
-        height: 4.75rem;
-        line-height: 4.75rem;
-    }
-
-    #header .logo .icon:before {
-        font-size: 1.75rem;
-    }
-
-    #header .content .inner {
-        padding: 2.5rem 1rem;
-    }
-
-    #header .content p {
-        line-height: 1.875;
-    }
-}
-
-@media screen and (max-width: 480px) {
-    #header {
-        padding: 1.5rem 0;
-    }
-
-    #header .content .inner {
-        padding: 2.5rem 0;
-    }
-
-    #header nav ul {
-        -moz-flex-direction: column;
-        -webkit-flex-direction: column;
-        -ms-flex-direction: column;
-        flex-direction: column;
-        min-width: 10rem;
-        max-width: 100%;
-    }
-
-    #header nav ul li {
-        border-left: 0;
-        border-top: solid 1px #ffffff;
-    }
-
-    #header nav ul li:first-child {
-        border-top: 0;
-    }
-
-    #header nav ul li a {
-        height: 3rem;
-        line-height: 3rem;
-        min-width: 0;
-        width: 100%;
-    }
-
-    #header nav.use-middle:after {
-        display: none;
-    }
 }
 
 /* Main */

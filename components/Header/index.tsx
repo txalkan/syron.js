@@ -3,7 +3,16 @@ import { useTranslation } from 'next-i18next'
 import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
-import { Dashboard, Footer, Menu, SearchBar, Stats, Syron, ZilPay } from '..'
+import {
+    Dashboard,
+    Logo,
+    Footer,
+    Menu,
+    SearchBar,
+    Stats,
+    Syron,
+    ZilPay,
+} from '..'
 import {
     $loading,
     $loadingBreadcrumbs,
@@ -224,49 +233,48 @@ function Header() {
     //     // eslint-disable-next-line react-hooks/exhaustive-deps
     // }, [replaceLangPath])
 
-    useEffect(() => {
-        let script =
-            // const injectScript = () => {
-            //     script =
-            document.createElement('script')
-        script.src =
-            // 'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
-            'https://cdn.jsdelivr.net/ghost/signup-form@~0.2/umd/signup-form.min.js'
-        script.async = true
-        //script.setAttribute('data-background-color', '#383838')
-        script.setAttribute('data-text-color', '#dbe4eb')
-        script.setAttribute('data-button-color', '#4B0082')
-        script.setAttribute('data-button-text-color', '#dbe4eb')
-        // script.setAttribute('data-title', 'tyronDAO')
-        // script.setAttribute('data-description', 'Be Your Own ₿ank')
-        // script.setAttribute(
-        //     'data-icon',
-        //     'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
-        // )
-        script.setAttribute('data-site', 'https://www.tyrondao.org/')
-        script.setAttribute('data-locale', 'en')
+    // useEffect(() => {
+    //     let script =
+    //         // const injectScript = () => {
+    //         //     script =
+    //         document.createElement('script')
+    //     script.src =
+    //         // 'https://cdn.jsdelivr.net/ghost/signup-form@~0.1/umd/signup-form.min.js'
+    //         'https://cdn.jsdelivr.net/ghost/signup-form@~0.2/umd/signup-form.min.js'
+    //     script.async = true
+    //     //script.setAttribute('data-background-color', '#383838')
+    //     script.setAttribute('data-text-color', '#dbe4eb')
+    //     script.setAttribute('data-button-color', '#4B0082')
+    //     script.setAttribute('data-button-text-color', '#dbe4eb')
+    //     // script.setAttribute('data-title', 'tyronDAO')
+    //     // script.setAttribute('data-description', 'Be Your Own ₿ank')
+    //     // script.setAttribute(
+    //     //     'data-icon',
+    //     //     'https://www.tyrondao.org/content/images/size/w192h192/size/w256h256/2024/09/tyrondao_logomark_square_transparent_background.png'
+    //     // )
+    //     script.setAttribute('data-site', 'https://www.tyrondao.org/')
+    //     script.setAttribute('data-locale', 'en')
 
-        const scriptContainer = document.createElement('div')
-        scriptContainer.id = 'script-container'
-        scriptContainer.style.display = 'flex'
-        scriptContainer.style.maxWidth = '100%'
-        scriptContainer.style.justifyContent = 'center'
-        scriptContainer.style.height = '20%'
+    //     const scriptContainer = document.createElement('div')
+    //     scriptContainer.id = 'script-container'
+    //     scriptContainer.style.display = 'flex'
+    //     scriptContainer.style.maxWidth = '100%'
+    //     scriptContainer.style.justifyContent = 'center'
 
-        document.body.appendChild(scriptContainer)
-        scriptContainer.appendChild(script)
-        // }
+    //     document.body.appendChild(scriptContainer)
+    //     scriptContainer.appendChild(script)
+    //     // }
 
-        // if (typeof window !== 'undefined') {
-        //     window.onload = injectScript
-        // }
+    //     // if (typeof window !== 'undefined') {
+    //     //     window.onload = injectScript
+    //     // }
 
-        return () => {
-            if (document.body.contains(scriptContainer)) {
-                document.body.removeChild(scriptContainer)
-            }
-        }
-    }, [])
+    //     return () => {
+    //         if (document.body.contains(scriptContainer)) {
+    //             document.body.removeChild(scriptContainer)
+    //         }
+    //     }
+    // }, [])
 
     return (
         <>
@@ -279,7 +287,9 @@ function Header() {
                 !modalNewMotions && (
                     <div className={styles.header}>
                         {/* <Menu /> */}
-                        <Footer />
+                        <div className={styles.logo}>
+                            <Logo />
+                        </div>
                         <Dashboard />
                     </div>
                 )}
@@ -292,12 +302,7 @@ function Header() {
             />
             {replaceLangPath() === '/' ? (
                 <div id={headerClassName}>
-                    <div
-                        style={{
-                            marginTop: '5%',
-                        }}
-                        className={contentClassName}
-                    >
+                    <div className={contentClassName}>
                         {!menuOn &&
                             !modalTx &&
                             !modalGetStarted &&
@@ -376,7 +381,7 @@ function Header() {
                         )}
                 </div>
             )}
-            <div id="script-container" />
+            {/* <div id="script-container" /> */}
         </>
     )
 }

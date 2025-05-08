@@ -1,7 +1,6 @@
 .container {
     display: flex;
     flex-direction: column;
-    text-align: center;
     justify-content: flex-end;
     width: 100%;
     transition: z-index linear 0s 0.3s;
@@ -37,6 +36,7 @@
     padding: 2rem 0rem;
     border-left: 0.5px solid #888888;
     border-right: 0.5px solid #888888;
+    border-bottom: 1px solid black;
 }
 
 .title2 {
@@ -228,7 +228,7 @@
     font-size: 0.9rem !important;
     padding-top: 1rem;
     padding-bottom: 1rem;
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .sdbAddr {
@@ -271,13 +271,14 @@
 .subsection {
     display: flex;
     width: 100%;
-    padding: 1rem 2rem 0;
+    margin-top: 1rem;
 
     //@mobile-first
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-start;
     @media only screen and (min-width: 500px) {
+        padding: 1rem 2rem 0;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
@@ -286,27 +287,30 @@
 
 .value {
     display: flex;
+    gap: 5px;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    width: 100%;
+    height: 100%;
     align-items: center;
-    gap: 0.5rem;
-
-    margin-top: 1.5rem;
-    margin-left: 1rem;
+    justify-content: center;
+    text-align: center;
     @media only screen and (min-width: 500px) {
-        margin-top: 0rem;
+        justify-content: flex-end;
     }
 }
 
 .buttons {
     display: flex;
+    justify-content: right;
     margin-top: 1rem;
+    margin-bottom: 1rem;
     gap: 1rem;
 
     width: 100%;
     flex-direction: column;
-    padding-left: 3rem;
     @media only screen and (min-width: 500px) {
         flex-direction: row;
-        padding-left: 4rem;
     }
 }
 
@@ -394,4 +398,18 @@
 
 .customButton {
     color: #ffff32 !important; /* Ensure the color is applied */
+}
+
+.buttonLabel {
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    gap: 5px;
 }

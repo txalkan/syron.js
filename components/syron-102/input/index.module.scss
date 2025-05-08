@@ -53,12 +53,12 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .wrapper {
     background-color: #fff;
     //@ref ssibrowser
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: center;
-    border: 0.5px solid silver;
+    border: 1px solid #dbe4eb;
     border-radius: 0 22px 22px 0;
-    width: 100%;
 
     height: 30px;
     @media only screen and (min-width: 375px) {
@@ -147,7 +147,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     display: flex;
     flex-direction: column;
     text-align: left;
-    padding: 2rem;
+    padding-left: 0.5rem;
 }
 
 .info,
@@ -296,7 +296,6 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .flexContainer {
     display: flex;
     flex-direction: row;
-    width: 100%;
     align-items: center;
     margin-top: 0.5rem;
 }
@@ -333,24 +332,9 @@ If you have any questions, comments or interest in pursuing any other use cases,
     }
 }
 
-.inputWrapper {
-    display: flex;
-    flex-direction: row;
-}
-
 .inputContainer {
-    width: 100%;
     display: flex;
     flex-direction: column;
-
-    min-width: 300px;
-
-    @media only screen and (min-width: 500px) {
-        min-width: 400px;
-    }
-    @media only screen and (min-width: 768px) {
-        min-width: 560px;
-    }
 }
 
 .inputTitle {
@@ -369,7 +353,7 @@ If you have any questions, comments or interest in pursuing any other use cases,
     font-family: 'Courier New', 'GeistMono', Courier, monospace;
     display: flex;
     justify-content: space-between;
-    padding: 1rem 0.5rem 0;
+    padding-left: 0.5rem;
     font-size: 0.8rem;
     text-transform: capitalize;
     color: #333333;
@@ -379,4 +363,14 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .infoSyron {
     color: rgb(75, 0, 130);
     text-shadow: 0 0 1px rgba(0, 0, 0, 0.1);
+}
+
+.label {
+    color: #000;
+    margin: 2rem 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
 }

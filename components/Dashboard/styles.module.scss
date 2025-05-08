@@ -1,11 +1,7 @@
 .wrapper {
-    position: absolute !important;
-    top: 22px;
-    right: 4%;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    // min-height: 50px;
+    position: fixed;
+    bottom: 0px;
+    right: 5px;
 }
 
 .wrapperIcon {
@@ -79,7 +75,7 @@
     font-size: smaller !important;
     color: #555555;
 
-    cursor: none;
+    cursor: not-allowed;
     background-color: transparent !important;
     box-shadow: none !important;
 

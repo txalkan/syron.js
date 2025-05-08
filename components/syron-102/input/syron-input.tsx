@@ -98,6 +98,16 @@ export const SyronInput: React.FC<Prop> = ({
         <div className={classNames(styles.container)}>
             <div className={styles.inputContainer}>
                 {/* @dev Percentage buttons */}
+                <div className={styles.infoWrapper}>
+                    Available
+                    <span className={styles.infoSyron}>
+                        {Number(balance).toLocaleString('en-US', {
+                            minimumFractionDigits: 0,
+                            maximumFractionDigits: 2,
+                        })}{' '}
+                        {token?.symbol}
+                    </span>
+                </div>
                 <div>
                     {disabled ? null : (
                         <div className={styles.percentWrapper}>
@@ -143,16 +153,6 @@ export const SyronInput: React.FC<Prop> = ({
                     </div>
                     {/* <div className={styles.tokenInfo}>| SYRON</div> */}
                 </div>
-            </div>
-            <div className={styles.infoWrapper}>
-                Available
-                <span className={styles.infoSyron}>
-                    {Number(balance).toLocaleString('en-US', {
-                        minimumFractionDigits: 0,
-                        maximumFractionDigits: 2,
-                    })}{' '}
-                    {token?.symbol}
-                </span>
             </div>
         </div>
     )

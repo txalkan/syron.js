@@ -157,9 +157,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 
 .titleForm2 {
     cursor: default;
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: #111111;
     text-align: left;
+    padding-bottom: 1rem;
 }
 
 .contentWrapper {
@@ -434,4 +435,24 @@ If you have any questions, comments or interest in pursuing any other use cases,
     @media only screen and (min-width: 768px) {
         font-size: 17px;
     }
+}
+
+.txtRow {
+    list-style-type: disc !important;
+    list-style-position: inside;
+    font-size: 0.7rem;
+    display: flexbox;
+    text-align: left;
+    color: #222222;
+    margin: 0.5rem;
+}
+
+.label {
+    color: #000;
+    margin: 2rem 0.5rem 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-align: left;
+    text-transform: uppercase;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
 }

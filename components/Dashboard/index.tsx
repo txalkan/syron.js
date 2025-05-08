@@ -354,44 +354,36 @@ function Component() {
                                 {!walletConnected ? (
                                     <>
                                         {!unisatInstalled ? (
-                                            <div
-                                                className={styles.wrapperIcon}
-                                                onClick={() => {
+                                            <button
+                                                className={'button primary'}
+                                                onClick={() =>
                                                     window.open(
                                                         'https://unisat.io',
                                                         '_blank'
                                                     )
-                                                }}
+                                                }
                                             >
-                                                <div
-                                                    className={
-                                                        styles.txtConnect
-                                                    }
-                                                >
-                                                    {t('CONNECT')}
-                                                </div>
-                                            </div>
+                                                {t('CONNECT')}
+                                            </button>
                                         ) : (
-                                            <div
-                                                className={styles.wrapperIcon}
+                                            <button
+                                                className={'button primary'}
                                                 onClick={handleButtonClick}
                                             >
-                                                <div
-                                                    className={
-                                                        styles.txtConnect
-                                                    }
-                                                >
-                                                    {t('CONNECT')}
-                                                </div>
-                                            </div>
+                                                {t('CONNECT')}
+                                            </button>
                                         )}
                                     </>
                                 ) : (
-                                    <div className={styles.wrapperIcon}>
-                                        <div className={styles.txtConnected}>
+                                    <button
+                                        className={'button secondary'}
+                                        onClick={() => unisat.disconnect()}
+                                    >
+                                        {t('disconnect wallet')}
+                                    </button>
+                                    /* <div className={styles.txtConnected}>
                                             {t('CONNECTED')}
-                                        </div>
-                                    </div>
+                                        </div> */
                                 )}
                                 {/* <div
                                     className={styles.wrapperIcon}

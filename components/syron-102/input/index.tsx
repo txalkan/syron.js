@@ -139,26 +139,24 @@ export const BoxInput: React.FC<Prop> = ({
     const walletConnected = useStore($walletConnected).isConnected
 
     return (
-        <label>
-            <div className={classNames(styles.container)}>
-                <div className={styles.formTxtInfoWrapper}>
-                    {xr == null ? (
-                        <div className={styles.info}>&nbsp;| Loading...</div>
-                    ) : (
-                        <>
-                            <div className={styles.info}>
-                                {/* &nbsp; */}| BTC Price:
-                                <span className={styles.infoPurple}>
-                                    <span style={{ paddingRight: '0.2rem' }}>
-                                        $
-                                    </span>
-                                    {Number(Big(xr!.rate)).toLocaleString(
-                                        'en-US'
-                                    )}
+        <div className={classNames(styles.container)}>
+            <div className={styles.formTxtInfoWrapper}>
+                {xr == null ? (
+                    <div className={styles.info}>&nbsp;| Loading...</div>
+                ) : (
+                    <>
+                        <div className={styles.info}>
+                            {/* &nbsp; */}| BTC Price:
+                            <span className={styles.infoPurple}>
+                                <span style={{ paddingRight: '0.2rem' }}>
+                                    $
                                 </span>
-                            </div>
+                                {Number(Big(xr!.rate)).toLocaleString('en-US')}
+                            </span>
+                        </div>
+                        <div className={styles.info}>
                             {walletConnected && (
-                                <div className={styles.info}>
+                                <>
                                     | Wallet Balance
                                     <span className={styles.infoBalance}>
                                         {!isNaN(Number(btcBalance)) &&
@@ -209,10 +207,11 @@ export const BoxInput: React.FC<Prop> = ({
                                                   })}
                                         </span>
                                     </span>
-                                </div>
+                                </>
                             )}
+                        </div>
 
-                            {/* {Number(bal) != 0 && (
+                        {/* {Number(bal) != 0 && (
                                 <div className={styles.info}>
                                     | Worth:
                                     <span className={styles.infoPurple}>
@@ -229,85 +228,79 @@ export const BoxInput: React.FC<Prop> = ({
                                     </span>
                                 </div>
                             )} */}
-                        </>
+                    </>
+                )}
+            </div>
+
+            <div className={styles.inputContainer}>
+                <label htmlFor="deposit" className={styles.label}>
+                    Amount to deposit (btc)
+                </label>
+                {/* @dev Percentage buttons */}
+                <div className={styles.percentWrapper}>
+                    {disabled ? null : (
+                        <div className={styles.row}>
+                            {list.map((n) => (
+                                <div
+                                    key={n}
+                                    className={
+                                        n === selectedPercent
+                                            ? styles.percentActive
+                                            : styles.percent
+                                    }
+                                    onClick={() => handlePercent(n)}
+                                >
+                                    {n}%
+                                </div>
+                            ))}
+                        </div>
                     )}
                 </div>
-                <div className={styles.inputWrapper}>
-                    {/* <Image
-                        src={icoArrow}
-                        alt="arrow-icon"
-                        className={styles.img}
-                    /> */}
-                    <div className={styles.inputContainer}>
-                        {/* @dev Percentage buttons */}
-                        <div>
-                            {disabled ? null : (
-                                <div className={styles.percentWrapper}>
-                                    <div className={styles.row}>
-                                        {list.map((n) => (
-                                            <div
-                                                key={n}
-                                                className={
-                                                    n === selectedPercent
-                                                        ? styles.percentActive
-                                                        : styles.percent
-                                                }
-                                                onClick={() => handlePercent(n)}
-                                            >
-                                                {n}%
-                                            </div>
-                                        ))}
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                        {/* @dev Input Box */}
-                        <div className={styles.flexContainer}>
-                            <div className={styles.wrapper}>
-                                <input
-                                    className={styles.inputAmt}
-                                    type="number"
-                                    placeholder="0"
-                                    onInput={handleOnInput}
-                                    value={Number(inputVal)}
-                                    disabled={disabled}
-                                    step="0.00000001"
-                                    min="0"
-                                    onBlur={handleOnBlur}
-                                />
-                                {token && (
-                                    <Image
-                                        className={styles.tokenImage}
-                                        src={
-                                            token.symbol === 'BTC'
-                                                ? icoBTC
-                                                : icoSYRON
-                                        }
-                                        alt="tokens-logo"
-                                    />
-                                    // <div
-                                    //     className={classNames(styles.dropdown)}
-                                    //     // onClick={onSelect}
-                                    // >
-                                    //     <Image
-                                    //         src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
-                                    //         alt="tokens-logo"
-                                    //         height="35"
-                                    //         width="35"
-                                    //     />
-                                    //     <div className={styles.symbol}>{token.symbol}</div>
-                                    //     <div className={styles.arrowIco}>
-                                    //         <Image alt="arrow-ico" src={ArrowDownReg} />
-                                    //     </div>
-                                    // </div>
-                                )}
-                            </div>
-                            {/* <div className={styles.tokenInfo}>| BTC</div> */}
-                        </div>
+                {/* @dev Input Box */}
+                <div className={styles.flexContainer}>
+                    <div className={styles.wrapper}>
+                        <input
+                            id="deposit"
+                            className={styles.inputAmt}
+                            type="number"
+                            placeholder="0"
+                            onInput={handleOnInput}
+                            value={Number(inputVal)}
+                            disabled={disabled}
+                            step="0.00000001"
+                            min="0"
+                            onBlur={handleOnBlur}
+                            lang="en-US"
+                        />
+                        {token && (
+                            <Image
+                                className={styles.tokenImage}
+                                src={token.symbol === 'BTC' ? icoBTC : icoSYRON}
+                                alt="tokens-logo"
+                            />
+                            // <div
+                            //     className={classNames(styles.dropdown)}
+                            //     // onClick={onSelect}
+                            // >
+                            //     <Image
+                            //         src={token.symbol === 'BTC' ? icoBTC : icoSU$D}
+                            //         alt="tokens-logo"
+                            //         height="35"
+                            //         width="35"
+                            //     />
+                            //     <div className={styles.symbol}>{token.symbol}</div>
+                            //     <div className={styles.arrowIco}>
+                            //         <Image alt="arrow-ico" src={ArrowDownReg} />
+                            //     </div>
+                            // </div>
+                        )}
                     </div>
+                    {/* <div className={styles.tokenInfo}>| BTC</div> */}
                 </div>
-                {/* @review (burn) */}
-                {/* <div>
+            </div>
+
+            {/* @review (burn) */}
+            {/* <div>
                     {disabled ? null : (
                         <div className={styles.btnSwapWrapper}>
                             {!noSwap && (
@@ -318,7 +311,6 @@ export const BoxInput: React.FC<Prop> = ({
                         </div>
                     )}
                 </div> */}
-            </div>
-        </label>
+        </div>
     )
 }

@@ -441,20 +441,6 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
 
     return (
         <div className={styles.container}>
-            <div className={styles.txtRow}>
-                <div>
-                    Syron SUSD is an asset-backed stablecoin secured with 150%
-                    Bitcoin collateral:
-                </div>
-            </div>
-            <ul>
-                <li className={styles.txtRow}>
-                    Borrow up to two-thirds of your BTC deposits in SUSD.
-                </li>
-                <li className={styles.txtRow}>
-                    Your SDB holds $1.50 in BTC for every $1 you borrow.
-                </li>
-            </ul>
             <div className={styles.confirmContainer}>
                 <button
                     className={`button ${disabled ? 'disabled' : 'primary'}`}

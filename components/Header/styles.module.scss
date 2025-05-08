@@ -27,7 +27,7 @@
 .header {
     // background-color: rgba(248, 248, 248, 0.6);
     backdrop-filter: blur(5px);
-    border-bottom: 1px solid silver;
+    // border-bottom: 1px solid silver;
     //box-shadow: 1px 1px 2px rgba(255, 255, 50, 0.5); // @design-shadow
     background-color: rgba($color: #dbe4eb, $alpha: 0.05);
     z-index: 1000;
@@ -37,13 +37,17 @@
     left: 0; /* Add this line to cover the full width */
 
     //@mobile
-    height: 60px;
+    height: 40px;
 
     @media only screen and (min-width: 375px) {
-        height: 70px;
+        height: 45px;
     }
 
     @media only screen and (min-width: 768px) {
-        height: 90px;
+        height: 50px;
     }
+}
+
+.logo {
+    display: flexbox;
 }

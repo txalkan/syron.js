@@ -196,8 +196,24 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 </div>
                             </div> */}
                             <div className={styles.titleForm2}>
-                                Deposit Bitcoin to Borrow Syron SUSD
+                                Deposit bitcoin to borrow Syron SUSD
                             </div>
+
+                            <div className={styles.txtRow}>
+                                Syron SUSD is an asset-backed stablecoin secured
+                                with 150% Bitcoin collateral:
+                            </div>
+                            <ul>
+                                <li className={styles.txtRow}>
+                                    Borrow two-thirds of your BTC deposits in
+                                    SUSD (your Safety Deposit ₿ox holds $1.50 in
+                                    BTC for every $1 you borrow)
+                                </li>
+                                <li className={styles.txtRow}>
+                                    Borrowed SUSD can be withdrawn to your
+                                    connected Bitcoin wallet as SYRON BRC-20
+                                </li>
+                            </ul>
 
                             <BoxInput
                                 value={vault_pair[0].value}
@@ -205,8 +221,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 disabled={disabled}
                                 onInput={handleOnInput}
                             />
-                        </div>
-                        {/* <div className={styles.contentWrapper2}>
+
+                            {/* <div className={styles.contentWrapper2}>
                             <div className={styles.icoWrapper}>
                                 <Image
                                     src={icoReceive}
@@ -221,7 +237,18 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 onSelect={() => setModal1(true)}
                             />
                         </div> */}
-                        <div style={{ width: '100%' }}>
+
+                            <div className={styles.label}>
+                                Amount to borrow (SYRON BRC-20)
+                            </div>
+                            <div className={styles.txtRow}>
+                                Based on the above BTC amount you will deposit,
+                                the following SUSD amount will be given as a new
+                                loan in your Safety Deposit ₿ox (SDB), adding
+                                briefly to its balance. Then it will be sent
+                                immediately as SYRON BRC-20 from your SDB to
+                                your connected Bitcoin Wallet.
+                            </div>
                             <TransactionOutput
                                 amount={amount}
                                 token={vault_pair[1].meta}

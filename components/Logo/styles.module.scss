@@ -1,0 +1,24 @@
+.tyronLg {
+    cursor: pointer;
+
+    position: fixed;
+
+    margin-top: 5px;
+    margin-bottom: 5px;
+
+    width: 110px;
+    height: auto;
+
+    @media only screen and (min-width: 375px) {
+        width: 140px;
+    }
+
+    @media only screen and (min-width: 768px) {
+        width: 170px;
+    }
+}
+
+.tyronImg {
+    width: 100%;
+    height: auto;
+}
