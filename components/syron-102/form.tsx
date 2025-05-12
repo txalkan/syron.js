@@ -49,8 +49,6 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
 
     useEffect(() => {
         if (syron !== null) {
-            console.log('Syron', JSON.stringify(syron, null, 2))
-
             setSDB(syron.sdb)
         }
     }, [syron?.sdb])
@@ -207,11 +205,11 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 <li className={styles.txtRow}>
                                     Borrow two-thirds of your BTC deposits in
                                     SUSD (your Safety Deposit ₿ox holds $1.50 in
-                                    BTC for every $1 you borrow)
+                                    BTC for every $1 SUSD you borrow)
                                 </li>
                                 <li className={styles.txtRow}>
                                     Borrowed SUSD can be withdrawn to your
-                                    connected Bitcoin wallet as SYRON BRC-20
+                                    personal Bitcoin wallet as SYRON BRC-20
                                 </li>
                             </ul>
 
@@ -242,12 +240,9 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 Amount to borrow (SYRON BRC-20)
                             </div>
                             <div className={styles.txtRow}>
-                                Based on the above BTC amount you will deposit,
-                                the following SUSD amount will be given as a new
-                                loan in your Safety Deposit ₿ox (SDB), adding
-                                briefly to its balance. Then it will be sent
-                                immediately as SYRON BRC-20 from your SDB to
-                                your connected Bitcoin Wallet.
+                                Based on your BTC deposit, the SUSD amount below
+                                will be borrowed and sent as SYRON BRC-20
+                                directly to your connected Bitcoin Wallet.
                             </div>
                             <TransactionOutput
                                 amount={amount}

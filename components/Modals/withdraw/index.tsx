@@ -27,6 +27,7 @@ import { toast } from 'react-toastify'
 import { extractRejectText } from '../../../src/utils/unisat/utils'
 import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
+import ConfirmTransactionModal from '../confirm-txn'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -106,14 +107,7 @@ var ThisModal: React.FC<Prop> = function ({
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
 
         try {
-            if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
-                throw new Error('Withdrawing SYRON is currently paused.')
-            }
             setIsLoading(true)
-
-            if (amount.lt(0.2)) {
-                throw new Error('Insufficient Amount')
-            }
 
             // @test
             // const inscriptionTx = {
@@ -128,37 +122,12 @@ var ThisModal: React.FC<Prop> = function ({
                     ? inscriptionTx.value
                     : undefined
             )
-            await getBox(ssi, false)
+            await getBox(ssi)
         } catch (error) {
             console.error('Syron Withdrawal', error)
             setTxError(extractRejectText(String(error)))
 
-            if (error == 'Error: Withdrawing SYRON is currently paused.') {
-                toast.info('Withdrawing SYRON is currently paused.')
-            } else if (error == 'Error: Insufficient Amount') {
-                toast.error(
-                    <div className={styles.error}>
-                        The minimum amount for withdrawal is 20 cents. Please
-                        adjust your request accordingly. If you need assistance,
-                        feel free to reach out on Telegram{' '}
-                        <a
-                            href="https://t.me/tyrondao"
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            style={{
-                                color: 'blue',
-                                textDecoration: 'underline',
-                            }}
-                        >
-                            @TyronDAO
-                        </a>
-                        .
-                    </div>
-                )
-            } else if (
-                typeof error === 'object' &&
-                Object.keys(error!).length !== 0
-            ) {
+            if (typeof error === 'object' && Object.keys(error!).length !== 0) {
                 toast.error(
                     <div className={styles.error}>
                         <div>
@@ -199,7 +168,7 @@ var ThisModal: React.FC<Prop> = function ({
                                     textDecoration: 'underline',
                                 }}
                             >
-                                @TyronDAO
+                                @tyronDAO
                             </a>
                             .
                         </div>
@@ -210,6 +179,7 @@ var ThisModal: React.FC<Prop> = function ({
                 )
             }
         } finally {
+            setIsConfirmationOpen(false)
             setIsLoading(false)
         }
     }, [ssi, sdb, amount, inscriptionTx, isLoading, isDisabled])
@@ -226,7 +196,7 @@ var ThisModal: React.FC<Prop> = function ({
 
             updateIcpTx(null)
             await syron_withdrawal(ssi, sdb, amount, inscriptionTx.value)
-            await getBox(ssi, false)
+            await getBox(ssi)
         } catch (error) {
             console.error('Retry Syron Withdrawal', error)
             setTxError(extractRejectText(String(error)))
@@ -290,10 +260,63 @@ var ThisModal: React.FC<Prop> = function ({
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text)
         toast.info(
-            `Your Safety Deposit ₿ox (SDB) address has been copied to your clipboard.`
+            `Your Safety Deposit ₿ox address has been copied to your clipboard.`
         )
     }
 
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
+    const [onDetails, setOnDetails] = useState({})
+    const handleContinue = React.useCallback(() => {
+        try {
+            if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
+                throw new Error('Withdrawing SYRON is currently paused.')
+            }
+            if (amount.lt(0.2)) {
+                throw new Error('Insufficient Amount')
+            }
+
+            const details = {
+                info: `You are about to withdraw Syron SUSD from your available account balance. To receive these funds in your personal Bitcoin wallet, by clicking on 'CONFIRM', you will send an inscribe-transfer UTXO to the Syron minter address along with a gas fee to cover the Bitcoin transaction.`,
+                amount: `$${amount}`,
+                fee: '$0.1',
+                total: `$${(Number(amount) - 0.1).toFixed(2)}`,
+                result: `You will receive $${(Number(amount) - 0.1).toFixed(
+                    2
+                )} SYRON BRC-20 tokens in your wallet.`,
+            }
+            setOnDetails(details)
+
+            setIsConfirmationOpen(true)
+        } catch (error) {
+            if (error == 'Error: Withdrawing SYRON is currently paused.') {
+                toast.info('Withdrawing SYRON is currently paused.')
+            } else if (error == 'Error: Insufficient Amount') {
+                toast.error(
+                    <div className={styles.error}>
+                        The minimum amount for withdrawal is 20 cents. Please
+                        adjust your request accordingly. If you need assistance,
+                        feel free to reach out on Telegram{' '}
+                        <a
+                            href="https://t.me/tyrondao"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{
+                                color: 'blue',
+                                textDecoration: 'underline',
+                            }}
+                        >
+                            @tyronDAO
+                        </a>
+                        .
+                    </div>
+                )
+            }
+        }
+    }, [amount])
+    const handleCloseConfirmation = () => {
+        setIsConfirmationOpen(false)
+        setIsLoading(false)
+    }
     return (
         <Modal show={show} onClose={onClose}>
             <div className={styles.container}>
@@ -364,13 +387,15 @@ var ThisModal: React.FC<Prop> = function ({
                                 {active === 1 ? (
                                     <>
                                         <div className={styles.rowContentTxt}>
-                                            {t('Send bitcoin into your SDB:')}
+                                            {t(
+                                                'Send bitcoin into your Deposit ₿ox address:'
+                                            )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'You can easily transfer BTC from any wallet to your SDB address. Just copy your SDB address below & follow the instructions in your wallet.'
+                                                        'You can easily transfer BTC from any wallet to your Deposit ₿ox address. Just copy your address below & follow the instructions in your personal wallet.'
                                                     )}
                                                 </li>
 
@@ -410,7 +435,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => menuActive(1)}
                                     >
-                                        {t('Send bitcoin into your SDB')}
+                                        {t(
+                                            'Send bitcoin into your Deposit ₿ox address'
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -465,23 +492,25 @@ var ThisModal: React.FC<Prop> = function ({
                                 {active === 2 ? (
                                     <>
                                         <div className={styles.rowContentTxt}>
-                                            {t('Update your SUSD balance:')}
+                                            {t(
+                                                'Draw SUSD into your account balance:'
+                                            )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
                                             <ul className={styles.ul}>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'To keep your balance up to date, click the UPDATE button in your Safety Deposit ₿ox.'
+                                                        "To keep your balance up to date, click the 'DRAW SUSD' button in your Syron account."
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'This will show you how much SYRON dollars you can withdraw.'
+                                                        "This will update your 'Available SUSD balance'."
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
                                                     {t(
-                                                        'Remember to click UPDATE each time you make a BTC deposit into your Safety Deposit ₿ox.'
+                                                        "Remember to click 'DRAW SUSD' each time you make a BTC deposit into your Safety Deposit ₿ox."
                                                     )}
                                                 </li>
                                             </ul>
@@ -498,7 +527,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         style={{ cursor: 'pointer' }}
                                         onClick={() => menuActive(2)}
                                     >
-                                        {t('Update your SUSD balance')}
+                                        {t(
+                                            'Draw SUSD into your account balance'
+                                        )}
                                     </div>
                                 )}
                             </div>
@@ -554,7 +585,7 @@ var ThisModal: React.FC<Prop> = function ({
                                     <>
                                         <div className={styles.rowContentTxt}>
                                             {t(
-                                                'Transfer SUSD from your balance to your wallet:'
+                                                "Transfer Syron SUSD from your 'Available SUSD balance' to your personal Bitcoin wallet:"
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
@@ -568,7 +599,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         {t('Transfer Process:')}
                                                     </span>{' '}
                                                     {t(
-                                                        'You can withdraw dollars from your SYRON balance to your wallet.'
+                                                        "You can withdraw Syron SUSD from your 'Available SUSD balance' to your personal wallet and receive SYRON BRC-20 tokens."
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -582,7 +613,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        'SYRON withdrawals are based on the balance in your Safety Deposit ₿ox.'
+                                                        "SYRON BRC-20 withdrawals are limited by your 'Available SUSD balance'."
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -596,10 +627,10 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        'Syron SUSD is implemented as a BRC-20 token named SYRON, which can be used freely on Bitcoin mainnet.'
+                                                        'Syron SUSD is withdrawn on Bitcoin as a BRC-20 token named SYRON, which can be used freely on Bitcoin mainnet.'
                                                     )}
                                                 </li>
-                                                <li className={styles.li}>
+                                                {/* <li className={styles.li}>
                                                     <span
                                                         style={{
                                                             color: 'rgb(75, 0, 130)',
@@ -612,7 +643,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                     {t(
                                                         'You can bridge Syron SUSD to other networks, such as Bitlayer, using the Omnity Network.'
                                                     )}
-                                                </li>
+                                                </li> */}
                                                 {/* <li className={styles.li}>
                                                     <span
                                                         style={{
@@ -647,7 +678,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => menuActive(3)}
                                     >
                                         {t(
-                                            'Transfer SUSD from your balance to your wallet'
+                                            "Transfer Syron SUSD from your 'Available SUSD balance' to your personal Bitcoin wallet"
                                         )}
                                     </div>
                                 )}
@@ -657,7 +688,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            YOUR SDB (Sender)
+                            YOUR SUSD BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
@@ -692,15 +723,23 @@ var ThisModal: React.FC<Prop> = function ({
                             className={`button ${
                                 isDisabled || isLoading ? 'disabled' : 'primary'
                             }`}
-                            onClick={handleConfirm}
+                            onClick={handleContinue}
                         >
                             {isLoading ? (
                                 <ThreeDots color="yellow" />
                             ) : (
-                                <>Confirm</>
+                                <>Continue</>
                             )}
                         </button>
                     </div>
+
+                    <ConfirmTransactionModal
+                        isOpen={isConfirmationOpen}
+                        onClose={handleCloseConfirmation}
+                        onDetails={onDetails}
+                        onConfirm={handleConfirm}
+                        isLoading={isLoading}
+                    />
 
                     {icpTx.value === false ? (
                         <div className={styles.failedWithdrawal}>
@@ -765,10 +804,8 @@ var ThisModal: React.FC<Prop> = function ({
                             {isLoading ? (
                                 <div>
                                     <div className={styles.withdrawalTxt}>
-                                        Your withdrawal request is currently
-                                        being processed. Please allow a few
-                                        moments for completion. Thank you for
-                                        your patience!
+                                        Your withdrawal request is being
+                                        processed...
                                     </div>
                                     <Spinner />
                                 </div>
@@ -793,11 +830,6 @@ var ThisModal: React.FC<Prop> = function ({
                                             >
                                                 You can check your wallet to
                                                 verify the transaction.
-                                            </div>
-                                            <div
-                                                className={styles.withdrawalTxt}
-                                            >
-                                                Thank you for using Tyron!
                                             </div>
                                         </div>
                                     ) : null}

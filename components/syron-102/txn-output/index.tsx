@@ -5,7 +5,7 @@ import Image from 'next/image'
 import tydradexSvg from '../../../src/assets/icons/ssi_tydradex.svg'
 import { CryptoState } from '../../../src/types/vault'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 
 Big.PE = 999

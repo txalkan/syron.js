@@ -1,7 +1,7 @@
 .dotFlashing {
     position: relative;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #ffff32;
     color: #ffff32;
@@ -18,9 +18,9 @@
 }
 
 .dotFlashing::before {
-    left: -15px;
-    width: 10px;
-    height: 10px;
+    left: -11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #ffff32;
     color: #ffff32;
@@ -29,9 +29,9 @@
 }
 
 .dotFlashing::after {
-    left: 15px;
-    width: 10px;
-    height: 10px;
+    left: 11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #ffff32;
     color: #ffff32;
@@ -52,8 +52,8 @@
 
 .dotFlashingBasic {
     position: relative;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #fff;
     color: #fff;
@@ -70,9 +70,9 @@
 }
 
 .dotFlashingBasic::before {
-    left: -15px;
-    width: 10px;
-    height: 10px;
+    left: -11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #fff;
     color: #fff;
@@ -81,9 +81,9 @@
 }
 
 .dotFlashingBasic::after {
-    left: 15px;
-    width: 10px;
-    height: 10px;
+    left: 11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #fff;
     color: #fff;
@@ -104,8 +104,8 @@
 
 .dotFlashingLight {
     position: relative;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #ffff32;
     color: #ffff32;
@@ -122,9 +122,9 @@
 }
 
 .dotFlashingLight::before {
-    left: -15px;
-    width: 10px;
-    height: 10px;
+    left: -11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #ffff32;
     color: #ffff32;
@@ -133,9 +133,9 @@
 }
 
 .dotFlashingLight::after {
-    left: 15px;
-    width: 10px;
-    height: 10px;
+    left: 11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #ffff32;
     color: #ffff32;
@@ -156,8 +156,8 @@
 
 .dotFlashingBlack {
     position: relative;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #000;
     color: #000;
@@ -174,9 +174,9 @@
 }
 
 .dotFlashingBlack::before {
-    left: -15px;
-    width: 10px;
-    height: 10px;
+    left: -11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #000;
     color: #000;
@@ -185,9 +185,9 @@
 }
 
 .dotFlashingBlack::after {
-    left: 15px;
-    width: 10px;
-    height: 10px;
+    left: 11px;
+    width: 8px;
+    height: 8px;
     border-radius: 5px;
     background-color: #000;
     color: #000;

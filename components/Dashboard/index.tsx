@@ -20,7 +20,6 @@ import {
 } from '../../src/store/bitcoin-addresses'
 import useICPHook from '../../src/hooks/useICP'
 import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
-import { useMempoolHook } from '../../src/hooks/useMempool'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { $walletConnected, updateWalletConnected } from '../../src/store/syron'
 import { toast } from 'react-toastify'
@@ -35,7 +34,6 @@ export const AuthContext = createContext(defaultValue)
 function Component() {
     const { updateWallet } = useBTCWalletHook()
     const { getBox } = useICPHook()
-    const { getXR } = useMempoolHook()
 
     const dispatch = useDispatch()
     const loginInfo = useSelector((state: RootState) => state.modal)
@@ -106,14 +104,6 @@ function Component() {
     //     return null
     // }
 
-    // @dev (xr)
-    useEffect(() => {
-        async function update() {
-            await getXR()
-        }
-        update()
-    }, [])
-
     // @dev (unisat)
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
@@ -140,7 +130,7 @@ function Component() {
         unconfirmed: 0,
         total: 0,
     })
-    const [network_, setNetwork] = useState('livenet') // defaults to mainnet
+    const [network_, setNetwork] = useState('BITCOIN_MAINNET') // defaults to mainnet
     const walletConnected = useStore($walletConnected).isConnected
 
     const getWalletInfo = async () => {
@@ -162,14 +152,14 @@ function Component() {
             }
 
             const [address] = await unisat.getAccounts()
-            console.log('Wallet Address: ', address)
+            // console.log('Wallet Address: ', address)
             setAddress(address)
 
             const publicKey = await unisat.getPublicKey()
             setPublicKey(publicKey)
 
             const balance = await unisat.getBalance()
-            console.log('Wallet Balance: ', JSON.stringify(balance, null, 2))
+            // console.log('Wallet Balance: ', JSON.stringify(balance, null, 2))
 
             setBalance(balance)
         } catch (error) {
@@ -182,8 +172,6 @@ function Component() {
         async function update() {
             if (balance_)
                 await updateWallet(address_, Number(balance_.total), network_)
-
-            console.log('Wallet balance updated') // @review (wallet) no needed when connecting for the first time
         }
 
         if (address_ !== '') update()
@@ -191,8 +179,7 @@ function Component() {
 
     useEffect(() => {
         async function updateSDB() {
-            console.log('@dev update safety deposit box')
-            await getBox(address_, false)
+            await getBox(address_)
         }
         if (address_ != '') updateSDB()
     }, [address_])
@@ -249,8 +236,10 @@ function Component() {
         try {
             setShouldCheckUnisat(true)
 
-            const network = await unisat.getChain().then((chain) => chain.enum)
-            console.log('Wallet current network:', network)
+            const network = await unisat
+                .getChain()
+                .then((chain: { enum: any }) => chain.enum)
+            // console.log('Wallet current network:', network)
 
             //@network
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION

@@ -115,9 +115,14 @@ var ThisModal: React.FC<Prop> = function ({
             }
 
             await send_syron(ssi, recipient, amount)
-            toast.info('Your SYRON payment was sent successfully.')
-
-            await getBox(ssi, false)
+            toast.info(
+                <div className={styles.toastMessage}>
+                    Your payment of {amount.toString()} SUSD to {recipient} was
+                    sent successfully
+                </div>,
+                { autoClose: false }
+            )
+            await getBox(ssi)
         } catch (error) {
             console.error('Syron Payment', error)
 
@@ -137,7 +142,8 @@ var ThisModal: React.FC<Prop> = function ({
                             @TyronDAO
                         </a>
                         .
-                    </div>
+                    </div>,
+                    { autoClose: false }
                 )
             } else if (error == 'Error: Insufficient Amount') {
                 toast.warn(
@@ -154,7 +160,8 @@ var ThisModal: React.FC<Prop> = function ({
                             @TyronDAO
                         </a>
                         .
-                    </div>
+                    </div>,
+                    { autoClose: false }
                 )
             } else if (
                 typeof error === 'object' &&
@@ -184,7 +191,8 @@ var ThisModal: React.FC<Prop> = function ({
                                 ? (error as Error).message
                                 : JSON.stringify(error, null, 2)}
                         </div>
-                    </div>
+                    </div>,
+                    { autoClose: false }
                 )
             } else {
                 toast.error(
@@ -207,13 +215,14 @@ var ThisModal: React.FC<Prop> = function ({
                         <div style={{ color: 'red', paddingTop: '1rem' }}>
                             {extractRejectText(String(error))}
                         </div>
-                    </div>
+                    </div>,
+                    { autoClose: false }
                 )
             }
         } finally {
             setIsLoading(false)
         }
-    }, [ssi, sdb, amount, isLoading, isDisabled])
+    }, [ssi, recipient, sdb, amount, isLoading, isDisabled])
 
     // const copyToClipboard = (text: string) => {
     //     navigator.clipboard.writeText(text)
@@ -248,7 +257,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.txt}>
                         {t(
-                            'Transfer SUSD via ICPayments: lightning-fast, gas-free transfers powered by the Internet Computer.'
+                            'Transfer SUSD via ICPayments: lightning-fast transfers powered by the Internet Computer.'
                         )}
                     </div>
 
@@ -582,35 +591,66 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            YOUR SDB (Sender)
+                            YOUR SUSD BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>▼</p>
                         <p className={styles.diagramLineLabel}>
-                            RECIPIENT'S SDB (Receiver)
+                            RECIPIENT&apos;S TYRON ACCOUNT (Receiver)
                         </p>
                         <p className={styles.diagramCaption}>
-                            Accessed via Recipient's BITCOIN WALLET ADDRESS
-                            entered below.
+                            Accessed via Recipient&apos;s PERSONAL WALLET
+                            ADDRESS entered below.
                         </p>
                     </div>
 
                     <div className={styles.label}>
-                        Recipient's Bitcoin Wallet Address
+                        Recipient&apos;s Personal Wallet Address
                     </div>
-                    <input
-                        type="text"
-                        className={styles.input}
-                        placeholder={t('Paste address')}
-                        onChange={handleRecipient}
-                    />
+                    <div className={styles.inputWrapper}>
+                        <input
+                            type="text"
+                            className={styles.input}
+                            placeholder={t('Paste address')}
+                            value={recipient} // Bind the input value to the recipient state
+                            onChange={handleRecipient} // Update the recipient state on change
+                        />
+                        {recipient && (
+                            <button
+                                className={styles.clearButton}
+                                onClick={() => setRecipient('')} // Clear the recipient state
+                                aria-label="Clear input"
+                            >
+                                ✕
+                            </button>
+                        )}
+                        <button
+                            className={styles.pasteButton}
+                            onClick={async () => {
+                                try {
+                                    const text =
+                                        await navigator.clipboard.readText() // Read text from clipboard
+                                    setRecipient(text) // Set the recipient state with the pasted text
+                                } catch (error) {
+                                    console.error(
+                                        'Failed to paste text:',
+                                        error
+                                    )
+                                }
+                            }}
+                            aria-label="Paste address"
+                        >
+                            Paste
+                        </button>
+                    </div>
 
                     <div className={styles.txt}>
-                        SUSD will be transferred from your Safety Deposit ₿ox
-                        (SDB) to the recipient's SDB. The recipient must log in
-                        with this Bitcoin wallet to access the funds.
+                        Syron will be transferred from your &apos;Available SUSD
+                        balance&apos; to the recipient&apos;s Tyron account. The
+                        recipient must log in with their Bitcoin personal wallet
+                        to access the funds.
                     </div>
 
                     <div className={styles.label}>

@@ -1,5 +1,4 @@
 import { Store } from 'react-stores'
-import Big from 'big.js'
 
 interface XR {
     rate: number

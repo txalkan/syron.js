@@ -366,9 +366,10 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .label {
+    letter-spacing: normal !important;
     color: #000;
     margin: 2rem 0.5rem 0.5rem;
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     font-weight: 800;
     text-align: left;
     text-transform: uppercase;

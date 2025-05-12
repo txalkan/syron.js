@@ -30,14 +30,13 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         clear()
     }, [])
 
-    useEffect(() => {
-        console.log({ isInitializing, identity })
-    }, [isInitializing, identity])
+    // useEffect(() => {
+    //     console.log({ isInitializing, identity })
+    // }, [isInitializing, identity])
 
     useEffect(() => {
         if (!isPrepareLoginIdle) return
         const address = getAddress()
-        console.log({ address })
 
         if (address) {
             setAddressRes(address)

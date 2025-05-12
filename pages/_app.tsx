@@ -17,8 +17,11 @@ import { GeistMono } from 'geist/font/mono'
 import type { _SERVICE as siwbService } from '../src/idls/ic_siwb_provider'
 import { idlFactory as siwbIdl } from '../src/idls/ic_siwb_provider.idl'
 import { SiwbIdentityProvider } from 'ic-use-siwb-identity'
+import { useMempoolHook } from '../src/hooks/useMempool'
 
 function TyronApp({ Component, pageProps }: AppProps) {
+    useMempoolHook()
+
     return (
         <SiwbIdentityProvider<siwbService>
             canisterId={

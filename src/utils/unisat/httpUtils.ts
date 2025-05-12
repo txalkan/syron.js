@@ -295,7 +295,7 @@ export async function mempoolFeeRate(): Promise<number> {
         const data = await response.json()
 
         // @dev recommended fees
-        console.log('RecommendedFees', JSON.stringify(data, null, 2))
+        // console.log('RecommendedFees', JSON.stringify(data, null, 2))
 
         let fee = data.fastestFee
 
@@ -319,16 +319,18 @@ export async function mempoolFeeRate(): Promise<number> {
         // const sum = percentiles.reduce((acc, value) => acc + value, 0)
         // const res = Math.ceil(sum / percentiles.length)
 
-        console.log('Fee Rate', fee)
         if (!fee) {
             fee = 5
         }
+
+        //@maxvb gas rate per vB
+        if (fee > 3) return 0
 
         return fee
     } catch (error) {
         console.error('Mempool Error:', error)
         //checkError(error)
-        return 5
+        return 3
     }
 }
 

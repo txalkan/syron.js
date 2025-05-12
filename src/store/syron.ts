@@ -5,6 +5,12 @@ export const $syron = new Store<SyronSSI | null>(null)
 export function updateSyronSSI(args: SyronSSI) {
     $syron.setState(args)
 }
+export function updateSusdBalance(state: SyronSSI, susd: Big) {
+    $syron.setState({
+        ...state,
+        syron_usd_bal: susd,
+    })
+}
 
 export const $btc_wallet = new Store<BTCWallet | null>(null)
 export function updateBTCWallet(args: BTCWallet) {

@@ -78,7 +78,7 @@ export default async function handler(
         const fetchBalanceWithRetry = async (
             id: string,
             retryInterval: number = 10000,
-            maxRetryTime: number = 180000 // 3 minutes in milliseconds
+            maxRetryTime: number = 30000 // 30s in milliseconds
         ): Promise<any> => {
             let data_unisat
             const startTime = Date.now()
@@ -91,7 +91,7 @@ export default async function handler(
 
                 if (Date.now() - startTime >= maxRetryTime) {
                     throw new Error(
-                        'The SDB balance is zero. Please make a deposit.'
+                        'SYRON BRC-20 in deposit address: balance is zero. Make a deposit to continue.'
                     )
                 }
 

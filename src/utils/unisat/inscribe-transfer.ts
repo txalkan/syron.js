@@ -30,7 +30,7 @@ export const inscribe_transfer = async (
     let devFee
     if (!collateral) {
         devAddress = receiveAddress // the Syron Minter
-        devFee = 1000 * fee // the gas fee to withdraw SYRON (virtual size of 1000 vB times the fee rate)
+        devFee = 200 * fee // @vb the gas fee to withdraw SYRON (virtual size of 1000 vB times the fee rate)
     } else {
         devAddress = sdb // deposit the collateral into the SDB
         devFee = collateral

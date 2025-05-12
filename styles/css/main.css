@@ -290,8 +290,8 @@ a:hover {
 
 strong,
 b {
-    color: #ffffff;
-    font-weight: 600;
+    color: #000;
+    font-weight: 700;
 }
 
 em,
@@ -1249,6 +1249,7 @@ button.secondary,
 .button.primary:hover,
 .button.secondary:hover,
 .button.disabled:hover {
+    cursor: pointer;
     color: rgb(75, 0, 130) !important;
 }
 

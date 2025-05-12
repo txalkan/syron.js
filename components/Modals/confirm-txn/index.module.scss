@@ -1,0 +1,58 @@
+.subtitle {
+    margin-top: 1rem;
+    font-family: 'Courier New', Courier, monospace;
+    color: #222222;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.confirm,
+.cancel {
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.confirm {
+    background-color: rgb(75, 0, 130);
+    color: white;
+}
+
+.table {
+    font-family: 'Courier New', Courier, monospace;
+    padding: 0.1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    color: black;
+}
+
+.subtable {
+    display: flex;
+    flex-direction: column;
+}
+
+.subvalue {
+    font-size: 0.8rem;
+    text-decoration: overline;
+    font-style: italic;
+}
+.value {
+    color: black !important;
+    font-weight: 600;
+}
+
+.total {
+    font-size: 1.1rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    font-weight: bold;
+    color: rgb(75, 0, 130);
+}
+
+.address {
+    padding: 0.5rem;
+    display: flex;
+    flex-grow: 1; // Allow the address span to take available space
+    white-space: normal;
+    word-break: break-all;
+    overflow: visible;
+}

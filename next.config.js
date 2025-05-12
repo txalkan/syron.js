@@ -36,7 +36,6 @@ const securityHeaders = [
 const nextConfig = withTM({
     reactStrictMode: true,
     transpilePackages: ['geist'],
-    webpack5: true,
     webpack: (config) => {
         config.resolve.fallback = {
             fs: false,

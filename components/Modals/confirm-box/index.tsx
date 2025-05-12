@@ -17,7 +17,7 @@ import toastTheme from '../../../src/hooks/toastTheme'
 import { $bitcoin_addresses } from '../../../src/store/bitcoin-addresses'
 import { VaultPair } from '../../../src/types/vault'
 import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
 import { $xr } from '../../../src/store/xr'
 import {
     $btc_wallet,
@@ -262,7 +262,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
         if (balance)
             await updateWallet(address, Number(balance.confirmed), network)
 
-        await getBox(address, false)
+        await getBox(address)
 
         console.log('Balance updated')
     }
@@ -288,7 +288,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 JSON.stringify(add_data, null, 2)
             )
 
-            await getSUSD(btc_wallet?.btc_addr!, tx_id, 5)
+            await getSUSD(btc_wallet?.btc_addr!, tx_id)
 
             // @dev Update inscription info in the Tyron indexer
             const update = await fetch(
@@ -369,7 +369,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 )
             }
 
-            if (btc_wallet?.network != 'livenet') {
+            if (btc_wallet?.network != 'BITCOIN_MAINNET') {
                 console.log('Network:', btc_wallet?.network)
                 throw new Error('Use Bitcoin Mainnet')
             }

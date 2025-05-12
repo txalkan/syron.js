@@ -4,6 +4,7 @@ import { updateSyronSSI } from '../store/syron'
 import Big from 'big.js'
 import { updateXR } from '../store/xr'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
+import { mempoolFeeRate } from '../utils/unisat/httpUtils'
 
 Big.PE = 999
 
@@ -17,19 +18,18 @@ function useICPHook() {
         provider_id = 1
     }
 
-    const getBox = async (ssi: string, dummy: boolean) => {
+    const getBox = async (ssi: string) => {
         try {
-            console.log('Loading SDB...')
-            //if (balance != 0) { @review (syron) v2
-            await fetch(`/api/get-sdb?id=${ssi}&dummy=${dummy}`)
+            console.log('Fetch Box details...')
+            await fetch(`/api/get-sdb?id=${ssi}`)
                 .then(async (response) => {
                     const sdb = await response.json()
                     console.log(
-                        'outcall response - SDB',
+                        'tyron gateway response for deposit box details: ',
                         JSON.stringify(sdb, null, 2)
                     )
 
-                    // @dev Get the balance of the SDB using ICP (deprecated in favour of Mempool API)
+                    // @dev Get the BTC balance of the SDB using ICP (deprecated in favour of Mempool API)
                     // const box_balance = await syron.get_balance(sdb.data.address)
 
                     // if the sdb is not undefined, update the store
@@ -41,6 +41,7 @@ function useICPHook() {
                             syron_btc: Big(Number(sdb.data.btc)), // @review (mainnet)
                             syron_usd_loan: Big(Number(sdb.data.susd)),
                             syron_usd_bal: Big(Number(sdb.data.bal)),
+                            exchange_rate: Big(Number(sdb.data.exchange_rate)),
                         })
                     }
                 })
@@ -93,9 +94,14 @@ function useICPHook() {
     //     }
     // }
 
-    const getSUSD = async (ssi: string, txid: string, fee: number) => {
+    const getSUSD = async (ssi: string, txid: string) => {
         try {
-            console.log(`Initiating SYRON Issuance with fee (${fee})...`)
+            console.log(
+                `Initiating SYRON Issuance with inscribe-transfer UTXO (${txid})...`
+            )
+            // @dev The transaction fee rate in sat/vB @gas @network
+            let fee_rate = await mempoolFeeRate()
+
             const syron = basic_bitcoin_syron()
 
             const txId = await syron.withdraw_susd(
@@ -103,7 +109,7 @@ function useICPHook() {
                 txid,
                 72000000,
                 provider_id,
-                fee * 1000
+                fee_rate * 1000
             )
 
             // Convert BigInt values to strings
@@ -125,16 +131,14 @@ function useICPHook() {
         }
     }
 
-    const syronWithdrawal = async (
-        ssi: string,
-        txid: string,
-        amt: number,
-        fee: number
-    ) => {
+    const syronWithdrawal = async (ssi: string, txid: string, amt: number) => {
         try {
             console.log(
-                `Initiating SYRON Withdrawal of amount (${amt}) with fee (${fee})...`
+                `Initiating SYRON Withdrawal of amount (${amt}) susd-sats...`
             )
+            // @dev The transaction fee rate in sat/vB @gas @network
+            let fee_rate = await mempoolFeeRate()
+
             const syron = basic_bitcoin_syron()
 
             const txId = await syron.syron_withdrawal(
@@ -143,7 +147,7 @@ function useICPHook() {
                 72000000,
                 provider_id,
                 amt,
-                fee * 1000
+                fee_rate * 1000
             )
 
             // Convert BigInt values to strings
@@ -168,7 +172,7 @@ function useICPHook() {
     const sendSyron = async (ssi: string, recipient: string, amt: number) => {
         try {
             console.log(
-                `Initiating SYRON payment of amount (${amt}) to recipient (${recipient})...`
+                `Initiating SUSD payment of amount (${amt}) to recipient (${recipient})...`
             )
             const syron = basic_bitcoin_syron(identity)
             const txId = await syron.send_syron(
@@ -196,6 +200,43 @@ function useICPHook() {
         }
     }
 
+    const buyBtc = async (ssi: string, amt: number, btcAmt: number) => {
+        try {
+            // @add in tests
+            // return 'Call failed: Canister: qgzyj-ciaaa-aaaam-qb5sq-cai Method: buy_btc (update) "Request ID": "1e5194b7b8e65411dd9bb8edd8c214824bb117c029da43c1257fce2b9694b175" "Error code": "IC0503" "Reject code": "5" "Reject message": "Error from Canister qgzyj-ciaaa-aaaam-qb5sq-cai: Canister called `ic0.trap` with message: Panicked at anonymous caller not allowed, src/basic_bitcoin/src/lib.rs:781:9.\nConsider gracefully handling failures from this canister or altering the canister to handle exceptions. See documentation: https://internetcomputer.org/docs/current/references/execution-errors#trapped-explicitly"'
+            // return '{"Ok":["transaction_id: 06dd0b6d4a383d149bc823ca9c66defb84a7f33b0b8c75bdf7e59346a6a9a32a", "given_fee: 3000", "bitcoin_amount: 1640", "susd_balance: 0"]}'
+
+            // @dev The transaction fee rate in sat/vB @gas @network
+            let fee_rate = await mempoolFeeRate()
+            console.log(
+                `Initiating BTC purchase with ${amt} susd-sats; minimum BTC amount: ${btcAmt} sats... & fee rate: ${fee_rate} sat/vB`
+            )
+            const syron = basic_bitcoin_syron(identity)
+            const tx_res = await syron.buy_btc(
+                { ssi, op: { payment: null } },
+                amt,
+                btcAmt,
+                fee_rate * 1000
+            )
+
+            // Convert BigInt values to strings
+            const tx_stringified = JSON.stringify(tx_res, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', tx_stringified)
+
+            if (tx_res.Err) {
+                throw new Error(tx_stringified)
+            }
+
+            return tx_stringified
+        } catch (error) {
+            console.error('BTC Purchase Call', error)
+            throw error
+        }
+    }
+
     const redemptionGas = async (ssi: string) => {
         try {
             console.log('Loading Redemption Gas')
@@ -219,6 +260,9 @@ function useICPHook() {
     const redeemBTC = async (ssi: string, txid: string) => {
         try {
             console.log('Loading BTC Redemption')
+            // @dev The transaction fee rate in sat/vB @gas @network
+            let fee_rate = await mempoolFeeRate()
+
             const syron = basic_bitcoin_syron()
             const txId = await syron.redeem_btc(
                 {
@@ -226,7 +270,8 @@ function useICPHook() {
                     op: { redeembitcoin: null },
                 },
                 txid,
-                provider_id
+                provider_id,
+                fee_rate * 1000
             )
             if (txId.Err) {
                 throw new Error(txId.Err.GenericError.error_message)
@@ -257,6 +302,7 @@ function useICPHook() {
         getSUSD,
         syronWithdrawal,
         sendSyron,
+        buyBtc,
         redemptionGas,
         redeemBTC,
         getServiceProviders,
@@ -264,3 +310,17 @@ function useICPHook() {
 }
 
 export default useICPHook
+
+export function parseTxOkArray(txStringified: string): string[] {
+    try {
+        const obj = JSON.parse(txStringified)
+        if (!obj.Ok || !Array.isArray(obj.Ok)) return []
+        return obj.Ok.map((entry: string) => {
+            const parts = entry.split(':')
+            // If the format is "key: value", return the value trimmed
+            return parts.length > 1 ? parts.slice(1).join(':').trim() : entry
+        })
+    } catch {
+        return []
+    }
+}

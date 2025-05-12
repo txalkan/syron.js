@@ -1,5 +1,5 @@
 import Big from 'big.js'
-import useICPHook from '../../hooks/useICP'
+import useICPHook, { parseTxOkArray } from '../../hooks/useICP'
 import { updateIcpTx, updateInscriptionTx } from '../../store/syron'
 import { inscribe_transfer } from '../unisat/inscribe-transfer'
 import {
@@ -11,7 +11,7 @@ import { mempoolFeeRate } from '../unisat/httpUtils'
 Big.PE = 999
 
 function useSyronWithdrawal() {
-    const { getSUSD, syronWithdrawal, sendSyron } = useICPHook()
+    const { getSUSD, syronWithdrawal, sendSyron, buyBtc } = useICPHook()
 
     const btc_to_syron = async (
         ssi: string,
@@ -43,9 +43,7 @@ function useSyronWithdrawal() {
             updateInscriptionTx(txId)
             await addInscriptionInfo(txId)
 
-            const fee = await mempoolFeeRate()
-
-            const res = await getSUSD(ssi, txId, fee)
+            const res = await getSUSD(ssi, txId)
             updateIcpTx(true)
 
             await updateInscriptionInfo(txId)
@@ -82,8 +80,7 @@ function useSyronWithdrawal() {
             const dec = 1e8
             const amount = Number(amt.mul(dec))
 
-            const fee = await mempoolFeeRate()
-            const res = await syronWithdrawal(ssi, txId, amount, fee)
+            const res = await syronWithdrawal(ssi, txId, amount)
             updateIcpTx(true)
 
             await updateInscriptionInfo(txId)
@@ -108,7 +105,23 @@ function useSyronWithdrawal() {
         }
     }
 
-    return { btc_to_syron, syron_withdrawal, send_syron }
+    const buy_btc = async (ssi: string, amt: Big, btcAmt: Big) => {
+        try {
+            const dec = 1e8
+            const amount = Number(amt.mul(dec))
+            const btcAmount = Number(btcAmt.mul(dec).round(0))
+
+            const res = await buyBtc(ssi, amount, btcAmount)
+            const array = parseTxOkArray(res)
+
+            if (array.length > 0) return array
+            return res
+        } catch (error) {
+            throw error
+        }
+    }
+
+    return { btc_to_syron, syron_withdrawal, send_syron, buy_btc }
 }
 
 export default useSyronWithdrawal

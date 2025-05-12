@@ -7,6 +7,7 @@ export interface SyronSSI {
     syron_btc: Big // Registered BTC balance in the Syron ledger (accounted deposit)
     syron_usd_loan: Big
     syron_usd_bal: Big
+    exchange_rate: Big
 }
 
 export interface BTCWallet {

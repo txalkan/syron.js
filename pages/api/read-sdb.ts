@@ -64,34 +64,19 @@ export default async function handler(
         // @dev read btc collateral deposit
         const balance = await unisatBalance(address)
 
-        // @dev Get account from ICP
-        const account = await syron.get_account(id)
-        console.log(account)
+        // @dev read account from ICP
+        const account = await syron.read_account(id)
+        console.log('@response account balances:', account)
 
-        if (account.Ok) {
-            let ratio = account.Ok.collateral_ratio.toString()
-            let btc = account.Ok.btc_1.toString()
-            let susd = account.Ok.susd_1.toString()
-            let bal = account.Ok.susd_2.toString()
-            let brc20 = account.Ok.susd_3.toString()
+        let ratio = '1500' //@review add btc_0
+        let btc = account[1].toString()
+        let susd = account[2].toString()
+        let bal = account[3].toString()
+        let brc20 = account[4].toString()
 
-            let exchange_rate = account.Ok.exchange_rate.toString()
-
-            response.status(200).json({
-                data: {
-                    address,
-                    balance,
-                    ratio,
-                    btc,
-                    susd,
-                    bal,
-                    brc20,
-                    exchange_rate,
-                },
-            })
-        } else {
-            throw new Error(account.Err)
-        }
+        response.status(200).json({
+            data: { address, balance, ratio, btc, susd, bal, brc20 },
+        })
     } catch (error) {
         console.error('@response account error:', error)
         response.status(500).json({

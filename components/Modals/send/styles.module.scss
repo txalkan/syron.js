@@ -305,7 +305,6 @@
     display: flex;
     align-items: center;
     width: 100%;
-    margin-bottom: 1.5rem;
     background-color: #fff !important;
 }
 
@@ -330,7 +329,6 @@
     font-family: 'Courier New', Courier, monospace;
     font-size: 0.85rem;
     padding: 1rem;
-    border: 1px solid #fff;
     text-align: left;
     line-height: 1.4;
     letter-spacing: 0.5px;
@@ -359,4 +357,69 @@
         margin-top: 0.5rem;
         margin-left: 0.5rem;
     }
+}
+.inputWrapper {
+    margin-bottom: 1.5rem;
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    gap: 0.5rem; /* Add spacing between elements */
+}
+
+.input {
+    flex: 1;
+    cursor: pointer;
+    padding-right: 2rem; /* Add space for the clear button */
+    padding-left: 0.5rem; /* Optional: Add padding for better spacing */
+    height: 2.5rem; /* Ensure consistent height */
+
+    color: #000 !important;
+    align-items: center;
+    width: 100%;
+    background-color: #fff !important;
+}
+
+.clearButton {
+    position: absolute;
+    right: 6.5rem; /* Adjust position to avoid overlap with the paste button */
+    background: none;
+    border: none;
+    color: #888;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 0;
+    line-height: 1;
+    height: 2.5rem; /* Match input height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.clearButton:hover {
+    color: #000; /* Change color on hover */
+}
+
+.pasteButton {
+    background: #4b0082;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 0 1rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    height: 2.5rem; /* Match input height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pasteButton:hover {
+    background: #7a28ff; /* Change background color on hover */
+}
+
+.toastMessage {
+    word-break: break-word; /* Allows breaking long words */
+    overflow-wrap: break-word; /* Ensures text wraps to the next line */
+    white-space: normal; /* Ensures text wraps instead of staying on one line */
 }

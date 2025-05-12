@@ -6,7 +6,7 @@ import { Modal, ModalHeader } from '../../modal'
 import Image from 'next/image'
 import CloseIcon from '../../../src/assets/icons/ic_cross_black.svg'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
 import { collection, getDocs } from 'firebase/firestore'
 import { db } from '../../../src/utils/firebase/firebaseConfig'
 import Spinner from '../../Spinner'
@@ -85,7 +85,7 @@ export var SyronTokenModal: React.FC<Prop> = function ({
                 <div
                     className={`${styles.modalHeaderPurple} ${styles.centered}`}
                 >
-                    <div>Select SDB to liquidate</div>
+                    <div>Select Box to liquidate</div>
                     <span className={styles.closeIco} onClick={onClose}>
                         <Image width={14} src={CloseIcon} alt="close-ico" />
                     </span>

@@ -5,7 +5,7 @@ import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
 import SwapIcon from '../../icons/swap'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
 import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
@@ -14,7 +14,6 @@ import { $btc_wallet, $walletConnected } from '../../../src/store/syron'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
-import { useMempoolHook } from '../../../src/hooks/useMempool'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -45,7 +44,6 @@ export const BoxInput: React.FC<Prop> = ({
     const [inputVal, setInputVal] = useState(_0)
     const [balWorth, setBalWorth] = useState(_0)
 
-    const { getXR } = useMempoolHook()
     useEffect(() => {
         if (addr_name == 'btc') {
             setInputVal(value_.div(dec))
@@ -58,25 +56,11 @@ export const BoxInput: React.FC<Prop> = ({
                 setBtcBalance(btcBal)
 
                 if (xr != null) {
-                    setBalWorth(btcBal.mul(xr.rate))
+                    setBalWorth(btcBal.mul(Big(xr.rate)))
                 }
             }
         }
     }, [btc_wallet?.btc_balance, xr])
-
-    // @dev Update BTC exchange rate every 2 minutes
-    useEffect(() => {
-        async function updateXR() {
-            await getXR()
-            // @review update wallet balance too
-        }
-
-        updateXR()
-
-        const intervalId = setInterval(updateXR, 2 * 60 * 1000)
-
-        return () => clearInterval(intervalId) // Cleanup on unmount
-    }, [])
 
     const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 
@@ -151,13 +135,15 @@ export const BoxInput: React.FC<Prop> = ({
                                 <span style={{ paddingRight: '0.2rem' }}>
                                     $
                                 </span>
-                                {Number(Big(xr!.rate)).toLocaleString('en-US')}
+                                {xr?.rate
+                                    ? xr.rate.toLocaleString('en-US')
+                                    : '...'}
                             </span>
                         </div>
                         <div className={styles.info}>
                             {walletConnected && (
                                 <>
-                                    | Wallet Balance
+                                    | Connected Wallet Balance
                                     <span className={styles.infoBalance}>
                                         {!isNaN(Number(btcBalance)) &&
                                             Number(btcBalance) !== 0 && (

@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import classNames from 'classnames'
 import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.svg'
+import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
 import { $btc_wallet, $syron } from '../../../src/store/syron'
@@ -63,6 +63,7 @@ export const SyronInput: React.FC<Prop> = ({
                     setVal_(input)
                     onInput(input)
                 } else {
+                    setVal_(_0)
                     onInput(_0)
                 }
             } catch (err) {

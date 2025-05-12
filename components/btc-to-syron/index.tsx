@@ -122,7 +122,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     }
     const updateUserBalance = async () => {
         const ssi = await updateWalletBalance()
-        await getBox(ssi, false)
+        await getBox(ssi)
         console.log('User balance updated')
     }
 
@@ -148,7 +148,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             // @network
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION
             if (version === '2') {
-                if (btcWallet?.network != 'livenet') {
+                if (btcWallet?.network != 'BITCOIN_MAINNET') {
                     console.log('Network:', btcWallet?.network)
                     throw new Error('Use Bitcoin Mainnet')
                 }

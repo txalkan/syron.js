@@ -49,7 +49,7 @@ type Mode = variant {
     ReadOnly;
     // Only specified principals can modify minter's state.
     RestrictedTo : vec principal;
-    // Only specified principals can deposit BTC to get SU$D.
+    // Only specified principals can deposit BTC to get Syron SUSD.
     DepositsRestrictedTo : vec principal;
     // Anyone can interact with the minter.
     GeneralAvailability;
@@ -65,7 +65,7 @@ type InitArgs = record {
     // the minting account of the ledger.
     ledger_id : principal;
     
-    // The principal of the Syron Ledger that handles SU$D transfers.
+    // The principal of the Syron Ledger that handles SUSD transfers.
     // The default account of the Syron Minter must be configured as
     // the minting account of the ledger.
     susd_id : principal;
@@ -80,7 +80,7 @@ type InitArgs = record {
     // E.g., "dfx_test_key" on the local replica.
     ecdsa_key_name : text;
 
-    // The minimal amount of SU$D that can be used to unlock BTC.
+    // The minimum BTC balance required to release the balance from an SDB.
     retrieve_btc_min_amount : nat64;
 
     /// Maximum time in nanoseconds that a transaction should spend in the queue
@@ -103,7 +103,7 @@ type InitArgs = record {
 
 // The upgrade parameters of the Syron Minter canister.
 type UpgradeArgs = record {
-    // The minimal amount of SU$D that the minter requests to unlock BTC.
+    // The minimum Bitcoin balance required to release the balance from an SDB.
     retrieve_btc_min_amount : opt nat64;
 
     /// Maximum time in nanoseconds that a transaction should spend in the queue
@@ -139,11 +139,11 @@ type UtxoStatus = variant {
     // The KYT provider considered this UTXO to be tainted. This UTXO state is
     // final, retrying [update_balance] call will have no effect on this UTXO.
     Tainted: Utxo;
-    // The UTXO passed the KYT check, but the minter failed to mint SU$D
+    // The UTXO passed the KYT check, but the minter failed to mint Syron SUSD
     // because the Ledger was unavailable. Retrying the [update_balance] call
     // should eventually advance the UTXO to the [Minted] state.
     Checked: Utxo;
-    // The UTXO passed the KYT check, and SU$D has been minted.
+    // The UTXO passed the KYT check, and Syron SUSD has been minted.
     Minted: record {
         block_index : nat64;
         minted_amount : nat64;
@@ -231,13 +231,14 @@ service : (network, MinterArg) -> {
     "getServiceProviderMap": () -> (vec record { ServiceProvider; nat64 }) query;
 
     "get_p2wpkh_address": () -> (bitcoin_address);
+    "get_dao_addr": () -> (vec bitcoin_address);
 
     "get_current_fee_percentiles": () -> (vec millisatoshi_per_vbyte);
     "get_fee_percentile": (percentile: nat64) -> (nat64);
 
-    // Returns the bitcoin address to which the user should send BTC
-    // to get SU$D using the [update_balance] endpoint.
-    "get_box_address": (GetBoxAddressArgs) -> (bitcoin_address);
+    // Returns the bitcoin address to which the user should send BTC (dubbed the Safety Deposit Box).
+    // Receive an SUSD loan using the [update_balance] endpoint.
+    "get_box_address": (GetBoxAddressArgs) -> (bitcoin_address) query;
 
     // Updates the Syron ledgers
     // A BTC deposit was made to the address returned by the [get_box_address] endpoint.
@@ -247,7 +248,7 @@ service : (network, MinterArg) -> {
     
     "get_indexed_balance": (id: text) -> (variant { Ok: text; Err: UpdateBalanceError });
     
-    // Mints SU$D for newly deposited UTXOs.
+    // Mints Syron SUSD for newly deposited UTXOs.
     //
     // # Preconditions
     //
@@ -263,13 +264,19 @@ service : (network, MinterArg) -> {
 
     "sbtc_balance_of": (ssi: bitcoin_address, nonce: nat64) -> (nat64);
     
-    "redeem_btc": (args: GetBoxAddressArgs, txid: text, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "redeem_btc": (args: GetBoxAddressArgs, txid: text, provider: nat64, fee: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
 
     "redemption_gas": (args: GetBoxAddressArgs) -> (variant { Ok: nat64; Err: UpdateBalanceError });
 
-    "get_account": (ssi: bitcoin_address, dummy: bool) -> (variant { Ok: CollateralizedAccount; Err: UpdateBalanceError });
+    "read_account": (ssi: bitcoin_address) -> (vec nat64);
+    "get_account": (ssi: bitcoin_address) -> (variant { Ok: CollateralizedAccount; Err: UpdateBalanceError });
 
     "liquidate": (args: GetBoxAddressArgs, id: text, txid: text, provider: nat64, fee: nat64) -> (variant { Ok: vec text; Err: UpdateBalanceError });
 
     "send_syron": (args: GetBoxAddressArgs, recipient: bitcoin_address, amount: nat64) -> (variant { Ok: vec nat64; Err: UpdateBalanceError });
+
+    "buy_btc": (args: GetBoxAddressArgs, amount: nat64, btc_amount: nat64, fee: nat64) -> (variant { Ok: vec text; Err: UpdateBalanceError });
+
+    // @dev-mode
+    "get_utxo_txids": (bitcoin_address) -> (vec text);
 }
