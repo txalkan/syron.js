@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import { updateXR } from '../store/xr'
 import { mempoolPrice } from '../utils/unisat/httpUtils'
 import { useStore } from 'react-stores'
-import { $syron, updateSyronSSI } from '../store/syron'
+import { $syron } from '../store/syron'
 
 //@mempool
 export function useMempoolHook() {
@@ -17,9 +17,9 @@ export function useMempoolHook() {
             )
             const now = Math.floor(Date.now() / 1000)
             console.log('now is', now)
-            if (xr.time && now - xr.time > 180) {
+            if (xr.time && now - xr.time > 600) {
                 throw new Error(
-                    'Mempool exchange rate data is older than 3 minutes'
+                    'Mempool exchange rate data is older than 10 minutes'
                 )
             }
             const xusd = Number(xr.USD)

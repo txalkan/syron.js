@@ -1,5 +1,6 @@
 import { Store } from 'react-stores'
 import { BTCWallet, SyronSSI } from '../types/syron'
+import { DelegationIdentity } from '@dfinity/identity'
 
 export const $syron = new Store<SyronSSI | null>(null)
 export function updateSyronSSI(args: SyronSSI) {
@@ -34,4 +35,11 @@ export function updateInscriptionTx(args: string | null) {
 export const $icpTx = new Store<{ value: boolean | null }>({ value: null })
 export function updateIcpTx(args: boolean | null) {
     $icpTx.setState({ value: args })
+}
+
+export const $siwb = new Store<{ value: DelegationIdentity | null }>({
+    value: null,
+})
+export function updateSiwb(args: DelegationIdentity | null) {
+    $siwb.setState({ value: args })
 }

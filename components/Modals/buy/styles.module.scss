@@ -66,6 +66,12 @@
     color: #000;
     padding: 1rem;
     font-size: 0.8rem;
+    overflow-y: auto; // Enable vertical scrolling if content exceeds the height
+    white-space: normal; // Allow text to wrap normally
+    line-height: 1.5; // Improve readability with better line spacing
+    word-break: break-all !important; // Break long words or URLs properly
+    display: flex;
+    flex-grow: 1;
 }
 
 .error {
@@ -77,6 +83,7 @@
     white-space: normal; // Allow text to wrap normally
     line-height: 1.5; // Improve readability with better line spacing
     word-break: break-word !important; // Break long words or URLs properly
+    flex-grow: 1; // Allow the span to take available space
 }
 
 .link {

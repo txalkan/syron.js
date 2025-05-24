@@ -13,7 +13,13 @@ import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
 import Big from 'big.js'
-import { $btc_wallet, $syron, $walletConnected } from '../../src/store/syron'
+import {
+    $btc_wallet,
+    $siwb,
+    $syron,
+    $walletConnected,
+    updateSiwb,
+} from '../../src/store/syron'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -31,6 +37,7 @@ import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
 import AuthGuard from '../AuthGuard'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import SyronLogo from '../../src/assets/logos/susd_minimal_brand_mark.png'
+import { DelegationIdentity } from '@dfinity/identity'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -38,21 +45,75 @@ const _0 = Big(0)
 function Component() {
     const walletConnected = useStore($walletConnected).isConnected
     const syron = useStore($syron)
-
+    const siwb = useStore($siwb).value
+    const { identity } = useSiwbIdentity()
     const { t } = useTranslation()
-    const [active, setActive] = useState('GetSyron')
 
+    const [active, setActive] = useState('GetSyron')
     const [sdb, setSDB] = useState('')
     const [satsDeposited, setSatsDeposited] = useState(_0)
     const [loan, setLoan] = useState('')
     const [syronBal, setSyronBal] = useState('')
+    const [isIdentified, setIsIdentified] = useState(false)
 
-    const { identity } = useSiwbIdentity()
+    const [showWithdrawModal, setWithdrawModal] = React.useState(false)
+    const updateWithdraw = async () => {
+        setWithdrawModal(true)
+    }
+    const [showSendModal, setSendModal] = React.useState(false)
+    const updateSend = async () => {
+        setSendModal(true)
+    }
+    const [showBuyModal, setBuyModal] = React.useState(false)
+    const updateBuy = async () => {
+        setBuyModal(true)
+    }
+
     useEffect(() => {
-        if (identity) {
-            console.log('SIWB Identity: ', JSON.stringify(identity, null, 2))
+        console.log('SIWB identity: ', identity)
+        console.log('SIWB saved identity: ', siwb)
+
+        let current_id: DelegationIdentity
+        if (siwb !== null) {
+            current_id = siwb
+            console.log('SIWB session still present')
+        } else if (identity) {
+            current_id = identity
+        } else {
+            console.log('SIWB session is invalid')
+            setIsIdentified(false)
+            updateSiwb(null)
+            return
         }
-    }, [identity])
+
+        const id_str = JSON.stringify(current_id, null, 2)
+        // console.log('SIWB Identity: ', id_str)
+        const match = id_str.match(/"expiration":\s*"([0-9a-fA-F]+)"/)
+        const expiration = match ? match[1] : null
+
+        if (expiration !== null) {
+            const exp = parseInt(expiration, 16) / 1e6
+            //console.log('Expiration: ', exp)
+
+            const now = Math.floor(Date.now())
+            // console.log(now)
+            if (exp > now) {
+                console.log('SIWB session not expired')
+                setIsIdentified(true)
+
+                if (siwb === null && identity) {
+                    updateSiwb(identity)
+                    console.log('SIWB session saved')
+                }
+            } else {
+                console.log('SIWB session has expired')
+                setIsIdentified(false)
+                updateSiwb(null)
+            }
+        } else {
+            console.error('SIWB session not found')
+        }
+    }, [identity, siwb, showSendModal, showBuyModal])
 
     useEffect(() => {
         if (syron !== null) {
@@ -83,12 +144,14 @@ function Component() {
                     console.error('readDeposits', error)
                 })
         }
-
-        if (syron?.sdb !== undefined && syron?.sdb !== '') readDeposits()
-
-        const intervalId = setInterval(readDeposits, 0.5 * 60 * 1000)
-
-        return () => clearInterval(intervalId) // Cleanup on unmount
+        // Only set interval if sdb is defined and not empty
+        if (syron?.sdb !== undefined && syron?.sdb !== '') {
+            readDeposits()
+            const intervalId = setInterval(readDeposits, 0.5 * 60 * 1000)
+            return () => clearInterval(intervalId)
+        }
+        // If condition not met, do nothing and no interval is set
+        return
     }, [syron?.sdb])
 
     const toggleActive = (id: string) => {
@@ -474,11 +537,6 @@ function Component() {
         }
     }
 
-    const [showWithdrawModal, setWithdrawModal] = React.useState(false)
-    const updateWithdraw = async () => {
-        setWithdrawModal(true)
-    }
-
     const handleCopy = async (value: string) => {
         try {
             await navigator.clipboard.writeText(value)
@@ -487,18 +545,6 @@ function Component() {
         } catch (error) {
             console.error('Failed to copy text:', error)
         }
-    }
-
-    // const { setWalletProvider } = useSiwbIdentity()
-
-    const [showSendModal, setSendModal] = React.useState(false)
-    const updateSend = async () => {
-        setSendModal(true)
-    }
-
-    const [showBuyModal, setBuyModal] = React.useState(false)
-    const updateBuy = async () => {
-        setBuyModal(true)
     }
 
     if (walletConnected && showWithdrawModal) {
@@ -847,7 +893,7 @@ function Component() {
                                                 | ICPayments
                                             </div>
                                             <div className={styles.buttons}>
-                                                {!identity ? (
+                                                {!isIdentified ? (
                                                     <AuthGuard>
                                                         <button
                                                             onClick={updateSend}

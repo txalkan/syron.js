@@ -86,7 +86,7 @@ var ThisModal: React.FC<Prop> = function ({
             setIsLoading(true)
 
             const res = await buy_btc(ssi, amount, btcAmount.times(0.99))
-            console.log(' BTC Purchase Result', res)
+            console.log('BTC Purchase Result', res)
 
             if (Array.isArray(res) && res.length > 0) {
                 setIsTxnErr(false)
@@ -118,6 +118,26 @@ var ThisModal: React.FC<Prop> = function ({
             setIsTxnRes(error_msg)
 
             if (
+                (error as Error).message.includes(
+                    'sender delegation has expired'
+                ) ||
+                (error as Error).message.includes(
+                    'anonymous caller not allowed'
+                )
+            ) {
+                onClose()
+                // await siwb()
+                toast.warn(
+                    "Your Sign In With Bitcoin session is no longer valid. Please 'SIGN IN' again.",
+                    { autoClose: false }
+                )
+            } else if (
+                (error as Error).message.includes(
+                    'signature could not be verified'
+                )
+            ) {
+                setIsTxnRes('')
+            } else if (
                 (error as Error).message.includes(
                     'anonymous caller not allowed'
                 )
@@ -192,10 +212,12 @@ var ThisModal: React.FC<Prop> = function ({
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
     const [onDetails, setOnDetails] = useState({})
     const btc_wallet = useStore($btc_wallet)
+
     const handleContinue = React.useCallback(async () => {
         if (isDisabled) return
         try {
             setIsTxnRes('')
+            setIsTxnErr(false)
             toast.dismiss(1)
             toast.dismiss(500)
 
@@ -368,7 +390,9 @@ var ThisModal: React.FC<Prop> = function ({
                     <div className={styles.btnConfirmWrapper}>
                         <button
                             className={`button ${
-                                isDisabled || isLoading ? 'disabled' : 'primary'
+                                isDisabled || isLoading || isConfirmationOpen
+                                    ? 'disabled'
+                                    : 'primary'
                             }`}
                             onClick={handleContinue}
                         >
@@ -396,63 +420,84 @@ var ThisModal: React.FC<Prop> = function ({
                             </div>
                             <Spinner />
                         </div>
-                    ) : (
-                        isTxnRes != '' && (
-                            <>
-                                {!isTxnErr ? (
-                                    <>
-                                        <div
-                                            className={
-                                                styles.succeededWithdrawal
-                                            }
-                                        >
-                                            <div
-                                                className={styles.withdrawalTxt}
-                                            >
-                                                Congratulations! The swap was
-                                                successful, and{' '}
-                                                <strong>{isBtcAmt} BTC</strong>{' '}
-                                                has been sent to your wallet.
-                                            </div>
-                                            <div
-                                                className={styles.withdrawalTxt}
-                                            >
-                                                You can check the explorer to
-                                                verify the transaction:
-                                            </div>
-                                            <div
-                                                className={styles.link}
-                                                onClick={() => {
-                                                    //@network defaults to mainnet
-                                                    let url: URL = new URL(
-                                                        `https://mempool.space/tx/${isTxnRes}`
-                                                    )
-                                                    const version =
-                                                        process.env
-                                                            .NEXT_PUBLIC_SYRON_VERSION
-                                                    if (version === 'testnet') {
-                                                        url = new URL(
-                                                            `https://mempool.space/testnet4/tx/${isTxnRes}`
-                                                        )
-                                                    }
-                                                    window.open(url)
-                                                }}
-                                            >
-                                                {isTxnRes}
-                                            </div>
-                                        </div>
-                                    </>
-                                ) : (
-                                    <div className={styles.failedWithdrawal}>
-                                        <div className={styles.withdrawalTxt}>
-                                            The swap was not successful. Please
-                                            try again.
-                                        </div>
-                                        <strong>{isTxnRes}</strong>
+                    ) : isTxnRes != '' ? (
+                        <>
+                            {!isTxnErr ? (
+                                <div className={styles.succeededWithdrawal}>
+                                    <div className={styles.withdrawalTxt}>
+                                        Your BTC purchase was successful, and{' '}
+                                        <strong>{isBtcAmt} BTC</strong> has been
+                                        sent to your wallet.
                                     </div>
-                                )}
-                            </>
-                        )
+                                    <div className={styles.withdrawalTxt}>
+                                        You can check the explorer to verify the
+                                        transaction:
+                                    </div>
+                                    <div
+                                        className={styles.link}
+                                        onClick={() => {
+                                            //@network defaults to mainnet
+                                            let url: URL = new URL(
+                                                `https://mempool.space/tx/${isTxnRes}`
+                                            )
+                                            const version =
+                                                process.env
+                                                    .NEXT_PUBLIC_SYRON_VERSION
+                                            if (version === 'testnet') {
+                                                url = new URL(
+                                                    `https://mempool.space/testnet4/tx/${isTxnRes}`
+                                                )
+                                            }
+                                            window.open(url)
+                                        }}
+                                    >
+                                        {isTxnRes}
+                                    </div>
+                                </div>
+                            ) : (
+                                <div className={styles.failedWithdrawal}>
+                                    <div className={styles.withdrawalTxt}>
+                                        The transaction was not successful.
+                                        Please try again.
+                                    </div>
+                                    <strong>{isTxnRes}</strong>
+                                </div>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            {isTxnErr && (
+                                <div className={styles.succeededWithdrawal}>
+                                    <div className={styles.withdrawalTxt}>
+                                        Your BTC purchase was successful!
+                                    </div>
+                                    <div className={styles.withdrawalTxt}>
+                                        You can check your wallet to verify the
+                                        transaction:
+                                    </div>
+                                    <div
+                                        className={styles.link}
+                                        onClick={() => {
+                                            //@network defaults to mainnet
+                                            let url: URL = new URL(
+                                                `https://mempool.space/address/${btc_wallet?.btc_addr}`
+                                            )
+                                            const version =
+                                                process.env
+                                                    .NEXT_PUBLIC_SYRON_VERSION
+                                            if (version === 'testnet') {
+                                                url = new URL(
+                                                    `https://mempool.space/testnet4/address/${btc_wallet?.btc_addr}`
+                                                )
+                                            }
+                                            window.open(url)
+                                        }}
+                                    >
+                                        {btc_wallet?.btc_addr}
+                                    </div>
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

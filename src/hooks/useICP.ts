@@ -1,15 +1,16 @@
+import { useCallback } from 'react'
 import { basic_bitcoin_syron } from '../declarations/basic_bitcoin_tyron'
-
-import { updateSyronSSI } from '../store/syron'
+import { $siwb, updateSyronSSI } from '../store/syron'
 import Big from 'big.js'
 import { updateXR } from '../store/xr'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { mempoolFeeRate } from '../utils/unisat/httpUtils'
+import { useStore } from 'react-stores'
 
 Big.PE = 999
 
 function useICPHook() {
-    const { identity } = useSiwbIdentity()
+    const identity = useStore($siwb).value
 
     // @network
     const version = process.env.NEXT_PUBLIC_SYRON_VERSION
@@ -99,7 +100,7 @@ function useICPHook() {
             console.log(
                 `Initiating SYRON Issuance with inscribe-transfer UTXO (${txid})...`
             )
-            // @dev The transaction fee rate in sat/vB @gas @network
+            // @dev The transaction fee rate in sat/vB
             let fee_rate = await mempoolFeeRate()
 
             const syron = basic_bitcoin_syron()
@@ -136,7 +137,7 @@ function useICPHook() {
             console.log(
                 `Initiating SYRON Withdrawal of amount (${amt}) susd-sats...`
             )
-            // @dev The transaction fee rate in sat/vB @gas @network
+            // @dev The transaction fee rate in sat/vB
             let fee_rate = await mempoolFeeRate()
 
             const syron = basic_bitcoin_syron()
@@ -169,73 +170,92 @@ function useICPHook() {
         }
     }
 
-    const sendSyron = async (ssi: string, recipient: string, amt: number) => {
-        try {
-            console.log(
-                `Initiating SUSD payment of amount (${amt}) to recipient (${recipient})...`
-            )
-            const syron = basic_bitcoin_syron(identity)
-            const txId = await syron.send_syron(
-                { ssi, op: { payment: null } },
-                recipient,
-                amt
-            )
+    const sendSyron = useCallback(
+        async (ssi: string, recipient: string, amt: number) => {
+            try {
+                if (identity === undefined || identity === null) {
+                    throw new Error('SIWB Identity is undefined')
+                }
+                console.log(
+                    `Initiating SUSD payment of amount (${amt}) to recipient (${recipient}) -- identity: ${identity}`
+                )
+                const syron = basic_bitcoin_syron(identity)
+                const txId = await syron.send_syron(
+                    { ssi, op: { payment: null } },
+                    recipient,
+                    amt
+                )
 
-            // Convert BigInt values to strings
-            const txIdStringified = JSON.stringify(txId, (key, value) =>
-                typeof value === 'bigint' ? value.toString() : value
-            )
+                // Convert BigInt values to strings
+                const txIdStringified = JSON.stringify(txId, (key, value) =>
+                    typeof value === 'bigint' ? value.toString() : value
+                )
 
-            console.log('txId response: ', txIdStringified)
-            //console.log('txId response: ', JSON.stringify(txId, null, 2))
+                console.log('txId response: ', txIdStringified)
+                //console.log('txId response: ', JSON.stringify(txId, null, 2))
 
-            if (txId.Err) {
-                throw new Error(txIdStringified)
+                if (txId.Err) {
+                    throw new Error(txIdStringified)
+                }
+
+                return txId
+            } catch (error) {
+                console.error('Syron Payment Call', error)
+                throw error
             }
+        },
+        [identity]
+    )
 
-            return txId
-        } catch (error) {
-            console.error('Syron Payment Call', error)
-            throw error
-        }
-    }
+    const buyBtc = useCallback(
+        async (ssi: string, amt: number, btcAmt: number) => {
+            try {
+                // @add in tests
+                // return 'Call failed: Canister: qgzyj-ciaaa-aaaam-qb5sq-cai Method: buy_btc (update) "Request ID": "1e5194b7b8e65411dd9bb8edd8c214824bb117c029da43c1257fce2b9694b175" "Error code": "IC0503" "Reject code": "5" "Reject message": "Error from Canister qgzyj-ciaaa-aaaam-qb5sq-cai: Canister called `ic0.trap` with message: Panicked at anonymous caller not allowed, src/basic_bitcoin/src/lib.rs:781:9.\nConsider gracefully handling failures from this canister or altering the canister to handle exceptions. See documentation: https://internetcomputer.org/docs/current/references/execution-errors#trapped-explicitly"'
+                // return '{"Ok":["transaction_id: 06dd0b6d4a383d149bc823ca9c66defb84a7f33b0b8c75bdf7e59346a6a9a32a", "given_fee: 3000", "bitcoin_amount: 1640", "susd_balance: 0"]}'
 
-    const buyBtc = async (ssi: string, amt: number, btcAmt: number) => {
-        try {
-            // @add in tests
-            // return 'Call failed: Canister: qgzyj-ciaaa-aaaam-qb5sq-cai Method: buy_btc (update) "Request ID": "1e5194b7b8e65411dd9bb8edd8c214824bb117c029da43c1257fce2b9694b175" "Error code": "IC0503" "Reject code": "5" "Reject message": "Error from Canister qgzyj-ciaaa-aaaam-qb5sq-cai: Canister called `ic0.trap` with message: Panicked at anonymous caller not allowed, src/basic_bitcoin/src/lib.rs:781:9.\nConsider gracefully handling failures from this canister or altering the canister to handle exceptions. See documentation: https://internetcomputer.org/docs/current/references/execution-errors#trapped-explicitly"'
-            // return '{"Ok":["transaction_id: 06dd0b6d4a383d149bc823ca9c66defb84a7f33b0b8c75bdf7e59346a6a9a32a", "given_fee: 3000", "bitcoin_amount: 1640", "susd_balance: 0"]}'
+                // @dev The transaction fee rate in sat/vB
+                let fee_rate = await mempoolFeeRate()
+                if (fee_rate === 0) {
+                    throw new Error('Invalid fee rate')
+                }
+                if (identity === null || identity === undefined) {
+                    throw new Error('SIWB identity is undefined')
+                }
+                console.log(
+                    `Initiating BTC purchase with ${amt} susd-sats; minimum BTC amount: ${btcAmt} sats; fee rate: ${fee_rate} sat/vB & identity: ${JSON.stringify(
+                        identity,
+                        null,
+                        2
+                    )}`
+                )
+                const syron = basic_bitcoin_syron(identity)
+                const tx_res = await syron.buy_btc(
+                    { ssi, op: { payment: null } },
+                    amt,
+                    btcAmt,
+                    fee_rate * 1000
+                )
 
-            // @dev The transaction fee rate in sat/vB @gas @network
-            let fee_rate = await mempoolFeeRate()
-            console.log(
-                `Initiating BTC purchase with ${amt} susd-sats; minimum BTC amount: ${btcAmt} sats... & fee rate: ${fee_rate} sat/vB`
-            )
-            const syron = basic_bitcoin_syron(identity)
-            const tx_res = await syron.buy_btc(
-                { ssi, op: { payment: null } },
-                amt,
-                btcAmt,
-                fee_rate * 1000
-            )
+                // Convert BigInt values to strings
+                const tx_stringified = JSON.stringify(tx_res, (key, value) =>
+                    typeof value === 'bigint' ? value.toString() : value
+                )
 
-            // Convert BigInt values to strings
-            const tx_stringified = JSON.stringify(tx_res, (key, value) =>
-                typeof value === 'bigint' ? value.toString() : value
-            )
+                console.log('txId response: ', tx_stringified)
 
-            console.log('txId response: ', tx_stringified)
+                if (tx_res.Err) {
+                    throw new Error(tx_stringified)
+                }
 
-            if (tx_res.Err) {
-                throw new Error(tx_stringified)
+                return tx_stringified
+            } catch (error) {
+                console.error('BTC Purchase Call', error)
+                throw error
             }
-
-            return tx_stringified
-        } catch (error) {
-            console.error('BTC Purchase Call', error)
-            throw error
-        }
-    }
+        },
+        [identity]
+    )
 
     const redemptionGas = async (ssi: string) => {
         try {
@@ -260,7 +280,7 @@ function useICPHook() {
     const redeemBTC = async (ssi: string, txid: string) => {
         try {
             console.log('Loading BTC Redemption')
-            // @dev The transaction fee rate in sat/vB @gas @network
+            // @dev The transaction fee rate in sat/vB
             let fee_rate = await mempoolFeeRate()
 
             const syron = basic_bitcoin_syron()
