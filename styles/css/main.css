@@ -117,12 +117,13 @@ section {
 }
 
 .body {
-    background-color: rgb(251, 252, 246);
+    background-image: url('/images/bg.png');
+    background-color: #cdcdcd;
+    /* #d3d6db; */
+    /* rgb(251, 252, 246); */
     /* #dbe4eb; */
     /* @design background: ; */
-    background-blend-mode: soft-light;
-    /* background-color: black;
-    background-blend-mode: luminosity; */
+    background-blend-mode: overlay;
 }
 
 .bodylight {
@@ -1232,7 +1233,7 @@ input[type='button'].primary,
 button.primary,
 .button.primary {
     text-transform: capitalize;
-    background-color: rgb(75, 0, 130);
+    background-color: rgba(100, 88, 107);
     color: #ffffff !important;
     letter-spacing: normal;
 }
@@ -1243,6 +1244,8 @@ input[type='button'].secondary,
 button.secondary,
 .button.secondary,
 .button.disabled {
+    height: 1.5rem;
+    font-size: 0.7rem;
     width: fit-content;
 }
 
