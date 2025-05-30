@@ -26,18 +26,10 @@
     justify-content: space-between;
 } */
 
-.languageSelectorWrapper {
-    margin-top: -5px;
-}
-
 .languageSelector {
     width: 100%;
     border: 1px solid rgb(182, 182, 182);
     border-radius: 5px;
-}
-
-.dropdownCheckListWrapper {
-    width: 170px;
 }
 
 .dropdownCheckList {
@@ -66,47 +58,4 @@
     font-size: 10px;
     color: #dbe4eb;
     cursor: pointer;
-}
-
-.closeWrapper {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0%;
-    left: 0%;
-}
-
-.dummy {
-    display: flex;
-    width: 170px;
-}
-
-@media only screen and (max-width: 850px) {
-    /* .wrapper {
-        margin-bottom: 0%;
-        padding-left: 0%;
-        padding-right: 0%;
-    } */
-    /* 
-    .footer {
-        width: 95%;
-    } */
-
-    .languageSelectorWrapper {
-        margin-bottom: -0.5rem;
-    }
-
-    .dropdownCheckListWrapper {
-        width: 80px;
-    }
-
-    /* .tyronLg {
-        width: 120px;
-        margin-bottom: -3px;
-        margin-right: -1rem;
-    } */
-
-    .dummy {
-        display: none;
-    }
 }

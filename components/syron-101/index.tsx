@@ -36,7 +36,6 @@ import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
 import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
 import AuthGuard from '../AuthGuard'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
-import SyronLogo from '../../src/assets/logos/syron_concrete.png'
 import { DelegationIdentity } from '@dfinity/identity'
 
 Big.PE = 999
@@ -581,13 +580,6 @@ function Component() {
         return (
             <div className={styles.container}>
                 {/* @dev: private SDB */}
-                <Image
-                    src={SyronLogo}
-                    alt="syron-logo"
-                    height={111}
-                    width={111}
-                    className={styles.logo}
-                />
                 <div className={styles.boxWrapper}>
                     {walletConnected ? (
                         <>
