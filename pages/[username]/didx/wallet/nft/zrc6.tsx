@@ -59,12 +59,10 @@ function Header() {
                 const merxeks = state_map.get('merxek')
                 const nessies = state_map.get('nessy')
 
-                const nawelito_map = await tyron.SmartUtil.default.intoMap(
-                    nawelitos
-                )
-                const merxek_map = await tyron.SmartUtil.default.intoMap(
-                    merxeks
-                )
+                const nawelito_map =
+                    await tyron.SmartUtil.default.intoMap(nawelitos)
+                const merxek_map =
+                    await tyron.SmartUtil.default.intoMap(merxeks)
                 const nessy_map = await tyron.SmartUtil.default.intoMap(nessies)
 
                 let condition

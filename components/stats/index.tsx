@@ -73,9 +73,8 @@ function Component() {
                     // Handle the case where token address is not found for a particular id, if necessary.
                 }
             })
-            const tokens_supply = await provider.readTokensSupply(
-                token_addresses
-            )
+            const tokens_supply =
+                await provider.readTokensSupply(token_addresses)
             const tyron_supply = tokens_supply[0]
                 ? Big(tokens_supply[0]).div(1e12).round(1)
                 : 0

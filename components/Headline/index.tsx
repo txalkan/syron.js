@@ -197,12 +197,12 @@ function Component({ data }) {
                                                                     isZil_
                                                                         ? 'zil'
                                                                         : isSbt
-                                                                        ? 'sbt'
-                                                                        : isAirx
-                                                                        ? 'airx'
-                                                                        : isDefix
-                                                                        ? 'defix'
-                                                                        : '' //didx'
+                                                                          ? 'sbt'
+                                                                          : isAirx
+                                                                            ? 'airx'
+                                                                            : isDefix
+                                                                              ? 'defix'
+                                                                              : '' //didx'
                                                                 }`
                                                             )
                                                             setLoadingHeadline(
