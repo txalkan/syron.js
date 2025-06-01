@@ -5,7 +5,7 @@ import { updateShowZilpay } from '../../src/store/modal'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
-import { initJuno } from '@junobuild/core-peer'
+// import { initJuno } from '@junobuild/core-peer'
 // import { ZilPayBase } from '../ZilPay/zilpay-base'
 // import { toast } from 'react-toastify'
 // import toastTheme from '../../src/hooks/toastTheme'
@@ -43,12 +43,12 @@ function LayoutSearch(props: LayoutProps) {
         }
     }, [loginInfo.isLight])
 
-    useEffect(() => {
-        ;(async () =>
-            await initJuno({
-                satelliteId: '7oy2c-ziaaa-aaaal-adqsq-cai',
-            }))()
-    }, [])
+    // useEffect(() => {
+    //     ;(async () =>
+    //         await initJuno({
+    //             satelliteId: '7oy2c-ziaaa-aaaal-adqsq-cai',
+    //         }))()
+    // }, [])
 
     return (
         <div

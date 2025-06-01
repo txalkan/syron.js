@@ -147,7 +147,8 @@ function Component() {
             //     }
             // )
         } else {
-            toast.warn(t('Invalid'), {
+            const message = t('Invalid subdomain.')
+            toast.warn(message, {
                 position: 'bottom-left',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -167,7 +168,8 @@ function Component() {
             updateDomainAddr({ base16: addr })
             updateDomainLegend2('saved')
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -262,7 +264,8 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.warn(t('Transaction failed.'), {
+                                const message = t('Transaction failed.')
+                                toast.warn(message, {
                                     position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,
@@ -340,7 +343,8 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.warn(t('Transaction failed.'), {
+                                const message = t('Transaction failed.')
+                                toast.warn(message, {
                                     position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,
@@ -546,7 +550,8 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.warn(t('Transaction failed.'), {
+                                    const message = t('Transaction failed.')
+                                    toast.warn(message, {
                                         position: 'bottom-right',
                                         autoClose: 4000,
                                         hideProgressBar: false,

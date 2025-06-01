@@ -340,20 +340,21 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                             <div
                                 onClick={() => {
                                     if (only_tyron) {
-                                        toast.error(
-                                            t('Insufficient balance.'),
-                                            {
-                                                position: 'top-center',
-                                                autoClose: 2222,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                toastId: 1,
-                                                theme: 'dark',
-                                            }
+                                        const message = t(
+                                            'Insufficient balance.'
                                         )
+
+                                        toast.error(message, {
+                                            position: 'top-center',
+                                            autoClose: 2222,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            toastId: 1,
+                                            theme: 'dark',
+                                        })
                                     } else {
                                         setIsSSI(true)
                                     }

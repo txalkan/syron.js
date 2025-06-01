@@ -59,7 +59,9 @@ export var Modal: React.FC<Prop> = function ({
             className={classNames(styles.container, {
                 'show-dialog': show,
             })}
-            ref={(n) => (node.current = n)}
+            ref={(n) => {
+                node.current = n
+            }}
             onClick={onToggle}
         >
             <div

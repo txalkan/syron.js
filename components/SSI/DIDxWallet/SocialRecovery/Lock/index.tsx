@@ -94,22 +94,20 @@ function Component() {
                 ]
                 const _amount = String(donation)
 
-                toast.info(
-                    t(
-                        'You’re about to submit a transaction to lock your DIDxWALLET. You are also donating X ZIL to donate.did, which gives you 0 xPoints!',
-                        { donate: donation, points: donation }
-                    ),
-                    {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                    }
+                const message = t(
+                    'You’re about to submit a transaction to lock your DIDxWALLET. You are also donating X ZIL to donate.did, which gives you 0 xPoints!',
+                    { donate: donation, points: donation }
                 )
+                toast.info(message, {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
 
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
@@ -139,7 +137,8 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.warn(t('Transaction failed.'), {
+                                    const message = t('Transaction failed.')
+                                    toast.warn(message, {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,

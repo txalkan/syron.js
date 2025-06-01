@@ -132,7 +132,7 @@ function Component({ title }) {
                                         dispatch(setTxStatusLoading('rejected'))
                                         updateModalTxMinimized(false)
                                         updateModalTx(true)
-                                        toast.warn(t(String(err)), {
+                                        toast.warn(String(err), {
                                             position: 'top-right',
                                             autoClose: 2000,
                                             hideProgressBar: false,
@@ -265,7 +265,7 @@ function Component({ title }) {
                                     dispatch(setTxStatusLoading('rejected'))
                                     updateModalTxMinimized(false)
                                     updateModalTx(true)
-                                    toast.warn(t(String(err)), {
+                                    toast.warn(String(err), {
                                         position: 'top-right',
                                         autoClose: 2000,
                                         hideProgressBar: false,
@@ -280,7 +280,7 @@ function Component({ title }) {
                     } catch (error) {
                         updateModalTx(false)
                         dispatch(setTxStatusLoading('idle'))
-                        toast.warn(t(String(error)), {
+                        toast.warn(String(error), {
                             position: 'top-right',
                             autoClose: 2000,
                             hideProgressBar: false,

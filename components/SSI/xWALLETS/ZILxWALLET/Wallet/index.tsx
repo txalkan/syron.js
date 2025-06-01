@@ -212,7 +212,8 @@ function StakeWallet() {
     }
     const handleSave = (noMinimum) => {
         if (isNaN(input)) {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -224,7 +225,8 @@ function StakeWallet() {
                 toastId: 2,
             })
         } else if (input === 0) {
-            toast.warn(t('The amount cannot be zero.'), {
+            const message = t('The amount cannot be zero.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -236,7 +238,8 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (!noMinimum && input < 10) {
-            toast.warn(t('The minimum input is 10 ZIL.'), {
+            const message = t('The minimum input is 10 ZIL.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -253,7 +256,8 @@ function StakeWallet() {
     }
     const handleSave2 = () => {
         if (isNaN(Number(extraZil))) {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -265,7 +269,8 @@ function StakeWallet() {
                 toastId: 2,
             })
         } else if (Number(extraZil) === 0) {
-            toast.warn(t('The amount cannot be zero.'), {
+            const message = t('The amount cannot be zero.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -277,7 +282,8 @@ function StakeWallet() {
                 toastId: 1,
             })
         } else if (Number(extraZil) < 10) {
-            toast.warn(t('The minimum input is 10 ZIL.'), {
+            const message = t('The minimum input is 10 ZIL.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -292,7 +298,8 @@ function StakeWallet() {
             if (Number(extraZil) <= zilBal[1]) {
                 setLegend2('SAVED')
             } else {
-                toast.warn(t('Insufficient balance.'), {
+                const message = t('Insufficient balance.')
+                toast.warn(message, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -361,7 +368,8 @@ function StakeWallet() {
                 setLegend('SAVED')
             }
         } else {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

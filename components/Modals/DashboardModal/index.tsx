@@ -181,17 +181,6 @@ function Component() {
             .catch((error) => {
                 setLoading(false)
                 console.error('@dashboard1:', error)
-                toast(t('GLITCH'), {
-                    position: 'top-right',
-                    autoClose: 7777,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 11,
-                })
             })
     }
     const handleOnChangeAddr = (event: { target: { value: any } }) => {
@@ -290,7 +279,8 @@ function Component() {
                 })
             }
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -326,9 +316,8 @@ function Component() {
                                 dispatch(setTxId(deploy[0].ID))
                                 dispatch(setTxStatusLoading('submitted'))
 
-                                let tx = await tyron.Init.default.transaction(
-                                    net
-                                )
+                                let tx =
+                                    await tyron.Init.default.transaction(net)
                                 tx = await tx.confirm(deploy[0].ID, 33)
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))
@@ -355,7 +344,8 @@ function Component() {
                                 } else if (tx.isRejected()) {
                                     dispatch(setTxStatusLoading('failed'))
                                     setTimeout(() => {
-                                        toast.warn(t('Transaction failed.'), {
+                                        const message = t('Transaction failed.')
+                                        toast.warn(message, {
                                             position: 'bottom-right',
                                             autoClose: 4000,
                                             hideProgressBar: false,
@@ -384,9 +374,8 @@ function Component() {
                                 dispatch(setTxId(deploy[0].ID))
                                 dispatch(setTxStatusLoading('submitted'))
 
-                                let tx = await tyron.Init.default.transaction(
-                                    net
-                                )
+                                let tx =
+                                    await tyron.Init.default.transaction(net)
                                 tx = await tx.confirm(deploy[0].ID, 33)
                                 if (tx.isConfirmed()) {
                                     dispatch(setTxStatusLoading('confirmed'))

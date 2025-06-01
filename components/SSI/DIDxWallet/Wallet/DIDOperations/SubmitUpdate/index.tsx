@@ -157,20 +157,19 @@ function Component({
                 updateModalTx(true)
 
                 let tx = await tyron.Init.default.transaction(net)
-
-                toast.info(
-                    t('You’re about to submit a DID Update operation!'),
-                    {
-                        position: 'top-center',
-                        autoClose: 6000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                    }
+                const message = t(
+                    'You’re about to submit a DID Update operation!'
                 )
+                toast.info(message, {
+                    position: 'top-center',
+                    autoClose: 6000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                })
                 await zilpay
                     .call({
                         contractAddress: resolvedInfo?.addr!,

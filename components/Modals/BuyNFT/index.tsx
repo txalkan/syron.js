@@ -169,7 +169,8 @@ function Component() {
             })
             setLegend('saved')
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -331,7 +332,8 @@ function Component() {
                             }
                         })
                         .catch(() => {
-                            toast.warning(t('Mint NFT: Unsupported token.'), {
+                            const message = t('Mint NFT: Unsupported token.')
+                            toast.warning(message, {
                                 position: 'bottom-right',
                                 autoClose: 4000,
                                 hideProgressBar: false,
@@ -421,22 +423,20 @@ function Component() {
 
             let tx = await tyron.Init.default.transaction(net)
 
-            toast.info(
-                t('You’re about to buy the NFT Username X!', {
-                    name: resolvedDomain,
-                }),
-                {
-                    position: 'top-center',
-                    autoClose: 6000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 6,
-                }
-            )
+            const message = t('You’re about to buy the NFT Username X!', {
+                name: resolvedDomain,
+            })
+            toast.info(message, {
+                position: 'top-center',
+                autoClose: 6000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 6,
+            })
             updateModalBuyNft(false)
             dispatch(setTxStatusLoading('true'))
             updateModalTxMinimized(false)

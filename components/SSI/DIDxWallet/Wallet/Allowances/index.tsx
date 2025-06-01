@@ -63,7 +63,8 @@ function Component() {
                 setLegend3('saved')
                 setButton3('button')
             } else {
-                toast.warn(t('Wrong address.'), {
+                const message = t('Wrong address.')
+                toast.warn(message, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -136,7 +137,8 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.warn(t('Transaction failed.'), {
+                                    const message = t('Transaction failed.')
+                                    toast.warn(message, {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,
@@ -167,7 +169,7 @@ function Component() {
             } catch (error) {
                 updateModalTx(false)
                 dispatch(setTxStatusLoading('idle'))
-                toast.warn(t(String(error)), {
+                toast.warn(String(error), {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,

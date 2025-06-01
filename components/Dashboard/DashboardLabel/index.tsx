@@ -11,7 +11,7 @@ function Component() {
     return (
         <div
             onClick={() =>
-                toast(t('Coming soon'), {
+                toast('Coming soon', {
                     position: 'top-center',
                     autoClose: 2000,
                     hideProgressBar: false,

@@ -755,11 +755,11 @@ function Component() {
                                                             )
                                                                 ? styles.serviceKeyReplace
                                                                 : checkIsExist(
-                                                                      res[0],
-                                                                      2
-                                                                  )
-                                                                ? styles.serviceKeyDelete
-                                                                : styles.serviceKey2
+                                                                        res[0],
+                                                                        2
+                                                                    )
+                                                                  ? styles.serviceKeyDelete
+                                                                  : styles.serviceKey2
                                                         }
                                                     >
                                                         <div>
@@ -1042,11 +1042,11 @@ function Component() {
                                                                                 )
                                                                                     ? styles.serviceKeyReplace
                                                                                     : checkIsExist(
-                                                                                          val[0],
-                                                                                          2
-                                                                                      )
-                                                                                    ? styles.serviceKeyDelete
-                                                                                    : styles.serviceKey
+                                                                                            val[0],
+                                                                                            2
+                                                                                        )
+                                                                                      ? styles.serviceKeyDelete
+                                                                                      : styles.serviceKey
                                                                             }
                                                                         >
                                                                             <div>
@@ -1353,10 +1353,12 @@ function Component() {
                                                                                                             )
                                                                                                         )
                                                                                                     ) {
-                                                                                                        toast.warn(
+                                                                                                        const message =
                                                                                                             t(
                                                                                                                 'The input is not a number.'
-                                                                                                            ),
+                                                                                                            )
+                                                                                                        toast.warn(
+                                                                                                            message,
                                                                                                             {
                                                                                                                 position:
                                                                                                                     'top-right',

@@ -92,7 +92,8 @@ function Component({ addrName }) {
             setSavedAddr(true)
             checkTokenId()
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

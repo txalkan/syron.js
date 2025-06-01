@@ -166,7 +166,8 @@ function Component() {
 
     const handleSave = async () => {
         if (transferInput === 0) {
-            toast.warn(t('The amount cannot be zero.'), {
+            const message = t('The amount cannot be zero.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2222,
                 hideProgressBar: false,
@@ -227,7 +228,8 @@ function Component() {
             )
             setLegendCurrency('saved')
         } else {
-            toast.warn(t('The amount cannot be zero.'), {
+            const message = t('The amount cannot be zero.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2222,
                 hideProgressBar: false,
@@ -249,7 +251,8 @@ function Component() {
         const input_ = Number(transfer_) * currencyBal[4]
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.warn(t('The amount cannot be zero.'), {
+                const message = t('The amount cannot be zero.')
+                toast.warn(message, {
                     position: 'top-right',
                     autoClose: 2222,
                     hideProgressBar: false,
@@ -266,7 +269,18 @@ function Component() {
                     index = 3
                 }
                 if (input_ > currencyBal[index]) {
-                    toast.error(t('Insufficient balance.'), {
+                    const message = t(
+                        'Insufficient balance. You have only {{amount}} {{currency}}.',
+                        {
+                            amount: Number(
+                                Big(currencyBal[index])
+                                    .div(currencyBal[4])
+                                    .round(4)
+                            ).toLocaleString(),
+                            currency: currency,
+                        }
+                    )
+                    toast.error(message, {
                         position: 'top-right',
                         autoClose: 2222,
                         hideProgressBar: false,
@@ -298,7 +312,8 @@ function Component() {
                 }
             }
         } else {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2222,
                 hideProgressBar: false,

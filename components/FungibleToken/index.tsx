@@ -33,7 +33,8 @@ function Component() {
         const input_ = Number(input)
         if (!isNaN(input_)) {
             if (input_ === 0) {
-                toast.warn(t('The amount cannot be zero.'), {
+                const message = t('The amount cannot be zero.')
+                toast.warn(message, {
                     position: 'top-right',
                     autoClose: 3000,
                     hideProgressBar: false,
@@ -48,7 +49,8 @@ function Component() {
                 setInput(input_)
             }
         } else {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 3000,
                 hideProgressBar: false,

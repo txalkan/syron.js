@@ -367,22 +367,20 @@ function Component() {
                                         user_subdomain: '',
                                     })
                                     updateModalBuyNft(true)
-                                    toast.warning(
-                                        t(
-                                            'For your security, make sure you’re at tyron.network'
-                                        ),
-                                        {
-                                            position: 'top-center',
-                                            autoClose: 3000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: toastTheme(isLight),
-                                            toastId: 4,
-                                        }
+                                    const message = t(
+                                        'For your security, make sure you’re at tyron.network'
                                     )
+                                    toast.warning(message, {
+                                        position: 'top-center',
+                                        autoClose: 3000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                        toastId: 4,
+                                    })
                                 }
                             }
                             updateLoading(false)

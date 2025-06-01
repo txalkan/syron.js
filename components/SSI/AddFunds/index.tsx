@@ -262,7 +262,8 @@ function Component(props: InputType) {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -288,7 +289,8 @@ function Component(props: InputType) {
         const { checkBalance } = wallet()
         const isEnough = await checkBalance(currency, input, setLoadingInfoBal)
         if (input === 0) {
-            toast.warn(t('The amount cannot be zero.'), {
+            const message = t('The amount cannot be zero.')
+            toast.warn(message, {
                 position: 'bottom-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -522,9 +524,8 @@ function Component(props: InputType) {
                         let _amount = '0'
                         if (donation !== null) {
                             _amount = String(donation)
-                            const tyron_ = await tyron.Donation.default.tyron(
-                                donation
-                            )
+                            const tyron_ =
+                                await tyron.Donation.default.tyron(donation)
                             let tx_params = Array()
                             switch (txID) {
                                 case 'SendFunds':

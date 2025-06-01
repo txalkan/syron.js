@@ -85,9 +85,8 @@ function Component() {
                             key: key_,
                         },
                     ]
-                const hash = await tyron.DidCrud.default.HashDocument(
-                    deactivate_element
-                )
+                const hash =
+                    await tyron.DidCrud.default.HashDocument(deactivate_element)
                 const addr =
                     selectedAddress === 'SSI' ? resolvedInfo?.addr! : address
                 const result: any = await tyron.SearchBarUtil.default.Resolve(
@@ -257,7 +256,8 @@ function Component() {
             setAddress(addr)
             setLegend('saved')
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

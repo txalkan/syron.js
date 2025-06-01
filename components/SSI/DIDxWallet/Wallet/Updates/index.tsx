@@ -108,7 +108,8 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.warn(t('Transaction failed.'), {
+                                const message = t('Transaction failed.')
+                                toast.warn(message, {
                                     position: 'top-right',
                                     autoClose: 3000,
                                     hideProgressBar: false,
@@ -167,7 +168,8 @@ function Component() {
         } else if (menu === 'deadline') {
             input = Number(input)
             if (isNaN(input)) {
-                toast.warn(t('The input is not a number.'), {
+                const message = t('The input is not a number.')
+                toast.warn(message, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -190,7 +192,9 @@ function Component() {
             setLegend('saved')
             setInput(addr)
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
