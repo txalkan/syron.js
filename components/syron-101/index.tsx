@@ -131,26 +131,33 @@ function Component() {
         }
     }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal])
 
-    // @dev Read for new BTC deposits every half minute
+    // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {
         async function readDeposits() {
             await unisatBalance(syron?.sdb!)
                 .then((balance) => {
-                    console.log('Box BTC Deposit', balance)
+                    console.log(
+                        'Box BTC Deposit',
+                        balance,
+                        'sats, for SDB:',
+                        syron?.sdb
+                    )
                     setSatsDeposited(Big(balance))
                 })
                 .catch((error) => {
                     console.error('readDeposits', error)
                 })
         }
-        // Only set interval if sdb is defined and not empty
-        if (syron?.sdb !== undefined && syron?.sdb !== '') {
+
+        if (syron?.sdb) {
             readDeposits()
-            const intervalId = setInterval(readDeposits, 0.5 * 60 * 1000)
-            return () => clearInterval(intervalId)
+            //intervalId = setInterval(readDeposits, 0.5 * 60 * 1000)
         }
-        // If condition not met, do nothing and no interval is set
-        return
+        // return () => {
+        //     if (intervalId) {
+        //         clearInterval(intervalId) // Clear the interval if it exists
+        //     }
+        // }
     }, [syron?.sdb])
 
     const toggleActive = (id: string) => {

@@ -4,14 +4,15 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import {
+    // Connect,
     Dashboard,
     Logo,
-    Footer,
     Menu,
     SearchBar,
     Stats,
     Syron,
     ZilPay,
+    Lang,
 } from '..'
 import {
     $loading,
@@ -45,6 +46,8 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
 import { useStore } from 'react-stores'
+import Image from 'next/image'
+import SyronLogo from '../../src/assets/logos/syron_concrete.png'
 
 function Header() {
     const Router = useRouter()
@@ -191,20 +194,20 @@ function Header() {
         const third = path.split('/')[3]
         const fourth = path.split('/')[4]
         if (third === 'funds' || fourth === 'balances') {
-            toast.warning(
-                t('For your security, make sure you’re at tyron.network'),
-                {
-                    position: 'top-center',
-                    autoClose: 3000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: toastTheme(isLight),
-                    toastId: 3,
-                }
+            const message = t(
+                'for your security, make sure you’re at tyron.network'
             )
+            toast.warning(message, {
+                position: 'top-center',
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: toastTheme(isLight),
+                toastId: 3,
+            })
             updateOriginatorAddress(null)
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -285,20 +288,30 @@ function Header() {
                 !modalInvestor &&
                 !modalTransfer &&
                 !modalNewMotions && (
-                    <div className={styles.header}>
-                        {/* <Menu /> */}
-                        <div className={styles.logo}>
-                            <Logo />
+                    <>
+                        <div className={styles.header}>
+                            {/* <Menu /> */}
+                            <div className={styles.logo}>
+                                <Logo />
+                            </div>
+                            <Dashboard />
+                            {/* <Connect /> */}
                         </div>
-                        <Dashboard />
-                    </div>
+                        <div className={styles.footer}>
+                            <Lang />
+                            <div className={styles.logoWrapper}>
+                                <Image
+                                    src={SyronLogo}
+                                    alt="syron-logo"
+                                    className={styles.syronLogo}
+                                />
+                            </div>
+                        </div>
+                    </>
                 )}
             <ToastContainer
                 className={styles.containerToast}
                 closeButton={false}
-                progressStyle={{
-                    backgroundColor: isLight ? '#ffff32' : '#eeeeee',
-                }}
             />
             {replaceLangPath() === '/' ? (
                 <div id={headerClassName}>

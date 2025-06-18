@@ -94,6 +94,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     }, [collateral])
 
     const [isLoading, setIsLoading] = React.useState(false)
+    const [isError, setIsError] = React.useState('')
 
     let inscriptionTx = useStore($inscriptionTx)
     const icpTx = useStore($icpTx) //{ value: true } //
@@ -131,6 +132,8 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     const handleConfirm = React.useCallback(async () => {
         // @review (asap) transaction status modal not working - see dispatch(setTx
         // dispatch(setTxStatusLoading('true'))
+
+        setIsLoading(true)
         try {
             // @pause
             // use environment variable to pause the minting process
@@ -138,14 +141,14 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                 throw new Error('Withdrawing SYRON is currently paused.')
             }
 
-            setIsLoading(true)
+            setIsError('')
             toast.dismiss(400)
 
             if (userSSI === '') {
                 throw new Error('Please wait for your wallet to connect.')
             }
 
-            // @network
+            // @network move to updateWallet
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION
             if (version === '2') {
                 if (btcWallet?.network != 'BITCOIN_MAINNET') {
@@ -173,10 +176,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     'Your BTC deposit exceeds the maximum allowed amount of 0.00005 BTC. Please reduce your deposit.'
                 )
 
-            toast.info('Submitting your BTC deposit...', {
-                autoClose: 4000,
-                toastId: 1,
-            })
+            toast.info('Submitting your BTC deposit...', { toastId: 1 })
 
             // @test
             // const inscriptionTx = {
@@ -194,14 +194,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             )
 
             toast.dismiss(1)
-            toast.info(`You have received ${amt} SYRON in your wallet!`, {
-                autoClose: false,
-            })
+            toast.info(`You have received ${amt} SYRON in your wallet!`)
 
             await updateUserBalance()
 
             // window.open(`https://unisat.io/brc20?q=${ssi}&tick=SYRON`)
         } catch (error) {
+            setIsError(JSON.stringify(error))
             console.error('BTC to SYRON', error)
 
             toast.dismiss(1)
@@ -232,7 +231,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 rel="noopener noreferrer"
                                 className={styles.link}
                             >
-                                @TyronDAO
+                                @tyronDAO
                             </a>
                         </div>
                         <br />
@@ -242,7 +241,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 : JSON.stringify(error, null, 2)}
                         </div>
                     </div>,
-                    { autoClose: false, toastId: 400 }
+                    { toastId: 400 }
                 )
             } else {
                 toast.error(
@@ -255,18 +254,19 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 rel="noopener noreferrer"
                                 className={styles.link}
                             >
-                                @TyronDAO
+                                @tyronDAO
                             </a>
                         </div>
                         <div style={{ color: 'red', paddingTop: '1rem' }}>
                             {extractRejectText(String(error))}
                         </div>
                     </div>,
-                    { autoClose: false, toastId: 400 }
+                    { toastId: 400 }
                 )
             }
+        } finally {
+            setIsLoading(false)
         }
-        setIsLoading(false)
     }, [userSSI, sdb, collateral, amt])
 
     const selfRef = useRef<{ accounts: string[] }>({
@@ -401,7 +401,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 rel="noopener noreferrer"
                                 className={styles.link}
                             >
-                                @TyronDAO
+                                @tyronDAO
                             </a>
                         </div>
                         <br />
@@ -411,7 +411,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 : JSON.stringify(error, null, 2)}
                         </div>
                     </div>,
-                    { autoClose: false, toastId: 400 }
+                    { toastId: 400 }
                 )
             } else {
                 toast.error(
@@ -424,14 +424,14 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                                 rel="noopener noreferrer"
                                 className={styles.link}
                             >
-                                @TyronDAO
+                                @tyronDAO
                             </a>
                         </div>
                         <div style={{ color: 'red', paddingTop: '1rem' }}>
                             {extractRejectText(String(error))}
                         </div>
                     </div>,
-                    { autoClose: false, toastId: 400 }
+                    { toastId: 400 }
                 )
             }
         }
@@ -459,7 +459,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
             </div>
             <div className={styles.confirmContainer}>
                 <div className={styles.txtRowTerms}>
-                    By clicking the button above, you agree to the{' '}
+                    By testing Syron, you agree to TyronDAO&apos;s{' '}
                     <span
                         className={styles.terms}
                         onClick={() => toast.info('Coming soon')}
@@ -473,11 +473,11 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                     >
                         Privacy Policy
                     </span>
-                    .
                 </div>
             </div>
-
-            {icpTx.value === false ? (
+            {icpTx.value === false &&
+            isError !== '' &&
+            !isError.includes('User rejected') ? (
                 <div className={styles.failedWithdrawal}>
                     {/* <div className={styles.icoColor}>
                                 <Image
@@ -502,27 +502,21 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
                             rel="noopener noreferrer"
                             className={styles.link}
                         >
-                            @TyronDAO
+                            @tyronDAO
                         </a>
                         .
                     </div>
                     <div className={styles.withdrawalTxt}>
                         We appreciate your patience and understanding!
                     </div>
-                    <button
-                        style={{
-                            marginTop: '1rem',
-                            backgroundColor: 'rgb(75, 0, 130)',
-                        }}
-                        onClick={retryWithdrawal}
-                        className={'button secondary'}
-                    >
-                        {isLoading ? (
-                            <Spinner />
-                        ) : (
-                            <div className={styles.txt}>retry</div>
-                        )}
-                    </button>
+                    <div className={styles.button}>
+                        <button
+                            onClick={retryWithdrawal}
+                            className={'button secondary'}
+                        >
+                            {isLoading ? <Spinner /> : <>retry</>}
+                        </button>
+                    </div>
                 </div>
             ) : (
                 <>

@@ -29,6 +29,9 @@ function useSyronWithdrawal() {
 
                 if (!amt)
                     throw new Error('The inscribed amount cannot be missing')
+
+                if (!fee) throw new Error('The fee rate cannot be missing')
+
                 // @dev Inscribe-transfer transaction ID
                 txId = await inscribe_transfer(
                     sdb,

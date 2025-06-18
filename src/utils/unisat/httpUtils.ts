@@ -323,8 +323,8 @@ export async function mempoolFeeRate(): Promise<number> {
             fee = 5
         }
 
-        //@maxvb gas rate per vB
-        if (fee > 3) return 0
+        // max gas rate per @vB
+        // if (fee > 3) return 0
 
         return fee
     } catch (error) {
@@ -407,7 +407,7 @@ export async function unisatBalance(address: string) {
         }
 
         const data = await response.json()
-        //console.log(JSON.stringify(data, null, 2))
+        console.log('UniSat balance response', JSON.stringify(data, null, 2))
 
         if (data.data) return data.data.btcSatoshi
     } catch (error) {
