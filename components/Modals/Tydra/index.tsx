@@ -203,20 +203,20 @@ function Component() {
                                     }
                                 })
                                 .catch(() => {
-                                    toast.warn(
-                                        t('Mint NFT: Unsupported token.'),
-                                        {
-                                            position: 'bottom-left',
-                                            autoClose: 4000,
-                                            hideProgressBar: false,
-                                            closeOnClick: true,
-                                            pauseOnHover: true,
-                                            draggable: true,
-                                            progress: undefined,
-                                            theme: toastTheme(isLight),
-                                            toastId: 4,
-                                        }
+                                    const message = t(
+                                        'Mint NFT: Unsupported token.'
                                     )
+                                    toast.warn(message, {
+                                        position: 'bottom-left',
+                                        autoClose: 4000,
+                                        hideProgressBar: false,
+                                        closeOnClick: true,
+                                        pauseOnHover: true,
+                                        draggable: true,
+                                        progress: undefined,
+                                        theme: toastTheme(isLight),
+                                        toastId: 4,
+                                    })
                                 })
                         }
                         await tokenBalance(value)

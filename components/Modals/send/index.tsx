@@ -257,7 +257,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.txt}>
                         {t(
-                            'Transfer SUSD via ICPayments: lightning-fast transfers powered by the Internet Computer.'
+                            'Transfer SUSD via ICPayments: lightning-fast transfers on the Internet Computer'
                         )}
                     </div>
 
@@ -591,23 +591,23 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            YOUR SUSD BALANCE (Sender)
+                            YOUR account&apos;s BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>▼</p>
                         <p className={styles.diagramLineLabel}>
-                            RECIPIENT&apos;S TYRON ACCOUNT (Receiver)
+                            Recipient&apos;s TyronDAO ACCOUNT (Receiver)
                         </p>
                         <p className={styles.diagramCaption}>
-                            Accessed via Recipient&apos;s PERSONAL WALLET
-                            ADDRESS entered below.
+                            Enter the recipient&apos;s self-custodial wallet
+                            below (Bitcoin address only)
                         </p>
                     </div>
 
                     <div className={styles.label}>
-                        Recipient&apos;s Personal Wallet Address
+                        Recipient&apos;s Bitcoin Address
                     </div>
                     <div className={styles.inputWrapper}>
                         <input

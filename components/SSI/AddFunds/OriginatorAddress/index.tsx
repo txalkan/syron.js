@@ -147,9 +147,8 @@ function Component() {
                         domain
                     )
                 }
-                const state = await init.API.blockchain.getSmartContractState(
-                    did_addr
-                )
+                const state =
+                    await init.API.blockchain.getSmartContractState(did_addr)
                 const did_controller = zcrypto.toChecksumAddress(
                     state.result.controller
                 )

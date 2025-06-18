@@ -1,6 +1,6 @@
 {
     "SEARCH FOR A DOMAIN NAME": "Ingresar un Dominio NFT",
-    "CONNECT": "CONECTAR",
+    "CONNECT": "Conectar Billetera",
     "Sign_In": "Iniciar Sesión",
     "CONNECTED": "CONECTADO",
     "LOGGED IN": "CONECTADO",
@@ -14,7 +14,7 @@
     "EXTERNAL_WALLETS": "BILLETERAS EXTERNAS",
     "LOG IN": "Iniciar sesión",
     "ARWEAVE WALLET": "Billetera ArConnect",
-    "DISCONNECT": "Desconectar",
+    "disconnect wallet": "Desconectar Billetera",
     "CONNECT_WITH_ARCONNECT": "CONECTAR CON ARCONNECT",
     "EXISTING SSI": "Ingresá",
     "NEW SSI": "Creá tu cuenta",

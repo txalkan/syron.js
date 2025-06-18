@@ -232,8 +232,10 @@ export var TokensModal: React.FC<Prop> = function ({
                                             token.meta.symbol === 'TYRON'
                                                 ? iconTYRON
                                                 : token.meta.symbol === 'S$I'
-                                                ? iconS$I
-                                                : getIconURL(token.meta.bech32)
+                                                  ? iconS$I
+                                                  : getIconURL(
+                                                        token.meta.bech32
+                                                    )
                                         }
                                         alt={token.meta.symbol}
                                         lazyRoot={lazyRoot as unknown as string}

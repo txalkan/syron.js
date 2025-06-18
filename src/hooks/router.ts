@@ -53,7 +53,8 @@ function useRouterHook() {
             updateBuyInfo(null)
             Router.push('/')
             setTimeout(() => {
-                toast.info(t('You have logged off'), {
+                const message = t('You have logged off')
+                toast.info(message, {
                     position: 'bottom-center',
                     autoClose: 2222,
                     hideProgressBar: false,

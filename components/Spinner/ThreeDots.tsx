@@ -10,10 +10,10 @@ function ThreeDots({ color }) {
                 color === 'basic'
                     ? styles.dotFlashingBasic
                     : color === 'black'
-                    ? styles.dotFlashingBlack
-                    : isLight
-                    ? styles.dotFlashingLight
-                    : styles.dotFlashing
+                      ? styles.dotFlashingBlack
+                      : isLight
+                        ? styles.dotFlashingLight
+                        : styles.dotFlashing
             }
         />
     )

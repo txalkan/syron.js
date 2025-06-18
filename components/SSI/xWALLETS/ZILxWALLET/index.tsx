@@ -200,23 +200,22 @@ function Component() {
                                         }, 1000)
                                     } else {
                                         setLoadingCard2(false)
-                                        toast.warn(
-                                            t(
-                                                'Only X’s owner can access this wallet.',
-                                                { name: resolvedDomain }
-                                            ),
-                                            {
-                                                position: 'bottom-right',
-                                                autoClose: 3000,
-                                                hideProgressBar: false,
-                                                closeOnClick: true,
-                                                pauseOnHover: true,
-                                                draggable: true,
-                                                progress: undefined,
-                                                theme: toastTheme(isLight),
-                                                toastId: 1,
-                                            }
+
+                                        const message = t(
+                                            'Only X’s owner can access this wallet.',
+                                            { name: resolvedDomain }
                                         )
+                                        toast.warn(message, {
+                                            position: 'bottom-right',
+                                            autoClose: 3000,
+                                            hideProgressBar: false,
+                                            closeOnClick: true,
+                                            pauseOnHover: true,
+                                            draggable: true,
+                                            progress: undefined,
+                                            theme: toastTheme(isLight),
+                                            toastId: 1,
+                                        })
                                     }
                                 }}
                                 className={styles.flipCard}

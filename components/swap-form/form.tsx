@@ -200,9 +200,8 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         const zilPay = await zilpay()
                         const blockchain = zilPay.blockchain
 
-                        const bal_zilpay = await blockchain.getBalance(
-                            zilpay_addr
-                        )
+                        const bal_zilpay =
+                            await blockchain.getBalance(zilpay_addr)
                         const balance_zilpay = Big(bal_zilpay.result!.balance)
 
                         if (pair[0].meta.symbol === 'ZIL') {

@@ -71,7 +71,8 @@ function StakeAddFunds() {
         if (!isNaN(input_)) {
             setInput(input_)
         } else {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -97,7 +98,8 @@ function StakeAddFunds() {
         updateDonation(null)
         const isEnough = await checkBalance('zil', input, setLoadingInfoBal)
         if (input === 0) {
-            toast.warn(t('The amount cannot be zero.'), {
+            const message = t('The amount cannot be zero.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -109,7 +111,8 @@ function StakeAddFunds() {
                 toastId: 1,
             })
         } else if (!isEnough) {
-            toast.warn('Insufficient balance.', {
+            const message = t('Insufficient balance.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -226,9 +229,8 @@ function StakeAddFunds() {
                         }
 
                         if (donation !== null) {
-                            const tyron_ = await tyron.Donation.default.tyron(
-                                donation
-                            )
+                            const tyron_ =
+                                await tyron.Donation.default.tyron(donation)
                             const tx_params =
                                 await tyron.TyronZil.default.SendFunds(
                                     addr!,

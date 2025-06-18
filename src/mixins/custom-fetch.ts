@@ -112,9 +112,8 @@ export class Blockchain {
                 [token],
             ]),
         ]
-        const [resUserContributions, resBlock, resPool] = await this._send(
-            batch
-        )
+        const [resUserContributions, resBlock, resPool] =
+            await this._send(batch)
         const userContributions =
             resUserContributions.result &&
             resUserContributions.result[DexFields.Balances]
@@ -146,9 +145,8 @@ export class Blockchain {
                 [token],
             ]),
         ]
-        const [resTotalContributions, resBlock, resPool] = await this._send(
-            batch
-        )
+        const [resTotalContributions, resBlock, resPool] =
+            await this._send(batch)
         const totalContributions = resTotalContributions.result
             ? resTotalContributions.result[DexFields.TotalContributions][token]
             : '0'

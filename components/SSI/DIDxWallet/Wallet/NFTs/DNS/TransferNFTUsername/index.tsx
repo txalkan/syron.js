@@ -84,7 +84,8 @@ function Component() {
             setButton('button')
             setInput(addr)
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -136,8 +137,8 @@ function Component() {
                     selectedAddress === 'SSI'
                         ? resolvedInfo?.addr!
                         : selectedAddress === 'ADDR'
-                        ? address
-                        : input
+                          ? address
+                          : input
                 const tyron_ = await tyron.Donation.default.tyron(donation!)
 
                 const params = await tyron.TyronZil.default.TransferNftUsername(
@@ -251,7 +252,8 @@ function Component() {
             setAddress(addr)
             setLegend2('saved')
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -329,8 +331,8 @@ function Component() {
                     {usernameType === 'default'
                         ? resolvedDomain
                         : usernameType === 'input'
-                        ? username
-                        : ''}
+                          ? username
+                          : ''}
                 </span>{' '}
                 {t('NFT Username')}
             </h3>

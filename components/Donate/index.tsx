@@ -23,6 +23,7 @@ import ArrowReg from '../../src/assets/icons/right_down.svg'
 import ArrowDark from '../../src/assets/icons/right_down_black.svg'
 import { $net } from '../../src/store/network'
 import { useStore } from 'react-stores'
+import { message } from 'antd'
 
 function Component() {
     const { t } = useTranslation()
@@ -114,36 +115,29 @@ function Component() {
                                 loginInfo.zilAddr?.base16.toLowerCase()
                             )
                             if (balance !== undefined) {
-                                toast.info(
-                                    t(
-                                        'Thank you! You are getting X xPoints. Current balance: X xPoints',
-                                        {
-                                            value: donation!.toFixed(4),
-                                            balance: (balance / 1e12).toFixed(
-                                                4
-                                            ),
-                                            s:
-                                                Number(donation) === 1
-                                                    ? ''
-                                                    : 's',
-                                            s2:
-                                                Number(balance / 1e12) === 1
-                                                    ? ''
-                                                    : 's',
-                                        }
-                                    ),
+                                const message = t(
+                                    'Thank you! You are getting {{value}} xPoints. Current balance: {{balance}} xPoints',
                                     {
-                                        position: 'top-center',
-                                        autoClose: 4000,
-                                        hideProgressBar: false,
-                                        closeOnClick: true,
-                                        pauseOnHover: true,
-                                        draggable: true,
-                                        progress: undefined,
-                                        theme: toastTheme(isLight),
-                                        toastId: 2,
+                                        value: donation!.toFixed(4),
+                                        balance: (balance / 1e12).toFixed(4),
+                                        s: Number(donation) === 1 ? '' : 's',
+                                        s2:
+                                            Number(balance / 1e12) === 1
+                                                ? ''
+                                                : 's',
                                     }
                                 )
+                                toast.info(message, {
+                                    position: 'top-center',
+                                    autoClose: 4000,
+                                    hideProgressBar: false,
+                                    closeOnClick: true,
+                                    pauseOnHover: true,
+                                    draggable: true,
+                                    progress: undefined,
+                                    theme: toastTheme(isLight),
+                                    toastId: 2,
+                                })
                             }
                         })
                         .catch(() => {
@@ -165,7 +159,8 @@ function Component() {
                     })
                 }
             } else {
-                toast.info(t('Donating 0'), {
+                const message = t('Donating 0')
+                toast.info(message, {
                     position: 'top-center',
                     autoClose: 2000,
                     hideProgressBar: false,

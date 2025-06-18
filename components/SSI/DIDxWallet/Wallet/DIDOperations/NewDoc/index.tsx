@@ -106,7 +106,8 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInput(input)
         } else if (isNaN(input)) {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -117,7 +118,8 @@ function Component(props: InputType) {
                 theme: toastTheme(isLight),
             })
         } else if (!Number.isInteger(input)) {
-            toast.warn('The number of services must be an integer.', {
+            const message = t('The number of services must be an integer.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -182,7 +184,8 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== input) {
-            toast.warn(t('The input is incomplete'), {
+            const message = t('The input is incomplete')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -231,7 +234,8 @@ function Component(props: InputType) {
         if (!isNaN(input) && Number.isInteger(input)) {
             setInputB(input)
         } else if (isNaN(input)) {
-            toast.warn(t('The input is not a number.'), {
+            const message = t('The input is not a number.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -273,7 +277,8 @@ function Component(props: InputType) {
             }
         }
         if (_services.length !== inputB) {
-            toast.warn(t('The input is incomplete'), {
+            const message = t('The input is incomplete')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

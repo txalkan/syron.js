@@ -239,7 +239,8 @@ function Component() {
                     const amount = inputCoin[i]?.split('@')[1]
                     const input_ = Number(amount)
                     if (isNaN(input_)) {
-                        toast.warn(t('The input is not a number.'), {
+                        const message = t('The input is not a number.')
+                        toast.warn(message, {
                             position: 'bottom-right',
                             autoClose: 2000,
                             hideProgressBar: false,

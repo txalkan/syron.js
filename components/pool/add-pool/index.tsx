@@ -45,6 +45,7 @@ import iconTYRON from '../../../src/assets/icons/ssi_token_Tyron.svg'
 import InfoDefaultReg from '../../../src/assets/icons/info_default.svg'
 import { toast } from 'react-toastify'
 import { useTranslation } from 'next-i18next'
+import { message } from 'antd'
 
 //@zilpay
 
@@ -420,7 +421,8 @@ export function AddPoolForm() {
                         {
                             const decimals = dex.toDecimals(token_pair.decimals)
                             if (String(pair_amount) === '0') {
-                                toast.error(t('The amount cannot be zero.'), {
+                                const message = t('The amount cannot be zero.')
+                                toast.error(message, {
                                     position: 'top-center',
                                     autoClose: 2222,
                                     hideProgressBar: false,
@@ -436,7 +438,8 @@ export function AddPoolForm() {
                                 Number(balance_pair) <
                                     Number(pair_amount.mul(decimals!))
                             ) {
-                                toast.error(t('Insufficient balance.'), {
+                                const message = t('Insufficient balance.')
+                                toast.error(message, {
                                     position: 'top-center',
                                     autoClose: 2222,
                                     hideProgressBar: false,

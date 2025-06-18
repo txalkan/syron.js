@@ -80,7 +80,9 @@ function Component({ addrName, type }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            console.error(message)
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

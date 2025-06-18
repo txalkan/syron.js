@@ -48,7 +48,8 @@ function Component() {
             setHideSubmit(false)
             setInput(addr)
         } else {
-            toast.error(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.error(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,

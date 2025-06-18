@@ -510,29 +510,24 @@ function Component({
                                                             'WhatsApp' &&
                                                         isNaN(Number(value))
                                                     ) {
-                                                        toast.warn(
-                                                            t(
-                                                                'The input is not a number.'
-                                                            ),
-                                                            {
-                                                                position:
-                                                                    'top-right',
-                                                                autoClose: 2000,
-                                                                hideProgressBar:
-                                                                    false,
-                                                                closeOnClick:
-                                                                    true,
-                                                                pauseOnHover:
-                                                                    true,
-                                                                draggable: true,
-                                                                progress:
-                                                                    undefined,
-                                                                theme: toastTheme(
-                                                                    isLight
-                                                                ),
-                                                                toastId: 1,
-                                                            }
+                                                        const message = t(
+                                                            'The input is not a number.'
                                                         )
+                                                        toast.warn(message, {
+                                                            position:
+                                                                'top-right',
+                                                            autoClose: 2000,
+                                                            hideProgressBar:
+                                                                false,
+                                                            closeOnClick: true,
+                                                            pauseOnHover: true,
+                                                            draggable: true,
+                                                            progress: undefined,
+                                                            theme: toastTheme(
+                                                                isLight
+                                                            ),
+                                                            toastId: 1,
+                                                        })
                                                     } else {
                                                         let value_ = value
                                                         if (

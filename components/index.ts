@@ -1,6 +1,7 @@
 export { default as Header } from './Header'
 export { default as Headline } from './Headline'
-export { default as Footer } from './Footer'
+export { default as Footer } from './Footer' // @review
+export { default as Lang } from './Lang'
 export { default as Logo } from './Logo'
 export { default as DIDxWallet } from './SSI/DIDxWallet'
 export { default as DIDDocument } from './SSI/DIDxWallet/DIDDocument'

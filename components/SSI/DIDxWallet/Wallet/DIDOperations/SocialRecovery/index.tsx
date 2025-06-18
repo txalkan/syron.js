@@ -139,7 +139,9 @@ function Component() {
                 toastId: 2,
             })
         } else if (input < 3 && input !== 0 && doc?.guardians.length < 3) {
-            toast.warn(t('The number of guardians must be at least three'), {
+            const message = t('The number of guardians must be at least three.')
+
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -233,7 +235,8 @@ function Component() {
                 }
             }
         } else {
-            toast.warn(t('The input is incomplete.'), {
+            const message = t('The input is incomplete.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 2000,
                 hideProgressBar: false,
@@ -293,22 +296,20 @@ function Component() {
                 //const tx_params: tyron.TyronZil.TransitionValue[] = [tyron_];
                 const _amount = String(donation)
 
-                toast.info(
-                    t(
-                        'You’re about to submit a transaction to configure Social Recovery'
-                    ),
-                    {
-                        position: 'top-center',
-                        autoClose: 2000,
-                        hideProgressBar: false,
-                        closeOnClick: true,
-                        pauseOnHover: true,
-                        draggable: true,
-                        progress: undefined,
-                        theme: toastTheme(isLight),
-                        toastId: 6,
-                    }
+                const message = t(
+                    'You’re about to submit a transaction to configure Social Recovery'
                 )
+                toast.info(message, {
+                    position: 'top-center',
+                    autoClose: 2000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: toastTheme(isLight),
+                    toastId: 6,
+                })
                 dispatch(setTxStatusLoading('true'))
                 updateModalTxMinimized(false)
                 updateModalTx(true)
@@ -337,7 +338,9 @@ function Component() {
                             } else if (tx.isRejected()) {
                                 dispatch(setTxStatusLoading('failed'))
                                 setTimeout(() => {
-                                    toast.warn(t('Transaction failed.'), {
+                                    const message = t('Transaction failed.')
+
+                                    toast.warn(message, {
                                         position: 'top-right',
                                         autoClose: 3000,
                                         hideProgressBar: false,

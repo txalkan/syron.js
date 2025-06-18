@@ -216,9 +216,11 @@ function useICPHook() {
 
                 // @dev The transaction fee rate in sat/vB
                 let fee_rate = await mempoolFeeRate()
-                if (fee_rate === 0) {
-                    throw new Error('Invalid fee rate')
-                }
+                if (fee_rate > 3)
+                    throw new Error(
+                        'The gas fee is too high - please try again later'
+                    )
+
                 if (identity === null || identity === undefined) {
                     throw new Error('SIWB identity is undefined')
                 }

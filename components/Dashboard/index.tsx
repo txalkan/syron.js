@@ -11,13 +11,13 @@ import moonIco from '../../src/assets/icons/moon.svg'
 import { UpdateIsLight } from '../../src/app/actions'
 // import toastTheme from '../../src/hooks/toastTheme'
 import { $menuOn } from '../../src/store/menuOn'
-import { User, signIn } from '@junobuild/core-peer'
-import { authSubscribe } from '@junobuild/core-peer'
-import { AddressPurpose, BitcoinNetworkType, getAddress } from 'sats-connect'
-import {
-    $bitcoin_addresses,
-    updateBitcoinAddresses,
-} from '../../src/store/bitcoin-addresses'
+// import { User, signIn } from '@junobuild/core-peer'
+// import { authSubscribe } from '@junobuild/core-peer'
+// import { AddressPurpose, BitcoinNetworkType, getAddress } from 'sats-connect'
+// import {
+//     $bitcoin_addresses,
+//     updateBitcoinAddresses,
+// } from '../../src/store/bitcoin-addresses'
 import useICPHook from '../../src/hooks/useICP'
 import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
@@ -41,22 +41,22 @@ function Component() {
 
     const { t } = useTranslation()
 
-    const onSignIn = () => {
-        console.log('sign in')
+    // const onSignIn = () => {
+    //     console.log('sign in')
 
-        async function internetIdentity() {
-            await signIn()
-        }
+    //     async function internetIdentity() {
+    //         await signIn()
+    //     }
 
-        internetIdentity()
-    }
+    //     internetIdentity()
+    // }
 
-    const [user, setUser] = useState<User | null>(null)
-    useEffect(() => {
-        const sub = authSubscribe((user) => setUser(user))
+    // const [user, setUser] = useState<User | null>(null)
+    // useEffect(() => {
+    //     const sub = authSubscribe((user) => setUser(user))
 
-        return () => sub()
-    }, [])
+    //     return () => sub()
+    // }, [])
 
     // @dev (xverse)
 
@@ -177,11 +177,15 @@ function Component() {
         if (address_ !== '') update()
     }, [address_, balance_, network_])
 
+    const lastProcessedAddress = useRef<string | null>(null)
     useEffect(() => {
-        async function updateSDB() {
-            await getBox(address_)
+        async function updateBox() {
+            if (address_ && address_ !== lastProcessedAddress.current) {
+                await getBox(address_)
+                lastProcessedAddress.current = address_
+            }
         }
-        if (address_ != '') updateSDB()
+        if (address_ != '') updateBox()
     }, [address_])
 
     const selfRef = useRef<{ accounts: string[] }>({
@@ -234,6 +238,19 @@ function Component() {
 
     const handleButtonClick = async () => {
         try {
+            // let okxwallet = (window as any).okxwallet
+            // if (typeof okxwallet !== 'undefined') {
+            //     console.log('OKX is installed!')
+            //     //const connect = await okxwallet.bitcoin.connect()
+            //     //console.log('OKX Wallet connected:', connect)
+
+            //     //const get_accounts = await okxwallet.bitcoin.getAccounts()
+            //     //console.log('OKX Wallet accounts:', get_accounts)
+
+            //     const req_accounts = await okxwallet.bitcoin.requestAccounts()
+            //     console.log('OKX Wallet request accounts:', req_accounts)
+            // }
+            // return
             setShouldCheckUnisat(true)
 
             const network = await unisat
@@ -266,9 +283,9 @@ function Component() {
     }
 
     return (
-        <AuthContext.Provider value={{ user }}>
-            <div className={styles.wrapper}>
-                {user !== undefined && user !== null ? (
+        // <AuthContext.Provider value={{ user }}>
+        <div className={styles.wrapper}>
+            {/* {user !== undefined && user !== null ? (
                     <div>
                         {loginInfo.isLight ? (
                             <div
@@ -298,7 +315,7 @@ function Component() {
                         {/*
                     {children}
                     <Logout />
-                    */}
+                    
                     </div>
                 ) : (
                     <>
@@ -314,7 +331,7 @@ function Component() {
                                         {t('LOGGED IN')}
                                     </div>
                                 </div>
-                                {/* {net === 'testnet' && <DashboardLabel />} */}
+                                {net === 'testnet' && <DashboardLabel />}
                             </>
                         ) : loginInfo.zilAddr ? (
                             <div
@@ -338,43 +355,40 @@ function Component() {
                                     </span>
                                 </div>
                             </div>
+                        ) : ( */}
+            <>
+                {!walletConnected ? (
+                    <>
+                        {!unisatInstalled ? (
+                            <button
+                                className={'button primary'}
+                                onClick={() =>
+                                    window.open('https://unisat.io', '_blank')
+                                }
+                            >
+                                {t('CONNECT')}
+                            </button>
                         ) : (
-                            <>
-                                {!walletConnected ? (
-                                    <>
-                                        {!unisatInstalled ? (
-                                            <button
-                                                className={'button primary'}
-                                                onClick={() =>
-                                                    window.open(
-                                                        'https://unisat.io',
-                                                        '_blank'
-                                                    )
-                                                }
-                                            >
-                                                {t('CONNECT')}
-                                            </button>
-                                        ) : (
-                                            <button
-                                                className={'button primary'}
-                                                onClick={handleButtonClick}
-                                            >
-                                                {t('CONNECT')}
-                                            </button>
-                                        )}
-                                    </>
-                                ) : (
-                                    <button
-                                        className={'button secondary'}
-                                        onClick={() => unisat.disconnect()}
-                                    >
-                                        {t('disconnect wallet')}
-                                    </button>
-                                    /* <div className={styles.txtConnected}>
+                            <button
+                                className={'button primary'}
+                                onClick={handleButtonClick}
+                            >
+                                {t('CONNECT')}
+                            </button>
+                        )}
+                    </>
+                ) : (
+                    <button
+                        className={'button secondary'}
+                        onClick={() => unisat.disconnect()}
+                    >
+                        {t('disconnect wallet')}
+                    </button>
+                    /* <div className={styles.txtConnected}>
                                             {t('CONNECTED')}
                                         </div> */
-                                )}
-                                {/* <div
+                )}
+                {/* <div
                                     className={styles.wrapperIcon}
                                     onClick={onSignIn}
                                 >
@@ -382,12 +396,12 @@ function Component() {
                                         {t('Sign_In')}
                                     </div>
                                 </div> */}
-                            </>
-                        )}
-                    </>
-                )}
-            </div>
-        </AuthContext.Provider>
+            </>
+            {/* )}
+                </>
+                )} */}
+        </div>
+        /* </AuthContext.Provider> */
     )
 }
 

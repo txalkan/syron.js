@@ -120,9 +120,8 @@ function Component(props: InputType) {
                         const zilpay = new ZilPayBase().zilpay
                         const zilPay = await zilpay()
                         const blockchain = zilPay.blockchain
-                        const zilliqa_balance = await blockchain.getBalance(
-                            zilpay_addr
-                        )
+                        const zilliqa_balance =
+                            await blockchain.getBalance(zilpay_addr)
                         const zilliqa_balance_ =
                             Number(zilliqa_balance.result!.balance) / 1e12
 

@@ -1,3 +1,4 @@
+import '../styles/css/globals.css'
 import '../styles/css/fontawesome-all.min.css'
 import '../styles/css/main.css'
 import '../styles/css/noscript.css'

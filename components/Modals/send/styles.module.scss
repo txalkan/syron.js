@@ -204,7 +204,8 @@
     border: 1px solid #ffff32;
     background-origin: rgb(75, 0, 130);
     background-image: linear-gradient(to right, rgb(75, 0, 130), #7a28ff);
-    box-shadow: 0 0 14px rgba(255, 255, 50, 0.6),
+    box-shadow:
+        0 0 14px rgba(255, 255, 50, 0.6),
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }
 
@@ -213,7 +214,8 @@
     border: 1px solid #808080;
     background-origin: #979797;
     background-image: linear-gradient(to right, #979797, #808080);
-    box-shadow: 0 0 14px rgba(151, 151, 151, 0.6),
+    box-shadow:
+        0 0 14px rgba(151, 151, 151, 0.6),
         inset 0 -3px 7px rgba(0, 0, 0, 0.4);
 }
 

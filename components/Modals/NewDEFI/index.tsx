@@ -118,7 +118,8 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.warn(t('Transaction failed.'), {
+                                const message = t('Transaction failed.')
+                                toast.warn(message, {
                                     position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,
@@ -250,7 +251,8 @@ function Component() {
                         } else if (tx.isRejected()) {
                             dispatch(setTxStatusLoading('failed'))
                             setTimeout(() => {
-                                toast.warn(t('Transaction failed.'), {
+                                const message = t('Transaction failed.')
+                                toast.warn(message, {
                                     position: 'bottom-right',
                                     autoClose: 4000,
                                     hideProgressBar: false,

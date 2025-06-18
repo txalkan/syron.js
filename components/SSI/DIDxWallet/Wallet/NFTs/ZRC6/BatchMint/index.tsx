@@ -106,7 +106,8 @@ function Component({ addrName }) {
             setAddr(addr)
             setSavedAddr(true)
         } else {
-            toast.warn(t('Wrong address.'), {
+            const message = t('Wrong address.')
+            toast.warn(message, {
                 position: 'top-right',
                 autoClose: 4000,
                 hideProgressBar: false,
@@ -638,7 +639,8 @@ function Component({ addrName }) {
                     }
                 }
             } else {
-                toast.warn(t('The input is incomplete.'), {
+                const message = t('The input is incomplete.')
+                toast.warn(message, {
                     position: 'top-right',
                     autoClose: 2000,
                     hideProgressBar: false,
@@ -771,7 +773,8 @@ function Component({ addrName }) {
                             }
                         })
                         .catch(() => {
-                            toast.warn(t('Mint NFT: Unsupported token.'), {
+                            const message = t('Mint NFT: Unsupported token.')
+                            toast.warn(message, {
                                 position: 'bottom-right',
                                 autoClose: 4000,
                                 hideProgressBar: false,

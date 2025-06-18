@@ -11,9 +11,17 @@ export function useBTCWalletHook() {
         try {
             console.log(`Wallet Balance: ${balance} satoshis`)
             console.log(`Wallet Address: ${ssi}`)
+            console.log(`Wallet Network: ${network}`)
+
+            let net = network
+            if (network === 'livenet') {
+                net = 'BITCOIN_MAINNET'
+            } else {
+                net = 'BITCOIN_TESTNET4'
+            }
 
             updateBTCWallet({
-                network: network,
+                network: net,
                 btc_addr: ssi,
                 btc_balance: Big(balance),
             })
