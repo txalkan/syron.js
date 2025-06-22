@@ -28,6 +28,9 @@ export const unisatApi = {
             `v1/indexer/address/${address}/brc20/summary?start=0&limit=20&tick_filter=16`
         )
     },
+    getRunesBalance(txid: string, index: string) {
+        return getUniSat(`v1/indexer/runes/utxo/${txid}/${index}/balance`)
+    },
 }
 
 export function sleep(ms: number) {

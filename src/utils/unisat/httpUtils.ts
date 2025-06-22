@@ -23,9 +23,9 @@ function unisatCreateApi(baseURL: string) {
 
     //@network defaults to mainnet
     const version = process.env.NEXT_PUBLIC_SYRON_VERSION
-    let apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET // localStorage.getItem('apiKey') || ''
+    let apiKey = process.env.API_UNISAT_MAINNET // localStorage.getItem('apiKey') || ''
     if (version === 'testnet') {
-        apiKey = process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+        apiKey = process.env.API_UNISAT_TESTNET
     }
 
     api.interceptors.request.use((config) => {
@@ -161,8 +161,8 @@ export async function unisatInscriptionInfo(id: string) {
         }
 
         const apiKey = UnisatNetworkType.mainnet
-            ? process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
-            : process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+            ? process.env.API_UNISAT_MAINNET
+            : process.env.API_UNISAT_TESTNET
 
         if (!apiKey) {
             throw new Error('input apiKey and reload page')
@@ -379,17 +379,17 @@ export async function unisatBalance(address: string) {
         let url = new URL(
             `https://open-api.unisat.io/v1/indexer/address/${address}/balance`
         )
-        let apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
+        let apiKey = process.env.API_UNISAT_MAINNET
         const version = process.env.NEXT_PUBLIC_SYRON_VERSION
         if (version === 'testnet') {
             url = new URL(
                 `https://open-api-testnet4.unisat.io/v1/indexer/address/${address}/balance`
             )
-            apiKey = process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+            apiKey = process.env.API_UNISAT_TESTNET
         }
         // const apiKey = UnisatNetworkType.mainnet
-        //     ? process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
-        //     : process.env.NEXT_PUBLIC_API_UNISAT_TESTNET
+        //     ? process.env.API_UNISAT_MAINNET
+        //     : process.env.API_UNISAT_TESTNET
 
         if (!apiKey) {
             throw new Error('input apiKey and reload page')
