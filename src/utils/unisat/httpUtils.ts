@@ -380,6 +380,12 @@ export async function unisatBalance(address: string) {
             `https://open-api.unisat.io/v1/indexer/address/${address}/balance`
         )
         let apiKey = process.env.API_UNISAT_MAINNET
+        // console.log('API_UNISAT_MAINNET:', process.env.API_UNISAT_MAINNET)
+
+        if (!apiKey) {
+            apiKey = process.env.NEXT_PUBLIC_API_UNISAT_MAINNET
+        }
+
         const version = process.env.NEXT_PUBLIC_SYRON_VERSION
         if (version === 'testnet') {
             url = new URL(

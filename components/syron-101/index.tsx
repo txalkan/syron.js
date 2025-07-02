@@ -60,8 +60,10 @@ function Component() {
         setWithdrawModal(true)
     }
     const [showSendModal, setSendModal] = React.useState(false)
-    const updateSend = async () => {
+    const [isICP, setIsICP] = React.useState(false)
+    const updateSend = async (is_icp: boolean) => {
         setSendModal(true)
+        setIsICP(is_icp)
     }
     const [showBuyModal, setBuyModal] = React.useState(false)
     const updateBuy = async () => {
@@ -134,6 +136,7 @@ function Component() {
     // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {
         async function readDeposits() {
+            // @review use api route
             await unisatBalance(syron?.sdb!)
                 .then((balance) => {
                     console.log(
@@ -219,7 +222,7 @@ function Component() {
             } else if (loan_amt <= 0) {
                 toast.info(
                     "You don't have an active loan. Click the 'DRAW SUSD' button first to borrow Syron SUSD against your BTC collateral.",
-                    { autoClose: false }
+                    { autoClose: false, closeOnClick: true }
                 )
                 return
             } else if (balance >= loan_amt) {
@@ -324,14 +327,20 @@ function Component() {
                                         // @review add retry option when the canister fails but the SDB received the inscription
                                         toast.info(
                                             `You have redeemed your BTC!`,
-                                            { autoClose: false }
+                                            {
+                                                autoClose: false,
+                                                closeOnClick: true,
+                                            }
                                         )
                                     }
                                 )
                             })
                     })
             }
-            toast.info(`You have redeemed your BTC!`, { autoClose: false })
+            toast.info(`You have redeemed your BTC!`, {
+                autoClose: false,
+                closeOnClick: true,
+            })
         } catch (err) {
             console.error('handleRedeem', err)
 
@@ -348,8 +357,8 @@ function Component() {
                         Number(loan) - Number(syronBal)
                     ).toFixed(
                         2
-                    )} SYRON BRC-20 to your Safety Deposit Box address.`,
-                    { autoClose: false }
+                    )} Syron SUSD into your Safety Deposit Box address.`,
+                    { autoClose: false, closeOnClick: true }
                 )
             } else if (
                 typeof err === 'object' &&
@@ -378,6 +387,7 @@ function Component() {
                     </div>,
                     {
                         autoClose: false,
+                        closeOnClick: true,
                         toastId: 4,
                     }
                 )
@@ -400,7 +410,10 @@ function Component() {
                             .
                         </p>
                     </div>,
-                    { autoClose: false }
+                    {
+                        autoClose: false,
+                        closeOnClick: true,
+                    }
                 )
             }
         } finally {
@@ -513,6 +526,7 @@ function Component() {
                     </div>,
                     {
                         autoClose: false,
+                        closeOnClick: true,
                     }
                 )
             } else {
@@ -535,7 +549,7 @@ function Component() {
                             .
                         </p>
                     </div>,
-                    { autoClose: false }
+                    { autoClose: false, closeOnClick: true }
                 )
             }
         } finally {
@@ -571,6 +585,7 @@ function Component() {
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showSendModal}
                 onClose={() => setSendModal(false)}
+                isICP={isICP}
             />
         )
     } else if (walletConnected && showBuyModal) {
@@ -841,8 +856,6 @@ function Component() {
                                             against your BTC collateral, adding
                                             it to your account&apos;s
                                             &apos;Available SUSD balance&apos;.
-                                            You can then use it for ICPayments,
-                                            buying BTC, or withdrawing it.
                                         </div>
                                     </div>
 
@@ -894,52 +907,79 @@ function Component() {
                                                 <div>Withdraw on bitcoin</div>
                                             </div>
                                         </div>
-                                        <div className={styles.subsection}>
-                                            <div className={styles.info}>
-                                                | ICPayments
-                                            </div>
+                                        <div className={styles.subsectionSIWB}>
                                             <div className={styles.buttons}>
                                                 {!isIdentified ? (
                                                     <AuthGuard>
                                                         <button
-                                                            onClick={updateSend}
+                                                            onClick={() =>
+                                                                updateSend(
+                                                                    false
+                                                                )
+                                                            }
                                                             // className={`button secondary ${styles.customButton}`}
                                                             className={`button secondary`}
                                                         >
-                                                            send susd
+                                                            send syron to btc
+                                                            address
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                updateSend(true)
+                                                            }
+                                                            className={`button secondary`}
+                                                        >
+                                                            send syron to icp
+                                                            address
                                                         </button>
                                                         <button
                                                             onClick={updateBuy}
                                                             className={`button secondary`}
                                                         >
-                                                            buy btc
+                                                            convert syron to
+                                                            bitcoin
                                                         </button>
                                                     </AuthGuard>
                                                 ) : (
                                                     <>
                                                         <button
-                                                            onClick={updateSend}
+                                                            onClick={() =>
+                                                                updateSend(
+                                                                    false
+                                                                )
+                                                            }
                                                             // className={`button secondary ${styles.customButton}`}
                                                             className={`button secondary`}
                                                         >
-                                                            send susd
+                                                            send syron to btc
+                                                            address
+                                                        </button>
+                                                        <button
+                                                            onClick={() =>
+                                                                updateSend(true)
+                                                            }
+                                                            className={`button secondary`}
+                                                        >
+                                                            send syron to icp
+                                                            address
                                                         </button>
                                                         <button
                                                             onClick={updateBuy}
                                                             className={`button secondary`}
                                                         >
-                                                            buy btc
+                                                            convert syron to
+                                                            bitcoin
                                                         </button>
                                                     </>
                                                 )}
                                             </div>
                                         </div>
-                                        <div className={styles.txtRow}>
+                                        {/* <div className={styles.txtRow}>
                                             To buy BTC with your &apos;Available
                                             SUSD balance&apos;, make sure to
                                             Sign In With Bitcoin & click the
                                             &apos;Buy BTC&apos; button.
-                                        </div>
+                                        </div> */}
                                     </div>
                                 </>
                             ) : (

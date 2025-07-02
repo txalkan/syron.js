@@ -2,6 +2,10 @@ import type { Principal } from '@dfinity/principal'
 import type { ActorMethod } from '@dfinity/agent'
 import type { IDL } from '@dfinity/candid'
 
+export interface Account {
+    owner: Principal
+    subaccount: [] | [Uint8Array | number[]]
+}
 export type BtcNetwork =
     | { Mainnet: null }
     | { Regtest: null }
@@ -18,6 +22,10 @@ export interface CollateralizedAccount {
 export interface GetBoxAddressArgs {
     op: syron_operation
     ssi: bitcoin_address
+}
+export interface GetRunesMinter {
+    sats_utxos: Array<utxo>
+    runes_utxos: Array<utxo>
 }
 export interface HttpHeader {
     value: string
@@ -59,6 +67,40 @@ export interface RegisterProviderArgs {
     chainId: bigint
     cyclesPerMessageByte: bigint
 }
+export interface ReimbursedDeposit {
+    account: Account
+    mint_block_index: bigint
+    amount: bigint
+    reason: ReimbursementReason
+}
+export type ReimbursementReason =
+    | { CallFailed: null }
+    | { TaintedDestination: { kyt_fee: bigint; kyt_provider: Principal } }
+export interface ReimbursementRequest {
+    account: Account
+    amount: bigint
+    reason: ReimbursementReason
+}
+export type RetrieveBtcError =
+    | { MalformedAddress: string }
+    | { GenericError: { error_message: string; error_code: bigint } }
+    | { TemporarilyUnavailable: string }
+    | { AlreadyProcessing: null }
+    | { AmountTooLow: bigint }
+    | { InsufficientFunds: { balance: bigint } }
+export interface RetrieveBtcOk {
+    block_index: bigint
+}
+export type RetrieveBtcStatusV2 =
+    | { Signing: null }
+    | { Confirmed: { txid: string } }
+    | { Sending: { txid: string } }
+    | { AmountTooLow: null }
+    | { WillReimburse: ReimbursementRequest }
+    | { Unknown: null }
+    | { Submitted: { txid: string } }
+    | { Reimbursed: ReimbursedDeposit }
+    | { Pending: null }
 export type ServiceProvider = { Chain: bigint } | { Provider: bigint }
 export type UpdateBalanceError =
     | {
@@ -89,6 +131,7 @@ export interface Utxo {
 export type UtxoStatus =
     | { ValueTooSmall: Utxo }
     | { Tainted: Utxo }
+    | { Read: Utxo }
     | {
           Minted: {
               minted_amount: bigint
@@ -140,6 +183,7 @@ export interface _SERVICE {
         { Ok: CollateralizedAccount } | { Err: UpdateBalanceError }
     >
     get_box_address: ActorMethod<[GetBoxAddressArgs], bitcoin_address>
+    get_btc_exchange_rate: ActorMethod<[string], bigint>
     get_current_fee_percentiles: ActorMethod<[], BigUint64Array | bigint[]>
     get_dao_addr: ActorMethod<[], Array<bitcoin_address>>
     get_fee_percentile: ActorMethod<[bigint], bigint>
@@ -163,6 +207,7 @@ export interface _SERVICE {
         { Ok: Array<string> } | { Err: UpdateBalanceError }
     >
     read_account: ActorMethod<[bitcoin_address], BigUint64Array | bigint[]>
+    read_runes_minter: ActorMethod<[], GetRunesMinter>
     redeem_btc: ActorMethod<
         [GetBoxAddressArgs, string, bigint, bigint],
         { Ok: string } | { Err: UpdateBalanceError }
@@ -171,15 +216,31 @@ export interface _SERVICE {
         [GetBoxAddressArgs],
         { Ok: bigint } | { Err: UpdateBalanceError }
     >
+    retrieve_btc_status_v2: ActorMethod<
+        [{ block_index: bigint }],
+        RetrieveBtcStatusV2
+    >
     sbtc_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     send_syron: ActorMethod<
-        [GetBoxAddressArgs, bitcoin_address, bigint],
+        [GetBoxAddressArgs, string, bigint],
+        { Ok: BigUint64Array | bigint[] } | { Err: UpdateBalanceError }
+    >
+    send_syron_icp: ActorMethod<
+        [GetBoxAddressArgs, Account, bigint],
         { Ok: BigUint64Array | bigint[] } | { Err: UpdateBalanceError }
     >
     susd_balance_of: ActorMethod<[bitcoin_address, bigint], bigint>
     syron_withdrawal: ActorMethod<
         [GetBoxAddressArgs, string, bigint, bigint, bigint, bigint],
         { Ok: string } | { Err: UpdateBalanceError }
+    >
+    syron_withdrawal_runes: ActorMethod<
+        [GetBoxAddressArgs, bigint],
+        { Ok: RetrieveBtcOk } | { Err: UpdateBalanceError }
+    >
+    update_runes_minter: ActorMethod<
+        [bigint],
+        { Ok: Array<UtxoStatus> } | { Err: UpdateBalanceError }
     >
     update_ssi_balance: ActorMethod<
         [GetBoxAddressArgs],

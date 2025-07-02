@@ -282,6 +282,14 @@
     }
 }
 
+.subsectionSIWB {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+}
+
 .value {
     display: flex;
     gap: 5px;
@@ -306,9 +314,9 @@
 
     width: 100%;
     flex-direction: column;
-    @media only screen and (min-width: 500px) {
-        flex-direction: row;
-    }
+    // @media only screen and (min-width: 500px) {
+    //     flex-direction: row;
+    // }
 }
 
 .loading {

@@ -1,10 +1,4 @@
 export const idlFactory = ({ IDL }) => {
-    const network = IDL.Variant({
-        mainnet: IDL.Null,
-        regtest: IDL.Null,
-        signet: IDL.Null,
-        testnet: IDL.Null,
-    })
     const Mode = IDL.Variant({
         RestrictedTo: IDL.Vec(IDL.Principal),
         DepositsRestrictedTo: IDL.Vec(IDL.Principal),
@@ -97,6 +91,54 @@ export const idlFactory = ({ IDL }) => {
         min_confirmations: IDL.Nat32,
         kyt_fee: IDL.Nat64,
     })
+    const satoshi = IDL.Nat64
+    const outpoint = IDL.Record({
+        txid: IDL.Vec(IDL.Nat8),
+        vout: IDL.Nat32,
+    })
+    const utxo = IDL.Record({
+        height: IDL.Nat32,
+        value: satoshi,
+        outpoint: outpoint,
+    })
+    const GetRunesMinter = IDL.Record({
+        sats_utxos: IDL.Vec(utxo),
+        runes_utxos: IDL.Vec(utxo),
+    })
+    const Account = IDL.Record({
+        owner: IDL.Principal,
+        subaccount: IDL.Opt(IDL.Vec(IDL.Nat8)),
+    })
+    const ReimbursementReason = IDL.Variant({
+        CallFailed: IDL.Null,
+        TaintedDestination: IDL.Record({
+            kyt_fee: IDL.Nat64,
+            kyt_provider: IDL.Principal,
+        }),
+    })
+    const ReimbursementRequest = IDL.Record({
+        account: Account,
+        amount: IDL.Nat64,
+        reason: ReimbursementReason,
+    })
+    const ReimbursedDeposit = IDL.Record({
+        account: Account,
+        mint_block_index: IDL.Nat64,
+        amount: IDL.Nat64,
+        reason: ReimbursementReason,
+    })
+    const RetrieveBtcStatusV2 = IDL.Variant({
+        Signing: IDL.Null,
+        Confirmed: IDL.Record({ txid: IDL.Text }),
+        Sending: IDL.Record({ txid: IDL.Text }),
+        AmountTooLow: IDL.Null,
+        WillReimburse: ReimbursementRequest,
+        Unknown: IDL.Null,
+        Submitted: IDL.Record({ txid: IDL.Text }),
+        Reimbursed: ReimbursedDeposit,
+        Pending: IDL.Null,
+    })
+    const RetrieveBtcOk = IDL.Record({ block_index: IDL.Nat64 })
     const Utxo = IDL.Record({
         height: IDL.Nat32,
         value: IDL.Nat64,
@@ -105,6 +147,7 @@ export const idlFactory = ({ IDL }) => {
     const UtxoStatus = IDL.Variant({
         ValueTooSmall: Utxo,
         Tainted: Utxo,
+        Read: Utxo,
         Minted: IDL.Record({
             minted_amount: IDL.Nat64,
             block_index: IDL.Nat64,
@@ -140,6 +183,7 @@ export const idlFactory = ({ IDL }) => {
             [bitcoin_address],
             ['query']
         ),
+        get_btc_exchange_rate: IDL.Func([IDL.Text], [IDL.Nat64], []),
         get_current_fee_percentiles: IDL.Func(
             [],
             [IDL.Vec(millisatoshi_per_vbyte)],
@@ -171,6 +215,7 @@ export const idlFactory = ({ IDL }) => {
             []
         ),
         read_account: IDL.Func([bitcoin_address], [IDL.Vec(IDL.Nat64)], []),
+        read_runes_minter: IDL.Func([], [GetRunesMinter], ['query']),
         redeem_btc: IDL.Func(
             [GetBoxAddressArgs, IDL.Text, IDL.Nat64, IDL.Nat64],
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
@@ -181,13 +226,28 @@ export const idlFactory = ({ IDL }) => {
             [IDL.Variant({ Ok: IDL.Nat64, Err: UpdateBalanceError })],
             []
         ),
+        retrieve_btc_status_v2: IDL.Func(
+            [IDL.Record({ block_index: IDL.Nat64 })],
+            [RetrieveBtcStatusV2],
+            ['query']
+        ),
         sbtc_balance_of: IDL.Func(
             [bitcoin_address, IDL.Nat64],
             [IDL.Nat64],
             []
         ),
         send_syron: IDL.Func(
-            [GetBoxAddressArgs, bitcoin_address, IDL.Nat64],
+            [GetBoxAddressArgs, IDL.Text, IDL.Nat64],
+            [
+                IDL.Variant({
+                    Ok: IDL.Vec(IDL.Nat64),
+                    Err: UpdateBalanceError,
+                }),
+            ],
+            []
+        ),
+        send_syron_icp: IDL.Func(
+            [GetBoxAddressArgs, Account, IDL.Nat64],
             [
                 IDL.Variant({
                     Ok: IDL.Vec(IDL.Nat64),
@@ -213,6 +273,21 @@ export const idlFactory = ({ IDL }) => {
             [IDL.Variant({ Ok: IDL.Text, Err: UpdateBalanceError })],
             []
         ),
+        syron_withdrawal_runes: IDL.Func(
+            [GetBoxAddressArgs, IDL.Nat64],
+            [IDL.Variant({ Ok: RetrieveBtcOk, Err: UpdateBalanceError })],
+            []
+        ),
+        update_runes_minter: IDL.Func(
+            [IDL.Nat64],
+            [
+                IDL.Variant({
+                    Ok: IDL.Vec(UtxoStatus),
+                    Err: UpdateBalanceError,
+                }),
+            ],
+            []
+        ),
         update_ssi_balance: IDL.Func(
             [GetBoxAddressArgs],
             [
@@ -231,12 +306,6 @@ export const idlFactory = ({ IDL }) => {
     })
 }
 export const init = ({ IDL }) => {
-    const network = IDL.Variant({
-        mainnet: IDL.Null,
-        regtest: IDL.Null,
-        signet: IDL.Null,
-        testnet: IDL.Null,
-    })
     const Mode = IDL.Variant({
         RestrictedTo: IDL.Vec(IDL.Principal),
         DepositsRestrictedTo: IDL.Vec(IDL.Principal),
@@ -273,5 +342,5 @@ export const init = ({ IDL }) => {
         Upgrade: IDL.Opt(UpgradeArgs),
         Init: InitArgs,
     })
-    return [network, MinterArg]
+    return [MinterArg]
 }
