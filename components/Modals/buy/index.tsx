@@ -98,6 +98,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                 toast.info('Your Bitcoin transaction was sent successfully', {
                     autoClose: false,
+                    closeOnClick: true,
                     toastId: 1,
                 })
             } else {
@@ -129,7 +130,10 @@ var ThisModal: React.FC<Prop> = function ({
                 // await siwb()
                 toast.warn(
                     "Your Sign In With Bitcoin session is no longer valid. Please 'SIGN IN' again.",
-                    { autoClose: false }
+                    {
+                        autoClose: false,
+                        closeOnClick: true,
+                    }
                 )
             } else if (
                 (error as Error).message.includes(
@@ -144,7 +148,10 @@ var ThisModal: React.FC<Prop> = function ({
             ) {
                 toast.warn(
                     "Your Sign In With Bitcoin authentication is no longer valid. Please go back and 'SIGN IN' again.",
-                    { autoClose: false }
+                    {
+                        autoClose: false,
+                        closeOnClick: true,
+                    }
                 )
             } else if (
                 typeof error === 'object' &&
@@ -175,7 +182,10 @@ var ThisModal: React.FC<Prop> = function ({
                                 : JSON.stringify(error, null, 2)}
                         </div>
                     </div>,
-                    { autoClose: false }
+                    {
+                        autoClose: false,
+                        closeOnClick: true,
+                    }
                 )
             } else {
                 toast.error(
@@ -198,7 +208,10 @@ var ThisModal: React.FC<Prop> = function ({
                             {extractRejectText(String(error))}
                         </div>
                     </div>,
-                    { autoClose: false }
+                    {
+                        autoClose: false,
+                        closeOnClick: true,
+                    }
                 )
             }
 
@@ -256,6 +269,7 @@ var ThisModal: React.FC<Prop> = function ({
             if (error == 'Error: Swap is paused') {
                 toast.info('Purchasing BTC is currently paused.', {
                     autoClose: false,
+                    closeOnClick: true,
                     toastId: 500,
                 })
             } else if (error == 'Error: Insufficient Amount') {
@@ -274,7 +288,7 @@ var ThisModal: React.FC<Prop> = function ({
                         </a>
                         .
                     </div>,
-                    { autoClose: false, toastId: 500 }
+                    { autoClose: false, closeOnClick: true, toastId: 500 }
                 )
             } else {
                 toast.error(
@@ -297,7 +311,7 @@ var ThisModal: React.FC<Prop> = function ({
                             {extractRejectText(String(error))}
                         </div>
                     </div>,
-                    { autoClose: false, toastId: 500 }
+                    { autoClose: false, closeOnClick: true, toastId: 500 }
                 )
             }
         }

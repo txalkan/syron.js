@@ -6,6 +6,8 @@ import { updateXR } from '../store/xr'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { mempoolFeeRate } from '../utils/unisat/httpUtils'
 import { useStore } from 'react-stores'
+import { decodeIcrcAccount } from '@dfinity/ledger-icrc'
+import { toNullable } from '@dfinity/utils'
 
 Big.PE = 999
 
@@ -171,20 +173,36 @@ function useICPHook() {
     }
 
     const sendSyron = useCallback(
-        async (ssi: string, recipient: string, amt: number) => {
+        async (ssi: string, recipient: string, amt: number, isICP: boolean) => {
             try {
                 if (identity === undefined || identity === null) {
                     throw new Error('SIWB Identity is undefined')
                 }
                 console.log(
-                    `Initiating SUSD payment of amount (${amt}) to recipient (${recipient}) -- identity: ${identity}`
+                    `Initiating Syron transfer of amount (${amt}) to recipient (${recipient}) w/ internet identity: ${identity}`
                 )
                 const syron = basic_bitcoin_syron(identity)
-                const txId = await syron.send_syron(
-                    { ssi, op: { payment: null } },
-                    recipient,
-                    amt
-                )
+
+                let txId
+                if (isICP) {
+                    const { owner, subaccount } = decodeIcrcAccount(recipient)
+
+                    const to = {
+                        owner,
+                        subaccount: toNullable(subaccount),
+                    }
+                    txId = await syron.send_syron_icp(
+                        { ssi, op: { payment: null } },
+                        to,
+                        amt
+                    )
+                } else {
+                    txId = await syron.send_syron(
+                        { ssi, op: { payment: null } },
+                        recipient,
+                        amt
+                    )
+                }
 
                 // Convert BigInt values to strings
                 const txIdStringified = JSON.stringify(txId, (key, value) =>

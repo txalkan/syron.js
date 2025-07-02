@@ -19,7 +19,7 @@ abstract class TypeChecker {
     abstract get isFunction(): boolean
     abstract get isSymbol(): boolean
 
-    abstract constructor(...args) {
+    constructor(...args) {
         this._args = args
     }
 }

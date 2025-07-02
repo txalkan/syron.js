@@ -35,11 +35,12 @@ type Prop = {
     balance: Big
     show: boolean
     onClose: () => void
+    isICP: boolean
 }
 
 const token: CryptoState = {
-    name: 'Syron SUSD',
-    symbol: 'Syron SUSD',
+    name: 'Syron Dollar',
+    symbol: 'SUSD',
     decimals: 8,
 }
 
@@ -49,6 +50,7 @@ var ThisModal: React.FC<Prop> = function ({
     balance,
     show,
     onClose,
+    isICP,
 }) {
     const { t } = useTranslation()
     const { send_syron } = useSyronWithdrawal()
@@ -114,13 +116,13 @@ var ThisModal: React.FC<Prop> = function ({
                 throw new Error('Insufficient Amount')
             }
 
-            await send_syron(ssi, recipient, amount)
+            await send_syron(ssi, recipient, amount, isICP)
             toast.info(
                 <div className={styles.toastMessage}>
                     Your payment of {amount.toString()} SUSD to {recipient} was
                     sent successfully
                 </div>,
-                { autoClose: false }
+                { autoClose: false, closeOnClick: true }
             )
             await getBox(ssi)
         } catch (error) {
@@ -143,7 +145,7 @@ var ThisModal: React.FC<Prop> = function ({
                         </a>
                         .
                     </div>,
-                    { autoClose: false }
+                    { autoClose: false, closeOnClick: true }
                 )
             } else if (error == 'Error: Insufficient Amount') {
                 toast.warn(
@@ -161,7 +163,7 @@ var ThisModal: React.FC<Prop> = function ({
                         </a>
                         .
                     </div>,
-                    { autoClose: false }
+                    { autoClose: false, closeOnClick: true }
                 )
             } else if (
                 typeof error === 'object' &&
@@ -192,13 +194,13 @@ var ThisModal: React.FC<Prop> = function ({
                                 : JSON.stringify(error, null, 2)}
                         </div>
                     </div>,
-                    { autoClose: false }
+                    { autoClose: false, closeOnClick: true }
                 )
             } else {
                 toast.error(
                     <div className={styles.error}>
                         <div>
-                            Please let us know about this error on Telegram{' '}
+                            You can let know about this error on Telegram{' '}
                             <a
                                 href="https://t.me/tyrondao"
                                 target="_blank"
@@ -216,7 +218,7 @@ var ThisModal: React.FC<Prop> = function ({
                             {extractRejectText(String(error))}
                         </div>
                     </div>,
-                    { autoClose: false }
+                    { autoClose: false, closeOnClick: true }
                 )
             }
         } finally {
@@ -239,11 +241,11 @@ var ThisModal: React.FC<Prop> = function ({
                         <div className={styles.headerTxt}>
                             {/* <Image
                                 src={icoThunder}
-                                alt={'Send Syron SUSD'}
+                                alt={'Send Syron'}
                                 height="32"
                                 width="32"
                             /> */}
-                            {t('Send Syron SUSD')}
+                            {t('Send Syron')}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
                             <Image
@@ -255,11 +257,11 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div>
 
-                    <div className={styles.txt}>
+                    {/* <div className={styles.txt}>
                         {t(
-                            'Transfer SUSD via ICPayments: lightning-fast transfers on the Internet Computer'
+                            'Transfer Syron via ICPayments: lightning-fast transfers on the Internet Computer'
                         )}
-                    </div>
+                    </div> */}
 
                     {/* <div className={styles.contentWrapper}>
                         <div className={styles.rowWrapper}>
@@ -597,18 +599,29 @@ var ThisModal: React.FC<Prop> = function ({
                         <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>▼</p>
-                        <p className={styles.diagramLineLabel}>
-                            Recipient&apos;s TyronDAO ACCOUNT (Receiver)
-                        </p>
-                        <p className={styles.diagramCaption}>
-                            Enter the recipient&apos;s self-custodial wallet
-                            below (Bitcoin address only)
-                        </p>
+                        {isICP ? (
+                            <p className={styles.diagramLineLabel}>
+                                Recipient&apos;s SUSD address (Receiver)
+                            </p>
+                        ) : (
+                            <p className={styles.diagramLineLabel}>
+                                Recipient&apos;s Syron account (Receiver)
+                            </p>
+                        )}
+                        {isICP ? (
+                            <p className={styles.diagramCaption}>
+                                Enter the receiver&apos;s SUSD address below
+                                (Internet Computer addresses only)
+                            </p>
+                        ) : (
+                            <p className={styles.diagramCaption}>
+                                Enter the receiver&apos;s self-custodial wallet
+                                address below (Bitcoin addresses only)
+                            </p>
+                        )}
                     </div>
 
-                    <div className={styles.label}>
-                        Recipient&apos;s Bitcoin Address
-                    </div>
+                    <div className={styles.label}>Recipient&apos;s Address</div>
                     <div className={styles.inputWrapper}>
                         <input
                             type="text"
@@ -646,12 +659,14 @@ var ThisModal: React.FC<Prop> = function ({
                         </button>
                     </div>
 
-                    <div className={styles.txt}>
-                        Syron will be transferred from your &apos;Available SUSD
-                        balance&apos; to the recipient&apos;s Tyron account. The
-                        recipient must log in with their Bitcoin personal wallet
-                        to access the funds.
-                    </div>
+                    {isICP ? null : (
+                        <div className={styles.txt}>
+                            Syron will be transferred from your &apos;Available
+                            SUSD balance&apos; to the recipient&apos;s Tyron
+                            account. The recipient must log in with their
+                            Bitcoin personal wallet to access the funds.
+                        </div>
+                    )}
 
                     <div className={styles.label}>
                         amount to transfer (susd)
@@ -686,9 +701,8 @@ var ThisModal: React.FC<Prop> = function ({
                     {isLoading ? (
                         <div>
                             <div className={styles.txt}>
-                                Your SUSD payment is being processed. Please
-                                allow a few moments for completion. Thank you
-                                for your patience!
+                                Your Syron transfer is being processed. Please
+                                allow a few moments for completion.
                             </div>
                             <Spinner />
                         </div>

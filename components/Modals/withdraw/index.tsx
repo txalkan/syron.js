@@ -158,7 +158,7 @@ var ThisModal: React.FC<Prop> = function ({
                 toast.error(
                     <div className={styles.error}>
                         <div>
-                            Please let us know about this error on Telegram{' '}
+                            You can let us know about this error on Telegram{' '}
                             <a
                                 href="https://t.me/tyrondao"
                                 target="_blank"
@@ -232,7 +232,7 @@ var ThisModal: React.FC<Prop> = function ({
                 toast.error(
                     <div className={styles.error}>
                         <div>
-                            Please let us know about this error on Telegram{' '}
+                            You can let us know about this error on Telegram{' '}
                             <a
                                 href="https://t.me/tyrondao"
                                 target="_blank"

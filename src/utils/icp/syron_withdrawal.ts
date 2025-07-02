@@ -95,12 +95,17 @@ function useSyronWithdrawal() {
         }
     }
 
-    const send_syron = async (ssi: string, recipient: string, amt: Big) => {
+    const send_syron = async (
+        ssi: string,
+        recipient: string,
+        amt: Big,
+        isICP: boolean
+    ) => {
         try {
             const dec = 1e8
             const amount = Number(amt.mul(dec))
 
-            const res = await sendSyron(ssi, recipient, amount)
+            const res = await sendSyron(ssi, recipient, amount, isICP)
 
             return res
         } catch (error) {
@@ -124,7 +129,12 @@ function useSyronWithdrawal() {
         }
     }
 
-    return { btc_to_syron, syron_withdrawal, send_syron, buy_btc }
+    return {
+        btc_to_syron,
+        syron_withdrawal,
+        send_syron,
+        buy_btc,
+    }
 }
 
 export default useSyronWithdrawal
