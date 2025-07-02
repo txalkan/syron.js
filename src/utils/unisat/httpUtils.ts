@@ -12,6 +12,10 @@ export enum UnisatNetworkType {
 //     network = type
 // }
 
+// Store the created instances in a cache to avoid re-creating them on every call within the same request
+let mainnetApiInstance: any = null
+let testnetApiInstance: any = null
+
 function unisatCreateApi(baseURL: string) {
     const api = axios.create({
         baseURL,
@@ -28,29 +32,38 @@ function unisatCreateApi(baseURL: string) {
         apiKey = process.env.API_UNISAT_TESTNET
     }
 
+    if (!apiKey) {
+        throw new Error(
+            `API key for ${baseURL} is not defined in environment variables.`
+        )
+    }
+
     api.interceptors.request.use((config) => {
-        if (!apiKey) {
-            throw new Error('input apiKey and reload page')
-        }
         config.headers.Authorization = `Bearer ${apiKey}`
         return config
     })
     return api
 }
 
-//@network
-const mainnetApi = unisatCreateApi('https://open-api.unisat.io')
-const testnetApi = unisatCreateApi('https://open-api-testnet4.unisat.io')
-
 function getApi() {
-    //@network defaults to mainnet
     const version = process.env.NEXT_PUBLIC_SYRON_VERSION
-    let api = mainnetApi
+
     if (version === 'testnet') {
-        api = testnetApi
+        // If the testnet instance doesn't exist, create it.
+        if (!testnetApiInstance) {
+            testnetApiInstance = unisatCreateApi(
+                'https://open-api-testnet4.unisat.io'
+            )
+        }
+        return testnetApiInstance
     }
 
-    return api
+    //@network defaults to mainnet
+    // If the mainnet instance doesn't exist, create it.
+    if (!mainnetApiInstance) {
+        mainnetApiInstance = unisatCreateApi('https://open-api.unisat.io')
+    }
+    return mainnetApiInstance
 }
 
 export const getUniSat = async (url: string, params?: any) => {
