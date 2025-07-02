@@ -13,8 +13,8 @@ export function useBTCWalletHook() {
             console.log(`Wallet Address: ${ssi}`)
             console.log(`Wallet Network: ${network}`)
 
-            let net = network
-            if (network === 'livenet') {
+            let net
+            if (network === 'livenet' || network === 'BITCOIN_MAINNET') {
                 net = 'BITCOIN_MAINNET'
             } else {
                 net = 'BITCOIN_TESTNET4'
