@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Modal, Button, Typography } from 'antd'
 import styles from './index.module.scss'
 import ThreeDots from '../../Spinner/ThreeDots'

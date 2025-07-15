@@ -31,10 +31,11 @@ Big.PE = 999
 const _0 = Big(0)
 
 type Prop = {
+    testBtc: boolean
     pair: VaultPair[]
 }
 
-export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
+export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
 
@@ -167,13 +168,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
 
             if (collateral < 1000)
                 throw new Error(
-                    'Your BTC deposit is below the minimum required amount of 0.00001 BTC. Please increase your deposit.'
+                    'Your BTC deposit is below the minimum recommended amount of 0.00001 BTC for testing Syron. Please increase your deposit.'
                 )
 
-            // @collateral cannot be more than 5000 sats
-            if (collateral > 5000)
+            // @collateral cannot be more than 20,000 sats
+            if (collateral > 20000)
                 throw new Error(
-                    'Your BTC deposit exceeds the maximum allowed amount of 0.00005 BTC. Please reduce your deposit.'
+                    'Your BTC deposit exceeds the recommended amount of 0.0002 BTC for testing Syron. Please reduce your deposit.'
                 )
 
             toast.info('Submitting your BTC deposit...', { toastId: 1 })
@@ -322,6 +323,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair }) {
     }, [inscriptionTx.value])
 
     const handleButtonClick = async () => {
+        if (testBtc) return toast.warn('Coming soon')
         try {
             if (!unisatInstalled) {
                 window.open('https://unisat.io', '_blank')

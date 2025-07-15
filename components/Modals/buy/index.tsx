@@ -354,8 +354,11 @@ var ThisModal: React.FC<Prop> = function ({
                             YOUR BITCOIN WALLET (Receiver)
                         </p>
                         <p className={styles.diagramCaption}>
-                            BTC will be sent to your connected Bitcoin wallet
-                            address
+                            BTC will be sent to your{' '}
+                            <span className={styles.noBreak}>
+                                self-custodial
+                            </span>{' '}
+                            wallet
                         </p>
                     </div>
 

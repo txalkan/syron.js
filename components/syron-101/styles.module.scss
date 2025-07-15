@@ -27,7 +27,7 @@
 .title {
     cursor: default;
     font-family: 'Courier New', 'GeistMono', Courier, monospace;
-    color: #111111;
+    color: gold;
     font-weight: bold;
     font-size: 1.1rem;
     text-transform: uppercase;
@@ -36,7 +36,7 @@
     padding: 2rem 0rem;
     border-left: 0.5px solid #888888;
     border-right: 0.5px solid #888888;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid gold;
 }
 
 .title2 {
@@ -177,7 +177,7 @@
 .boxWrapper {
     background-color: #f8f8f8;
     color: #333333;
-    border: 0.5px solid #888888;
+    // border: 0.5px solid #888888;
     padding: 24px 36px;
     display: flex;
     flex-direction: column;
@@ -201,7 +201,7 @@
     background-color: #f2f2f2;
     padding: 2rem 2rem;
     border-radius: 5px;
-    border: 0.5px solid white;
+    // border: 0.5px solid white;
     flex-direction: column;
     margin-bottom: 1rem;
 }
@@ -449,4 +449,29 @@
     white-space: normal; /* Allow text to wrap */
     word-break: break-word; /* Break long words if necessary */
     overflow-wrap: break-word; /* Ensure text wraps properly */
+}
+
+.titleForm2 {
+    cursor: default;
+    font-size: 0.9rem;
+    color: #111111;
+    text-align: left;
+    padding-top: 2rem;
+    padding-bottom: 1rem;
+    padding-left: 1rem;
+}
+
+.txtRowInfo {
+    list-style-type: disc !important;
+    list-style-position: inside;
+    font-size: 0.75rem;
+    display: flexbox;
+    text-align: left;
+    color: #222222;
+    margin: 0.5rem;
+    padding-left: 1rem;
+}
+
+.noBreak {
+    white-space: nowrap;
 }

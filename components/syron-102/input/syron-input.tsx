@@ -1,16 +1,10 @@
-import * as tyron from 'tyron'
 import styles from './index.module.scss'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 import Image from 'next/image'
 import classNames from 'classnames'
-import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
+import icoSYRON from '../../../src/assets/logos/syron_susd_brand_mark.png'
 import { CryptoState } from '../../../src/types/vault'
-import { useStore } from 'react-stores'
-import { $btc_wallet, $syron } from '../../../src/store/syron'
 import Big from 'big.js'
-import { $xr } from '../../../src/store/xr'
-import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 
 Big.PE = 999
 const _0 = Big(0)
