@@ -5,7 +5,7 @@ import Image from 'next/image'
 import tydradexSvg from '../../../src/assets/icons/ssi_tydradex.svg'
 import { CryptoState } from '../../../src/types/vault'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
-import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
+import icoSYRON from '../../../src/assets/logos/syron_susd_brand_mark.png'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
 
 Big.PE = 999
@@ -19,7 +19,9 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
     return (
         <div className={styles.wrapper}>
             {/* <Image src={icoArrow} alt="arrow-icon" className={styles.img} /> */}
-
+            <label htmlFor="borrow" className={styles.label}>
+                mint susd
+            </label>
             <div className={styles.output}>
                 <input
                     disabled

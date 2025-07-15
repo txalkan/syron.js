@@ -143,7 +143,7 @@ export const BoxInput: React.FC<Prop> = ({
                         <div className={styles.info}>
                             {walletConnected && (
                                 <>
-                                    | Connected Wallet Balance
+                                    | Wallet Balance
                                     <span className={styles.infoBalance}>
                                         {!isNaN(Number(btcBalance)) &&
                                             Number(btcBalance) !== 0 && (
@@ -220,7 +220,7 @@ export const BoxInput: React.FC<Prop> = ({
 
             <div className={styles.inputContainer}>
                 <label htmlFor="deposit" className={styles.label}>
-                    Amount to deposit (btc)
+                    Deposit bitcoin
                 </label>
                 {/* @dev Percentage buttons */}
                 <div className={styles.percentWrapper}>

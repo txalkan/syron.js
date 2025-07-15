@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { SyronForm } from '../syron-102'
 import icoBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import icoBTC from '../../src/assets/icons/bitcoin.png'
-import icoSYRON from '../../src/assets/icons/ssi_SYRON_iso.png'
+import icoSYRON from '../../src/assets/logos/syron_susd_brand_mark.png'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
@@ -688,7 +688,10 @@ function Component() {
                                         </div>
                                         <br />
                                         <div className={styles.subtitle}>
-                                            connected wallet
+                                            <span className={styles.noBreak}>
+                                                self-custodial
+                                            </span>{' '}
+                                            wallet
                                         </div>
                                         <div className={styles.sdbAddr}>
                                             <div
@@ -749,8 +752,8 @@ function Component() {
                                     </div>
                                     <div className={styles.boxWrapperInner}>
                                         <div className={styles.txtRow}>
-                                            To add collateral, send BTC to your
-                                            Deposit ₿ox address shown above.
+                                            To add collateral, send Bitcoin to
+                                            your Safety Deposit ₿ox address.
                                         </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
@@ -854,8 +857,8 @@ function Component() {
                                         <div className={styles.txtRow}>
                                             This action borrows Syron SUSD
                                             against your BTC collateral, adding
-                                            it to your account&apos;s
-                                            &apos;Available SUSD balance&apos;.
+                                            it to your account&apos;s SUSD
+                                            balance.
                                         </div>
                                     </div>
 
@@ -990,7 +993,7 @@ function Component() {
                         </>
                     ) : (
                         <div style={{ fontSize: '0.8rem' }}>
-                            Connect Wallet to access your Syron account
+                            Connect to access your Syron account
                         </div>
                     )}
                 </div>
@@ -999,7 +1002,9 @@ function Component() {
                 <div className={styles.cardActiveWrapper}>
                     <div
                         className={
-                            active === 'GetSyron' || active === 'LiquidSyron'
+                            active === 'GetSyron' ||
+                            active === 'GetSyronRunes' ||
+                            active === 'LiquidSyron'
                                 ? styles.cardTitle
                                 : styles.cardNoTitle
                         }
@@ -1013,6 +1018,30 @@ function Component() {
                             />
                         </div> */}
                     </div>
+
+                    <div className={styles.titleForm2}>
+                        Deposit Bitcoin to borrow Syron stablecoins
+                    </div>
+                    <div className={styles.txtRowInfo}>
+                        Syron is an asset-backed stablecoin protocol. Every loan
+                        must be secured with 150% collateral in BTC.
+                    </div>
+                    <ul>
+                        <li className={styles.txtRowInfo}>
+                            Two-thirds of your BTC deposits can be borrowed in
+                            {''}
+                            <span className={styles.noBreak}>Syron SUSD</span>:
+                            Your Safety Deposit ₿ox holds $1.50 in BTC for every
+                            dollar you receive.
+                        </li>
+                        <li className={styles.txtRowInfo}>
+                            Syron SUSD can be withdrawn to your self-custodial
+                            Bitcoin wallet as{' '}
+                            <span className={styles.noBreak}>BRC-20</span> or
+                            Runes.
+                        </li>
+                    </ul>
+
                     <div className={styles.tabWrapper}>
                         <div
                             onClick={() =>
@@ -1033,14 +1062,35 @@ function Component() {
                                         className={styles.icon}
                                     />
                                 </div> */}
-                            Borrow SYRON
+                            Mint SYRON BRC-20
                         </div>
                         <div
-                            onClick={
-                                () => toast.info('Coming soon')
-                                // active !== 'LiquidSyron'
-                                //     ? toggleActive('LiquidSyron')
-                                //     : null
+                            onClick={() =>
+                                active !== 'GetSyronRunes'
+                                    ? toggleActive('GetSyronRunes')
+                                    : null
+                            }
+                            className={
+                                active === 'GetSyronRunes'
+                                    ? styles.cardSelect
+                                    : styles.card
+                            }
+                        >
+                            {/* <div className={styles.iconGoldContainer}>
+                                    <Image
+                                        src={icoPrint}
+                                        alt={'print-syron'}
+                                        className={styles.icon}
+                                    />
+                                </div> */}
+                            mint RUNE•DOLLAR
+                        </div>
+                        {/* <div
+                            onClick={() =>
+                                //toast.info('Coming soon')
+                                active !== 'LiquidSyron'
+                                    ? toggleActive('LiquidSyron')
+                                    : null
                             }
                             className={
                                 active === 'LiquidSyron'
@@ -1048,21 +1098,34 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            {/* <div className={styles.iconGoldContainer}>
+                            <div className={styles.iconGoldContainer}>
                                     <Image
                                         src={icoEarn}
                                         alt={'earn-bitcoin'}
                                         className={styles.icon}
                                     />
-                                </div> */}
+                                </div>
                             Earn Bitcoin
-                        </div>
+                        </div> */}
                     </div>
 
                     {active === 'GetSyron' && (
                         <div className={styles.cardSub}>
                             <div className={styles.wrapper}>
-                                <SyronForm type="get" startPair={start_pair} />
+                                <SyronForm
+                                    type={active}
+                                    startPair={start_pair}
+                                />
+                            </div>
+                        </div>
+                    )}
+                    {active === 'GetSyronRunes' && (
+                        <div className={styles.cardSub}>
+                            <div className={styles.wrapper}>
+                                <SyronForm
+                                    type={active}
+                                    startPair={start_pair}
+                                />
                             </div>
                         </div>
                     )}

@@ -117,7 +117,7 @@ section {
 }
 
 .body {
-    background-image: url('/images/bg.png');
+    background-image: url('/images/lightning.jpg');
     background-color: #cdcdcd;
     /* #d3d6db; */
     /* rgb(251, 252, 246); */
@@ -138,12 +138,12 @@ section {
     }
 } */
 
-/* @media only screen and (max-width: 576px) {
+@media only screen and (max-width: 576px) {
     .body,
     .bodylight {
         background-image: url('/images/lightning_mobile.jpg');
     }
-} */
+}
 
 ol,
 ul {

@@ -453,9 +453,16 @@ If you have any questions, comments or interest in pursuing any other use cases,
     letter-spacing: normal !important;
     color: #000;
     margin: 2rem 0.5rem 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 800;
-    text-align: left;
+    font-size: 2rem;
+    font-weight: 1000;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     text-transform: uppercase;
     font-family: 'Courier New', 'GeistMono', Courier, monospace;
+}
+
+.noBreak {
+    white-space: nowrap;
 }
