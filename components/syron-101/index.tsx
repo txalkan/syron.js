@@ -1018,30 +1018,30 @@ function Component() {
                             />
                         </div> */}
                     </div>
-
+                    <br />
                     <div className={styles.titleForm2}>
-                        Deposit Bitcoin to borrow Syron stablecoins
+                        Syron is a Bitcoin-backed stablecoin protocol - Deposit
+                        BTC to borrow stablecoins
                     </div>
                     <div className={styles.txtRowInfo}>
-                        Syron is an asset-backed stablecoin protocol. Every loan
-                        must be secured with 150% collateral in BTC.
+                        Every loan is secured with 150% collateral in BTC:
                     </div>
                     <ul>
                         <li className={styles.txtRowInfo}>
-                            Two-thirds of your BTC deposits can be borrowed in
-                            {''}
-                            <span className={styles.noBreak}>Syron SUSD</span>:
                             Your Safety Deposit ₿ox holds $1.50 in BTC for every
-                            dollar you receive.
+                            dollar you receive
                         </li>
                         <li className={styles.txtRowInfo}>
-                            Syron SUSD can be withdrawn to your self-custodial
-                            Bitcoin wallet as{' '}
-                            <span className={styles.noBreak}>BRC-20</span> or
-                            Runes.
+                            Two-thirds of your BTC deposits can be borrowed in{' '}
+                            <span className={styles.noBreak}>Syron SUSD</span>
                         </li>
                     </ul>
-
+                    <div className={styles.txtRowInfo}>
+                        You can withdraw Syron to your self-custodial Bitcoin
+                        wallet as <span className={styles.noBreak}>BRC-20</span>{' '}
+                        or Runes:
+                    </div>
+                    <br />
                     <div className={styles.tabWrapper}>
                         <div
                             onClick={() =>
