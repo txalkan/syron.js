@@ -454,22 +454,21 @@
 .titleForm2 {
     cursor: default;
     font-size: 0.9rem;
-    color: #111111;
+    color: white;
     text-align: left;
-    padding-top: 2rem;
-    padding-bottom: 1rem;
-    padding-left: 1rem;
+    padding: 1rem;
 }
 
 .txtRowInfo {
     list-style-type: disc !important;
     list-style-position: inside;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     display: flexbox;
     text-align: left;
-    color: #222222;
+    color: white;
     margin: 0.5rem;
     padding-left: 1rem;
+    padding-right: 1rem;
 }
 
 .noBreak {
