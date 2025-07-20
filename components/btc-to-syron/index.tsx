@@ -464,14 +464,22 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
                     By testing Syron, you agree to TyronDAO&apos;s{' '}
                     <span
                         className={styles.terms}
-                        onClick={() => toast.info('Coming soon')}
+                        onClick={() =>
+                            window.open(
+                                'https://docs.tyrondao.org/legal/terms-of-service'
+                            )
+                        }
                     >
                         Terms of Service
                     </span>{' '}
                     &{' '}
                     <span
                         className={styles.terms}
-                        onClick={() => toast.info('Coming soon')}
+                        onClick={() =>
+                            window.open(
+                                'https://docs.tyrondao.org/legal/privacy-policy'
+                            )
+                        }
                     >
                         Privacy Policy
                     </span>
