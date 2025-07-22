@@ -1,0 +1,25 @@
+.panel {
+    max-width: 420px;
+    margin: 40px auto;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 24px;
+    box-shadow: 0 4px 32px rgba(0, 0, 0, 0.12);
+    padding: 32px 24px 24px 24px;
+    color: #fff;
+}
+
+.alphaWarning {
+    background: linear-gradient(
+        90deg,
+        rgba(255, 153, 0, 0.4) 0%,
+        rgba(255, 179, 71, 0.92) 100%
+    );
+    color: #181a20;
+    border-radius: 12px;
+    padding: 12px 17px;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-align: center;
+    font-family: 'Noto Sans', sans-serif;
+}

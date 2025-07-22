@@ -116,9 +116,21 @@ section {
     /* Ensure the body takes up the full viewport height */
 }
 
+@supports (background-image: url('/images/lightning.webp')) {
+    .body {
+        background-image: url('/images/lightning.webp');
+    }
+    @media only screen and (max-width: 576px) {
+        .body {
+            background-image: url('/images/lightning_mobile.webp');
+        }
+    }
+}
+
 .body {
     background-image: url('/images/lightning.jpg');
-    background-color: #cdcdcd;
+    background-color: rgba(255, 255, 255, 0.4);
+
     /* #d3d6db; */
     /* rgb(251, 252, 246); */
     /* #dbe4eb; */
@@ -126,20 +138,39 @@ section {
     background-blend-mode: overlay;
 }
 
+@media only screen and (max-width: 576px) {
+    .body {
+        background-image: url('/images/lightning_mobile.jpg');
+    }
+}
+
 .bodylight {
     background-color: silver;
     background-blend-mode: soft-light;
+    background-image: url('/images/lightning.jpg');
 }
 
-/* @media only screen and (min-width: 576px) {
-    .body,
-    .bodylight {
-        background-image: url('/images/lightning.jpg');
-    }
-} */
-
 @media only screen and (max-width: 576px) {
-    .body,
+    .bodylight {
+        background-image: url('/images/lightning_mobile.jpg');
+    }
+}
+
+@supports (background-image: url('/images/lightning.webp')) {
+    .bodylight {
+        background-image: url('/images/lightning.webp');
+    }
+    @media only screen and (max-width: 576px) {
+        .bodylight {
+            background-image: url('/images/lightning_mobile.webp');
+        }
+    }
+}
+
+.bodylight {
+    background-image: url('/images/lightning.jpg');
+}
+@media only screen and (max-width: 576px) {
     .bodylight {
         background-image: url('/images/lightning_mobile.jpg');
     }
