@@ -32,6 +32,7 @@ import {
 } from '../../src/utils/unisat/httpUtils'
 import ThreeDots from '../Spinner/ThreeDots'
 import { BtcToSyron } from '../btc-to-syron'
+import ReleaseWarning from '../ReleaseWarning'
 
 type Prop = {
     startPair: VaultPair[]
@@ -56,9 +57,10 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const tokensStore = useStore($tokens)
 
     const [loading, setLoading] = React.useState(false)
-    const [modal0, setModal0] = React.useState(false)
-    const [modal1, setModal1] = React.useState(false)
-    const [modal3, setModal3] = React.useState(false)
+    const [showInputTokenModal, setShowInputTokenModal] = React.useState(false)
+    const [showOutputTokenModal, setShowOutputTokenModal] =
+        React.useState(false)
+    const [showSettingsModal, setShowSettingsModal] = React.useState(false)
     const [modal4, setModal4] = React.useState(false)
     const [verified, setVerified] = React.useState(false)
     const [known, setKnown] = React.useState(false)
@@ -128,8 +130,8 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
             unLinkedPair[0].value = String(0)
             unLinkedPair[index].meta = token
             setPair(unLinkedPair)
-            setModal0(false)
-            setModal1(false)
+            setShowInputTokenModal(false)
+            setShowOutputTokenModal(false)
 
             setAmount(_0)
         },
@@ -160,24 +162,25 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     if (type === 'GetSyron') {
         return (
             <>
+                <ReleaseWarning />
                 <SwapSettingsModal
-                    show={modal3}
-                    onClose={() => setModal3(false)}
+                    show={showSettingsModal}
+                    onClose={() => setShowSettingsModal(false)}
                 />
                 <TokensModal
-                    show={modal0}
+                    show={showInputTokenModal}
                     // warn
                     // include
                     exceptions={vault_pair.map((t) => t.meta.symbol)}
-                    onClose={() => setModal0(false)}
+                    onClose={() => setShowInputTokenModal(false)}
                     onSelect={(token) => handleOnSelectToken(token, 0)}
                 />
                 <TokensModal
-                    show={modal1}
+                    show={showOutputTokenModal}
                     include
                     // warn
                     exceptions={vault_pair.map((t) => t.meta.symbol)}
-                    onClose={() => setModal1(false)}
+                    onClose={() => setShowOutputTokenModal(false)}
                     onSelect={(token) => handleOnSelectToken(token, 1)}
                 />
                 {vault_pair.length === 2 ? (
@@ -213,7 +216,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             </div>
                             <TokenInput
                                 token={vault_pair[1].meta}
-                                onSelect={() => setModal1(true)}
+                                onSelect={() => setShowOutputTokenModal(true)}
                             />
                         </div> */}
 
@@ -252,23 +255,23 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         return (
             <>
                 <SwapSettingsModal
-                    show={modal3}
-                    onClose={() => setModal3(false)}
+                    show={showSettingsModal}
+                    onClose={() => setShowSettingsModal(false)}
                 />
                 <TokensModal
-                    show={modal0}
+                    show={showInputTokenModal}
                     // warn
                     // include
                     exceptions={vault_pair.map((t) => t.meta.symbol)}
-                    onClose={() => setModal0(false)}
+                    onClose={() => setShowInputTokenModal(false)}
                     onSelect={(token) => handleOnSelectToken(token, 0)}
                 />
                 <TokensModal
-                    show={modal1}
+                    show={showOutputTokenModal}
                     include
                     // warn
                     exceptions={vault_pair.map((t) => t.meta.symbol)}
-                    onClose={() => setModal1(false)}
+                    onClose={() => setShowOutputTokenModal(false)}
                     onSelect={(token) => handleOnSelectToken(token, 1)}
                 />
                 {vault_pair.length === 2 ? (
@@ -304,7 +307,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             </div>
                             <TokenInput
                                 token={vault_pair[1].meta}
-                                onSelect={() => setModal1(true)}
+                                onSelect={() => setShowOutputTokenModal(true)}
                             />
                         </div> */}
 
@@ -481,7 +484,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                 // warn
                 // include
                 exceptions={vault_pair.map((t) => t.meta.symbol)}
-                onClose={() => setModal0(false)}
+                onClose={() => setShowInputTokenModal(false)}
                 onSelect={(token) => handleOnSelectToken(token, 0)}
             />
             <SyronTokenModal
@@ -550,7 +553,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                             value={vault_pair[0].value}
                             token={vault_pair[0].meta}
                             disabled={disabled}
-                            onSelect={() => setModal0(true)}
+                            onSelect={() => setShowInputTokenModal(true)}
                             onInput={handleOnInput}
                             onMax={handleOnInput}
                             onSwap={handleForm}
@@ -570,7 +573,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         </div>
                         <TokenInput
                             token={vault_pair[1].meta}
-                            onSelect={() => setModal1(true)}
+                            onSelect={() => setShowOutputTokenModal(true)}
                         />
                     </div> */}
 
