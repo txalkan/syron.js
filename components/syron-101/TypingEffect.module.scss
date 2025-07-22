@@ -1,0 +1,28 @@
+.typing {
+    font-family: 'Fira Mono', 'Courier New', Courier, monospace;
+    font-size: inherit;
+    color: inherit;
+}
+
+.cursor {
+    display: inline-block;
+    width: 1ch;
+    font-weight: bold;
+    color: #bfa100;
+    animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+    0%,
+    50% {
+        opacity: 1;
+    }
+    51%,
+    100% {
+        opacity: 0;
+    }
+}
+
+.cursorHidden {
+    display: none;
+}

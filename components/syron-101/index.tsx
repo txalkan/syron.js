@@ -37,6 +37,7 @@ import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
 import AuthGuard from '../AuthGuard'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { DelegationIdentity } from '@dfinity/identity'
+import SyronInfoCard from './SyronInfoCard'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -601,6 +602,8 @@ function Component() {
     } else {
         return (
             <div className={styles.container}>
+                <SyronInfoCard />
+
                 {/* @dev: private SDB */}
                 <div className={styles.boxWrapper}>
                     {walletConnected ? (
@@ -993,7 +996,7 @@ function Component() {
                         </>
                     ) : (
                         <div style={{ fontSize: '0.8rem' }}>
-                            Connect to access your Syron account
+                            Connect Wallet to access your Tyron account
                         </div>
                     )}
                 </div>
@@ -1018,7 +1021,7 @@ function Component() {
                             />
                         </div> */}
                     </div>
-                    <br />
+                    {/* <br />
                     <div className={styles.titleForm2}>
                         Syron is a Bitcoin-backed stablecoin protocol - Deposit
                         BTC to borrow stablecoins
@@ -1041,7 +1044,7 @@ function Component() {
                         wallet as <span className={styles.noBreak}>BRC-20</span>{' '}
                         or Runes:
                     </div>
-                    <br />
+                    <br /> */}
                     <div className={styles.tabWrapper}>
                         <div
                             onClick={() =>
