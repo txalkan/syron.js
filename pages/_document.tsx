@@ -23,6 +23,32 @@ class MyDocument extends Document {
                     />
                     <meta property="og:image" content="ssi_tyron.png" />
                     <meta property="og:title" content="TYRON" />
+                    <link
+                        rel="preload"
+                        as="image"
+                        href="/images/lightning.webp"
+                        type="image/webp"
+                    />
+                    <link
+                        rel="preload"
+                        as="image"
+                        href="/images/lightning.jpg"
+                        type="image/jpeg"
+                    />
+                    <link
+                        rel="preload"
+                        as="image"
+                        href="/images/lightning_mobile.webp"
+                        type="image/webp"
+                        media="(max-width: 576px)"
+                    />
+                    <link
+                        rel="preload"
+                        as="image"
+                        href="/images/lightning_mobile.jpg"
+                        type="image/jpeg"
+                        media="(max-width: 576px)"
+                    />
                 </Head>
                 <body>
                     <Main />
