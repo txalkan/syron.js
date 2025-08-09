@@ -254,10 +254,33 @@
     padding: 20px;
     margin-bottom: 24px;
     text-align: center;
+    position: relative;
 
     @media (max-width: 768px) {
         padding: 16px;
         margin-bottom: 20px;
+    }
+}
+
+.bitcoinLogo {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 12px;
+
+    img {
+        width: 32px;
+        height: 32px;
+        object-fit: contain;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    @media (max-width: 768px) {
+        margin-bottom: 10px;
+
+        img {
+            width: 28px;
+            height: 28px;
+        }
     }
 }
 
@@ -385,6 +408,58 @@
     &:hover {
         background: linear-gradient(135deg, #6d28d9 0%, #5b21b6 100%);
         box-shadow: 0 6px 16px rgba(124, 58, 237, 0.4);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        height: 40px;
+        padding: 0 20px;
+    }
+}
+
+.confirmButtonGreen {
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+
+    &:hover {
+        background: linear-gradient(135deg, #059669 0%, #047857 100%);
+        box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 768px) {
+        height: 40px;
+        padding: 0 20px;
+    }
+}
+
+.confirmButtonYellow {
+    height: 44px;
+    padding: 0 24px;
+    border-radius: 8px;
+    font-weight: 500;
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    border: none;
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+
+    &:hover {
+        background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
+        box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
         transform: translateY(-1px);
     }
 

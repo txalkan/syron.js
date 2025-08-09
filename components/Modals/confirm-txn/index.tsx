@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, Button, Typography } from 'antd'
 import styles from './index.module.scss'
 import ThreeDots from '../../Spinner/ThreeDots'
+import bitcoinIcon from '../../../src/assets/icons/bitcoin.png'
 
 const { Text } = Typography
 
@@ -113,7 +114,8 @@ const ConfirmTransactionModal = ({
                 </div>
 
                 {/* Big Total Amount Display */}
-                {onDetails.amount && (
+                {/* Show SUSD amount (green box) only for withdrawals */}
+                {onDetails.title === 'Confirm Transaction' && (
                     <div className={styles.bigTotalSection}>
                         <div className={styles.bigTotalLabel}>
                             Total Amount to Receive
@@ -127,8 +129,12 @@ const ConfirmTransactionModal = ({
                     </div>
                 )}
 
-                {onDetails.total_min && (
+                {/* Show BTC amount (yellow box) only for BTC purchases */}
+                {onDetails.title === 'Confirm BTC Purchase' && (
                     <div className={styles.totalSection}>
+                        <div className={styles.bitcoinLogo}>
+                            <img src={bitcoinIcon.src} alt="Bitcoin" />
+                        </div>
                         <div className={styles.totalLabel}>
                             You will receive around
                         </div>
@@ -165,7 +171,13 @@ const ConfirmTransactionModal = ({
                     <Button
                         type="primary"
                         onClick={onConfirm}
-                        className={styles.confirmButton}
+                        className={
+                            onDetails.title === 'Confirm Transaction'
+                                ? styles.confirmButtonGreen
+                                : onDetails.title === 'Confirm BTC Purchase'
+                                  ? styles.confirmButtonYellow
+                                  : styles.confirmButton
+                        }
                         size="large"
                         loading={isLoading}
                     >

@@ -249,12 +249,12 @@ var ThisModal: React.FC<Prop> = function ({
                     'The Bitcoin network is experiencing some congestion. During our testing campaign, the maximum allowed gas fee is 3 sats/vB (satoshis per virtual byte). Please try again later when network conditions improve and fees are lower.'
                 )
 
-            const dao_fee = 0.000001
+            const dao_fee = 0.00000546
             const gas_fee = (fee * 152) / 1e8 // @vb
             const total_min = Number(btcAmount.times(0.99)) - gas_fee - dao_fee
             const details = {
                 title: 'Confirm BTC Purchase',
-                info: `You are about to purchase bitcoin (BTC) using your Syron SUSD and receive it directly in your connected Bitcoin wallet.`,
+                info: `You are about to purchase bitcoin (BTC) using your Syron SUSD and receive it directly in your self-custodial Bitcoin wallet.`,
                 amount: `$${Number(amount).toFixed(2)} SUSD`,
                 btcAmount: `+${Number(btcAmount.times(0.99)).toFixed(8)} BTC`,
                 gas: `-${gas_fee.toFixed(8)} BTC`,

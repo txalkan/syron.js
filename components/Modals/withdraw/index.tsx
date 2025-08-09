@@ -306,6 +306,7 @@ var ThisModal: React.FC<Prop> = function ({
             }
 
             const details = {
+                title: 'Confirm Transaction',
                 info:
                     stablecoin === 'BRC-20'
                         ? `You are about to withdraw Syron SUSD from your Tyron account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will send an inscribe-transfer UTXO to the Syron minter address along with a gas fee to cover the Bitcoin transaction cost.`
