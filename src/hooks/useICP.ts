@@ -172,6 +172,47 @@ function useICPHook() {
         }
     }
 
+    const syronWithdrawalRunes = async (ssi: string, amt: number) => {
+        try {
+            console.log(
+                `Initiating Runes withdrawal of amount (${amt}) susd-sats...`
+            )
+            // @dev The transaction fee rate in sat/vB
+            let fee_rate = await mempoolFeeRate()
+
+            // @dev throw error if fee_rate is greater than 4
+            if (fee_rate > 4) {
+                throw new Error(
+                    'The gas fee is too high - please try again later'
+                )
+            }
+
+            const syron = basic_bitcoin_syron()
+
+            const txId = await syron.syron_withdrawal_runes(
+                { ssi, op: { getsyron: null } },
+                amt
+            )
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+            //console.log('txId response: ', JSON.stringify(txId, null, 2))
+
+            if (txId.Err) {
+                throw new Error(txIdStringified)
+            }
+
+            return txId
+        } catch (error) {
+            console.error('@syronWithdrawalRunes Error', error)
+            throw error
+        }
+    }
+
     const sendSyron = useCallback(
         async (ssi: string, recipient: string, amt: number, isICP: boolean) => {
             try {
@@ -297,14 +338,47 @@ function useICPHook() {
         }
     }
 
-    const redeemBTC = async (ssi: string, txid: string) => {
+    const redeemBTC = async (ssi: string) => {
+        try {
+            console.log('Loading BTC Redemption')
+            // @dev The transaction fee rate in sat/vB
+            let fee_rate = await mempoolFeeRate()
+            if (fee_rate > 4)
+                throw new Error(
+                    'The gas fee is too high - please try again later'
+                )
+
+            if (identity === null || identity === undefined) {
+                throw new Error('SIWB identity is undefined')
+            }
+
+            const syron = basic_bitcoin_syron(identity)
+            const txId = await syron.redeem_btc(
+                {
+                    ssi,
+                    op: { redeembitcoin: null },
+                },
+                fee_rate * 1000
+            )
+            if (txId.Err) {
+                throw new Error(txId.Err.GenericError.error_message)
+            }
+            console.log(txId)
+            return txId
+        } catch (err) {
+            console.error('Redeem BTC', err)
+            throw err
+        }
+    }
+
+    const deposit_brc20_and_redeem_btc = async (ssi: string, txid: string) => {
         try {
             console.log('Loading BTC Redemption')
             // @dev The transaction fee rate in sat/vB
             let fee_rate = await mempoolFeeRate()
 
             const syron = basic_bitcoin_syron()
-            const txId = await syron.redeem_btc(
+            const txId = await syron.deposit_brc20_and_redeem_btc(
                 {
                     ssi,
                     op: { redeembitcoin: null },
@@ -341,9 +415,11 @@ function useICPHook() {
         updateSyronBalance,
         getSUSD,
         syronWithdrawal,
+        syronWithdrawalRunes,
         sendSyron,
         buyBtc,
         redemptionGas,
+        deposit_brc20_and_redeem_btc,
         redeemBTC,
         getServiceProviders,
     }

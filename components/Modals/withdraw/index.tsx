@@ -38,21 +38,23 @@ type Prop = {
     balance: Big
     show: boolean
     onClose: () => void
-}
-
-const token: CryptoState = {
-    name: 'Syron SUSD',
-    symbol: 'Syron SUSD',
-    decimals: 8,
+    stablecoin?: 'BRC-20' | 'RUNES'
 }
 
 var ThisModal: React.FC<Prop> = function ({
     ssi,
     sdb,
     balance,
+    stablecoin,
     show,
     onClose,
 }) {
+    // Create CryptoState object based on token type
+    const tokenState: CryptoState = {
+        name: stablecoin === 'BRC-20' ? 'Syron BRC-20' : 'RUNE•DOLLAR',
+        symbol: stablecoin === 'BRC-20' ? 'SYRON BRC-20' : 'RUNE•DOLLAR',
+        decimals: 8,
+    }
     useEffect(() => {
         if (show) updateIcpTx(null)
     }, [show])
@@ -97,7 +99,7 @@ var ThisModal: React.FC<Prop> = function ({
 
     const [isLoading, setIsLoading] = React.useState(false)
 
-    const { syron_withdrawal } = useSyronWithdrawal()
+    const { syron_withdrawal, runes_withdrawal } = useSyronWithdrawal()
     const { getBox } = useICPHook()
 
     const [txError, setTxError] = React.useState('')
@@ -114,14 +116,18 @@ var ThisModal: React.FC<Prop> = function ({
             //     value: '68f079d9fd70a19ff43c5e057bceb348e8d0d9d13a53367887390ce4ab7c0c9c',
             // }
 
-            await syron_withdrawal(
-                ssi,
-                sdb,
-                amount,
-                typeof inscriptionTx.value === 'string'
-                    ? inscriptionTx.value
-                    : undefined
-            )
+            if (stablecoin === 'RUNES') {
+                await runes_withdrawal(ssi, amount)
+            } else {
+                await syron_withdrawal(
+                    ssi,
+                    sdb,
+                    amount,
+                    typeof inscriptionTx.value === 'string'
+                        ? inscriptionTx.value
+                        : undefined
+                )
+            }
             await getBox(ssi)
         } catch (error) {
             console.error('Syron Withdrawal', error)
@@ -190,12 +196,20 @@ var ThisModal: React.FC<Prop> = function ({
         try {
             setIsLoading(true)
 
-            if (!inscriptionTx.value) {
-                throw new Error('The inscribe-transfer transaction is missing.')
+            updateIcpTx(null)
+
+            if (stablecoin === 'RUNES') {
+                console.log('Running Runes Withdrawal')
+                await runes_withdrawal(ssi, amount)
+            } else {
+                if (!inscriptionTx.value) {
+                    throw new Error(
+                        'The inscribe-transfer transaction is missing.'
+                    )
+                }
+                await syron_withdrawal(ssi, sdb, amount, inscriptionTx.value)
             }
 
-            updateIcpTx(null)
-            await syron_withdrawal(ssi, sdb, amount, inscriptionTx.value)
             await getBox(ssi)
         } catch (error) {
             console.error('Retry Syron Withdrawal', error)
@@ -275,14 +289,34 @@ var ThisModal: React.FC<Prop> = function ({
                 throw new Error('Insufficient Amount')
             }
 
+            // Calculate fee based on token type and amount
+            let fee = 0.1 // Default fee for BRC-20
+            let feeDescription = ''
+
+            if (stablecoin === 'RUNES') {
+                if (Number(amount) >= 2) {
+                    fee = 0.5
+                    feeDescription =
+                        'There will be a 0.5 SUSD withdrawal fee for amounts of 2 SUSD and above.'
+                } else {
+                    fee = 0
+                    feeDescription =
+                        'No withdrawal fee for amounts under 2 SUSD.'
+                }
+            }
+
             const details = {
-                info: `You are about to withdraw Syron SUSD from your available account balance. To receive these funds in your personal Bitcoin wallet, by clicking on 'CONFIRM', you will send an inscribe-transfer UTXO to the Syron minter address along with a gas fee to cover the Bitcoin transaction.`,
+                info:
+                    stablecoin === 'BRC-20'
+                        ? `You are about to withdraw Syron SUSD from your Tyron account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will send an inscribe-transfer UTXO to the Syron minter address along with a gas fee to cover the Bitcoin transaction cost.`
+                        : `You are about to withdraw Syron SUSD from your Tyron account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will send a request to withdraw RUNE•DOLLAR tokens to your wallet.`,
                 amount: `$${amount}`,
-                fee: '$0.1',
-                total: `$${(Number(amount) - 0.1).toFixed(2)}`,
-                result: `You will receive $${(Number(amount) - 0.1).toFixed(
+                fee: `$${fee}`,
+                feeDescription: feeDescription,
+                total: `$${(Number(amount) - fee).toFixed(2)}`,
+                result: `You will receive $${(Number(amount) - fee).toFixed(
                     2
-                )} SYRON BRC-20 tokens in your wallet.`,
+                )} ${stablecoin === 'BRC-20' ? 'SYRON BRC-20 tokens' : 'RUNE•DOLLAR tokens'} in your wallet.`,
             }
             setOnDetails(details)
 
@@ -323,7 +357,10 @@ var ThisModal: React.FC<Prop> = function ({
                 <div className={styles.innerContainer}>
                     <div className={styles.headerWrapper}>
                         <div className={styles.headerTxt}>
-                            {t('Withdraw Syron SUSD')}
+                            {t('Withdraw SUSD as ')}
+                            {stablecoin === 'BRC-20'
+                                ? 'SYRON BRC-20'
+                                : 'RUNE•DOLLAR'}
                         </div>
                         <div onClick={onClose} className={styles.closeIcon}>
                             <Image
@@ -436,7 +473,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => menuActive(1)}
                                     >
                                         {t(
-                                            'Send bitcoin into your Deposit ₿ox address'
+                                            'Send bitcoin into your Deposit ₿ox address.'
                                         )}
                                     </div>
                                 )}
@@ -467,7 +504,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Borrow Syron SUSD')}
+                                        {t('Borrow Syron SUSD stablecoins')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -493,7 +530,7 @@ var ThisModal: React.FC<Prop> = function ({
                                     <>
                                         <div className={styles.rowContentTxt}>
                                             {t(
-                                                'Draw SUSD into your account balance:'
+                                                'Draw SUSD into your Tyron account balance:'
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
@@ -528,7 +565,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => menuActive(2)}
                                     >
                                         {t(
-                                            'Draw SUSD into your account balance'
+                                            'Draw SUSD into your Tyron account balance.'
                                         )}
                                     </div>
                                 )}
@@ -559,7 +596,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         )}
                                     </div>
                                     <div className={styles.rowHeaderTitle}>
-                                        {t('Withdraw Syron SUSD')}
+                                        {t('Withdraw Syron SUSD stablecoins')}
                                     </div>
                                 </div>
                                 <div className={styles.wrapperDropdownIco}>
@@ -585,7 +622,7 @@ var ThisModal: React.FC<Prop> = function ({
                                     <>
                                         <div className={styles.rowContentTxt}>
                                             {t(
-                                                "Transfer Syron SUSD from your 'Available SUSD balance' to your personal Bitcoin wallet:"
+                                                'Mint Syron SUSD as BRC-20 or runes stablecoins, and send them to your personal Bitcoin wallet:'
                                             )}
                                         </div>
                                         <div className={styles.rowContentTxt}>
@@ -599,7 +636,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         {t('Transfer Process:')}
                                                     </span>{' '}
                                                     {t(
-                                                        "You can withdraw Syron SUSD from your 'Available SUSD balance' to your personal wallet and receive SYRON BRC-20 tokens."
+                                                        'You can withdraw Syron SUSD from your balance to your self-custodial wallet and receive SYRON BRC-20 or RUNE•DOLLAR tokens.'
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -613,7 +650,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        "SYRON BRC-20 withdrawals are limited by your 'Available SUSD balance'."
+                                                        "SUSD withdrawals are limited by your account's available balance. There is a stable deposit of $0.1 per rune withdrawal."
                                                     )}
                                                 </li>
                                                 <li className={styles.li}>
@@ -627,7 +664,7 @@ var ThisModal: React.FC<Prop> = function ({
                                                         )}
                                                     </span>{' '}
                                                     {t(
-                                                        'Syron SUSD is withdrawn on Bitcoin as a BRC-20 token named SYRON, which can be used freely on Bitcoin mainnet.'
+                                                        'Syron SUSD can be withdrawn on Bitcoin Mainnet as a BRC-20 token named SYRON, or as a rune token called RUNE•DOLLAR, both running natively on the Bitcoin L1 network.'
                                                     )}
                                                 </li>
                                                 {/* <li className={styles.li}>
@@ -678,7 +715,7 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => menuActive(3)}
                                     >
                                         {t(
-                                            "Transfer Syron SUSD from your 'Available SUSD balance' to your personal Bitcoin wallet"
+                                            'Mint Syron SUSD as BRC-20 or runes stablecoins, and send them to your personal Bitcoin wallet.'
                                         )}
                                     </div>
                                 )}
@@ -688,27 +725,35 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            YOUR SUSD BALANCE (Sender)
+                            TYRON ACCOUNT BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
-                        <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
+                        <p className={styles.diagramFlowSymbol}>
+                            SUSD{' '}
+                            {stablecoin === 'BRC-20'
+                                ? '(SYRON BRC-20)'
+                                : '(RUNE•DOLLAR)'}
+                        </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>▼</p>
                         <p className={styles.diagramLineLabel}>
-                            YOUR BITCOIN WALLET (Receiver)
+                            SELF-CUSTODIAL BITCOIN WALLET (Receiver)
                         </p>
                         <p className={styles.diagramCaption}>
-                            SYRON BRC-20 will be sent to your connected Bitcoin
+                            Syron SUD will be sent to your connected Bitcoin
                             Wallet Address.
                         </p>
                     </div>
 
                     <div className={styles.label}>
-                        amount to withdraw (syron brc-20)
+                        amount to withdraw{' '}
+                        {stablecoin === 'BRC-20'
+                            ? '(SYRON BRC-20)'
+                            : '(RUNE•DOLLAR)'}
                     </div>
                     <SyronInput
                         balance={balance}
-                        token={token}
+                        token={tokenState}
                         onInput={handleOnInput}
                         disabled={isDisabled}
                     />
@@ -743,71 +788,151 @@ var ThisModal: React.FC<Prop> = function ({
 
                     {icpTx.value === false ? (
                         <div className={styles.failedWithdrawal}>
-                            {/* <div className={styles.icoColor}>
-                                <Image
-                                    alt="warning-ico"
-                                    src={Warning}
-                                    width={20}
-                                    height={20}
-                                />
-                            </div> */}
-                            <div className={styles.withdrawalTxt}>
-                                We are very sorry, but your withdrawal request
-                                has failed.
+                            <div className={styles.failedHeader}>
+                                <div className={styles.failedIcon}>
+                                    <svg
+                                        width="56"
+                                        height="56"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <circle
+                                            cx="12"
+                                            cy="12"
+                                            r="10"
+                                            stroke="#ef4444"
+                                            strokeWidth="2"
+                                            fill="#fef2f2"
+                                        />
+                                        <path
+                                            d="M15 9l-6 6m0-6l6 6"
+                                            stroke="#ef4444"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </div>
+
+                                <div className={styles.failedTitle}>
+                                    Withdrawal Failed
+                                </div>
+
+                                <div className={styles.failedMessage}>
+                                    We're sorry, but your withdrawal request
+                                    could not be completed.
+                                </div>
                             </div>
+
                             {txError !== '' && (
-                                <div
-                                    style={{
-                                        color: 'red',
-                                        wordBreak: 'break-word',
-                                    }}
-                                >
-                                    Error: {txError}
+                                <div className={styles.errorDetails}>
+                                    <div className={styles.errorLabel}>
+                                        Error Details
+                                    </div>
+                                    <div className={styles.errorText}>
+                                        {txError}
+                                    </div>
                                 </div>
                             )}
-                            <div className={styles.withdrawalTxt}>
-                                Please try again after a moment. If the error
-                                persists, do not hesitate to contact us for
-                                support on Telegram{' '}
-                                <a
-                                    href="https://t.me/tyrondao"
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    style={{
-                                        color: 'blue',
-                                        textDecoration: 'underline',
-                                    }}
+
+                            <div className={styles.failedInstructions}>
+                                <div className={styles.instructionText}>
+                                    Please try again after a moment. If the
+                                    error persists, you can contact us for
+                                    support.
+                                </div>
+                                <div className={styles.supportLink}>
+                                    <span>Get help on </span>
+                                    <a
+                                        href="https://t.me/tyrondao"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={styles.telegramLink}
+                                    >
+                                        Telegram @TyronDAO
+                                    </a>
+                                </div>
+                            </div>
+
+                            <div className={styles.failedActions}>
+                                <button
+                                    onClick={retryWithdrawal}
+                                    className={styles.retryButton}
+                                    disabled={isLoading}
                                 >
-                                    @TyronDAO
-                                </a>
-                                .
+                                    {isLoading ? (
+                                        <div className={styles.loadingState}>
+                                            <ThreeDots color="white" />
+                                            <span>Retrying...</span>
+                                        </div>
+                                    ) : (
+                                        <>
+                                            <svg
+                                                width="16"
+                                                height="16"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M1 4v6h6"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M23 20v-6h-6"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+                                                    stroke="currentColor"
+                                                    strokeWidth="2"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                            <span>Try Again</span>
+                                        </>
+                                    )}
+                                </button>
                             </div>
-                            <div className={styles.withdrawalTxt}>
-                                We appreciate your patience and understanding!
-                            </div>
-                            <button
-                                style={{
-                                    backgroundColor: 'rgb(75, 0, 130)',
-                                }}
-                                onClick={retryWithdrawal}
-                                className={'button secondary'}
-                            >
-                                {isLoading ? (
-                                    <ThreeDots color="yellow" />
-                                ) : (
-                                    <>retry</>
-                                )}
-                            </button>
                         </div>
                     ) : (
                         <>
                             {isLoading ? (
-                                <div>
-                                    <div className={styles.withdrawalTxt}>
-                                        Your withdrawal request is being
-                                        processed...
+                                <div className={styles.processingWithdrawal}>
+                                    <div className={styles.processingHeader}>
+                                        <div className={styles.processingIcon}>
+                                            <div
+                                                className={styles.spinner}
+                                            ></div>
+                                        </div>
+
+                                        <div className={styles.processingTitle}>
+                                            Processing Withdrawal
+                                        </div>
+
+                                        <div
+                                            className={styles.processingMessage}
+                                        >
+                                            Your withdrawal request is being
+                                            processed...
+                                        </div>
                                     </div>
-                                    <Spinner />
+
+                                    <div className={styles.processingDetails}>
+                                        <div className={styles.processingNote}>
+                                            Please wait while we confirm your
+                                            transaction on the blockchain. This
+                                            may take a few moments.
+                                        </div>
+                                    </div>
                                 </div>
                             ) : (
                                 <>
@@ -818,18 +943,186 @@ var ThisModal: React.FC<Prop> = function ({
                                             }
                                         >
                                             <div
-                                                className={styles.withdrawalTxt}
+                                                className={styles.successHeader}
                                             >
-                                                Congratulations! Your withdrawal
-                                                was successful, and{' '}
-                                                {String(amount)} SYRON has been
-                                                sent to your wallet.
+                                                <div
+                                                    className={
+                                                        styles.successIcon
+                                                    }
+                                                >
+                                                    <svg
+                                                        width="56"
+                                                        height="56"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <circle
+                                                            cx="12"
+                                                            cy="12"
+                                                            r="10"
+                                                            stroke="#10b981"
+                                                            strokeWidth="2"
+                                                            fill="#ecfdf5"
+                                                        />
+                                                        <path
+                                                            d="M9 12l2 2 4-4"
+                                                            stroke="#10b981"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.successTitle
+                                                    }
+                                                >
+                                                    Withdrawal Completed
+                                                </div>
+                                                <div
+                                                    className={
+                                                        styles.successSubtitle
+                                                    }
+                                                >
+                                                    Your transaction has been
+                                                    processed successfully
+                                                </div>
                                             </div>
+
                                             <div
-                                                className={styles.withdrawalTxt}
+                                                className={
+                                                    styles.successDetails
+                                                }
                                             >
-                                                You can check your wallet to
-                                                verify the transaction.
+                                                <div
+                                                    className={
+                                                        styles.amountSection
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.amountLabel
+                                                        }
+                                                    >
+                                                        Amount Withdrawn
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.amountValue
+                                                        }
+                                                    >
+                                                        {String(amount)}{' '}
+                                                        {stablecoin === 'RUNES'
+                                                            ? 'RUNE•DOLLAR'
+                                                            : 'SYRON'}
+                                                    </div>
+                                                </div>
+
+                                                <div
+                                                    className={
+                                                        styles.statusSection
+                                                    }
+                                                >
+                                                    <div
+                                                        className={
+                                                            styles.statusItem
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.statusIcon
+                                                            }
+                                                        >
+                                                            <svg
+                                                                width="16"
+                                                                height="16"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M9 12l2 2 4-4"
+                                                                    stroke="#10b981"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.statusText
+                                                            }
+                                                        >
+                                                            Transaction
+                                                            confirmed on
+                                                            blockchain
+                                                        </div>
+                                                    </div>
+                                                    <div
+                                                        className={
+                                                            styles.statusItem
+                                                        }
+                                                    >
+                                                        <div
+                                                            className={
+                                                                styles.statusIcon
+                                                            }
+                                                        >
+                                                            <svg
+                                                                width="16"
+                                                                height="16"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                            >
+                                                                <path
+                                                                    d="M9 12l2 2 4-4"
+                                                                    stroke="#10b981"
+                                                                    strokeWidth="2"
+                                                                    strokeLinecap="round"
+                                                                    strokeLinejoin="round"
+                                                                />
+                                                            </svg>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.statusText
+                                                            }
+                                                        >
+                                                            Funds sent to your
+                                                            wallet
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                className={
+                                                    styles.successActions
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.successNote
+                                                    }
+                                                >
+                                                    You can check your wallet to
+                                                    verify the transaction. It
+                                                    may take a few minutes to
+                                                    appear depending on network
+                                                    conditions.
+                                                </div>
+                                                <button
+                                                    onClick={onClose}
+                                                    className={
+                                                        styles.closeButton
+                                                    }
+                                                >
+                                                    Close
+                                                </button>
                                             </div>
                                         </div>
                                     ) : null}

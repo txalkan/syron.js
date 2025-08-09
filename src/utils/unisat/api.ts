@@ -31,6 +31,9 @@ export const unisatApi = {
     getRunesBalance(txid: string, index: string) {
         return getUniSat(`v1/indexer/runes/utxo/${txid}/${index}/balance`)
     },
+    getRunesAddrBalance(addr: string, runeid: string) {
+        return getUniSat(`v1/indexer/address/${addr}/runes/${runeid}/balance`)
+    },
 }
 
 export function sleep(ms: number) {

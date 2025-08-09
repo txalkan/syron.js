@@ -109,6 +109,8 @@ type InitArgs = record {
 
     /// The canister id of the KYT canister.
     // kyt_principal: opt principal;
+
+    min_deposit: opt nat64;
 };
 
 // The upgrade parameters of the Syron Minter canister.
@@ -132,6 +134,8 @@ type UpgradeArgs = record {
 
     /// The principal of the KYT canister.
     kyt_principal : opt principal;
+
+    min_deposit: opt nat64;
 };
 
 type MinterArg = variant {
@@ -176,6 +180,8 @@ type UpdateBalanceError = variant {
     TemporarilyUnavailable: text;
     // A generic error reserved for future extensions.
     GenericError: record { error_message : text; error_code : nat64 };
+    // A call error with method name and reason.
+    CallError: record { method : text; reason : text };
 };
 
 type RetrieveBtcOk = record {
@@ -238,6 +244,7 @@ type syron_operation = variant {
     redeembitcoin;
     liquidation;
     payment;
+    depositsyron
 };
 
 type GetBoxAddressArgs = record {
@@ -311,7 +318,7 @@ service : (MinterArg) -> {
 
     "getServiceProviderMap": () -> (vec record { ServiceProvider; nat64 }) query;
 
-    "get_p2wpkh_address": () -> (bitcoin_address);
+    // "get_p2wpkh_address": () -> (bitcoin_address);
     "get_dao_addr": () -> (vec bitcoin_address);
 
     // Returns the bitcoin address to which the user should send BTC (dubbed the Safety Deposit Box).
@@ -324,9 +331,9 @@ service : (MinterArg) -> {
 
     "update_runes_minter": (cycles_cost: nat64) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
     
-    "get_inscription": (txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    // "get_inscription": (txid: text, cycles_cost: nat64, provider: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
     
-    "get_indexed_balance": (id: text) -> (variant { Ok: text; Err: UpdateBalanceError });
+    // "get_indexed_balance": (id: text) -> (variant { Ok: text; Err: UpdateBalanceError });
     
     // Mints Syron SUSD for newly deposited UTXOs.
     //
@@ -349,9 +356,10 @@ service : (MinterArg) -> {
 
     "sbtc_balance_of": (ssi: bitcoin_address, nonce: nat64) -> (nat64);
     
-    "redeem_btc": (args: GetBoxAddressArgs, txid: text, provider: nat64, fee: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "deposit_brc20_and_redeem_btc": (args: GetBoxAddressArgs, txid: text, provider: nat64, fee: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
+    "redeem_btc": (args: GetBoxAddressArgs, fee: nat64) -> (variant { Ok: text; Err: UpdateBalanceError });
 
-    "redemption_gas": (args: GetBoxAddressArgs) -> (variant { Ok: nat64; Err: UpdateBalanceError });
+    // "redemption_gas": (args: GetBoxAddressArgs) -> (variant { Ok: nat64; Err: UpdateBalanceError });
 
     "read_account": (ssi: bitcoin_address) -> (vec nat64);
     "get_account": (ssi: bitcoin_address) -> (variant { Ok: CollateralizedAccount; Err: UpdateBalanceError });
@@ -360,14 +368,17 @@ service : (MinterArg) -> {
 
     "send_syron": (args: GetBoxAddressArgs, recipient: text, amount: nat64) -> (variant { Ok: vec nat64; Err: UpdateBalanceError });
 
-    "send_syron_icp": (args: GetBoxAddressArgs, recipient: Account, amount: nat64) -> (variant { Ok: vec nat64; Err: UpdateBalanceError });
+    // "send_syron_icp": (args: GetBoxAddressArgs, recipient: Account, amount: nat64) -> (variant { Ok: vec nat64; Err: UpdateBalanceError });
 
     "buy_btc": (args: GetBoxAddressArgs, amount: nat64, btc_amount: nat64, fee: nat64) -> (variant { Ok: vec text; Err: UpdateBalanceError });
 
     // @dev-mode
-    "get_current_fee_percentiles": () -> (vec millisatoshi_per_vbyte);
-    "get_fee_percentile": (percentile: nat64) -> (nat64);
-    "get_utxo_txids": (bitcoin_address) -> (vec text);
-    "get_btc_exchange_rate": (symbol: text) -> (nat64);
+    // "get_current_fee_percentiles": () -> (vec millisatoshi_per_vbyte);
+    // "get_fee_percentile": (percentile: nat64) -> (nat64);
+    // "get_utxo_txids": (bitcoin_address) -> (vec text);
+    // "get_btc_exchange_rate": (symbol: text) -> (nat64);
+    
     "read_runes_minter": () -> (GetRunesMinter) query;
+
+    "deposit_syron_runes": (args: GetBoxAddressArgs, fee: nat64) -> (variant { Ok: vec UtxoStatus; Err: UpdateBalanceError });
 }

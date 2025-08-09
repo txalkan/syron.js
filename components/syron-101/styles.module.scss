@@ -433,7 +433,42 @@
     gap: 5px;
 }
 
+.buttonSeparator {
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        #888888 20%,
+        #cccccc 50%,
+        #888888 80%,
+        transparent 100%
+    );
+    margin: 0.5rem 0;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
 .txtRow {
+    border: 1px solid white;
+    margin-top: 2rem;
+    padding: 0.5rem;
+    list-style-type: disc !important;
+    list-style-position: inside;
+    font-size: 0.75rem;
+    display: flex;
+    width: 100%;
+    max-width: 560px; /* Set a maximum width for the text */
+
+    text-align: left;
+    color: #222222;
+    white-space: normal; /* Allow text to wrap */
+    word-break: break-word; /* Break long words if necessary */
+    overflow-wrap: break-word; /* Ensure text wraps properly */
+}
+
+.txtRowsInfo {
+    display: flex;
+    flex-direction: column;
     border: 1px solid white;
     margin-top: 2rem;
     padding: 0.5rem;

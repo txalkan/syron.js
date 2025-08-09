@@ -3,7 +3,7 @@ import styles from './SyronInfoCard.module.scss'
 import TypingEffect from './TypingEffect'
 
 const SyronInfoCard = () => {
-    const mainDesc = 'SYRON • DEPOSIT BITCOIN, BORROW STABLECOINS'
+    const mainDesc = 'SYRON • SAVE YOUR BITCOIN, BORROW STABLECOINS'
 
     return (
         <div className={styles.classic}>

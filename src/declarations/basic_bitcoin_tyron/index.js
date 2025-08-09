@@ -16,6 +16,9 @@ const version = process.env.NEXT_PUBLIC_SYRON_VERSION
 let canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON
 if (version === '2') {
     canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_2
+}
+if (version === '3') {
+    canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_3
 } else if (version === 'testnet') {
     canisterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_TESTNET
 }

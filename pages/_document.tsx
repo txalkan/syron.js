@@ -26,21 +26,8 @@ class MyDocument extends Document {
                     <link
                         rel="preload"
                         as="image"
-                        href="/images/lightning.webp"
-                        type="image/webp"
-                    />
-                    <link
-                        rel="preload"
-                        as="image"
                         href="/images/lightning.jpg"
                         type="image/jpeg"
-                    />
-                    <link
-                        rel="preload"
-                        as="image"
-                        href="/images/lightning_mobile.webp"
-                        type="image/webp"
-                        media="(max-width: 576px)"
                     />
                     <link
                         rel="preload"
@@ -49,8 +36,30 @@ class MyDocument extends Document {
                         type="image/jpeg"
                         media="(max-width: 576px)"
                     />
+                    <link
+                        rel="preload"
+                        as="image"
+                        href="/images/lightning.webp"
+                        type="image/webp"
+                        media="(supports: webp)"
+                    />
+                    <link
+                        rel="preload"
+                        as="image"
+                        href="/images/lightning_mobile.webp"
+                        type="image/webp"
+                        media="(max-width: 576px) and (supports: webp)"
+                    />
                 </Head>
                 <body>
+                    <script
+                        dangerouslySetInnerHTML={{
+                            __html: `
+                                // Apply body class immediately to ensure preloaded images are used
+                                document.body.classList.add('body');
+                            `,
+                        }}
+                    />
                     <Main />
                     <NextScript />
                 </body>

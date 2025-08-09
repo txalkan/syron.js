@@ -12,84 +12,167 @@ const ConfirmTransactionModal = ({
     onConfirm,
     isLoading,
 }) => {
+    // Helper function to extract numeric values from currency strings
+    const extractNumber = (str) => {
+        if (!str) return 0
+        const match = str.toString().match(/[\d,]+\.?\d*/)
+        return match ? parseFloat(match[0].replace(/,/g, '')) : 0
+    }
+
+    // Calculate total amount to receive
+    const calculateTotalAmount = () => {
+        if (!onDetails.amount) return '0.00'
+
+        const amount = extractNumber(onDetails.amount)
+        const gasFee = extractNumber(onDetails.gas)
+        const daoFee = extractNumber(onDetails.fee)
+        const total = Math.max(0, amount - gasFee - daoFee)
+
+        return `$${total.toFixed(2)}`
+    }
+
     return (
         <Modal
-            title={onDetails.title}
+            title={
+                <div className={styles.modalTitle}>
+                    <span className={styles.titleText}>
+                        {onDetails.title || 'Confirm Transaction'}
+                    </span>
+                </div>
+            }
             open={isOpen}
             onCancel={onClose}
-            footer={[
-                <Button
-                    key="cancel"
-                    onClick={onClose}
-                    className={styles.cancel}
-                >
-                    Cancel
-                </Button>,
-                <Button
-                    key="confirm"
-                    type="primary"
-                    onClick={onConfirm}
-                    className={styles.confirm}
-                >
-                    {isLoading ? (
-                        <ThreeDots color={undefined} />
-                    ) : (
-                        <span>Confirm</span>
-                    )}
-                </Button>,
-            ]}
+            footer={null}
+            className={styles.modal}
+            width={480}
         >
-            {onDetails.info && <Text>{onDetails.info}</Text>}
+            <div className={styles.modalContent}>
+                {onDetails.info && (
+                    <div className={styles.infoSection}>
+                        <Text className={styles.infoText}>
+                            {onDetails.info}
+                        </Text>
+                    </div>
+                )}
 
-            <div className={styles.subtitle}>Transaction Summary</div>
-            {onDetails.amount && (
-                <div className={styles.table}>
-                    <div>SUSD paid</div>
-                    <div className={styles.value}>{onDetails.amount}</div>
+                <div className={styles.summarySection}>
+                    <div className={styles.summaryTitle}>
+                        Transaction Summary
+                    </div>
+
+                    {onDetails.amount && (
+                        <div className={styles.summaryRow}>
+                            <span className={styles.label}>SUSD Amount</span>
+                            <span className={styles.value}>
+                                {onDetails.amount}
+                            </span>
+                        </div>
+                    )}
+
+                    {onDetails.btcAmount && (
+                        <div className={styles.summaryRow}>
+                            <div className={styles.labelGroup}>
+                                <span className={styles.label}>
+                                    BTC Acquired
+                                </span>
+                                <span className={styles.subLabel}>
+                                    After 1% max slippage
+                                </span>
+                            </div>
+                            <span className={styles.value}>
+                                {onDetails.btcAmount}
+                            </span>
+                        </div>
+                    )}
+
+                    {onDetails.gas && (
+                        <div className={styles.summaryRow}>
+                            <span className={styles.label}>Miner Fee ≈</span>
+                            <span className={styles.value}>
+                                {onDetails.gas}
+                            </span>
+                        </div>
+                    )}
+
+                    {onDetails.fee && (
+                        <div className={styles.summaryRow}>
+                            <span className={styles.label}>DAO Fee</span>
+                            <span className={styles.value}>
+                                {onDetails.fee}
+                            </span>
+                        </div>
+                    )}
+
+                    {onDetails.feeDescription && (
+                        <div className={styles.feeDescription}>
+                            <span className={styles.feeText}>
+                                {onDetails.feeDescription}
+                            </span>
+                        </div>
+                    )}
                 </div>
-            )}
-            {onDetails.btcAmount && (
-                <div className={styles.table}>
-                    <div className={styles.subtable}>
-                        <div>BTC acquired</div>
-                        <div className={styles.subvalue}>
-                            After 1% max slippage{' '}
+
+                {/* Big Total Amount Display */}
+                {onDetails.amount && (
+                    <div className={styles.bigTotalSection}>
+                        <div className={styles.bigTotalLabel}>
+                            Total Amount to Receive
+                        </div>
+                        <div className={styles.bigTotalAmount}>
+                            {calculateTotalAmount()}
+                        </div>
+                        <div className={styles.bigTotalSubtext}>
+                            SUSD amount minus fees
                         </div>
                     </div>
-                    <div className={styles.value}>{onDetails.btcAmount}</div>
-                </div>
-            )}
-            <br />
-            {onDetails.gas && (
-                <div className={styles.table}>
-                    <div>Miner fee &#8776; </div>
-                    <div className={styles.value}>{onDetails.gas}</div>
-                </div>
-            )}
-            {onDetails.fee && (
-                <div className={styles.table}>
-                    <div>DAO fee</div>
-                    <div className={styles.value}>{onDetails.fee}</div>
-                </div>
-            )}
-            <br />
-            {onDetails.total_min && (
-                <div>
-                    <strong>You will receive around</strong>
-                    <div className={styles.total}>{onDetails.total_min}</div>
-                    <i>Final amount may vary slightly</i>
-                </div>
-            )}
-            <br />
-            {onDetails.receiver && (
-                <div>
-                    <u>Sending to</u>
-                    <div className={styles.address}>{onDetails.receiver}</div>
-                </div>
-            )}
+                )}
 
-            <br />
-            <Text>Are you sure you want to proceed?</Text>
+                {onDetails.total_min && (
+                    <div className={styles.totalSection}>
+                        <div className={styles.totalLabel}>
+                            You will receive around
+                        </div>
+                        <div className={styles.totalAmount}>
+                            {onDetails.total_min}
+                        </div>
+                        <div className={styles.totalNote}>
+                            Final amount may vary slightly
+                        </div>
+                    </div>
+                )}
+
+                {onDetails.receiver && (
+                    <div className={styles.receiverSection}>
+                        <div className={styles.receiverLabel}>Sending to</div>
+                        <div className={styles.receiverAddress}>
+                            {onDetails.receiver}
+                        </div>
+                    </div>
+                )}
+
+                <div className={styles.confirmationText}>
+                    Are you sure you want to proceed?
+                </div>
+
+                <div className={styles.actionButtons}>
+                    <Button
+                        onClick={onClose}
+                        className={styles.cancelButton}
+                        size="large"
+                    >
+                        Cancel
+                    </Button>
+                    <Button
+                        type="primary"
+                        onClick={onConfirm}
+                        className={styles.confirmButton}
+                        size="large"
+                        loading={isLoading}
+                    >
+                        Confirm
+                    </Button>
+                </div>
+            </div>
         </Modal>
     )
 }

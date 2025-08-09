@@ -382,7 +382,9 @@ function Component() {
                         className={'button secondary'}
                         onClick={() => unisat.disconnect()}
                     >
-                        {t('disconnect wallet')}
+                        <span style={{ color: 'purple' }}>
+                            {t('disconnect wallet')}
+                        </span>
                     </button>
                     /* <div className={styles.txtConnected}>
                                             {t('CONNECTED')}

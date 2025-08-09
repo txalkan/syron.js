@@ -605,7 +605,7 @@ var ThisModal: React.FC<Prop> = function ({
                             </p>
                         ) : (
                             <p className={styles.diagramLineLabel}>
-                                Recipient&apos;s Syron account (Receiver)
+                                Recipient&apos;s Tyron account (Receiver)
                             </p>
                         )}
                         {isICP ? (
@@ -661,10 +661,10 @@ var ThisModal: React.FC<Prop> = function ({
 
                     {isICP ? null : (
                         <div className={styles.txt}>
-                            Syron will be transferred from your &apos;Available
-                            SUSD balance&apos; to the recipient&apos;s Tyron
-                            account. The recipient must log in with their
-                            Bitcoin personal wallet to access the funds.
+                            Syron will be transferred from your available SUSD
+                            balance to the recipient&apos;s Tyron account. The
+                            recipient must log in with their Bitcoin personal
+                            wallet to access the funds.
                         </div>
                     )}
 

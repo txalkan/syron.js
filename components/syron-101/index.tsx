@@ -19,6 +19,7 @@ import {
     $syron,
     $walletConnected,
     updateSiwb,
+    clearSiwbSession,
 } from '../../src/store/syron'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
@@ -38,6 +39,7 @@ import AuthGuard from '../AuthGuard'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { DelegationIdentity } from '@dfinity/identity'
 import SyronInfoCard from './SyronInfoCard'
+import { DepositRunes } from '../DepositRunes'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -46,34 +48,53 @@ function Component() {
     const walletConnected = useStore($walletConnected).isConnected
     const syron = useStore($syron)
     const siwb = useStore($siwb).value
-    const { identity } = useSiwbIdentity()
+    const { identity, clear } = useSiwbIdentity()
     const { t } = useTranslation()
 
     const [active, setActive] = useState('GetSyron')
     const [sdb, setSDB] = useState('')
     const [satsDeposited, setSatsDeposited] = useState(_0)
+    const [satsCollateral, setSatsCollateral] = useState('')
     const [loan, setLoan] = useState('')
     const [syronBal, setSyronBal] = useState('')
     const [isIdentified, setIsIdentified] = useState(false)
 
     const [showWithdrawModal, setWithdrawModal] = React.useState(false)
-    const updateWithdraw = async () => {
+    const [stablecoin, setStablecoin] = React.useState<'BRC-20' | 'RUNES'>(
+        'BRC-20'
+    )
+    const updateWithdraw = (token: 'BRC-20' | 'RUNES') => {
+        setStablecoin(token)
         setWithdrawModal(true)
     }
     const [showSendModal, setSendModal] = React.useState(false)
     const [isICP, setIsICP] = React.useState(false)
-    const updateSend = async (is_icp: boolean) => {
+    const updateSend = (is_icp: boolean) => {
         setSendModal(true)
         setIsICP(is_icp)
     }
     const [showBuyModal, setBuyModal] = React.useState(false)
-    const updateBuy = async () => {
+    const updateBuy = () => {
         setBuyModal(true)
+    }
+    const [showDepositRunesModal, setShowDepositRunesModal] =
+        React.useState(false)
+    const updateDepositRunes = () => {
+        setShowDepositRunesModal(true)
     }
 
     useEffect(() => {
         console.log('SIWB identity: ', identity)
         console.log('SIWB saved identity: ', siwb)
+
+        // Reset authentication if wallet is disconnected
+        if (!walletConnected) {
+            console.log('Wallet disconnected, resetting authentication')
+            setIsIdentified(false)
+            clearSiwbSession()
+            clear() // Clear the SIWB identity from the hook
+            return
+        }
 
         let current_id: DelegationIdentity
         if (siwb !== null) {
@@ -84,7 +105,8 @@ function Component() {
         } else {
             console.log('SIWB session is invalid')
             setIsIdentified(false)
-            updateSiwb(null)
+            clearSiwbSession()
+            clear() // Clear the SIWB identity from the hook
             return
         }
 
@@ -110,12 +132,13 @@ function Component() {
             } else {
                 console.log('SIWB session has expired')
                 setIsIdentified(false)
-                updateSiwb(null)
+                clearSiwbSession()
+                clear() // Clear the SIWB identity from the hook
             }
         } else {
             console.error('SIWB session not found')
         }
-    }, [identity, siwb, showSendModal, showBuyModal])
+    }, [identity, siwb, showSendModal, showBuyModal, walletConnected])
 
     useEffect(() => {
         if (syron !== null) {
@@ -124,13 +147,14 @@ function Component() {
             setSDB(syron.sdb)
             setSatsDeposited(syron.sdb_btc)
 
+            const collateral = syron.syron_btc.div(1e8).round(8, 0).toString()
+            setSatsCollateral(collateral)
+
             const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
             setLoan(loan_)
-            console.log('SUSD printed: ', loan_)
 
             const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
             setSyronBal(bal_)
-            console.log('SUSD balance: ', bal_)
         }
     }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal])
 
@@ -222,122 +246,123 @@ function Component() {
                 throw new Error('Deposit Box Loading error')
             } else if (loan_amt <= 0) {
                 toast.info(
-                    "You don't have an active loan. Click the 'DRAW SUSD' button first to borrow Syron SUSD against your BTC collateral.",
+                    "You don't have an active loan. Click the 'DRAW SUSD' button first to borrow Syron against your BTC deposits.",
                     { autoClose: false, closeOnClick: true }
                 )
                 return
             } else if (balance >= loan_amt) {
-                await redeemBTC(btc_wallet?.btc_addr!, '')
-            } else if (balance < loan_amt) {
-                // @dev the SUSD balance will be used to repay the loan
-                let loan_balance = loan_amt - balance
-
-                // @dev Check SYRON BRC-20 balance in Box address
-                console.log('Checking SYRON BRC-20 balance in Box...')
-                await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
-                    .then(async (response) => {
-                        const res = await response.json()
-                        if (res.error) {
-                            throw new Error(res.error)
-                        }
-
-                        console.log(
-                            'outcall response: SYRON BRC-20 balance in box',
-                            JSON.stringify(res, null, 2)
-                        )
-
-                        const brc20_balance = parseFloat(
-                            res.detail[0].overallBalance
-                        ) // @review make sure that the balance has at least 1 confirmation
-
-                        const limit = 0.02 // @governance
-                        if (brc20_balance < loan_balance - limit) {
-                            loan_balance = loan_balance - brc20_balance
-
-                            throw new Error(
-                                `You have to repay the full amount of your loan to redeem your BTC collateral, and your current SYRON BRC-20 balance is $${brc20_balance.toFixed(
-                                    2
-                                )}. Deposit $${loan_balance.toFixed(
-                                    2
-                                )} SYRON BRC-20 into your Deposit ₿ox before proceeding.`
-                            )
-                        }
-
-                        //return await redemptionGas(btc_wallet?.btc_addr!)
-                    })
-                    .catch((error) => {
-                        throw error
-                    })
-                // @dev Send inscribe-transfer UTXO transaction on Bitcoin
-                console.log('Sending inscribe-transfer UTXO transaction...')
-
-                // Inscribe the loan_balance amount to the box address
-                const tick = 'SYRON' // @brc20
-
-                let feeRate = await mempoolFeeRate()
-                // Add a fee to cover the redeption gas from deposit box
-                let deposit = (150 * feeRate).toString() // @vb
-
-                // Get inscription order
-                let order = await fetch(
-                    `/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&devAddress=${sdb}&devFee=${deposit}&brc20Ticker=${tick}&brc20Amount=${loan_balance}`
-                )
-                    .then((response) => response.json())
-                    .then((res) => {
-                        console.log(JSON.stringify(res, null, 2))
-                        return res.data
-                    })
-                    .catch((error) => {
-                        throw error
-                    })
-
-                // @dev Send inscribe-transfer UTXO transaction on Bitcoin (#1)
-                await unisat
-                    .sendBitcoin(order.payAddress, order.amount, order.feeRate)
-                    .then(async (txId) => {
-                        console.log('Transaction ID #1', txId)
-
-                        // @dev Make sure that the Bitcoin transaction (#2) is confirmed
-                        await transaction_status(txId)
-                            .then(async (_res) => {
-                                const order_ = await fetch(
-                                    `/api/get-unisat-brc20-order?id=${order.orderId}`
-                                )
-                                    .then((response) => response.json())
-                                    .then((res) => {
-                                        return res.data
-                                    })
-                                    .catch((error) => {
-                                        throw error
-                                    })
-
-                                console.log(
-                                    'Order From OrderId',
-                                    JSON.stringify(order_, null, 2)
-                                )
-                                const inscription_id =
-                                    order_.files[0].inscriptionId
-
-                                return inscription_id.slice(0, -2)
-                            })
-                            .then(async (txId2) => {
-                                console.log('Transaction ID #2', txId2)
-                                await transaction_status(txId2).then(
-                                    async () => {
-                                        await redeemBitcoin(txId2)
-                                        // @review add retry option when the canister fails but the SDB received the inscription
-                                        toast.info(
-                                            `You have redeemed your BTC!`,
-                                            {
-                                                autoClose: false,
-                                                closeOnClick: true,
-                                            }
-                                        )
-                                    }
-                                )
-                            })
-                    })
+                await redeemBTC(btc_wallet?.btc_addr!)
             }
+            // else if (balance < loan_amt) {
+            //     // @dev the SUSD balance will be used to repay the loan
+            //     let loan_balance = loan_amt - balance
+
+            //     // @dev Check SYRON BRC-20 balance in Box address
+            //     console.log('Checking SYRON BRC-20 balance in Box...')
+            //     await fetch(`/api/get-unisat-brc20-balance?id=${sdb}`)
+            //         .then(async (response) => {
+            //             const res = await response.json()
+            //             if (res.error) {
+            //                 throw new Error(res.error)
+            //             }
+
+            //             console.log(
+            //                 'outcall response: SYRON BRC-20 balance in box',
+            //                 JSON.stringify(res, null, 2)
+            //             )
+
+            //             const brc20_balance = parseFloat(
+            //                 res.detail[0].overallBalance
+            //             ) // @review make sure that the balance has at least 1 confirmation
+
+            //             const limit = 0.02 // @governance
+            //             if (brc20_balance < loan_balance - limit) {
+            //                 loan_balance = loan_balance - brc20_balance
+
+            //                 throw new Error(
+            //                     `You have to repay the full amount of your loan to redeem your BTC collateral, and your current SYRON BRC-20 balance is $${brc20_balance.toFixed(
+            //                         2
+            //                     )}. Deposit $${loan_balance.toFixed(
+            //                         2
+            //                     )} SYRON BRC-20 into your Deposit ₿ox before proceeding.`
+            //                 )
+            //             }
+
+            //             //return await redemptionGas(btc_wallet?.btc_addr!)
+            //         })
+            //         .catch((error) => {
+            //             throw error
+            //         })
+            //     // @dev Send inscribe-transfer UTXO transaction on Bitcoin
+            //     console.log('Sending inscribe-transfer UTXO transaction...')
+
+            //     // Inscribe the loan_balance amount to the box address
+            //     const tick = 'SYRON' // @brc20
+
+            //     let feeRate = await mempoolFeeRate()
+            //     // Add a fee to cover the redeption gas from deposit box
+            //     let deposit = (150 * feeRate).toString() // @vb
+
+            //     // Get inscription order
+            //     let order = await fetch(
+            //         `/api/post-unisat-brc20-transfer?receiveAddress=${sdb}&feeRate=${feeRate}&devAddress=${sdb}&devFee=${deposit}&brc20Ticker=${tick}&brc20Amount=${loan_balance}`
+            //     )
+            //         .then((response) => response.json())
+            //         .then((res) => {
+            //             console.log(JSON.stringify(res, null, 2))
+            //             return res.data
+            //         })
+            //         .catch((error) => {
+            //             throw error
+            //         })
+
+            //     // @dev Send inscribe-transfer UTXO transaction on Bitcoin (#1)
+            //     await unisat
+            //         .sendBitcoin(order.payAddress, order.amount, order.feeRate)
+            //         .then(async (txId) => {
+            //             console.log('Transaction ID #1', txId)
+
+            //             // @dev Make sure that the Bitcoin transaction (#2) is confirmed
+            //             await transaction_status(txId)
+            //                 .then(async (_res) => {
+            //                     const order_ = await fetch(
+            //                         `/api/get-unisat-brc20-order?id=${order.orderId}`
+            //                     )
+            //                         .then((response) => response.json())
+            //                         .then((res) => {
+            //                             return res.data
+            //                         })
+            //                         .catch((error) => {
+            //                             throw error
+            //                         })
+
+            //                     console.log(
+            //                         'Order From OrderId',
+            //                         JSON.stringify(order_, null, 2)
+            //                     )
+            //                     const inscription_id =
+            //                         order_.files[0].inscriptionId
+
+            //                     return inscription_id.slice(0, -2)
+            //                 })
+            //                 .then(async (txId2) => {
+            //                     console.log('Transaction ID #2', txId2)
+            //                     await transaction_status(txId2).then(
+            //                         async () => {
+            //                             await redeemBitcoin(txId2)
+            //                             // @review add retry option when the canister fails but the SDB received the inscription
+            //                             toast.info(
+            //                                 `You have redeemed your BTC!`,
+            //                                 {
+            //                                     autoClose: false,
+            //                                     closeOnClick: true,
+            //                                 }
+            //                             )
+            //                         }
+            //                     )
+            //                 })
+            //         })
+            // }
             toast.info(`You have redeemed your BTC!`, {
                 autoClose: false,
                 closeOnClick: true,
@@ -463,7 +488,7 @@ function Component() {
             let update_data = await update.json()
             console.log(JSON.stringify(update_data, null, 2))
 
-            await redeemBTC(btc_wallet?.btc_addr!, tx_id)
+            // await redeemBTC(btc_wallet?.btc_addr!, tx_id)
 
             // @dev Update inscription info in Tyron indexer
             update = await fetch(
@@ -574,6 +599,7 @@ function Component() {
                 ssi={btc_wallet?.btc_addr!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
+                stablecoin={stablecoin}
                 show={showWithdrawModal}
                 onClose={() => setWithdrawModal(false)}
             />
@@ -597,6 +623,14 @@ function Component() {
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showBuyModal}
                 onClose={() => setBuyModal(false)}
+            />
+        )
+    } else if (walletConnected && showDepositRunesModal) {
+        return (
+            <DepositRunes
+                open={showDepositRunesModal}
+                onClose={() => setShowDepositRunesModal(false)}
+                sdbAddress={syron?.sdb}
             />
         )
     } else {
@@ -754,13 +788,25 @@ function Component() {
                                         manage collateral & loan
                                     </div>
                                     <div className={styles.boxWrapperInner}>
-                                        <div className={styles.txtRow}>
+                                        <div className={styles.txtRowsInfo}>
                                             To add collateral, send Bitcoin to
-                                            your Safety Deposit ₿ox address.
+                                            your Safety Deposit ₿ox address. The
+                                            minimum deposit amount is 3,000 sats
+                                            (0.00003 BTC).
+                                            <br />
+                                            <br />
+                                            <strong>Good to know:</strong> Tyron
+                                            calculates your collateral balance
+                                            using only UTXOs ≥ 3,000 sats.
+                                            Smaller UTXOs don't count toward
+                                            collateral but are reserved for gas,
+                                            DAO fees, and Syron token deposits
+                                            (BRC-20 inscriptions and Runes
+                                            deposits).
                                         </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | BTC collateral in ₿ox
+                                                BTC deposited
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -781,7 +827,28 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={styles.buttons}>
+                                        <div className={styles.subsection}>
+                                            <div className={styles.info}>
+                                                | Current collateral
+                                            </div>
+                                            <div className={styles.value}>
+                                                <span className={styles.color}>
+                                                    {satsCollateral}
+                                                </span>
+                                                <div
+                                                    className={
+                                                        styles.iconTokenContainer
+                                                    }
+                                                >
+                                                    <Image
+                                                        src={icoBTC}
+                                                        alt={'btc-token'}
+                                                        className={styles.icon}
+                                                    />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        {/* <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
                                                     onClick={handleRedeem}
@@ -806,11 +873,11 @@ function Component() {
                                                 </button>
                                                 <div>redeem btc</div>
                                             </div>
-                                        </div>
+                                        </div> */}
                                         {/* @dev Subsection Loan */}
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | Current SUSD loan
+                                                | Current loan
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -834,7 +901,9 @@ function Component() {
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
-                                                    onClick={updateBalance}
+                                                    onClick={() =>
+                                                        updateBalance()
+                                                    }
                                                     className={`button ${
                                                         isLoading
                                                             ? 'disabled'
@@ -859,8 +928,8 @@ function Component() {
                                         </div>
                                         <div className={styles.txtRow}>
                                             This action borrows Syron SUSD
-                                            against your BTC collateral, adding
-                                            it to your account&apos;s SUSD
+                                            against your Bitcoin deposits,
+                                            adding SUSD to your account&apos;s
                                             balance.
                                         </div>
                                     </div>
@@ -879,7 +948,7 @@ function Component() {
                                         {/* @dev Subsection Balance */}
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | Available SUSD balance
+                                                SUSD balance
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -903,64 +972,147 @@ function Component() {
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
-                                                    onClick={updateWithdraw}
+                                                    onClick={() =>
+                                                        updateWithdraw('BRC-20')
+                                                    }
                                                     className={
                                                         'button secondary'
                                                     }
                                                 >
                                                     ↗
                                                 </button>
-                                                <div>Withdraw on bitcoin</div>
+                                                <div>Withdraw BRC-20</div>
                                             </div>
                                         </div>
+                                        <div className={styles.buttons}>
+                                            <div className={styles.buttonLabel}>
+                                                <button
+                                                    onClick={() =>
+                                                        updateWithdraw('RUNES')
+                                                    }
+                                                    className={
+                                                        'button secondary'
+                                                    }
+                                                >
+                                                    ↗
+                                                </button>
+                                                <div>Withdraw RUNES</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {!isIdentified && (
+                                        <div className={styles.subtitleLabel}>
+                                            Sign in for more features
+                                        </div>
+                                    )}
+                                    <div className={styles.boxWrapperInner}>
                                         <div className={styles.subsectionSIWB}>
                                             <div className={styles.buttons}>
                                                 {!isIdentified ? (
                                                     <AuthGuard>
-                                                        <button
-                                                            onClick={() =>
-                                                                updateSend(
-                                                                    false
-                                                                )
-                                                            }
-                                                            // className={`button secondary ${styles.customButton}`}
-                                                            className={`button secondary`}
-                                                        >
-                                                            send syron to btc
-                                                            address
-                                                        </button>
-                                                        <button
-                                                            onClick={() =>
-                                                                updateSend(true)
-                                                            }
-                                                            className={`button secondary`}
-                                                        >
-                                                            send syron to icp
-                                                            address
-                                                        </button>
-                                                        <button
-                                                            onClick={updateBuy}
-                                                            className={`button secondary`}
-                                                        >
-                                                            convert syron to
-                                                            bitcoin
-                                                        </button>
+                                                        <></>
                                                     </AuthGuard>
                                                 ) : (
                                                     <>
-                                                        <button
-                                                            onClick={() =>
-                                                                updateSend(
-                                                                    false
-                                                                )
+                                                        <div
+                                                            className={
+                                                                styles.buttonLabel
                                                             }
-                                                            // className={`button secondary ${styles.customButton}`}
-                                                            className={`button secondary`}
                                                         >
-                                                            send syron to btc
-                                                            address
-                                                        </button>
-                                                        <button
+                                                            <button
+                                                                onClick={
+                                                                    handleRedeem
+                                                                }
+                                                                className={`button ${
+                                                                    isRedeeming
+                                                                        ? 'disabled'
+                                                                        : 'secondary'
+                                                                }`}
+                                                            >
+                                                                {isRedeeming ? (
+                                                                    <div
+                                                                        className={
+                                                                            styles.loading
+                                                                        }
+                                                                    >
+                                                                        Loading
+                                                                        <ThreeDots color="black" />
+                                                                    </div>
+                                                                ) : (
+                                                                    <>-</>
+                                                                )}
+                                                            </button>
+                                                            <div>
+                                                                redeem btc
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonSeparator
+                                                            }
+                                                        ></div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonLabel
+                                                            }
+                                                        >
+                                                            <button
+                                                                onClick={() =>
+                                                                    updateSend(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className={`button secondary`}
+                                                            >
+                                                                ↗
+                                                            </button>
+                                                            <div>send susd</div>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonSeparator
+                                                            }
+                                                        ></div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonLabel
+                                                            }
+                                                        >
+                                                            <button
+                                                                onClick={
+                                                                    updateDepositRunes
+                                                                }
+                                                                className={`button secondary`}
+                                                            >
+                                                                ↓
+                                                            </button>
+                                                            <div>
+                                                                deposit runes
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonSeparator
+                                                            }
+                                                        ></div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonLabel
+                                                            }
+                                                        >
+                                                            <button
+                                                                onClick={
+                                                                    updateBuy
+                                                                }
+                                                                className={`button secondary`}
+                                                            >
+                                                                ₿
+                                                            </button>
+                                                            <div>
+                                                                buy bitcoin
+                                                            </div>
+                                                        </div>
+                                                        {/* <button
                                                             onClick={() =>
                                                                 updateSend(true)
                                                             }
@@ -968,14 +1120,7 @@ function Component() {
                                                         >
                                                             send syron to icp
                                                             address
-                                                        </button>
-                                                        <button
-                                                            onClick={updateBuy}
-                                                            className={`button secondary`}
-                                                        >
-                                                            convert syron to
-                                                            bitcoin
-                                                        </button>
+                                                        </button> */}
                                                     </>
                                                 )}
                                             </div>
@@ -990,7 +1135,7 @@ function Component() {
                                 </>
                             ) : (
                                 <div style={{ fontSize: '0.8rem' }}>
-                                    Loading your Syron account...
+                                    Loading your Tyron account...
                                 </div>
                             )}
                         </>
