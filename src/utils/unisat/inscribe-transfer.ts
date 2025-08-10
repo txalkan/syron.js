@@ -19,9 +19,9 @@ export const inscribe_transfer = async (
     // Choose minter id based on version
     let minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET
     if (version === '2') {
-        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2
+        minterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_2
     } else if (version === 'testnet') {
-        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_TESTNET
+        minterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_TESTNET
     }
     let receiveAddress = minterId!
     if (!receiveAddress) throw new Error('The receiver address is not defined')
