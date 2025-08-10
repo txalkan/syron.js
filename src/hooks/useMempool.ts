@@ -11,10 +11,10 @@ export function useMempoolHook() {
     const getXR = async (): Promise<number> => {
         try {
             const xr = await mempoolPrice()
-            console.log(
-                'BTC exchange rates from Mempool',
-                JSON.stringify(xr, null, 2)
-            )
+            // console.log(
+            //     'BTC exchange rates from Mempool',
+            //     JSON.stringify(xr, null, 2)
+            // )
             const now = Math.floor(Date.now() / 1000)
             // console.log('now is', now)
             if (xr.time && now - xr.time > 600) {

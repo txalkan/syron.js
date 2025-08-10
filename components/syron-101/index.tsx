@@ -1022,7 +1022,7 @@ function Component() {
                                                     >
                                                         {parseFloat(
                                                             collateralRatio
-                                                        ) > 150 ? (
+                                                        ) >= 150 ? (
                                                             <span
                                                                 className={
                                                                     styles.greenCheckmark

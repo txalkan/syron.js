@@ -337,7 +337,7 @@ export async function mempoolFeeRate(): Promise<number> {
         }
 
         // max gas rate per @vB
-        // if (fee > 3) return 0
+        if (fee > 4) return 0
 
         return fee
     } catch (error) {

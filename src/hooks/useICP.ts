@@ -322,15 +322,19 @@ function useICPHook() {
         try {
             console.log('Loading Redemption Gas')
             const syron = basic_bitcoin_syron()
-            const gas = await syron.redemption_gas({
+            const txId = await syron.redemption_gas({
                 ssi,
                 op: { redeembitcoin: null },
             })
-            if (gas.Err) {
-                throw new Error(gas.Err.GenericError.error_message)
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+            if (txId.Err) {
+                throw new Error(txIdStringified)
             } else {
-                console.log('Redeption Gas:', gas.Ok)
-                return gas.Ok
+                console.log('Redeption Gas:', txId.Ok)
+                return txId.Ok
             }
         } catch (err) {
             console.error('Redemption Gas', err)
@@ -360,8 +364,12 @@ function useICPHook() {
                 },
                 fee_rate * 1000
             )
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
             if (txId.Err) {
-                throw new Error(txId.Err.GenericError.error_message)
+                throw new Error(txIdStringified)
             }
             console.log(txId)
             return txId
@@ -387,8 +395,12 @@ function useICPHook() {
                 provider_id,
                 fee_rate * 1000
             )
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
             if (txId.Err) {
-                throw new Error(txId.Err.GenericError.error_message)
+                throw new Error(txIdStringified)
             }
             console.log(txId)
             return txId

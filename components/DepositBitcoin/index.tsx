@@ -40,7 +40,7 @@ export function DepositBitcoin({
         if (!unisat) {
             const error = new Error('Unisat wallet not found')
             toast.error(
-                'UniSat wallet extension is required. Please install Unisat and try again.',
+                'UniSat wallet extension is required. Please install UniSat and try again.',
                 {
                     theme: toastTheme(isLight),
                 }

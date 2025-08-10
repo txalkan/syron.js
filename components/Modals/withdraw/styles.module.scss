@@ -54,11 +54,20 @@
     @media only screen and (min-width: 800px) {
         width: 800px; /* Fixed width for screens wider than 500px */
     }
+
+    @media only screen and (max-width: 640px) {
+        padding: 5% 5% 8% 5%;
+    }
 }
 
 .closeIcon {
     margin: 0px;
     cursor: pointer;
+
+    &.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
 }
 
 .headerWrapper {
@@ -78,6 +87,98 @@
     margin-left: 0.3rem;
     margin-bottom: 2rem;
     color: rgb(75, 0, 130);
+}
+
+.transactionStatus {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+
+    @media (max-width: 768px) {
+        padding: 14px 16px;
+        margin-bottom: 16px;
+        gap: 10px;
+    }
+}
+
+.statusIcon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.statusContent {
+    flex: 1;
+}
+
+.statusTitle {
+    font-weight: 600;
+    font-size: 14px;
+    color: #92400e;
+    margin-bottom: 4px;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+
+    @media (max-width: 768px) {
+        font-size: 13px;
+    }
+}
+
+.statusText {
+    font-size: 13px;
+    color: #b45309;
+    line-height: 1.4;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+
+    @media (max-width: 768px) {
+        font-size: 12px;
+    }
+}
+
+.transactionNote {
+    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+    border: 1px solid #f59e0b;
+    border-radius: 12px;
+    padding: 16px 20px;
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+
+    @media (max-width: 768px) {
+        padding: 14px 16px;
+        margin: 16px 0;
+        gap: 10px;
+    }
+}
+
+.noteIcon {
+    font-size: 20px;
+    flex-shrink: 0;
+
+    @media (max-width: 768px) {
+        font-size: 18px;
+    }
+}
+
+.noteText {
+    color: #92400e;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.4;
+    margin: 0;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+
+    @media (max-width: 768px) {
+        font-size: 13px;
+    }
 }
 
 .contentWrapper {
@@ -101,6 +202,11 @@
     justify-content: space-between;
     width: 100%;
     cursor: pointer;
+
+    &.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
 }
 
 .rowHeaderContent {
@@ -186,6 +292,11 @@
     justify-content: center;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+
+    @media (max-width: 640px) {
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+    }
 }
 
 .btnConfirm,
@@ -453,6 +564,18 @@
         transform: translateY(0);
     }
 
+    &:disabled {
+        background: #9ca3af;
+        cursor: not-allowed;
+        opacity: 0.6;
+        transform: none;
+
+        &:hover {
+            background: #9ca3af;
+            transform: none;
+        }
+    }
+
     @media (max-width: 768px) {
         padding: 10px 20px;
         font-size: 13px;
@@ -715,6 +838,7 @@
     &:hover:not(:disabled) {
         background: #dc2626;
         transform: translateY(-1px);
+        color: #111111 !important;
     }
 
     &:active:not(:disabled) {
@@ -737,6 +861,11 @@
     display: flex;
     align-items: center;
     gap: 8px;
+
+    // onhover give an accent color to the text
+    &:hover {
+        color: #111111;
+    }
 }
 
 .processingWithdrawal {

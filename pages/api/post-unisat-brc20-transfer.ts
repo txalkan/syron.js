@@ -35,6 +35,7 @@ export default async function handler(
         devFee,
         brc20Ticker,
         brc20Amount,
+        outputValue,
     } = request.query as {
         receiveAddress: string
         feeRate: string
@@ -42,14 +43,18 @@ export default async function handler(
         devFee: string
         brc20Ticker: string
         brc20Amount: string
+        outputValue: string
     }
 
-    console.log('@dev post data to UniSat')
+    console.log(
+        '@dev post data to UniSat: ',
+        JSON.stringify(request.query, null, 2)
+    )
     try {
         const order = await unisatApi.createTransfer({
             receiveAddress,
             feeRate: Number(feeRate),
-            outputValue: 546,
+            outputValue: Number(outputValue),
             devAddress,
             devFee: Number(devFee),
             brc20Ticker,
