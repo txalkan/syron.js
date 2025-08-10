@@ -12,6 +12,7 @@ import {
     TableHeaderCell,
 } from './Table'
 import { TransactionDetails } from './DepositRunes/TransactionDetails'
+import LoadingSpinner from './LoadingSpinner'
 import styles from './DepositRunes.module.scss'
 
 // Constants
@@ -229,9 +230,7 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                 title="Refresh balances"
                             >
                                 {isLoading ? (
-                                    <div
-                                        className={styles.refreshSpinner}
-                                    ></div>
+                                    <LoadingSpinner size="md" />
                                 ) : (
                                     <svg
                                         width="16"
@@ -421,18 +420,33 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                                                             : '1px solid #b7eb8f',
                                                                 }}
                                                             >
-                                                                {isLoading
-                                                                    ? 'Loading...'
-                                                                    : parseFloat(
-                                                                            balance.depositedAmount
-                                                                        ) ===
-                                                                        STABLE_DEPOSIT_THRESHOLD
-                                                                      ? 'Stable Deposit'
-                                                                      : parseFloat(
-                                                                              balance.depositedAmount
-                                                                          ) > 0
-                                                                        ? 'Pending'
-                                                                        : 'Confirmed'}
+                                                                {isLoading ? (
+                                                                    <div
+                                                                        style={{
+                                                                            display:
+                                                                                'flex',
+                                                                            alignItems:
+                                                                                'center',
+                                                                            gap: '6px',
+                                                                        }}
+                                                                    >
+                                                                        <LoadingSpinner size="sm" />
+                                                                        <span>
+                                                                            Loading...
+                                                                        </span>
+                                                                    </div>
+                                                                ) : parseFloat(
+                                                                      balance.depositedAmount
+                                                                  ) ===
+                                                                  STABLE_DEPOSIT_THRESHOLD ? (
+                                                                    'Stable Deposit'
+                                                                ) : parseFloat(
+                                                                      balance.depositedAmount
+                                                                  ) > 0 ? (
+                                                                    'Pending'
+                                                                ) : (
+                                                                    'Confirmed'
+                                                                )}
                                                             </span>
                                                         </div>
                                                     </TableCell>

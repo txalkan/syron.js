@@ -1,14 +1,5 @@
 @import '../styles/scss/mixins.scss';
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
 .container {
     font-family:
         -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -740,12 +731,6 @@
         height: 16px;
     }
 
-    // Ensure spinner is properly displayed within flex container
-    .refreshSpinner {
-        display: block !important;
-        flex-shrink: 0 !important;
-    }
-
     @media (max-width: 767px) {
         width: 28px;
         height: 28px;
@@ -764,29 +749,6 @@
             width: 12px;
             height: 12px;
         }
-    }
-}
-
-.refreshSpinner {
-    width: 16px !important;
-    height: 16px !important;
-    border: 2px solid #e5e7eb !important;
-    border-top: 2px solid #3b82f6 !important;
-    border-radius: 50% !important;
-    animation: spin 1s linear infinite !important;
-    display: block !important;
-    flex-shrink: 0 !important;
-
-    @media (max-width: 767px) {
-        width: 14px !important;
-        height: 14px !important;
-        border-width: 1.5px !important;
-    }
-
-    @media (max-width: 480px) {
-        width: 12px !important;
-        height: 12px !important;
-        border-width: 1px !important;
     }
 }
 
