@@ -118,7 +118,7 @@ export function DepositBitcoin({
             onClick={handleDeposit}
             className={`${styles.depositBitcoinButton} ${className}`}
             disabled={disabled || !sdbAddress}
-            title={`Deposit ${btcAmount.toLocaleString()} sats (${(btcAmount / 100000000).toFixed(8)} BTC) to your SDB address`}
+            title={`Deposit BTC to your SDB address`}
         >
             <svg
                 width="16"

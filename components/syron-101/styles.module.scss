@@ -376,6 +376,44 @@
     text-transform: uppercase;
 }
 
+.titleWithRefresh {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 1rem;
+}
+
+.refreshButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s ease;
+    color: #6b7280;
+    min-width: 24px;
+    height: 24px;
+
+    &:hover {
+        background-color: #f3f4f6;
+        color: #374151;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    svg {
+        width: 16px;
+        height: 16px;
+    }
+}
+
 .iconContainer {
     display: flex;
     align-items: center;

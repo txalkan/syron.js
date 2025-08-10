@@ -275,7 +275,7 @@ function Component() {
             const result = await unisat.requestAccounts()
             handleAccountsChanged(result)
 
-            toast.info('Your wallet is now connected')
+            toast.success('Your wallet is now connected')
         } catch (error) {
             console.error('Error connecting wallet:', error)
             toast.error('Failed to connect wallet')

@@ -3,6 +3,7 @@ import { Modal, Button, Typography } from 'antd'
 import styles from './index.module.scss'
 import ThreeDots from '../../Spinner/ThreeDots'
 import bitcoinIcon from '../../../src/assets/icons/bitcoin.png'
+import { toast } from 'react-toastify'
 
 const { Text } = Typography
 
@@ -170,7 +171,14 @@ const ConfirmTransactionModal = ({
                     </Button>
                     <Button
                         type="primary"
-                        onClick={onConfirm}
+                        onClick={
+                            onDetails.title != 'Confirm BTC Purchase'
+                                ? onConfirm
+                                : () => {
+                                      onClose()
+                                      toast.info('Coming soon')
+                                  }
+                        }
                         className={
                             onDetails.title === 'Confirm Transaction'
                                 ? styles.confirmButtonGreen

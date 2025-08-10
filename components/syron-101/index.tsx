@@ -33,6 +33,7 @@ import {
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal, SendModal, BuyModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
+import LoadingSpinner from '../LoadingSpinner'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
 import icoEarn from '../../src/assets/icons/ico_earn_bitcoin.svg'
 import AuthGuard from '../AuthGuard'
@@ -51,7 +52,7 @@ function Component() {
     const { identity, clear } = useSiwbIdentity()
     const { t } = useTranslation()
 
-    const [active, setActive] = useState('GetSyron')
+    const [active, setActive] = useState('')
     const [sdb, setSDB] = useState('')
     const [satsDeposited, setSatsDeposited] = useState(_0)
     const [satsCollateral, setSatsCollateral] = useState('')
@@ -252,6 +253,19 @@ function Component() {
                 return
             } else if (balance >= loan_amt) {
                 await redeemBTC(btc_wallet?.btc_addr!)
+                toast.info(`You have redeemed your BTC!`, {
+                    autoClose: false,
+                    closeOnClick: true,
+                })
+            } else {
+                toast.info(
+                    `You have to repay the full amount of your loan to redeem your BTC deposit, and your current balance is $${balance.toFixed(
+                        2
+                    )}. Deposit $${(loan_amt - balance).toFixed(
+                        2
+                    )} into your Safety Deposit ₿ox before proceeding.`,
+                    { autoClose: false, closeOnClick: true }
+                )
             }
             // else if (balance < loan_amt) {
             //     // @dev the SUSD balance will be used to repay the loan
@@ -363,10 +377,6 @@ function Component() {
             //                 })
             //         })
             // }
-            toast.info(`You have redeemed your BTC!`, {
-                autoClose: false,
-                closeOnClick: true,
-            })
         } catch (err) {
             console.error('handleRedeem', err)
 
@@ -522,6 +532,38 @@ function Component() {
     }
 
     const [isLoading, setIsLoading] = useState(false)
+    const [isRefreshingCollateral, setIsRefreshingCollateral] = useState(false)
+    const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+
+    const refreshCollateral = async () => {
+        try {
+            setIsRefreshingCollateral(true)
+            // Refresh BTC deposits
+            if (syron?.sdb) {
+                const balance = await unisatBalance(syron.sdb)
+                setSatsDeposited(Big(balance))
+            }
+            await updateSession()
+        } catch (error) {
+            console.error('Error refreshing collateral:', error)
+            toast.error('Failed to refresh collateral data')
+        } finally {
+            setIsRefreshingCollateral(false)
+        }
+    }
+
+    const refreshBalance = async () => {
+        try {
+            setIsRefreshingBalance(true)
+            await updateSession()
+        } catch (error) {
+            console.error('Error refreshing balance:', error)
+            toast.error('Failed to refresh balance data')
+        } finally {
+            setIsRefreshingBalance(false)
+        }
+    }
+
     const updateBalance = async () => {
         try {
             setIsLoading(true)
@@ -785,7 +827,55 @@ function Component() {
                                                     className={styles.icon}
                                                 />
                                             </div> */}
-                                        manage collateral & loan
+                                        <div
+                                            className={styles.titleWithRefresh}
+                                        >
+                                            <span>
+                                                manage collateral & loan
+                                            </span>
+                                            <button
+                                                onClick={refreshCollateral}
+                                                disabled={
+                                                    isRefreshingCollateral
+                                                }
+                                                className={styles.refreshButton}
+                                                title="Refresh collateral data"
+                                            >
+                                                {isRefreshingCollateral ? (
+                                                    <LoadingSpinner size="sm" />
+                                                ) : (
+                                                    <svg
+                                                        width="16"
+                                                        height="16"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M1 4v6h6"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        <path
+                                                            d="M23 20v-6h-6"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        <path
+                                                            d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
                                     <div className={styles.boxWrapperInner}>
                                         <div className={styles.txtRowsInfo}>
@@ -929,8 +1019,7 @@ function Component() {
                                         <div className={styles.txtRow}>
                                             This action borrows Syron SUSD
                                             against your Bitcoin deposits,
-                                            adding SUSD to your account&apos;s
-                                            balance.
+                                            adding SUSD to your account balance.
                                         </div>
                                     </div>
 
@@ -942,7 +1031,51 @@ function Component() {
                                                     className={styles.icon}
                                                 />
                                             </div> */}
-                                        account balance
+                                        <div
+                                            className={styles.titleWithRefresh}
+                                        >
+                                            <span>account balance</span>
+                                            <button
+                                                onClick={refreshBalance}
+                                                disabled={isRefreshingBalance}
+                                                className={styles.refreshButton}
+                                                title="Refresh account balance"
+                                            >
+                                                {isRefreshingBalance ? (
+                                                    <LoadingSpinner size="sm" />
+                                                ) : (
+                                                    <svg
+                                                        width="16"
+                                                        height="16"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M1 4v6h6"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        <path
+                                                            d="M23 20v-6h-6"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                        <path
+                                                            d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+                                                            stroke="currentColor"
+                                                            strokeWidth="2"
+                                                            strokeLinecap="round"
+                                                            strokeLinejoin="round"
+                                                        />
+                                                    </svg>
+                                                )}
+                                            </button>
+                                        </div>
                                     </div>
                                     <div className={styles.boxWrapperInner}>
                                         {/* @dev Subsection Balance */}
@@ -999,6 +1132,19 @@ function Component() {
                                                 <div>Withdraw RUNES</div>
                                             </div>
                                         </div>
+                                        <div className={styles.buttons}>
+                                            <div className={styles.buttonLabel}>
+                                                <button
+                                                    onClick={updateDepositRunes}
+                                                    className={
+                                                        'button secondary'
+                                                    }
+                                                >
+                                                    ↓
+                                                </button>
+                                                <div>Deposit RUNES</div>
+                                            </div>
+                                        </div>
                                     </div>
                                     {!isIdentified && (
                                         <div className={styles.subtitleLabel}>
@@ -1014,6 +1160,50 @@ function Component() {
                                                     </AuthGuard>
                                                 ) : (
                                                     <>
+                                                        <div
+                                                            className={
+                                                                styles.buttonLabel
+                                                            }
+                                                        >
+                                                            <button
+                                                                onClick={() =>
+                                                                    updateSend(
+                                                                        false
+                                                                    )
+                                                                }
+                                                                className={`button secondary`}
+                                                            >
+                                                                ↗
+                                                            </button>
+                                                            <div>send susd</div>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonSeparator
+                                                            }
+                                                        ></div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonLabel
+                                                            }
+                                                        >
+                                                            <button
+                                                                onClick={
+                                                                    updateBuy
+                                                                }
+                                                                className={`button secondary`}
+                                                            >
+                                                                ₿
+                                                            </button>
+                                                            <div>
+                                                                buy bitcoin
+                                                            </div>
+                                                        </div>
+                                                        <div
+                                                            className={
+                                                                styles.buttonSeparator
+                                                            }
+                                                        ></div>
                                                         <div
                                                             className={
                                                                 styles.buttonLabel
@@ -1044,72 +1234,6 @@ function Component() {
                                                             </button>
                                                             <div>
                                                                 redeem btc
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        ></div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={() =>
-                                                                    updateSend(
-                                                                        false
-                                                                    )
-                                                                }
-                                                                className={`button secondary`}
-                                                            >
-                                                                ↗
-                                                            </button>
-                                                            <div>send susd</div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        ></div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={
-                                                                    updateDepositRunes
-                                                                }
-                                                                className={`button secondary`}
-                                                            >
-                                                                ↓
-                                                            </button>
-                                                            <div>
-                                                                deposit runes
-                                                            </div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        ></div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={
-                                                                    updateBuy
-                                                                }
-                                                                className={`button secondary`}
-                                                            >
-                                                                ₿
-                                                            </button>
-                                                            <div>
-                                                                buy bitcoin
                                                             </div>
                                                         </div>
                                                         {/* <button
@@ -1203,13 +1327,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            {/* <div className={styles.iconGoldContainer}>
-                                    <Image
-                                        src={icoPrint}
-                                        alt={'print-syron'}
-                                        className={styles.icon}
-                                    />
-                                </div> */}
+                            <div className={styles.iconGoldContainer}>
+                                <Image
+                                    src={icoPrint}
+                                    alt={'print-syron'}
+                                    className={styles.icon}
+                                />
+                            </div>
                             Mint SYRON BRC-20
                         </div>
                         <div
@@ -1224,13 +1348,13 @@ function Component() {
                                     : styles.card
                             }
                         >
-                            {/* <div className={styles.iconGoldContainer}>
-                                    <Image
-                                        src={icoPrint}
-                                        alt={'print-syron'}
-                                        className={styles.icon}
-                                    />
-                                </div> */}
+                            <div className={styles.iconGoldContainer}>
+                                <Image
+                                    src={icoEarn}
+                                    alt={'earn-bitcoin'}
+                                    className={styles.icon}
+                                />
+                            </div>
                             mint RUNE•DOLLAR
                         </div>
                         {/* <div
@@ -1257,7 +1381,7 @@ function Component() {
                         </div> */}
                     </div>
 
-                    {active === 'GetSyron' && (
+                    {active === 'GetSyronIsOff' && (
                         <div className={styles.cardSub}>
                             <div className={styles.wrapper}>
                                 <SyronForm
@@ -1267,7 +1391,7 @@ function Component() {
                             </div>
                         </div>
                     )}
-                    {active === 'GetSyronRunes' && (
+                    {active === 'GetSyronRunesIsOff' && (
                         <div className={styles.cardSub}>
                             <div className={styles.wrapper}>
                                 <SyronForm

@@ -410,6 +410,49 @@ function useICPHook() {
         }
     }
 
+    const depositSyronRunes = async (ssi: string, recommended_fee: number) => {
+        try {
+            if (recommended_fee > 1) {
+                throw new Error(
+                    'The gas fee is too high - please try again later'
+                )
+            }
+
+            console.log('depositSyronRunes called with:', {
+                ssi,
+                recommended_fee,
+            })
+
+            const syron = basic_bitcoin_syron()
+
+            const args = {
+                ssi: ssi,
+                op: { depositsyron: null },
+            }
+
+            const txId = await syron.deposit_syron_runes(
+                args,
+                recommended_fee * 1000
+            )
+
+            // Convert BigInt values to strings
+            const txIdStringified = JSON.stringify(txId, (key, value) =>
+                typeof value === 'bigint' ? value.toString() : value
+            )
+
+            console.log('txId response: ', txIdStringified)
+
+            if (txId.Err) {
+                throw new Error(txIdStringified)
+            }
+
+            return txId
+        } catch (error) {
+            console.error('Error calling deposit_syron_runes:', error)
+            throw error
+        }
+    }
+
     return {
         getBox,
         updateSyronBalance,
@@ -422,6 +465,7 @@ function useICPHook() {
         deposit_brc20_and_redeem_btc,
         redeemBTC,
         getServiceProviders,
+        depositSyronRunes,
     }
 }
 

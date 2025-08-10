@@ -8,16 +8,14 @@ import {
     TableHeaderCell,
 } from '../Table'
 import { useStore } from 'react-stores'
-import { $btc_wallet } from '../../src/store/syron'
+import { $btc_wallet, $syron } from '../../src/store/syron'
 import styles from './TransactionDetails.module.scss'
-import refreshIco from '../../src/assets/icons/refresh.svg'
-import Image from 'next/image'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../src/app/reducers'
-import { mempoolFeeRate } from '../../src/utils/unisat/httpUtils'
+import { mempoolFeeRate, unisatBalance } from '../../src/utils/unisat/httpUtils'
 import { DepositBitcoin } from '../DepositBitcoin'
+import useICPHook from '../../src/hooks/useICP'
+import LoadingSpinner from '../LoadingSpinner'
 
 // Constants
 const STABLE_DEPOSIT_THRESHOLD = 0.1
@@ -31,52 +29,6 @@ interface TransactionDetailsProps {
     sdbAddress: string
 }
 
-// Function to call Internet Computer deposit_syron_runes
-async function depositSyronRunes(
-    ssi: string,
-    recommendedFee: number
-): Promise<{ Ok: string[] } | { Err: any }> {
-    try {
-        console.log('depositSyronRunes called with:', { ssi, recommendedFee })
-
-        // @dev throw error if fee_rate is greater than 4
-        // if (recommendedFee > 2) {
-        //     throw new Error('The gas fee is too high - please try again later')
-        // }
-
-        // Import the basic_bitcoin_syron declaration
-        const { basic_bitcoin_syron } = await import(
-            '../../src/declarations/basic_bitcoin_tyron'
-        )
-
-        const syron = basic_bitcoin_syron()
-
-        const args = {
-            ssi: ssi,
-            op: { depositsyron: null },
-        }
-
-        console.log('Calling syron.deposit_syron_runes with args:', args)
-        console.log('Fee parameter:', BigInt(recommendedFee * 1000))
-
-        const result = await syron.deposit_syron_runes(
-            args,
-            recommendedFee * 1000
-        )
-
-        console.log('deposit_syron_runes result:', result)
-        return result
-    } catch (error) {
-        console.error('Error calling deposit_syron_runes:', error)
-        console.error('Error details:', {
-            name: error instanceof Error ? error.name : 'Unknown',
-            message: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : 'No stack trace',
-        })
-        return { Err: error }
-    }
-}
-
 export function TransactionDetails({
     runeName,
     depositedAmount,
@@ -84,6 +36,7 @@ export function TransactionDetails({
     onConfirm,
     sdbAddress,
 }: TransactionDetailsProps) {
+    const { depositSyronRunes } = useICPHook()
     const currentAmount = parseFloat(depositedAmount)
     const availableForDeposit = Math.max(
         0,
@@ -94,6 +47,9 @@ export function TransactionDetails({
     // Get wallet address from store
     const btcWallet = useStore($btc_wallet)
     const walletAddress = btcWallet?.btc_addr
+
+    // Get syron store
+    const syron = useStore($syron)
 
     // Get theme from Redux store
     const isLight = true //useSelector((state: RootState) => state.modal.isLight)
@@ -118,6 +74,35 @@ export function TransactionDetails({
         currentSats: 0,
         runesSats: 0,
     })
+
+    // State for input amount
+    const [inputAmount, setInputAmount] = React.useState<string>('2999')
+
+    // Calculate the required amounts once to avoid repetition
+    const missingAmount = React.useMemo(() => {
+        return (
+            insufficientSatsError.requiredSats -
+            insufficientSatsError.currentSats -
+            insufficientSatsError.runesSats
+        )
+    }, [
+        insufficientSatsError.requiredSats,
+        insufficientSatsError.currentSats,
+        insufficientSatsError.runesSats,
+    ])
+
+    const recommendedMin = React.useMemo(() => {
+        return Math.ceil(missingAmount * 1.2)
+    }, [missingAmount])
+
+    const isValidAmount = React.useMemo(() => {
+        const amount = parseInt(inputAmount)
+        return amount >= recommendedMin && amount <= 2999
+    }, [inputAmount, recommendedMin])
+
+    const isFeeTooHigh = React.useMemo(() => {
+        return missingAmount > 2999
+    }, [missingAmount])
 
     // Fetch gas fee on component mount
     React.useEffect(() => {
@@ -157,19 +142,52 @@ export function TransactionDetails({
     const totalFee = daoFee + runeDust + gasFeeSats
     const totalFeeText = isLoadingFee ? 'Calculating...' : `${totalFee} sats`
 
-    // Update insufficient sats error when gas fee changes
+    // Check for insufficient sats when component loads or gas fee changes
     React.useEffect(() => {
-        if (insufficientSatsError.hasError) {
-            const newRequiredSats = daoFee + runeDust + gasFeeSats
-            setInsufficientSatsError((prev) => ({
-                ...prev,
-                requiredSats: newRequiredSats,
-            }))
+        const checkInsufficientSats = async () => {
+            if (syron && gasFeeSats > 0) {
+                const requiredSats = daoFee + runeDust + gasFeeSats
+
+                const currentDeposit = await unisatBalance(syron.sdb)
+                const currentCollateral = syron?.syron_btc
+                    ? Number(syron.syron_btc)
+                    : 0
+                const currentSats = currentDeposit - currentCollateral
+
+                console.log('Sats Debug Info:', {
+                    requiredSats,
+                    currentDeposit,
+                    currentCollateral,
+                    currentSats,
+                    daoFee,
+                    runeDust,
+                    gasFeeSats,
+                    hasInsufficientFunds: currentSats < requiredSats,
+                })
+
+                if (currentSats < requiredSats) {
+                    setInsufficientSatsError({
+                        hasError: true,
+                        requiredSats,
+                        currentSats,
+                        runesSats: 0,
+                    })
+                } else {
+                    setInsufficientSatsError({
+                        hasError: false,
+                        requiredSats: 0,
+                        currentSats: 0,
+                        runesSats: 0,
+                    })
+                }
+            }
         }
-    }, [gasFeeSats, insufficientSatsError.hasError])
+
+        checkInsufficientSats()
+    }, [gasFeeSats, syron])
 
     // Handle deposit to Tyron account
-    const handleDeposit = async () => {
+    const handleDeposit = React.useCallback(async () => {
         if (!walletAddress || !isDepositable) {
             if (!walletAddress) {
                 toast.error(
@@ -238,7 +256,7 @@ export function TransactionDetails({
                             runesSats,
                         })
 
-                        const guidanceMessage = `Insufficient BTC to cover fees. You need ${requiredSats} sats but have ${btcSats + runesSats} sats. Please deposit at least ${requiredSats - btcSats - runesSats} sats to your SDB address.`
+                        const guidanceMessage = `Insufficient BTC to cover fees. You need ${requiredSats} sats but have ${btcSats + runesSats} sats. Please deposit at least ${requiredSats - btcSats - runesSats} sats to your Safety Deposit ₿ox.`
                         toast.error(guidanceMessage, {
                             theme: toastTheme(isLight),
                         })
@@ -255,6 +273,33 @@ export function TransactionDetails({
                             message: `Deposit failed: ${errorMessage}`,
                         })
                     }
+                } else if (errorMessage.includes('NotEnoughFunds')) {
+                    const requiredSats = daoFee + runeDust + gasFeeSats
+                    const currentDeposit = syron?.sdb_btc
+                        ? Number(syron.sdb_btc)
+                        : 0
+
+                    const currentCollateral = syron?.syron_btc
+                        ? Number(syron.syron_btc)
+                        : 0
+
+                    const currentSats = currentDeposit - currentCollateral
+
+                    setInsufficientSatsError({
+                        hasError: true,
+                        requiredSats,
+                        currentSats,
+                        runesSats: 0,
+                    })
+
+                    const guidanceMessage = `Your Safety Deposit ₿ox doesn't have enough funds to cover the transaction fees. You need ${requiredSats} sats but have ${currentSats} sats. Please deposit at least ${requiredSats - currentSats} sats to your Safety Deposit ₿ox.`
+                    toast.error(guidanceMessage, {
+                        theme: toastTheme(isLight),
+                    })
+                    setDepositStatus({
+                        type: 'error',
+                        message: guidanceMessage,
+                    })
                 } else {
                     toast.error(`Deposit failed: ${errorMessage}`, {
                         theme: toastTheme(isLight),
@@ -281,7 +326,14 @@ export function TransactionDetails({
         } finally {
             setIsDepositing(false)
         }
-    }
+    }, [
+        walletAddress,
+        isDepositable,
+        availableForDeposit,
+        feeRate,
+        gasFeeSats,
+        syron,
+    ])
 
     return (
         <div className={styles.container}>
@@ -301,7 +353,7 @@ export function TransactionDetails({
                                 Current Deposit
                             </span>
                             <span className={styles.amountDescription}>
-                                Total amount in your SDB
+                                Total amount in your Safety Deposit ₿ox
                             </span>
                         </div>
                         <span className={styles.currentAmount}>
@@ -314,7 +366,8 @@ export function TransactionDetails({
                                 Stable Deposit
                             </span>
                             <span className={styles.amountDescription}>
-                                Minimum balance to maintain
+                                Minimum amount to maintain in your Safety
+                                Deposit ₿ox
                             </span>
                         </div>
                         <span className={styles.stableAmount}>
@@ -327,7 +380,7 @@ export function TransactionDetails({
                                 Available for Deposit
                             </span>
                             <span className={styles.amountDescription}>
-                                Amount you can deposit to Tyron
+                                Amount you can deposit to your account balance
                             </span>
                         </div>
                         <span
@@ -434,7 +487,7 @@ export function TransactionDetails({
                                 </TableCell>
                                 <TableCell>
                                     <span className={styles.feeDescription}>
-                                        Minimum UTXO requirement
+                                        Minimum requirement
                                     </span>
                                 </TableCell>
                             </TableRow>
@@ -480,11 +533,7 @@ export function TransactionDetails({
                                             title="Refresh gas fee"
                                         >
                                             {isLoadingFee ? (
-                                                <div
-                                                    className={
-                                                        styles.refreshSpinner
-                                                    }
-                                                ></div>
+                                                <LoadingSpinner size="md" />
                                             ) : (
                                                 <svg
                                                     width="16"
@@ -578,15 +627,21 @@ export function TransactionDetails({
                     Go Back
                 </button>
                 <button
-                    className={`${styles.confirmButton} ${!isDepositable ? styles.disabled : ''}`}
+                    className={`${styles.confirmButton} ${!isDepositable || insufficientSatsError.hasError ? styles.disabled : ''}`}
                     onClick={handleDeposit}
-                    disabled={!isDepositable || isDepositing}
+                    disabled={
+                        !isDepositable ||
+                        isDepositing ||
+                        insufficientSatsError.hasError
+                    }
                 >
                     {isDepositing
                         ? 'Depositing...'
-                        : isDepositable
-                          ? 'Deposit to Tyron Account'
-                          : 'No Funds Available'}
+                        : insufficientSatsError.hasError
+                          ? 'add funds'
+                          : isDepositable
+                            ? 'Confirm Deposit'
+                            : 'No Funds Available'}
                 </button>
             </div>
 
@@ -652,8 +707,34 @@ export function TransactionDetails({
                 </div>
             )}
 
+            {/* Fee Too High Error */}
+            {isFeeTooHigh && (
+                <div className={styles.feeTooHighError}>
+                    <div className={styles.errorHeader}>
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            xmlns="http://www.w3.org/2000/svg"
+                        >
+                            <path
+                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                                fill="#dc2626"
+                            />
+                        </svg>
+                        <span>Fee Too High</span>
+                    </div>
+                    <div className={styles.errorContent}>
+                        <p>
+                            Please try again later when network fees are lower.
+                        </p>
+                    </div>
+                </div>
+            )}
+
             {/* Insufficient Sats Guidance */}
-            {insufficientSatsError.hasError && (
+            {insufficientSatsError.hasError && !isFeeTooHigh && (
                 <div className={styles.insufficientSatsGuidance}>
                     <div className={styles.guidanceHeader}>
                         <svg
@@ -687,12 +768,14 @@ export function TransactionDetails({
                                     {insufficientSatsError.currentSats} sats
                                 </span>
                             </div>
-                            <div className={styles.satsItem}>
-                                <span>Current Rune Dust:</span>
-                                <span className={styles.satsValue}>
-                                    {insufficientSatsError.runesSats} sats
-                                </span>
-                            </div>
+                            {insufficientSatsError.runesSats > 0 && (
+                                <div className={styles.satsItem}>
+                                    <span>Current Rune Dust:</span>
+                                    <span className={styles.satsValue}>
+                                        {insufficientSatsError.runesSats} sats
+                                    </span>
+                                </div>
+                            )}
                             <div className={styles.satsItem}>
                                 <span>Missing:</span>
                                 <span
@@ -706,7 +789,7 @@ export function TransactionDetails({
                             </div>
                         </div>
                         <div className={styles.sdbAddressSection}>
-                            <p>Send BTC to your SDB address:</p>
+                            <p>Send BTC to your Safety Deposit Box address:</p>
                             <div className={styles.sdbAddressContainer}>
                                 <code className={styles.sdbAddress}>
                                     {sdbAddress || 'Loading...'}
@@ -751,13 +834,129 @@ export function TransactionDetails({
                                     </svg>
                                 </button>
                             </div>
+                            {/* <div className={styles.recommendedAmount}>
+                                <p>
+                                    <strong>Recommended amount:</strong>
+                                </p>
+                                <div className={styles.recommendedBreakdown}>
+                                    <div className={styles.recommendedItem}>
+                                        <span>Missing amount:</span>
+                                        <span className={styles.satsValue}>
+                                            {insufficientSatsError.requiredSats -
+                                                insufficientSatsError.currentSats -
+                                                insufficientSatsError.runesSats}{' '}
+                                            sats
+                                        </span>
+                                    </div>
+                                    <div className={styles.recommendedItem}>
+                                        <span>1.2x minimum:</span>
+                                        <span className={styles.satsValue}>
+                                            {Math.ceil(
+                                                (insufficientSatsError.requiredSats -
+                                                    insufficientSatsError.currentSats -
+                                                    insufficientSatsError.runesSats) *
+                                                    1.2
+                                            )}{' '}
+                                            sats
+                                        </span>
+                                    </div>
+                                    <div className={styles.recommendedItem}>
+                                        <span>Maximum (UTXO requirement):</span>
+                                        <span className={styles.satsValue}>
+                                            2999 sats
+                                        </span>
+                                    </div>
+                                    <div className={styles.recommendedItem}>
+                                        <span>
+                                            <strong>Recommended range:</strong>
+                                        </span>
+                                        <span
+                                            className={`${styles.satsValue} ${styles.recommendedTotal}`}
+                                        >
+                                            {Math.ceil(
+                                                (insufficientSatsError.requiredSats -
+                                                    insufficientSatsError.currentSats -
+                                                    insufficientSatsError.runesSats) *
+                                                    1.2
+                                            )}{' '}
+                                            - 2999 sats
+                                        </span>
+                                    </div>
+                                </div>
+                                <div className={styles.recommendedNote}>
+                                    <p>
+                                        <strong>Note:</strong> UTXOs with values
+                                        of 3000 sats and above can be taken as
+                                        collateral, You want this Bitcoin
+                                        deposit to cover transaction costs only.
+                                        If you make a deposit above 3000 sats,
+                                        do not DRAW SUSD, so you can use it for
+                                        gas first.
+                                    </p>
+                                </div>
+                            </div> */}
+
+                            <div className={styles.inputAmountContainer}>
+                                <div className={styles.inputAmountHeader}>
+                                    <span className={styles.inputAmountLabel}>
+                                        Enter Deposit Amount
+                                    </span>
+                                    <span
+                                        className={styles.inputAmountSubtitle}
+                                    >
+                                        Recommended: {recommendedMin} - 2999
+                                        sats
+                                    </span>
+                                </div>
+                                <div className={styles.inputAmountWrapper}>
+                                    <input
+                                        type="number"
+                                        className={styles.inputAmount}
+                                        placeholder="Enter amount in sats"
+                                        min={recommendedMin}
+                                        max="2999"
+                                        step="100"
+                                        value={inputAmount}
+                                        onChange={(e) =>
+                                            setInputAmount(e.target.value)
+                                        }
+                                    />
+                                    <span className={styles.inputAmountUnit}>
+                                        sats
+                                    </span>
+                                </div>
+                                <div className={styles.inputAmountValidation}>
+                                    {isFeeTooHigh ? (
+                                        <span
+                                            className={`${styles.validationMessage} ${styles.invalid}`}
+                                        >
+                                            ⚠ Network fees are currently too
+                                            high. Please try again later.
+                                        </span>
+                                    ) : inputAmount ? (
+                                        <span
+                                            className={`${styles.validationMessage} ${
+                                                isValidAmount
+                                                    ? styles.valid
+                                                    : styles.invalid
+                                            }`}
+                                        >
+                                            {isValidAmount
+                                                ? '✓ Valid amount'
+                                                : `⚠ Amount should be between ${recommendedMin} and 2999 sats`}
+                                        </span>
+                                    ) : null}
+                                </div>
+                            </div>
+
                             <div className={styles.depositButtonContainer}>
                                 <DepositBitcoin
                                     sdbAddress={sdbAddress}
-                                    btcAmount={
-                                        insufficientSatsError.requiredSats -
-                                        insufficientSatsError.currentSats -
-                                        insufficientSatsError.runesSats
+                                    btcAmount={Number(inputAmount)}
+                                    disabled={
+                                        !isValidAmount ||
+                                        !inputAmount ||
+                                        isFeeTooHigh
                                     }
                                     onSuccess={(txId) => {
                                         // Refresh the gas fee calculation after deposit

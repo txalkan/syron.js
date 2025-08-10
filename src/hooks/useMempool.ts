@@ -16,7 +16,7 @@ export function useMempoolHook() {
                 JSON.stringify(xr, null, 2)
             )
             const now = Math.floor(Date.now() / 1000)
-            console.log('now is', now)
+            // console.log('now is', now)
             if (xr.time && now - xr.time > 600) {
                 throw new Error(
                     'Mempool exchange rate data is older than 10 minutes'

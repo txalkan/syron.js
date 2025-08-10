@@ -348,7 +348,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
                 const result = await unisat.requestAccounts()
                 handleAccountsChanged(result)
 
-                toast.info('Your wallet is now connected')
+                toast.success('Your wallet is now connected')
 
                 // @reload page
                 // setTimeout(() => window.location.reload(), 2 * 1000)
