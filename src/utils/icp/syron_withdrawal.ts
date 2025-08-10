@@ -68,16 +68,24 @@ function useSyronWithdrawal() {
         ssi: string,
         sdb: string,
         amt: Big,
-        tx_id?: string
+        tx_id?: string,
+        fee_rate?: number,
+        network_fee?: number
     ) => {
         let txId: string
         if (tx_id) {
             txId = tx_id
-        } else {
-            const fee = await mempoolFeeRate()
-
+        } else if (fee_rate) {
             // @dev Inscribe-transfer transaction ID
-            txId = await inscribe_transfer(sdb, Number(amt), fee)
+            txId = await inscribe_transfer(
+                sdb,
+                Number(amt),
+                fee_rate,
+                undefined, // collateral - not needed for withdrawal
+                network_fee
+            )
+        } else {
+            throw new Error('Transaction ID or fee rate must be provided')
         }
 
         console.log('Inscribe-Transfer Transaction ID: ', txId)

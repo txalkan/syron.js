@@ -18,9 +18,11 @@ import { SyronInput } from '../../syron-102/input/syron-input'
 import Big from 'big.js'
 import { CryptoState } from '../../../src/types/vault'
 import ThreeDots from '../../Spinner/ThreeDots'
+import LoadingSpinner from '../../LoadingSpinner'
 import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
 import { $icpTx, $inscriptionTx, updateIcpTx } from '../../../src/store/syron'
 import { useStore } from 'react-stores'
+import { useBitcoinTransactionStore } from '../../../src/store/bitcoin_transactions'
 import Spinner from '../../Spinner'
 import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -28,6 +30,7 @@ import { extractRejectText } from '../../../src/utils/unisat/utils'
 import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
 import ConfirmTransactionModal from '../confirm-txn'
+import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -98,25 +101,156 @@ var ThisModal: React.FC<Prop> = function ({
     }, [balance, icpTx])
 
     const [isLoading, setIsLoading] = React.useState(false)
+    const [feeRate, setFeeRate] = React.useState<number>(0)
+    const [isLoadingFee, setIsLoadingFee] = React.useState(false)
+
+    // Fee multipliers for different transaction types
+    const BRC20_FEE_MULTIPLIER = 220 * 2
+    const RUNES_FEE_MULTIPLIER = 300 * 1.5
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
+    const [onDetails, setOnDetails] = useState({})
+    const [txError, setTxError] = React.useState('')
+    let inscriptionTx = useStore($inscriptionTx)
+
+    // Zustand store for transaction state persistence
+    const { runningTransactions, setTransactionRunning, clearTransaction } =
+        useBitcoinTransactionStore()
+    const transactionKey = `withdraw_${stablecoin?.toLowerCase() || 'unknown'}`
+    const isTransactionRunning = runningTransactions[transactionKey] || false
+
+    // Use Zustand state for transaction status when modal reopens
+    useEffect(() => {
+        if (isTransactionRunning && !isLoading) {
+            setIsLoading(true)
+        }
+    }, [isTransactionRunning])
+
+    // Cleanup transaction state when modal unmounts (but keep running transactions)
+    useEffect(() => {
+        return () => {
+            // Don't clear running transactions - let them persist
+            // Only clear if they're completed/failed
+        }
+    }, [])
 
     const { syron_withdrawal, runes_withdrawal } = useSyronWithdrawal()
     const { getBox } = useICPHook()
 
-    const [txError, setTxError] = React.useState('')
-    let inscriptionTx = useStore($inscriptionTx)
+    // Single function to calculate all fee information
+    const calculateFeeDetails = React.useCallback(
+        (
+            amount: Big,
+            currentFeeRate: number,
+            currentStablecoin: string | undefined
+        ) => {
+            if (currentFeeRate === 0) return null
+
+            let fee = '546 sats' // Default for BRC-20
+            let feeDescription = 'There will be a 546 sats withdrawal fee.'
+            let gas_fee = currentFeeRate * BRC20_FEE_MULTIPLIER + 330 // Default for BRC-20
+
+            if (currentStablecoin === 'RUNES') {
+                if (Number(amount) >= 2) {
+                    fee = '$0.5'
+                    feeDescription =
+                        'There will be a 0.5 SUSD withdrawal fee for amounts of 2 SUSD and above.'
+                } else {
+                    fee = '0'
+                    feeDescription =
+                        'No withdrawal fee for amounts under 2 SUSD.'
+                }
+                gas_fee = currentFeeRate * RUNES_FEE_MULTIPLIER + 330 // @vb for RUNES
+            }
+
+            return {
+                fee,
+                feeDescription,
+                gas_fee: `${gas_fee} sats`,
+            }
+        },
+        []
+    )
+
+    // Function to fetch fee rate and calculate network fee
+    const fetchFeeRate = React.useCallback(async () => {
+        try {
+            setIsLoadingFee(true)
+            const rate = await mempoolFeeRate()
+
+            setFeeRate(rate)
+        } catch (error) {
+            console.error('Error fetching fee rate:', error)
+            toast.error('Failed to fetch network fee rate. Please try again.')
+        } finally {
+            setIsLoadingFee(false)
+        }
+    }, [])
+
+    // Fetch fee rate when modal opens
+    useEffect(() => {
+        if (show) {
+            fetchFeeRate()
+        }
+    }, [show, fetchFeeRate])
+
+    // Update onDetails when fee rate changes and confirmation modal is open
+    useEffect(() => {
+        if (
+            isConfirmationOpen &&
+            feeRate > 0 &&
+            onDetails &&
+            typeof onDetails === 'object' &&
+            'amount' in onDetails
+        ) {
+            const feeDetails = calculateFeeDetails(amount, feeRate, stablecoin)
+            if (feeDetails) {
+                setOnDetails((prev) => ({
+                    ...prev,
+                    gas: feeDetails.gas_fee,
+                }))
+            }
+        }
+    }, [feeRate, isConfirmationOpen, amount, stablecoin, calculateFeeDetails])
 
     const handleConfirm = React.useCallback(async () => {
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
 
         try {
             setIsLoading(true)
+            setTransactionRunning(transactionKey, true)
 
             // @test
             // const inscriptionTx = {
             //     value: '68f079d9fd70a19ff43c5e057bceb348e8d0d9d13a53367887390ce4ab7c0c9c',
             // }
 
+            await fetchFeeRate()
+
             if (stablecoin === 'RUNES') {
+                const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+                // Choose minter id based on version
+                let minterId =
+                    process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET
+                if (version === '2') {
+                    minterId =
+                        process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET2
+                } else if (version === 'testnet') {
+                    minterId =
+                        process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_TESTNET
+                }
+                let receiveAddress = minterId!
+
+                const unisat = (window as any).unisat
+                const txId = await unisat.sendBitcoin(
+                    receiveAddress,
+                    feeRate * RUNES_FEE_MULTIPLIER + 330,
+                    feeRate
+                )
+
+                toast.success(
+                    `Transaction submitted successfully! Transaction ID: ${txId.slice(0, 8)}...${txId.slice(-8)}`
+                )
+
                 await runes_withdrawal(ssi, amount)
             } else {
                 await syron_withdrawal(
@@ -125,10 +259,17 @@ var ThisModal: React.FC<Prop> = function ({
                     amount,
                     typeof inscriptionTx.value === 'string'
                         ? inscriptionTx.value
-                        : undefined
+                        : undefined,
+                    feeRate,
+                    feeRate * BRC20_FEE_MULTIPLIER
                 )
             }
             await getBox(ssi)
+
+            // Transaction successful - clear loading state and show success
+            setIsLoading(false)
+            clearTransaction(transactionKey)
+            toast.success('Withdrawal transaction submitted successfully!')
         } catch (error) {
             console.error('Syron Withdrawal', error)
             setTxError(extractRejectText(String(error)))
@@ -184,11 +325,23 @@ var ThisModal: React.FC<Prop> = function ({
                     </div>
                 )
             }
-        } finally {
-            setIsConfirmationOpen(false)
             setIsLoading(false)
+            clearTransaction(transactionKey)
         }
-    }, [ssi, sdb, amount, inscriptionTx, isLoading, isDisabled])
+    }, [
+        ssi,
+        sdb,
+        amount,
+        inscriptionTx,
+        isLoading,
+        isDisabled,
+        stablecoin,
+        feeRate,
+        fetchFeeRate,
+        getBox,
+        runes_withdrawal,
+        syron_withdrawal,
+    ])
 
     const retryWithdrawal = React.useCallback(async () => {
         if (isLoading) return
@@ -207,7 +360,14 @@ var ThisModal: React.FC<Prop> = function ({
                         'The inscribe-transfer transaction is missing.'
                     )
                 }
-                await syron_withdrawal(ssi, sdb, amount, inscriptionTx.value)
+                await syron_withdrawal(
+                    ssi,
+                    sdb,
+                    amount,
+                    inscriptionTx.value,
+                    feeRate,
+                    feeRate * BRC20_FEE_MULTIPLIER
+                )
             }
 
             await getBox(ssi)
@@ -256,7 +416,7 @@ var ThisModal: React.FC<Prop> = function ({
                                     textDecoration: 'underline',
                                 }}
                             >
-                                @TyronDAO
+                                @tyronDAO
                             </a>
                             .
                         </div>
@@ -269,7 +429,18 @@ var ThisModal: React.FC<Prop> = function ({
         } finally {
             setIsLoading(false)
         }
-    }, [ssi, sdb, amount, isLoading, inscriptionTx])
+    }, [
+        ssi,
+        sdb,
+        amount,
+        isLoading,
+        inscriptionTx,
+        feeRate,
+        stablecoin,
+        getBox,
+        runes_withdrawal,
+        syron_withdrawal,
+    ])
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text)
@@ -278,46 +449,42 @@ var ThisModal: React.FC<Prop> = function ({
         )
     }
 
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
-    const [onDetails, setOnDetails] = useState({})
-    const handleContinue = React.useCallback(() => {
+    const handleContinue = React.useCallback(async () => {
+        if (isLoading) return
         try {
             if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
-                throw new Error('Withdrawing SYRON is currently paused.')
+                throw new Error('Withdrawing SUSD is currently paused.')
             }
             if (amount.lt(0.2)) {
                 throw new Error('Insufficient Amount')
             }
 
-            // Calculate fee based on token type and amount
-            let fee = 0.1 // Default fee for BRC-20
-            let feeDescription = ''
+            // Refresh fee information before opening confirmation modal
+            await fetchFeeRate()
 
-            if (stablecoin === 'RUNES') {
-                if (Number(amount) >= 2) {
-                    fee = 0.5
-                    feeDescription =
-                        'There will be a 0.5 SUSD withdrawal fee for amounts of 2 SUSD and above.'
-                } else {
-                    fee = 0
-                    feeDescription =
-                        'No withdrawal fee for amounts under 2 SUSD.'
-                }
+            if (feeRate === 0) {
+                throw new Error(
+                    'The Bitcoin network is experiencing some congestion. During our testing campaign, the maximum allowed gas fee is 4 sats/vB (satoshis per virtual byte). Please try again later when network conditions improve and fees are lower.'
+                )
+            }
+
+            // Use the single fee calculation function
+            const feeDetails = calculateFeeDetails(amount, feeRate, stablecoin)
+            if (!feeDetails) {
+                throw new Error('Unable to calculate fee information')
             }
 
             const details = {
                 title: 'Confirm Transaction',
+                stablecoin: stablecoin,
                 info:
                     stablecoin === 'BRC-20'
-                        ? `You are about to withdraw Syron SUSD from your Tyron account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will send an inscribe-transfer UTXO to the Syron minter address along with a gas fee to cover the Bitcoin transaction cost.`
-                        : `You are about to withdraw Syron SUSD from your Tyron account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will send a request to withdraw RUNE•DOLLAR tokens to your wallet.`,
+                        ? `You are about to withdraw SUSD from your account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will mint a SYRON BRC-20 transfer inscription and send it to the Syron minter along with a fee to cover the Bitcoin gas.`
+                        : `You are about to withdraw SUSD from your account balance. To receive these funds in your self-custodial Bitcoin wallet, by clicking on 'CONFIRM', you will send a request to withdraw RUNE•DOLLAR tokens to your wallet.`,
                 amount: `$${amount}`,
-                fee: `$${fee}`,
-                feeDescription: feeDescription,
-                total: `$${(Number(amount) - fee).toFixed(2)}`,
-                result: `You will receive $${(Number(amount) - fee).toFixed(
-                    2
-                )} ${stablecoin === 'BRC-20' ? 'SYRON BRC-20 tokens' : 'RUNE•DOLLAR tokens'} in your wallet.`,
+                fee: feeDetails.fee,
+                feeDescription: feeDetails.feeDescription,
+                gas: feeDetails.gas_fee,
             }
             setOnDetails(details)
 
@@ -345,12 +512,37 @@ var ThisModal: React.FC<Prop> = function ({
                         .
                     </div>
                 )
+            } else {
+                toast.error(
+                    <div className={styles.error}>
+                        <div>
+                            You can let us know about this error on Telegram{' '}
+                            <a
+                                href="https://t.me/tyrondao"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                    color: '#0000ff',
+                                    textDecoration: 'underline',
+                                }}
+                            >
+                                @tyronDAO
+                            </a>
+                        </div>
+                        <div style={{ color: 'red', paddingTop: '1rem' }}>
+                            {extractRejectText(String(error))}
+                        </div>
+                    </div>,
+                    { autoClose: false, closeOnClick: true, toastId: 500 }
+                )
             }
         }
-    }, [amount])
+    }, [amount, feeRate, stablecoin, fetchFeeRate, calculateFeeDetails])
+
     const handleCloseConfirmation = () => {
+        // Always close the confirmation modal
         setIsConfirmationOpen(false)
-        setIsLoading(false)
+        // Don't reset isLoading - let the transaction continue in the background
     }
     return (
         <Modal show={show} onClose={onClose}>
@@ -363,7 +555,20 @@ var ThisModal: React.FC<Prop> = function ({
                                 ? 'SYRON BRC-20'
                                 : 'RUNE•DOLLAR'}
                         </div>
-                        <div onClick={onClose} className={styles.closeIcon}>
+                        <div
+                            onClick={
+                                isLoading || isTransactionRunning
+                                    ? undefined
+                                    : onClose
+                            }
+                            className={`${styles.closeIcon} ${isLoading || isTransactionRunning ? styles.disabled : ''}`}
+                            style={{
+                                cursor:
+                                    isLoading || isTransactionRunning
+                                        ? 'not-allowed'
+                                        : 'pointer',
+                            }}
+                        >
                             <Image
                                 alt="ico-close"
                                 src={Close}
@@ -372,6 +577,24 @@ var ThisModal: React.FC<Prop> = function ({
                             />
                         </div>
                     </div>
+
+                    {/* Transaction Status Indicator */}
+                    {(isLoading || isTransactionRunning) && (
+                        <div className={styles.transactionStatus}>
+                            <div className={styles.statusIcon}>
+                                <LoadingSpinner size="sm" />
+                            </div>
+                            <div className={styles.statusContent}>
+                                <div className={styles.statusTitle}>
+                                    Transaction in Progress
+                                </div>
+                                <div className={styles.statusText}>
+                                    Your withdrawal is being processed. Please
+                                    wait for completion.
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     <div className={styles.contentWrapper}>
                         <div className={styles.rowWrapper}>
@@ -758,7 +981,6 @@ var ThisModal: React.FC<Prop> = function ({
                         onInput={handleOnInput}
                         disabled={isDisabled}
                     />
-
                     <div className={styles.btnConfirmWrapper}>
                         <button
                             // className={
@@ -785,6 +1007,8 @@ var ThisModal: React.FC<Prop> = function ({
                         onDetails={onDetails}
                         onConfirm={handleConfirm}
                         isLoading={isLoading}
+                        onReloadFees={fetchFeeRate}
+                        isReloadingFees={isLoadingFee}
                     />
 
                     {icpTx.value === false ? (

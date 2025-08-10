@@ -3,9 +3,10 @@ import { transaction_status } from './httpUtils'
 
 export const inscribe_transfer = async (
     sdb: string,
-    amt: number,
-    fee: number,
-    collateral?: number
+    brc20_amt: number,
+    fee_rate: number,
+    collateral?: number,
+    network_fee?: number
 ): Promise<string> => {
     if (sdb === '') {
         throw new Error('SDB Loading Error')
@@ -19,9 +20,9 @@ export const inscribe_transfer = async (
     // Choose minter id based on version
     let minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET
     if (version === '2') {
-        minterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_2
+        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2
     } else if (version === 'testnet') {
-        minterId = process.env.NEXT_PUBLIC_CANISTER_ID_SYRON_TESTNET
+        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_TESTNET
     }
     let receiveAddress = minterId!
     if (!receiveAddress) throw new Error('The receiver address is not defined')
@@ -29,16 +30,29 @@ export const inscribe_transfer = async (
     let devAddress
     let devFee
     if (!collateral) {
-        devAddress = receiveAddress // the Syron Minter
-        devFee = 200 * fee // @vb the gas fee to withdraw SYRON (virtual size of 1000 vB times the fee rate)
+        // Choose treasury addr based on version
+        let treasury_addr = process.env.NEXT_PUBLIC_SYRON_TREASURY_MAINNET
+        if (version === '2') {
+            treasury_addr = process.env.NEXT_PUBLIC_SYRON_TREASURY_MAINNET2
+        } else if (version === 'testnet') {
+            treasury_addr = process.env.NEXT_PUBLIC_SYRON_TREASURY_TESTNET
+        }
+        devAddress = treasury_addr
+        devFee = 546 // @governance brc-20 withdrawal fee
     } else {
         devAddress = sdb // deposit the collateral into the SDB
         devFee = collateral
     }
 
+    let outputValue = 330
+
+    if (network_fee) {
+        outputValue += network_fee
+    }
+
     // @dev Inscribe-transfer order
     const order: InscribeOrderData = await fetch(
-        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${fee}&devAddress=${devAddress}&devFee=${devFee}&brc20Ticker=${ticker}&brc20Amount=${amt}`
+        `/api/post-unisat-brc20-transfer?receiveAddress=${receiveAddress}&feeRate=${fee_rate}&devAddress=${devAddress}&devFee=${devFee}&brc20Ticker=${ticker}&brc20Amount=${brc20_amt}&outputValue=${outputValue}`
     )
         .then((response) => {
             if (!response.ok) {

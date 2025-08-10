@@ -21,8 +21,7 @@ const SyronInfoCard = () => {
                 </li>
                 <li>
                     <strong>Loan-to-Value</strong> You can borrow Syron
-                    stablecoins up to 66,6% of your total deposited Bitcoin
-                    value
+                    stablecoins up to 66,6% of your Bitcoin collateral value
                 </li>
                 <li>
                     <strong>Multi-Token Support</strong> Withdrawals are

@@ -2,6 +2,7 @@ import React from 'react'
 import { Modal, Button, Typography } from 'antd'
 import styles from './index.module.scss'
 import ThreeDots from '../../Spinner/ThreeDots'
+import LoadingSpinner from '../../LoadingSpinner'
 import bitcoinIcon from '../../../src/assets/icons/bitcoin.png'
 import { toast } from 'react-toastify'
 
@@ -13,7 +14,14 @@ const ConfirmTransactionModal = ({
     onDetails,
     onConfirm,
     isLoading,
+    onReloadFees,
+    isReloadingFees,
 }) => {
+    // Safety check to ensure onDetails exists
+    if (!onDetails || typeof onDetails !== 'object') {
+        return null
+    }
+
     // Helper function to extract numeric values from currency strings
     const extractNumber = (str) => {
         if (!str) return 0
@@ -26,11 +34,28 @@ const ConfirmTransactionModal = ({
         if (!onDetails.amount) return '0.00'
 
         const amount = extractNumber(onDetails.amount)
-        const gasFee = extractNumber(onDetails.gas)
-        const daoFee = extractNumber(onDetails.fee)
+        const gasFee =
+            onDetails.gas && onDetails.gas.includes('sats')
+                ? 0
+                : onDetails.gas
+                  ? extractNumber(onDetails.gas)
+                  : 0
+
+        // if the fee includes a $ sign, treat as number without the $ sign
+        // otherwise, if includes "sats" consider 0
+
+        const daoFee =
+            onDetails.fee && onDetails.fee.includes('$')
+                ? extractNumber(onDetails.fee.replace('$', ''))
+                : onDetails.fee && onDetails.fee.includes('sats')
+                  ? 0
+                  : onDetails.fee
+                    ? extractNumber(onDetails.fee)
+                    : 0
+
         const total = Math.max(0, amount - gasFee - daoFee)
 
-        return `$${total.toFixed(2)}`
+        return `${total.toFixed(2)}`
     }
 
     return (
@@ -58,13 +83,33 @@ const ConfirmTransactionModal = ({
                 )}
 
                 <div className={styles.summarySection}>
-                    <div className={styles.summaryTitle}>
-                        Transaction Summary
+                    <div className={styles.summaryHeader}>
+                        <div className={styles.summaryTitle}>
+                            Transaction Summary
+                        </div>
+                        <button
+                            className={styles.reloadButton}
+                            onClick={onReloadFees}
+                            disabled={isReloadingFees}
+                            title="Reload fee information"
+                        >
+                            {isReloadingFees ? (
+                                <LoadingSpinner size="sm" />
+                            ) : (
+                                <span>↻</span>
+                            )}
+                        </button>
                     </div>
 
                     {onDetails.amount && (
                         <div className={styles.summaryRow}>
-                            <span className={styles.label}>SUSD Amount</span>
+                            <span className={styles.label}>
+                                {onDetails.stablecoin === 'BRC-20'
+                                    ? 'SYRON BRC-20 Amount'
+                                    : onDetails.stablecoin === 'RUNES'
+                                      ? 'RUNE•DOLLAR Amount'
+                                      : 'SUSD Amount'}
+                            </span>
                             <span className={styles.value}>
                                 {onDetails.amount}
                             </span>
@@ -87,15 +132,6 @@ const ConfirmTransactionModal = ({
                         </div>
                     )}
 
-                    {onDetails.gas && (
-                        <div className={styles.summaryRow}>
-                            <span className={styles.label}>Miner Fee ≈</span>
-                            <span className={styles.value}>
-                                {onDetails.gas}
-                            </span>
-                        </div>
-                    )}
-
                     {onDetails.fee && (
                         <div className={styles.summaryRow}>
                             <span className={styles.label}>DAO Fee</span>
@@ -112,6 +148,15 @@ const ConfirmTransactionModal = ({
                             </span>
                         </div>
                     )}
+
+                    {onDetails.gas && (
+                        <div className={styles.summaryRow}>
+                            <span className={styles.label}>Network Fee ≈</span>
+                            <span className={styles.value}>
+                                {onDetails.gas}
+                            </span>
+                        </div>
+                    )}
                 </div>
 
                 {/* Big Total Amount Display */}
@@ -122,10 +167,16 @@ const ConfirmTransactionModal = ({
                             Total Amount to Receive
                         </div>
                         <div className={styles.bigTotalAmount}>
-                            {calculateTotalAmount()}
-                        </div>
-                        <div className={styles.bigTotalSubtext}>
-                            SUSD amount minus fees
+                            <div className={styles.amountValue}>
+                                {calculateTotalAmount()}
+                            </div>
+                            <div className={styles.tokenName}>
+                                {onDetails.stablecoin === 'BRC-20'
+                                    ? 'SYRON BRC-20'
+                                    : onDetails.stablecoin === 'RUNES'
+                                      ? 'RUNE•DOLLAR'
+                                      : 'SUSD'}
+                            </div>
                         </div>
                     </div>
                 )}
@@ -172,8 +223,12 @@ const ConfirmTransactionModal = ({
                     <Button
                         type="primary"
                         onClick={
+                            onDetails.title &&
                             onDetails.title != 'Confirm BTC Purchase'
-                                ? onConfirm
+                                ? () => {
+                                      onConfirm()
+                                      onClose()
+                                  }
                                 : () => {
                                       onClose()
                                       toast.info('Coming soon')

@@ -246,7 +246,7 @@ var ThisModal: React.FC<Prop> = function ({
             const fee = await mempoolFeeRate()
             if (fee === 0)
                 throw new Error(
-                    'The Bitcoin network is experiencing some congestion. During our testing campaign, the maximum allowed gas fee is 3 sats/vB (satoshis per virtual byte). Please try again later when network conditions improve and fees are lower.'
+                    'The Bitcoin network is experiencing some congestion. During our testing campaign, the maximum allowed gas fee is 4 sats/vB (satoshis per virtual byte). Please try again later when network conditions improve and fees are lower.'
                 )
 
             const dao_fee = 0.00000546
