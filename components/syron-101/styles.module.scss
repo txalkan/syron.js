@@ -436,6 +436,148 @@
     min-height: 1.5rem;
 }
 
+.collateralIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-left: 0.5rem;
+}
+
+.greenCheckmark {
+    color: #10b981;
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-shadow: 0 0 6px rgba(16, 185, 129, 0.4);
+}
+
+.yellowWarning {
+    color: #f59e0b;
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-shadow: 0 0 6px rgba(245, 158, 11, 0.4);
+}
+
+.redAlert {
+    color: #ef4444;
+    font-weight: bold;
+    font-size: 1.8rem;
+    text-shadow: 0 0 6px rgba(239, 68, 68, 0.4);
+}
+
+/* Collateral Ratio Progress Bar */
+.collateralProgressBar {
+    margin-top: 1rem;
+    width: 100%;
+}
+
+.progressBarContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.progressBar {
+    position: relative;
+    width: 100%;
+    height: 12px;
+    background: linear-gradient(
+        90deg,
+        #ef4444 0%,
+        #ef4444 12.5%,
+        #f59e0b 12.5%,
+        #f59e0b 37.5%,
+        #10b981 37.5%,
+        #10b981 100%
+    );
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progressFill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    border-radius: 6px;
+    transition: width 0.3s ease;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.progressMarker {
+    position: absolute;
+    top: -4px;
+    width: 8px;
+    height: 20px;
+    background: #1f2937;
+    border-radius: 4px;
+    transform: translateX(-50%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+}
+
+.progressLabels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.progressLabel {
+    position: relative;
+    transform: translateX(-50%);
+}
+
+.progressLabel:first-child {
+    transform: translateX(0);
+}
+
+.progressLabel:last-child {
+    transform: translateX(-100%);
+}
+
+.progressZones {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.zone {
+    flex: 1;
+    text-align: center;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.65rem;
+}
+
+.redZone {
+    background: rgba(239, 68, 68, 0.1);
+    color: #dc2626;
+}
+
+.yellowZone {
+    background: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.greenZone {
+    background: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.zonePrice {
+    font-size: 0.6rem;
+    font-weight: 500;
+    margin-top: 0.25rem;
+    opacity: 0.8;
+}
+
 .iconGoldContainer {
     display: flex;
     align-items: center;

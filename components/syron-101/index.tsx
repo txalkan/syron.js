@@ -25,11 +25,7 @@ import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
 import { extractRejectText } from '../../src/utils/unisat/utils'
-import {
-    mempoolFeeRate,
-    transaction_status,
-    unisatBalance,
-} from '../../src/utils/unisat/httpUtils'
+import { unisatBalance } from '../../src/utils/unisat/httpUtils'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal, SendModal, BuyModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
@@ -41,11 +37,14 @@ import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { DelegationIdentity } from '@dfinity/identity'
 import SyronInfoCard from './SyronInfoCard'
 import { DepositRunes } from '../DepositRunes'
+import { useMempoolHook } from '../../src/hooks/useMempool'
+import CollateralRatioProgressBar from './CollateralRatioProgressBar'
 
 Big.PE = 999
 const _0 = Big(0)
 
 function Component() {
+    const { getXR } = useMempoolHook()
     const walletConnected = useStore($walletConnected).isConnected
     const syron = useStore($syron)
     const siwb = useStore($siwb).value
@@ -56,6 +55,7 @@ function Component() {
     const [sdb, setSDB] = useState('')
     const [satsDeposited, setSatsDeposited] = useState(_0)
     const [satsCollateral, setSatsCollateral] = useState('')
+    const [collateralRatio, setCollateralRatio] = useState('')
     const [loan, setLoan] = useState('')
     const [syronBal, setSyronBal] = useState('')
     const [isIdentified, setIsIdentified] = useState(false)
@@ -156,8 +156,23 @@ function Component() {
 
             const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
             setSyronBal(bal_)
+
+            // Fetch BTC price and calculate collateral ratio
+            getXR()
+                .then((btcPrice) => {
+                    const collateral_ratio = syron.syron_btc
+                        .mul(btcPrice)
+                        .div(syron.syron_usd_loan)
+                        .mul(100)
+                        .round(1, 1)
+                        .toString()
+                    setCollateralRatio(collateral_ratio)
+                })
+                .catch((error) => {
+                    console.error('Error fetching BTC price:', error)
+                })
         }
-    }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal])
+    }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal, getXR])
 
     // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {
@@ -880,19 +895,20 @@ function Component() {
                                     <div className={styles.boxWrapperInner}>
                                         <div className={styles.txtRowsInfo}>
                                             To add collateral, send Bitcoin to
-                                            your Safety Deposit ₿ox address. The
-                                            minimum deposit amount is 3,000 sats
-                                            (0.00003 BTC).
+                                            your Safety Deposit ₿ox address.
+                                            <br />
+                                            Minimum deposit: 3,000 sats (0.00003
+                                            BTC).
                                             <br />
                                             <br />
-                                            <strong>Good to know:</strong> Tyron
-                                            calculates your collateral balance
-                                            using only UTXOs ≥ 3,000 sats.
-                                            Smaller UTXOs don't count toward
-                                            collateral but are reserved for gas,
-                                            DAO fees, and Syron token deposits
-                                            (BRC-20 inscriptions and Runes
-                                            deposits).
+                                            <span>
+                                                <strong>Quick tip:</strong> Only
+                                                UTXOs ≥ 3,000 sats count as
+                                                collateral.
+                                                <br />
+                                                Smaller amounts are reserved for
+                                                fees.
+                                            </span>
                                         </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
@@ -988,6 +1004,85 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
+                                        <div className={styles.subsection}>
+                                            <div className={styles.info}>
+                                                | Collateralization
+                                            </div>
+                                            <div className={styles.value}>
+                                                <span className={styles.color}>
+                                                    {collateralRatio}%
+                                                </span>
+
+                                                {/* Collateral ratio indicator */}
+                                                {collateralRatio && (
+                                                    <div
+                                                        className={
+                                                            styles.collateralIndicator
+                                                        }
+                                                    >
+                                                        {parseFloat(
+                                                            collateralRatio
+                                                        ) > 150 ? (
+                                                            <span
+                                                                className={
+                                                                    styles.greenCheckmark
+                                                                }
+                                                                title="Excellent collateral ratio"
+                                                            >
+                                                                ✓
+                                                            </span>
+                                                        ) : parseFloat(
+                                                              collateralRatio
+                                                          ) >= 130 ? (
+                                                            <span
+                                                                className={
+                                                                    styles.yellowWarning
+                                                                }
+                                                                title="Moderate collateral ratio"
+                                                            >
+                                                                ⚠
+                                                            </span>
+                                                        ) : (
+                                                            <span
+                                                                className={
+                                                                    styles.redAlert
+                                                                }
+                                                                title="Low collateral ratio - consider adding more collateral"
+                                                            >
+                                                                ⚠
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                        {/* Collateral ratio progress bar */}
+                                        {collateralRatio && (
+                                            <div
+                                                className={
+                                                    styles.collateralProgressBar
+                                                }
+                                            >
+                                                <div
+                                                    className={
+                                                        styles.progressBarContainer
+                                                    }
+                                                >
+                                                    <CollateralRatioProgressBar
+                                                        collateralRatio={
+                                                            collateralRatio
+                                                        }
+                                                        syron={syron}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                        <br />
+                                        <div className={styles.txtRow}>
+                                            Borrow stablecoins against your
+                                            Bitcoin deposits, adding SUSD to
+                                            your account balance.
+                                        </div>
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
@@ -1013,13 +1108,8 @@ function Component() {
                                                         <>+</>
                                                     )}
                                                 </button>
-                                                <div>draw susd</div>
+                                                <div>borrow susd</div>
                                             </div>
-                                        </div>
-                                        <div className={styles.txtRow}>
-                                            This action borrows Syron SUSD
-                                            against your Bitcoin deposits,
-                                            adding SUSD to your account balance.
                                         </div>
                                     </div>
 
