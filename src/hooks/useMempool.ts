@@ -32,8 +32,9 @@ export function useMempoolHook() {
             if (syron?.exchange_rate) {
                 return Number(syron?.exchange_rate)
             } else {
+                // @dev get exchange rate from ICP using a default SSI address
                 const res = await fetch(
-                    `/api/get-sdb?id=${'bc1p2em8l7wx3w6gn0w3wswz5scsagfzg6zhlpwuaqszwts29285mnjq4ca8n7'}`
+                    `/api/get-sdb-addr?id=${'bc1p2em8l7wx3w6gn0w3wswz5scsagfzg6zhlpwuaqszwts29285mnjq4ca8n7'}`
                 )
                 const sdb = await res.json()
                 return Number(sdb.data.exchange_rate)

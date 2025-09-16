@@ -24,7 +24,7 @@ function useICPHook() {
     const getBox = async (ssi: string) => {
         try {
             console.log('Fetch Box details...')
-            await fetch(`/api/get-sdb?id=${ssi}`)
+            await fetch(`/api/get-sdb-addr?id=${ssi}`)
                 .then(async (response) => {
                     const sdb = await response.json()
                     console.log(
