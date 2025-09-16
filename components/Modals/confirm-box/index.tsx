@@ -1,3 +1,5 @@
+// @deprecated file - to be removed soon
+
 import styles from './index.module.scss'
 import _Big from 'big.js'
 import { useStore } from 'react-stores'
@@ -20,7 +22,6 @@ import { SSIVault, VaultDirection } from '../../../src/mixins/vault'
 import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
 import { $xr } from '../../../src/store/xr'
 import {
-    $btc_wallet,
     $syron,
     $walletConnected,
     updateWalletConnected,
@@ -48,8 +49,7 @@ import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
 import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'
 import { useTranslation } from 'next-i18next'
-
-// @deprecated file - to be removed soon
+import { useWalletInfoStore } from '../../../src/store/wallet_info'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -81,7 +81,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
-    const btc_wallet = useStore($btc_wallet)
+    const { wallet } = useWalletInfoStore()
     const walletConnected = useStore($walletConnected).isConnected
 
     const { updateWallet } = useBTCWalletHook()
@@ -288,7 +288,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 JSON.stringify(add_data, null, 2)
             )
 
-            await getSUSD(btc_wallet?.btc_addr!, tx_id)
+            await getSUSD(wallet.address!, tx_id)
 
             // @dev Update inscription info in the Tyron indexer
             const update = await fetch(
@@ -363,14 +363,14 @@ export var ConfirmBox: React.FC<Prop> = function ({
                 throw new Error('Minting is paused')
             }
 
-            if (!btc_wallet?.btc_addr) {
+            if (!wallet.address) {
                 throw new Error(
                     'Please wait for the wallet to connect (ensure it has a balance).'
                 )
             }
 
-            if (btc_wallet?.network != 'BITCOIN_MAINNET') {
-                console.log('Network:', btc_wallet?.network)
+            if (wallet.network != 'BITCOIN_MAINNET') {
+                console.log('Network:', wallet.network)
                 throw new Error('Use Bitcoin Mainnet')
             }
 
@@ -623,7 +623,7 @@ export var ConfirmBox: React.FC<Prop> = function ({
                                         { autoClose: false }
                                     )
                                     window.open(
-                                        `https://unisat.io/brc20?q=${btc_wallet?.btc_addr}&tick=SYRON`
+                                        `https://unisat.io/brc20?q=${wallet.address}&tick=SYRON`
                                     )
                                 }
                             )

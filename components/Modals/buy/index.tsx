@@ -15,15 +15,12 @@ import { toast } from 'react-toastify'
 import { extractRejectText } from '../../../src/utils/unisat/utils'
 import { useStore } from 'react-stores'
 import { $xr } from '../../../src/store/xr'
+import { useWalletInfoStore } from '../../../src/store/wallet_info'
 import { TransactionOutput } from '../../syron-102/txn-output'
 import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
 import ConfirmTransactionModal from '../confirm-txn'
 import { getMempoolUrl } from '../../../src/config/wallet'
-import {
-    $btc_wallet,
-    $syron,
-    updateSusdBalance,
-} from '../../../src/store/syron'
+import { $syron, updateSusdBalance } from '../../../src/store/syron'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -225,7 +222,7 @@ var ThisModal: React.FC<Prop> = function ({
 
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
     const [onDetails, setOnDetails] = useState({})
-    const btc_wallet = useStore($btc_wallet)
+    const { wallet } = useWalletInfoStore()
 
     const handleContinue = React.useCallback(async () => {
         if (isDisabled) return
@@ -261,7 +258,7 @@ var ThisModal: React.FC<Prop> = function ({
                 gas: `-${gas_fee.toFixed(8)} BTC`,
                 fee: `-${dao_fee.toFixed(8)} BTC`,
                 total_min: `${total_min.toFixed(8)} BTC`,
-                receiver: btc_wallet?.btc_addr,
+                receiver: wallet.address,
             }
             setOnDetails(details)
 
@@ -491,12 +488,12 @@ var ThisModal: React.FC<Prop> = function ({
                                         onClick={() => {
                                             //@network defaults to mainnet
                                             const url = getMempoolUrl(
-                                                `/address/${btc_wallet?.btc_addr}`
+                                                `/address/${wallet.address}`
                                             )
                                             window.open(url)
                                         }}
                                     >
-                                        {btc_wallet?.btc_addr}
+                                        {wallet.address}
                                     </div>
                                 </div>
                             )}

@@ -1,12 +1,13 @@
 import React from 'react'
 import styles from './styles.module.scss'
+import Big from 'big.js'
 
 interface WalletDropdownProps {
     isOpen: boolean
     wallet: {
         type: 'unisat' | 'okx' | null
         address: string | null
-        balance: number | null
+        balance: Big | null
     }
     isDisconnecting: boolean
     onDisconnect: () => Promise<void>
@@ -57,7 +58,7 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({
                 <div className={styles.section}>
                     <div className={styles.sectionLabel}>Balance</div>
                     <div className={styles.balanceValue}>
-                        {(Number(wallet.balance || 0) / 1e8).toFixed(8)} BTC
+                        {wallet.balance.div(1e8).toFixed(8)} BTC
                     </div>
                 </div>
             )}

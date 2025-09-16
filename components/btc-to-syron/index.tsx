@@ -6,7 +6,6 @@ import React, { useEffect, useRef, useState } from 'react'
 import ThreeDots from '../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import {
-    $btc_wallet,
     $icpTx,
     $inscriptionTx,
     $syron,
@@ -25,6 +24,7 @@ import useSyronWithdrawal from '../../src/utils/icp/syron_withdrawal'
 import Spinner from '../Spinner'
 import { VaultPair } from '../../src/types/vault'
 import { BitcoinNetworkType } from '../../src/config/wallet'
+import { useWalletInfoStore } from '../../src/store/wallet_info'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -39,8 +39,8 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
     const { t } = useTranslation()
     const dispatch = useDispatch()
 
-    const btcWallet = useStore($btc_wallet)
-    const btcAddr = btcWallet?.btc_addr
+    const { wallet } = useWalletInfoStore()
+    const btcAddr = wallet.address
 
     const [userSSI, setSSI] = useState('')
     useEffect(() => {
@@ -152,13 +152,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
             // @network move to updateWallet
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION
             if (version === '2') {
-                if (btcWallet?.network != 'BITCOIN_MAINNET') {
-                    console.log('Network:', btcWallet?.network)
+                if (wallet.network != 'BITCOIN_MAINNET') {
+                    console.log('Network:', wallet.network)
                     throw new Error('Use Bitcoin Mainnet')
                 }
             } else if (version === 'testnet') {
-                if (btcWallet?.network != 'BITCOIN_TESTNET4') {
-                    console.log('Network:', btcWallet?.network)
+                if (wallet.network != 'BITCOIN_TESTNET4') {
+                    console.log('Network:', wallet.network)
                     throw new Error('Use Bitcoin Testnet4')
                 }
             }

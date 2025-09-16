@@ -1,12 +1,13 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import Big from 'big.js'
 
 interface WalletInfo {
     type: 'unisat' | 'okx' | null
     address: string | null
     network: string | null // e.g., 'mainnet', 'testnet'
     sdbAddress: string | null // Safety Deposit Box address
-    balance: number | null
+    balance: Big | null
 }
 
 interface WalletInfoState {
@@ -16,9 +17,9 @@ interface WalletInfoState {
     setWalletAddress: (address: string) => void
     setWalletNetwork: (network: string) => void
     setSdbAddress: (sdbAddress: string) => void
-    setWalletBalance: (balance: number) => void
+    setWalletBalance: (balance: Big) => void
     clearWallet: () => void
-    updateWallet: (updates: Partial<WalletInfo>) => void
+    updateWalletInfo: (updates: Partial<WalletInfo>) => void
 }
 
 const initialWalletState: WalletInfo = {
@@ -71,7 +72,7 @@ export const useWalletInfoStore = create<WalletInfoState>()(
                     },
                 })),
 
-            setWalletBalance: (balance: number) =>
+            setWalletBalance: (balance: Big) =>
                 set((state) => ({
                     wallet: {
                         ...state.wallet,
@@ -79,7 +80,7 @@ export const useWalletInfoStore = create<WalletInfoState>()(
                     },
                 })),
 
-            updateWallet: (updates: Partial<WalletInfo>) =>
+            updateWalletInfo: (updates: Partial<WalletInfo>) =>
                 set((state) => ({
                     wallet: {
                         ...state.wallet,

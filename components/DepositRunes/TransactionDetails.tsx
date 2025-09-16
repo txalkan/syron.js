@@ -8,7 +8,8 @@ import {
     TableHeaderCell,
 } from '../Table'
 import { useStore } from 'react-stores'
-import { $btc_wallet, $syron } from '../../src/store/syron'
+import { $syron } from '../../src/store/syron'
+import { useWalletInfoStore } from '../../src/store/wallet_info'
 import styles from './TransactionDetails.module.scss'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
@@ -45,8 +46,7 @@ export function TransactionDetails({
     const isDepositable = availableForDeposit > 0
 
     // Get wallet address from store
-    const btcWallet = useStore($btc_wallet)
-    const walletAddress = btcWallet?.btc_addr
+    const { wallet } = useWalletInfoStore()
 
     // Get syron store
     const syron = useStore($syron)
@@ -188,8 +188,8 @@ export function TransactionDetails({
 
     // Handle deposit to Tyron account
     const handleDeposit = React.useCallback(async () => {
-        if (!walletAddress || !isDepositable) {
-            if (!walletAddress) {
+        if (!wallet.address || !isDepositable) {
+            if (!wallet.address) {
                 toast.error(
                     'Wallet not connected. Please connect your wallet first.',
                     { theme: toastTheme(isLight) }
@@ -206,11 +206,11 @@ export function TransactionDetails({
         setDepositStatus({ type: null, message: '' })
 
         try {
-            console.log('Depositing runes:', walletAddress, feeRate)
-            console.log('Wallet address type:', typeof walletAddress)
+            console.log('Depositing runes:', wallet.address, feeRate)
+            console.log('Wallet address type:', typeof wallet.address)
             console.log('Fee rate type:', typeof feeRate)
 
-            const result = await depositSyronRunes(walletAddress, feeRate)
+            const result = await depositSyronRunes(wallet.address, feeRate)
             // const result = { Ok: ['txId'] }
             if ('Ok' in result) {
                 console.log('Deposit successful:', result.Ok)
@@ -327,7 +327,7 @@ export function TransactionDetails({
             setIsDepositing(false)
         }
     }, [
-        walletAddress,
+        wallet.address,
         isDepositable,
         availableForDeposit,
         feeRate,

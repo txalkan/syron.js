@@ -10,7 +10,8 @@ import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $btc_wallet, $syron } from '../../../src/store/syron'
+import { $syron } from '../../../src/store/syron'
+import { useWalletInfoStore } from '../../../src/store/wallet_info'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
@@ -44,7 +45,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
     selectedData,
 }) => {
     const syron = useStore($syron)
-    const btc_wallet = useStore($btc_wallet)
+    const { wallet } = useWalletInfoStore()
     const xr = useStore($xr)
 
     const addr_name = token?.symbol.toLowerCase()
@@ -57,7 +58,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
         const dec = 1e8
         val = value_.div(dec)
 
-        if (btc_wallet?.btc_balance) balance = btc_wallet.btc_balance
+        if (wallet.balance) balance = Big(wallet.balance)
         bal = balance.div(dec)
 
         if (xr != null) worth_ = bal.mul(xr.rate)

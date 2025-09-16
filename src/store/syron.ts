@@ -1,5 +1,5 @@
 import { Store } from 'react-stores'
-import { BTCWallet, SyronSSI } from '../types/syron'
+import { SyronSSI } from '../types/syron'
 import { DelegationIdentity } from '@dfinity/identity'
 
 export const $syron = new Store<SyronSSI | null>(null)
@@ -11,11 +11,6 @@ export function updateSusdBalance(state: SyronSSI, susd: Big) {
         ...state,
         syron_usd_bal: susd,
     })
-}
-
-export const $btc_wallet = new Store<BTCWallet | null>(null)
-export function updateBTCWallet(args: BTCWallet) {
-    $btc_wallet.setState(args)
 }
 
 export const $walletConnected = new Store<{ isConnected: boolean }>({

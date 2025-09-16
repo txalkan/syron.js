@@ -9,9 +9,3 @@ export interface SyronSSI {
     syron_usd_bal: Big
     exchange_rate: Big
 }
-
-export interface BTCWallet {
-    network: string
-    btc_addr: string
-    btc_balance: Big
-}

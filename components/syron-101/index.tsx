@@ -14,7 +14,6 @@ import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
 import Big from 'big.js'
 import {
-    $btc_wallet,
     $siwb,
     $syron,
     updateSiwb,
@@ -246,7 +245,6 @@ function Component() {
     const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
         useICPHook()
 
-    const btc_wallet = useStore($btc_wallet)
 
     const unisat = (window as any).unisat
 
@@ -275,7 +273,7 @@ function Component() {
                 )
                 return
             } else if (balance >= loan_amt) {
-                await redeemBTC(btc_wallet?.btc_addr!)
+                await redeemBTC(wallet.address!)
                 toast.info(`You have redeemed your BTC!`, {
                     autoClose: false,
                     closeOnClick: true,
@@ -590,7 +588,7 @@ function Component() {
     const updateBalance = async () => {
         try {
             setIsLoading(true)
-            await updateSyronBalance(btc_wallet?.btc_addr!)
+            await updateSyronBalance(wallet.address!)
             await updateSession()
         } catch (error) {
             if (typeof error === 'object' && Object.keys(error!).length !== 0) {
@@ -661,7 +659,7 @@ function Component() {
     if (isWalletConnected && showWithdrawModal) {
         return (
             <WithdrawModal
-                ssi={btc_wallet?.btc_addr!}
+                ssi={wallet.address!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
                 stablecoin={stablecoin}
@@ -672,7 +670,7 @@ function Component() {
     } else if (isWalletConnected && showSendModal) {
         return (
             <SendModal
-                ssi={btc_wallet?.btc_addr!}
+                ssi={wallet.address!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showSendModal}
@@ -683,7 +681,7 @@ function Component() {
     } else if (isWalletConnected && showBuyModal) {
         return (
             <BuyModal
-                ssi={btc_wallet?.btc_addr!}
+                ssi={wallet.address!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showBuyModal}
@@ -791,7 +789,7 @@ function Component() {
                                                 className={styles.sdb}
                                                 onClick={() =>
                                                     handleCopy(
-                                                        btc_wallet?.btc_addr as string
+                                                        wallet.address as string
                                                     )
                                                 }
                                             >
@@ -814,7 +812,7 @@ function Component() {
                                                 className={styles.link}
                                                 onClick={() => {
                                                     const url = getMempoolUrl(
-                                                        `/address/${btc_wallet?.btc_addr}`
+                                                        `/address/${wallet.address}`
                                                     )
                                                     window.open(url)
                                                 }}

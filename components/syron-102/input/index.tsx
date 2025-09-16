@@ -10,7 +10,8 @@ import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $btc_wallet, $walletConnected } from '../../../src/store/syron'
+import { $walletConnected } from '../../../src/store/syron'
+import { useWalletInfoStore } from '../../../src/store/wallet_info'
 import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
 import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
@@ -34,7 +35,7 @@ export const BoxInput: React.FC<Prop> = ({
     disabled,
     onInput = () => null,
 }) => {
-    const btc_wallet = useStore($btc_wallet)
+    const { wallet } = useWalletInfoStore()
     const xr = useStore($xr)
 
     const addr_name = token?.symbol.toLowerCase()
@@ -48,11 +49,12 @@ export const BoxInput: React.FC<Prop> = ({
         if (addr_name == 'btc') {
             setInputVal(value_.div(dec))
 
-            const sats = btc_wallet?.btc_balance
+            const sats = wallet.balance
             if (sats) {
-                setSatsBalance(sats)
+                const satsBig = Big(sats)
+                setSatsBalance(satsBig)
 
-                const btcBal = sats.div(dec)
+                const btcBal = satsBig.div(dec)
                 setBtcBalance(btcBal)
 
                 if (xr != null) {
@@ -60,7 +62,7 @@ export const BoxInput: React.FC<Prop> = ({
                 }
             }
         }
-    }, [btc_wallet?.btc_balance, xr])
+    }, [wallet.balance, xr])
 
     const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 

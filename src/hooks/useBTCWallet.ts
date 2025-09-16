@@ -1,8 +1,9 @@
-import { updateBTCWallet } from '../store/syron'
+import { useWalletInfoStore } from '../store/wallet_info'
 import Big from 'big.js'
 Big.PE = 999
 
 export function useBTCWalletHook() {
+    const { updateWalletInfo } = useWalletInfoStore()
     const updateWallet = async (
         ssi: string,
         balance: number,
@@ -20,10 +21,10 @@ export function useBTCWalletHook() {
                 net = 'BITCOIN_TESTNET4'
             }
 
-            updateBTCWallet({
+            updateWalletInfo({
                 network: net,
-                btc_addr: ssi,
-                btc_balance: Big(balance),
+                address: ssi,
+                balance: Big(balance),
             })
         } catch (err) {
             console.error(err)
