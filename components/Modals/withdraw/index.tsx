@@ -31,6 +31,7 @@ import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
 import ConfirmTransactionModal from '../confirm-txn'
 import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
+import { getRunesMinterAddress } from '../../../src/config/wallet'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -227,18 +228,8 @@ var ThisModal: React.FC<Prop> = function ({
             await fetchFeeRate()
 
             if (stablecoin === 'RUNES') {
-                const version = process.env.NEXT_PUBLIC_SYRON_VERSION
-                // Choose minter id based on version
-                let minterId =
-                    process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET
-                if (version === '2') {
-                    minterId =
-                        process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET2
-                } else if (version === 'testnet') {
-                    minterId =
-                        process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_TESTNET
-                }
-                let receiveAddress = minterId!
+                // Use config function to get minter address
+                const receiveAddress = getRunesMinterAddress()
 
                 const unisat = (window as any).unisat
                 const txId = await unisat.sendBitcoin(

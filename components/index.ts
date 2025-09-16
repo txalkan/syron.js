@@ -46,6 +46,7 @@ export { default as SubmitUpdateDoc } from './SSI/DIDxWallet/Wallet/DIDOperation
 export { default as DidSocialRecovery } from './SSI/DIDxWallet/Wallet/DIDOperations/SocialRecovery'
 export { default as Menu } from './Menu'
 export { default as Dashboard } from './Dashboard'
+export { default as WalletConnection } from './WalletConnection'
 export { default as TransactionStatus } from './Modals/TransactionStatus'
 export { default as TransactionStatusMinimized } from './Modals/TransactionStatus/TransactionMinimized'
 export { default as GetStartedModal } from './Modals/GetStartedModal'

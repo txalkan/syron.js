@@ -17,7 +17,6 @@ import {
     $btc_wallet,
     $siwb,
     $syron,
-    $walletConnected,
     updateSiwb,
     clearSiwbSession,
 } from '../../src/store/syron'
@@ -39,13 +38,17 @@ import SyronInfoCard from './SyronInfoCard'
 import { DepositRunes } from '../DepositRunes'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import CollateralRatioProgressBar from './CollateralRatioProgressBar'
+import { useWalletInfoStore } from '../../src/store/wallet_info'
+import { getMempoolUrl } from '../../src/config/wallet'
 
 Big.PE = 999
 const _0 = Big(0)
 
 function Component() {
     const { getXR } = useMempoolHook()
-    const walletConnected = useStore($walletConnected).isConnected
+    const { wallet } = useWalletInfoStore()
+    // Derive connection state from wallet address
+    const isWalletConnected = !!wallet.address
     const syron = useStore($syron)
     const siwb = useStore($siwb).value
     const { identity, clear } = useSiwbIdentity()
@@ -89,7 +92,7 @@ function Component() {
         console.log('SIWB saved identity: ', siwb)
 
         // Reset authentication if wallet is disconnected
-        if (!walletConnected) {
+        if (!isWalletConnected) {
             console.log('Wallet disconnected, resetting authentication')
             setIsIdentified(false)
             clearSiwbSession()
@@ -139,7 +142,7 @@ function Component() {
         } else {
             console.error('SIWB session not found')
         }
-    }, [identity, siwb, showSendModal, showBuyModal, walletConnected])
+    }, [identity, siwb, showSendModal, showBuyModal, isWalletConnected])
 
     useEffect(() => {
         if (syron !== null) {
@@ -160,19 +163,24 @@ function Component() {
             // Fetch BTC price and calculate collateral ratio
             getXR()
                 .then((btcPrice) => {
-                    const collateral_ratio = syron.syron_btc
-                        .mul(btcPrice)
-                        .div(syron.syron_usd_loan)
-                        .mul(100)
-                        .round(1, 1)
-                        .toString()
-                    setCollateralRatio(collateral_ratio)
+                    // Check for division by zero - if no loan, collateral ratio is undefined
+                    if (syron.syron_usd_loan.eq(0)) {
+                        setCollateralRatio('') // Set to null when no loan exists
+                    } else {
+                        const collateral_ratio = syron.syron_btc
+                            .mul(btcPrice)
+                            .div(syron.syron_usd_loan)
+                            .mul(100)
+                            .round(1, 1)
+                            .toString()
+                        setCollateralRatio(collateral_ratio)
+                    }
                 })
                 .catch((error) => {
                     console.error('Error fetching BTC price:', error)
                 })
         }
-    }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal, getXR])
+    }, [syron, getXR])
 
     // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {
@@ -650,7 +658,7 @@ function Component() {
         }
     }
 
-    if (walletConnected && showWithdrawModal) {
+    if (isWalletConnected && showWithdrawModal) {
         return (
             <WithdrawModal
                 ssi={btc_wallet?.btc_addr!}
@@ -661,7 +669,7 @@ function Component() {
                 onClose={() => setWithdrawModal(false)}
             />
         )
-    } else if (walletConnected && showSendModal) {
+    } else if (isWalletConnected && showSendModal) {
         return (
             <SendModal
                 ssi={btc_wallet?.btc_addr!}
@@ -672,7 +680,7 @@ function Component() {
                 isICP={isICP}
             />
         )
-    } else if (walletConnected && showBuyModal) {
+    } else if (isWalletConnected && showBuyModal) {
         return (
             <BuyModal
                 ssi={btc_wallet?.btc_addr!}
@@ -682,7 +690,7 @@ function Component() {
                 onClose={() => setBuyModal(false)}
             />
         )
-    } else if (walletConnected && showDepositRunesModal) {
+    } else if (isWalletConnected && showDepositRunesModal) {
         return (
             <DepositRunes
                 open={showDepositRunesModal}
@@ -697,7 +705,7 @@ function Component() {
 
                 {/* @dev: private SDB */}
                 <div className={styles.boxWrapper}>
-                    {walletConnected ? (
+                    {isWalletConnected ? (
                         <>
                             {sdb ? (
                                 <>
@@ -762,18 +770,9 @@ function Component() {
                                             <div
                                                 className={styles.link}
                                                 onClick={() => {
-                                                    //@network defaults to mainnet
-                                                    let url: URL = new URL(
-                                                        `https://mempool.space/address/${syron?.sdb}`
+                                                    const url = getMempoolUrl(
+                                                        `/address/${syron?.sdb}`
                                                     )
-                                                    const version =
-                                                        process.env
-                                                            .NEXT_PUBLIC_SYRON_VERSION
-                                                    if (version === 'testnet') {
-                                                        url = new URL(
-                                                            `https://mempool.space/testnet4/address/${syron?.sdb}`
-                                                        )
-                                                    }
                                                     window.open(url)
                                                 }}
                                             >
@@ -808,24 +807,15 @@ function Component() {
                                                     />
                                                 </div>
                                                 <div className={styles.sdbText}>
-                                                    {btc_wallet?.btc_addr}
+                                                    {wallet.address}
                                                 </div>
                                             </div>
                                             <div
                                                 className={styles.link}
                                                 onClick={() => {
-                                                    //@network defaults to mainnet
-                                                    let url: URL = new URL(
-                                                        `https://mempool.space/address/${btc_wallet?.btc_addr}`
+                                                    const url = getMempoolUrl(
+                                                        `/address/${btc_wallet?.btc_addr}`
                                                     )
-                                                    const version =
-                                                        process.env
-                                                            .NEXT_PUBLIC_SYRON_VERSION
-                                                    if (version === 'testnet') {
-                                                        url = new URL(
-                                                            `https://mempool.space/testnet4/address/${btc_wallet?.btc_addr}`
-                                                        )
-                                                    }
                                                     window.open(url)
                                                 }}
                                             >

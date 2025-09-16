@@ -24,7 +24,7 @@ import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import useSyronWithdrawal from '../../src/utils/icp/syron_withdrawal'
 import Spinner from '../Spinner'
 import { VaultPair } from '../../src/types/vault'
-import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
+import { BitcoinNetworkType } from '../../src/config/wallet'
 
 const Big = toformat(_Big)
 Big.PE = 999
@@ -338,8 +338,8 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
                 const version = process.env.NEXT_PUBLIC_SYRON_VERSION
                 const target_network =
                     version === 'testnet'
-                        ? UnisatNetworkType.testnet4
-                        : UnisatNetworkType.mainnet
+                        ? BitcoinNetworkType.testnet4
+                        : BitcoinNetworkType.mainnet
                 if (network !== target_network) {
                     await unisat.switchChain(target_network)
                     console.log(`Switched to ${target_network}`)

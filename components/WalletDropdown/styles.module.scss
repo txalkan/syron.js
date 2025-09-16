@@ -1,0 +1,104 @@
+.dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 8px;
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    min-width: 280px;
+    z-index: 1000;
+    overflow: hidden;
+    cursor: default;
+}
+
+.header {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    background-color: #f8fafc;
+    cursor: default;
+}
+
+.walletType {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 4px;
+    cursor: default;
+}
+
+.connectedStatus {
+    font-size: 0.75rem;
+    color: #10b981;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    cursor: default;
+}
+
+.statusDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+}
+
+.section {
+    padding: 16px;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: default;
+
+    &:last-of-type {
+        border-bottom: none;
+    }
+}
+
+.sectionLabel {
+    font-size: 0.75rem;
+    color: #6b7280;
+    font-weight: 500;
+    margin-bottom: 8px;
+    cursor: default;
+}
+
+.addressValue,
+.balanceValue {
+    font-size: 0.75rem;
+    color: #374151;
+    font-family: monospace;
+    background-color: #f9fafb;
+    padding: 8px 12px;
+    border-radius: 8px;
+    word-break: break-all;
+    cursor: default;
+}
+
+.actions {
+    padding: 12px;
+    cursor: default;
+}
+
+.disconnectButton {
+    width: 100%;
+    padding: 12px;
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #dc2626;
+    font-size: 0.875rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover:not(.disabled) {
+        background-color: #fecaca;
+        border-color: #f87171;
+    }
+
+    &.disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+}

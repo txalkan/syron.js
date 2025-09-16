@@ -5,6 +5,7 @@
     width: 100%;
     transition: z-index linear 0s 0.3s;
     align-items: center;
+    cursor: default;
 }
 
 .cardActiveWrapper {
@@ -14,11 +15,13 @@
     width: 100%;
     max-width: 800px;
     height: fit-content;
+    cursor: default;
 }
 
 .tabWrapper {
     display: flex;
     flex-direction: row;
+    cursor: default;
     // @media only screen and (max-width: 168px) {
     //     width: 92%;
     // }
@@ -45,6 +48,7 @@
     text-transform: uppercase;
     padding-left: 10px;
     margin-right: 17px;
+    cursor: default;
     @media only screen and (max-width: 168px) {
         font-size: 14px;
     }
@@ -80,6 +84,7 @@
     background-color: rgb(251, 252, 246);
     // background: linear-gradient(22deg, #999, #f8f8f8, #dbe4eb, #ffffff2e);
     color: #222222;
+    cursor: default;
 }
 .card:hover {
     cursor: pointer;
@@ -135,6 +140,7 @@
     border-radius: 0 0 5px 5px;
     border: 0.5px solid #888888;
     border-top: none;
+    cursor: default;
 }
 
 // .cardSub::before {
@@ -153,6 +159,7 @@
     border-radius: 4px;
     padding: 4px;
     margin-bottom: 11px;
+    cursor: default;
 }
 
 .wrapper {
@@ -160,6 +167,7 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
+    cursor: default;
 }
 
 .subWrapper {

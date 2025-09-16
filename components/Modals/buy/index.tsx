@@ -18,6 +18,7 @@ import { $xr } from '../../../src/store/xr'
 import { TransactionOutput } from '../../syron-102/txn-output'
 import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
 import ConfirmTransactionModal from '../confirm-txn'
+import { getMempoolUrl } from '../../../src/config/wallet'
 import {
     $btc_wallet,
     $syron,
@@ -455,17 +456,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         className={styles.link}
                                         onClick={() => {
                                             //@network defaults to mainnet
-                                            let url: URL = new URL(
-                                                `https://mempool.space/tx/${isTxnRes}`
+                                            const url = getMempoolUrl(
+                                                `/tx/${isTxnRes}`
                                             )
-                                            const version =
-                                                process.env
-                                                    .NEXT_PUBLIC_SYRON_VERSION
-                                            if (version === 'testnet') {
-                                                url = new URL(
-                                                    `https://mempool.space/testnet4/tx/${isTxnRes}`
-                                                )
-                                            }
                                             window.open(url)
                                         }}
                                     >
@@ -497,17 +490,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         className={styles.link}
                                         onClick={() => {
                                             //@network defaults to mainnet
-                                            let url: URL = new URL(
-                                                `https://mempool.space/address/${btc_wallet?.btc_addr}`
+                                            const url = getMempoolUrl(
+                                                `/address/${btc_wallet?.btc_addr}`
                                             )
-                                            const version =
-                                                process.env
-                                                    .NEXT_PUBLIC_SYRON_VERSION
-                                            if (version === 'testnet') {
-                                                url = new URL(
-                                                    `https://mempool.space/testnet4/address/${btc_wallet?.btc_addr}`
-                                                )
-                                            }
                                             window.open(url)
                                         }}
                                     >

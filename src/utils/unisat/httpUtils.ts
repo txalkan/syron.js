@@ -1,10 +1,5 @@
 import axios from 'axios'
-
-export enum UnisatNetworkType {
-    mainnet = 'BITCOIN_MAINNET',
-    testnet = 'testnet',
-    testnet4 = 'BITCOIN_TESTNET4',
-}
+import { isTestnet } from '../../config/wallet'
 
 // let network = UnisatNetworkType.mainnet
 
@@ -173,7 +168,7 @@ export async function unisatInscriptionInfo(id: string) {
             )
         }
 
-        const apiKey = UnisatNetworkType.mainnet
+        const apiKey = !isTestnet()
             ? process.env.API_UNISAT_MAINNET
             : process.env.API_UNISAT_TESTNET
 

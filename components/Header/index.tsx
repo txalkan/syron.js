@@ -4,8 +4,8 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import {
-    // Connect,
-    Dashboard,
+    WalletConnection,
+    // Dashboard,
     Logo,
     Menu,
     SearchBar,
@@ -294,8 +294,8 @@ function Header() {
                             <div className={styles.logo}>
                                 <Logo />
                             </div>
-                            <Dashboard />
-                            {/* <Connect /> */}
+                            {/* <Dashboard /> */}
+                            <WalletConnection />
                         </div>
                         <div className={styles.footer}>
                             <Lang />
@@ -304,6 +304,7 @@ function Header() {
                                     src={SyronLogo}
                                     alt="syron-logo"
                                     className={styles.syronLogo}
+                                    priority
                                 />
                             </div>
                         </div>

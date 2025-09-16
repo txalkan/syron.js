@@ -19,7 +19,7 @@ import { $menuOn } from '../../src/store/menuOn'
 //     updateBitcoinAddresses,
 // } from '../../src/store/bitcoin-addresses'
 import useICPHook from '../../src/hooks/useICP'
-import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
+import { BitcoinNetworkType } from '../../src/config/wallet'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { $walletConnected, updateWalletConnected } from '../../src/store/syron'
 import { toast } from 'react-toastify'
@@ -141,8 +141,8 @@ function Component() {
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION
             const target_network =
                 version === 'testnet'
-                    ? UnisatNetworkType.testnet4
-                    : UnisatNetworkType.mainnet
+                    ? BitcoinNetworkType.testnet4
+                    : BitcoinNetworkType.mainnet
             if (network !== target_network) {
                 await unisat.switchChain(target_network)
                 setNetwork(target_network)
@@ -262,8 +262,8 @@ function Component() {
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION
             const target_network =
                 version === 'testnet'
-                    ? UnisatNetworkType.testnet4
-                    : UnisatNetworkType.mainnet
+                    ? BitcoinNetworkType.testnet4
+                    : BitcoinNetworkType.mainnet
             if (network !== target_network) {
                 await unisat.switchChain(target_network)
                 setNetwork(target_network)
