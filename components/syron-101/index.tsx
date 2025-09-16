@@ -34,7 +34,7 @@ import AuthGuard from '../AuthGuard'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { DelegationIdentity } from '@dfinity/identity'
 import SyronInfoCard from './SyronInfoCard'
-import { DepositRunes } from '../DepositRunes'
+import { DepositRunes } from '../DepositRunes/DepositRunes'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import CollateralRatioProgressBar from './CollateralRatioProgressBar'
 import { useWalletInfoStore } from '../../src/store/wallet_info'
@@ -244,7 +244,6 @@ function Component() {
 
     const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
         useICPHook()
-
 
     const unisat = (window as any).unisat
 

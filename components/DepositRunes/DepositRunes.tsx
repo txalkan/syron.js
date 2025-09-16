@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Modal } from 'antd'
-import { Button } from './Button'
+import React from 'react'
+import { Button } from '../Button'
 import {
     Table,
     TableHead,
@@ -10,9 +9,9 @@ import {
     TableRow,
     TableCell,
     TableHeaderCell,
-} from './Table'
-import { TransactionDetails } from './DepositRunes/TransactionDetails'
-import LoadingSpinner from './LoadingSpinner'
+} from '../Table'
+import { TransactionDetails } from './TransactionDetails'
+import LoadingSpinner from '../LoadingSpinner'
 import styles from './DepositRunes.module.scss'
 
 // Constants
