@@ -72,12 +72,12 @@
     padding: 20px 0;
     border-bottom: 2px solid #f3f4f6;
     background:
+        linear-gradient(120deg, #e0e0e0 0%, #b0b0b0 40%, #f5f5f5 100%),
         linear-gradient(
-            90deg,
-            rgba(75, 0, 130, 0.1) 0%,
-            rgba(0, 212, 255, 0.1) 100%
-        ),
-        rgba(255, 255, 255, 0.92);
+            0deg,
+            rgba(255, 255, 255, 0.7) 0%,
+            rgba(180, 180, 180, 0.5) 100%
+        );
     box-shadow:
         0 2px 12px 0 rgba(75, 0, 130, 0.1),
         0 1.5px 0 0 rgba(0, 212, 255, 0.08);
@@ -88,12 +88,17 @@
 
     p {
         margin: 0;
-        font-size: 1.125 rem;
+        font-size: 1.125rem;
         font-weight: 500;
         color: #4b0082;
         letter-spacing: -0.025em;
         cursor: default;
-        text-transform: uppercase;
+        text-transform: capitalize;
+        font-family:
+            'Geist Sans',
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
     }
 }
 
@@ -101,8 +106,8 @@
     background: none;
     border: none;
     cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
+    padding: 6px;
+    border-radius: 4px;
     color: #6b7280 !important;
     transition: all 0.2s;
 
@@ -118,16 +123,16 @@
     .walletOption {
         display: flex;
         flex-direction: column;
-        padding: 20px;
-        margin-bottom: 16px;
-        border: 2px solid #e5e7eb;
-        border-radius: 16px;
-        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        padding: 16px;
+        margin-bottom: 12px;
+        border: 1px solid #e5e7eb;
+        background: #ffffff;
         transition: all 0.2s ease;
         position: relative;
         overflow: hidden;
-        min-height: 80px;
+        min-height: 64px;
         cursor: default;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 
         &::before {
             content: '';
@@ -135,8 +140,13 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, #ffff32, #4b0082);
+            height: 1px;
+            background: linear-gradient(90deg, #333333, #4b0082);
+        }
+
+        &:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
         }
     }
 
@@ -149,14 +159,14 @@
     }
 
     .walletIcon {
-        padding: 14px;
-        background: #dbe4eb;
-        border-radius: 14px;
+        padding: 12px;
+        background: #f8fafc;
+        border-radius: 8px;
         color: #374151;
-        box-shadow: 0 4px 12px rgba(75, 0, 130, 0.3);
+        border: 1px solid #e5e7eb;
         transition: all 0.2s ease;
-        min-width: 48px;
-        height: 100%;
+        min-width: 44px;
+        height: 44px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -173,16 +183,20 @@
     }
 
     .walletName {
-        font-size: 1.125rem;
+        font-size: 1rem;
         font-weight: 600;
-        color: #111827;
-        letter-spacing: -0.025em;
+        color: #222222;
         margin: 0;
         cursor: default;
+        font-family:
+            'Geist Sans',
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
     }
 
     .walletAction {
-        margin-top: 12px;
+        margin-top: 8px;
         display: flex;
         justify-content: flex-end;
         cursor: default;
@@ -192,14 +206,19 @@
         background: rgba(100, 88, 107);
         color: white;
         border: none;
-        padding: 12px 24px;
-        border-radius: 10px;
-        font-size: 0.9375rem;
-        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 500;
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-        letter-spacing: 0.025em;
+        box-shadow: 0 1px 3px rgba(59, 130, 246, 0.15);
+        letter-spacing: 0.01em;
+        font-family:
+            'Geist Sans',
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
 
         &:hover {
             background: linear-gradient(
@@ -207,8 +226,8 @@
                 #a259f7 0%,
                 #4b0082 100%
             ) !important; // Syron purple synthwave
-            transform: translateY(-2px) scale(1.03);
-            border: 1.5px solid #e0b3ff;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 6px rgba(59, 130, 246, 0.25);
         }
 
         &:active {
@@ -220,41 +239,51 @@
         display: flex;
         flex-direction: column;
         align-items: flex-end;
-        gap: 10px;
+        gap: 8px;
         cursor: default;
     }
 
     .notInstalledLabel {
-        font-size: 0.6875rem;
+        font-size: 0.75rem;
         color: #9ca3af;
         background: transparent;
-        padding: 4px 8px;
-        border-radius: 4px;
+        padding: 2px 6px;
+        border-radius: 3px;
         border: none;
         font-weight: 400;
         box-shadow: none;
         cursor: default;
+        font-family:
+            'Geist Sans',
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
     }
 
     .installButton {
         background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
         color: #374151;
-        border: 2px solid #d1d5db;
-        padding: 14px 28px;
-        border-radius: 10px;
-        min-width: 140px;
+        border: 1px solid #d1d5db;
+        padding: 4px 12px;
+        border-radius: 4px;
+        min-width: 100px;
         text-align: center;
-        font-size: 0.8125rem;
+        font-size: 0.6875rem;
         font-weight: 500;
         cursor: pointer;
         transition: all 0.2s ease;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+        font-family:
+            'Geist Sans',
+            -apple-system,
+            BlinkMacSystemFont,
+            sans-serif;
 
         &:hover {
             background: linear-gradient(135deg, #e5e7eb 0%, #d1d5db 100%);
             border-color: #9ca3af;
             transform: translateY(-1px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12);
         }
 
         &:active {
@@ -273,9 +302,9 @@
 
     .content {
         .walletOption {
-            padding: 20px 16px;
-            margin-bottom: 12px;
-            min-height: 70px;
+            padding: 14px 12px;
+            margin-bottom: 10px;
+            min-height: 60px;
         }
 
         .walletInfo {
@@ -283,14 +312,14 @@
         }
 
         .walletIcon {
-            min-width: 44px;
-            min-height: 44px;
-            padding: 12px;
+            min-width: 40px;
+            min-height: 40px;
+            padding: 10px;
         }
 
         .installButton {
-            padding: 12px 20px;
-            min-width: 120px;
+            padding: 3px 8px;
+            min-width: 80px;
         }
     }
 }
