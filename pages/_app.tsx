@@ -19,6 +19,7 @@ import type { _SERVICE as siwbService } from '../src/idls/ic_siwb_provider'
 import { idlFactory as siwbIdl } from '../src/idls/ic_siwb_provider.idl'
 import { SiwbIdentityProvider } from 'ic-use-siwb-identity'
 import { useMempoolHook } from '../src/hooks/useMempool'
+import WalletGlobalListener from '../components/WalletGlobalListener'
 
 function TyronApp({ Component, pageProps }: AppProps) {
     useMempoolHook()
@@ -35,6 +36,7 @@ function TyronApp({ Component, pageProps }: AppProps) {
         >
             <Provider store={store}>
                 <PersistGate persistor={persistor}>
+                    <WalletGlobalListener />
                     <main className={GeistMono.className}>
                         <Component {...pageProps} />
                     </main>

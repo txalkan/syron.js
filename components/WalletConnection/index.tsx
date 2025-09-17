@@ -14,6 +14,8 @@ import {
     getUnisatTargetNetwork,
     getOKXTargetNetwork,
     parseBitcoinNetwork,
+    getUnisatWindow,
+    getOkxWindow,
 } from '../../src/config/wallet'
 
 function Component() {
@@ -25,7 +27,6 @@ function Component() {
         setWalletAddress,
         setWalletNetwork,
         setWalletBalance,
-        clearWallet,
     } = useWalletInfoStore()
 
     // Derive connection state from wallet address
@@ -36,16 +37,10 @@ function Component() {
     const [unisatInstalled, setUnisatInstalled] = useState(false)
     const [okxInstalled, setOKXInstalled] = useState(false)
 
-    // Helper functions to safely access window objects
-    const getUnisat = () =>
-        typeof window !== 'undefined' ? (window as any).unisat : null
-    const getOkx = () =>
-        typeof window !== 'undefined' ? (window as any).okxwallet : null
-
     useEffect(() => {
         const checkWalletInstallations = () => {
-            const unisat = getUnisat()
-            const okx = getOkx()
+            const unisat = getUnisatWindow()
+            const okx = getOkxWindow()
 
             if (unisat) {
                 setUnisatInstalled(true)
@@ -75,7 +70,7 @@ function Component() {
             let balance: any = null
 
             if (currentWalletType === 'unisat') {
-                const unisat = getUnisat()
+                const unisat = getUnisatWindow()
                 if (!unisat) {
                     console.error('UniSat not available')
                     return
@@ -94,17 +89,17 @@ function Component() {
                     balance = await unisat.getBalance()
                 }
             } else if (currentWalletType === 'okx') {
-                const okx = getOkx()
-                if (!okx || !okx.bitcoin) {
+                const okx = getOkxWindow()
+                if (!okx) {
                     console.error('OKX wallet not available')
                     return
                 }
-                walletInstance = okx.bitcoin
+                walletInstance = okx
 
                 // Get network (OKX might have different network API)
                 try {
-                    if (typeof okx.bitcoin.getNetwork === 'function') {
-                        const okxNetwork = await okx.bitcoin.getNetwork()
+                    if (typeof okx.getNetwork === 'function') {
+                        const okxNetwork = await okx.getNetwork()
                         network = parseBitcoinNetwork(okxNetwork)
                     } else {
                         network = getOKXTargetNetwork()
@@ -124,14 +119,14 @@ function Component() {
                 }
 
                 // Get accounts
-                accounts = await okx.bitcoin.getAccounts()
+                accounts = await okx.getAccounts()
 
                 // Get balance (OKX might have different balance API)
                 if (accounts && accounts.length > 0) {
                     try {
                         // Pass address to getBalance if API supports it
                         const address = accounts[0]
-                        balance = (await okx.bitcoin.getBalance()) || {
+                        balance = (await okx.getBalance()) || {
                             confirmed: 0,
                             unconfirmed: 0,
                             total: 0,
@@ -204,48 +199,7 @@ function Component() {
         if (wallet.address) updateBox()
     }, [wallet.address])
 
-    const selfRef = useRef<{ accounts: string[] }>({
-        accounts: [],
-    })
-    const self = selfRef.current
-
-    // Store handler references for proper cleanup
-    const unisatAccountsHandlerRef = useRef<
-        ((accounts: string[]) => void) | null
-    >(null)
-    const okxAccountsHandlerRef = useRef<((accounts: string[]) => void) | null>(
-        null
-    )
-    const unisatNetworkHandlerRef = useRef<(() => void) | null>(null)
-    const okxNetworkHandlerRef = useRef<(() => void) | null>(null)
-    const handleAccountsChanged = (
-        _accounts: string[],
-        walletType?: 'unisat' | 'okx'
-    ) => {
-        if (self.accounts[0] === _accounts[0]) {
-            // prevent from triggering twice
-            return
-        }
-        self.accounts = _accounts
-        if (_accounts.length > 0) {
-            setWalletAddress(_accounts[0])
-
-            // Set wallet type if provided, otherwise keep existing type
-            if (walletType) {
-                setWalletType(walletType)
-            }
-            // If no walletType provided, keep the existing wallet.type from store
-
-            // Call getWalletInfo with the current wallet type
-            getWalletInfo(walletType || wallet.type || undefined)
-        } else {
-            setWalletAddress('')
-            clearWallet()
-        }
-    }
-
     const [isConnecting, setIsConnecting] = useState(false)
-    const [isDisconnecting, setIsDisconnecting] = useState(false)
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
 
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
@@ -253,7 +207,7 @@ function Component() {
     // Close dropdown when clicking outside
     useEffect(() => {
         const handleClickOutside = (event: MouseEvent) => {
-            if (isUserDropdownOpen && !isDisconnecting) {
+            if (isUserDropdownOpen) {
                 const target = event.target as HTMLElement
                 if (!target.closest('[data-user-dropdown]')) {
                     setIsUserDropdownOpen(false)
@@ -265,267 +219,7 @@ function Component() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
-    }, [isUserDropdownOpen, isDisconnecting])
-
-    const handleDisconnect = async () => {
-        try {
-            console.log('Disconnecting wallet...')
-
-            // Prevent multiple clicks
-            if (isDisconnecting) {
-                return
-            }
-            setIsDisconnecting(true)
-
-            // Use wallet-specific disconnect method
-            if (wallet.type === 'unisat') {
-                const unisat = getUnisat()
-                if (unisat && unisat.disconnect) {
-                    try {
-                        await unisat.disconnect()
-                        console.log('UniSat wallet disconnected via API')
-                    } catch (disconnectError) {
-                        console.log(
-                            'UniSat disconnect API not available, using fallback'
-                        )
-                    }
-                }
-            } else if (wallet.type === 'okx') {
-                const okx = getOkx()
-                if (okx && okx.bitcoin && okx.bitcoin.disconnect) {
-                    try {
-                        await okx.bitcoin.disconnect()
-                        console.log('OKX wallet disconnected via API')
-                    } catch (disconnectError) {
-                        console.log(
-                            'OKX disconnect API not available, using fallback'
-                        )
-                    }
-                }
-            }
-
-            // Clear wallet info from Zustand store (only once)
-            clearWallet()
-
-            // Clear wallet from store
-            updateWallet('', 0, BitcoinNetworkType.mainnet)
-
-            // Show success message
-            toast.success('Wallet disconnected successfully', {
-                onClick: () => toast.dismiss(),
-            })
-
-            console.log('Wallet disconnected successfully')
-        } catch (error) {
-            console.error('Error disconnecting wallet:', error)
-            toast.error('Failed to disconnect wallet', {
-                onClick: () => toast.dismiss(),
-            })
-        } finally {
-            setIsDisconnecting(false)
-        }
-    }
-
-    useEffect(() => {
-        async function checkUnisat() {
-            try {
-                let unisatInstance = getUnisat()
-
-                // Wait for unisat to be available
-                for (let i = 1; i < 10 && !unisatInstance; i += 1) {
-                    await new Promise((resolve) => setTimeout(resolve, 100 * i))
-                    unisatInstance = getUnisat()
-                }
-
-                if (!unisatInstance) {
-                    return
-                }
-
-                try {
-                    // Create event handler functions for proper cleanup
-                    const unisatAccountsHandler = (accounts: string[]) =>
-                        handleAccountsChanged(accounts, 'unisat')
-
-                    // Store handler references for cleanup
-                    unisatAccountsHandlerRef.current = unisatAccountsHandler
-                    const unisatNetworkHandler = () => getWalletInfo('unisat')
-                    unisatNetworkHandlerRef.current = unisatNetworkHandler
-
-                    // Set up UniSat event listeners
-                    unisatInstance.on('accountsChanged', unisatAccountsHandler)
-                    unisatInstance.on('networkChanged', unisatNetworkHandler)
-
-                    return () => {
-                        if (
-                            unisatInstance &&
-                            unisatAccountsHandlerRef.current
-                        ) {
-                            unisatInstance.removeListener(
-                                'accountsChanged',
-                                unisatAccountsHandlerRef.current
-                            )
-                            unisatInstance.removeListener(
-                                'networkChanged',
-                                unisatNetworkHandlerRef.current!
-                            )
-                        }
-                    }
-                } catch (error) {}
-            } catch (error) {}
-        }
-
-        checkUnisat().catch((error) => {
-            console.error('❌ Error in UniSat useEffect:', error)
-        })
-    }, [])
-
-    // Setup OKX wallet listeners on component mount
-    useEffect(() => {
-        async function setupOKXListeners() {
-            let okxInstance = getOkx()
-
-            // Wait for OKX to be available
-            for (let i = 1; i < 10 && !okxInstance; i += 1) {
-                await new Promise((resolve) => setTimeout(resolve, 100 * i))
-                okxInstance = getOkx()
-            }
-
-            if (!okxInstance || !okxInstance.bitcoin) {
-                return
-            }
-
-            try {
-                // Set up OKX wallet event listeners (if available)
-                if (okxInstance.bitcoin.on) {
-                    // Create event handler functions for proper cleanup
-                    const okxAccountsHandler = (accounts: string[]) =>
-                        handleAccountsChanged(accounts, 'okx')
-
-                    // Store handler references for cleanup
-                    okxAccountsHandlerRef.current = okxAccountsHandler
-                    const okxNetworkHandler = () => getWalletInfo('okx')
-                    okxNetworkHandlerRef.current = okxNetworkHandler
-
-                    okxInstance.bitcoin.on(
-                        'accountsChanged',
-                        okxAccountsHandler
-                    )
-                    // Add network change listener for OKX if supported
-                    try {
-                        okxInstance.bitcoin.on(
-                            'networkChanged',
-                            okxNetworkHandler
-                        )
-                    } catch (error) {}
-
-                    return () => {
-                        if (
-                            okxInstance &&
-                            okxInstance.bitcoin &&
-                            typeof okxInstance.bitcoin.removeListener ===
-                                'function'
-                        ) {
-                            try {
-                                okxInstance.bitcoin.removeListener(
-                                    'accountsChanged',
-                                    okxAccountsHandlerRef.current!
-                                )
-                                okxInstance.bitcoin.removeListener(
-                                    'networkChanged',
-                                    okxNetworkHandlerRef.current!
-                                )
-                            } catch (error) {}
-                        }
-                    }
-                }
-            } catch (error) {}
-        }
-
-        setupOKXListeners().catch((error) => {
-            console.error('❌ Error in OKX useEffect:', error)
-        })
-    }, [])
-
-    useEffect(() => {
-        // Only auto-connect if wallet was connected in this tab's session
-        // Don't auto-connect in new tabs for security
-        // Only restore once when wallets are installed, not on every re-render
-        if (wallet.address && wallet.type) {
-            // Restore UniSat connection if wallet type is unisat
-            if (wallet.type === 'unisat' && unisatInstalled) {
-                const unisat = getUnisat()
-                if (unisat) {
-                    unisat
-                        .getAccounts()
-                        .then((accounts: string[]) => {
-                            if (accounts && accounts.length > 0) {
-                                handleAccountsChanged(accounts, 'unisat')
-                            }
-                        })
-                        .catch(console.error)
-                }
-            }
-
-            // Restore OKX connection if wallet type is okx
-            if (wallet.type === 'okx' && okxInstalled) {
-                const okx = getOkx()
-                if (okx && okx.bitcoin) {
-                    okx.bitcoin
-                        .getAccounts()
-                        .then((accounts: string[]) => {
-                            if (accounts && accounts.length > 0) {
-                                handleAccountsChanged(accounts, 'okx')
-                            }
-                        })
-                        .catch(console.error)
-                }
-            }
-        }
-    }, [unisatInstalled, okxInstalled])
-
-    // Cleanup effect for component unmount
-    useEffect(() => {
-        return () => {
-            // Cleanup unisat listeners when component unmounts
-            const unisat = getUnisat()
-            if (
-                unisat &&
-                typeof unisat.removeListener === 'function' &&
-                unisatAccountsHandlerRef.current
-            ) {
-                try {
-                    unisat.removeListener(
-                        'accountsChanged',
-                        unisatAccountsHandlerRef.current
-                    )
-                    unisat.removeListener(
-                        'networkChanged',
-                        unisatNetworkHandlerRef.current!
-                    )
-                } catch (error) {}
-            }
-
-            // Cleanup OKX listeners when component unmounts
-            const okx = getOkx()
-            if (
-                okx &&
-                okx.bitcoin &&
-                typeof okx.bitcoin.removeListener === 'function' &&
-                okxAccountsHandlerRef.current
-            ) {
-                try {
-                    okx.bitcoin.removeListener(
-                        'accountsChanged',
-                        okxAccountsHandlerRef.current
-                    )
-                    okx.bitcoin.removeListener(
-                        'networkChanged',
-                        okxNetworkHandlerRef.current!
-                    )
-                } catch (error) {}
-            }
-        }
-    }, [])
+    }, [isUserDropdownOpen])
 
     const handleUniSatConnect = async () => {
         try {
@@ -536,7 +230,7 @@ function Component() {
             setIsConnecting(true)
 
             // Check if unisat is available
-            const unisat = getUnisat()
+            const unisat = getUnisatWindow()
             if (!unisat) {
                 toast.error(
                     'Unisat wallet not found. Please install Unisat extension.',
@@ -554,7 +248,9 @@ function Component() {
                 toast.info('UniSat wallet connected', {
                     onClick: () => toast.dismiss(),
                 })
-                handleAccountsChanged(currentAccounts, 'unisat')
+                setWalletAddress(currentAccounts[0])
+                setWalletType('unisat')
+                getWalletInfo('unisat')
                 setIsConnecting(false)
                 return
             }
@@ -602,7 +298,8 @@ function Component() {
             if (result && result.length > 0) {
                 // Set wallet type explicitly (keeps exclusivity super clear)
                 setWalletType('unisat')
-                handleAccountsChanged(result, 'unisat')
+                setWalletAddress(result[0])
+                getWalletInfo('unisat')
                 toast.success('Your UniSat wallet is now connected', {
                     onClick: () => toast.dismiss(),
                 })
@@ -630,7 +327,7 @@ function Component() {
             setIsConnecting(true)
 
             // Check if OKX wallet is available
-            const okx = getOkx()
+            const okx = getOkxWindow()
             if (!okx) {
                 toast.error(
                     'OKX wallet not found. Please install OKX extension.',
@@ -642,26 +339,16 @@ function Component() {
                 return
             }
 
-            // Check if OKX wallet has bitcoin support
-            if (!okx.bitcoin) {
-                toast.error(
-                    'OKX wallet Bitcoin support not available. Please update your OKX wallet.',
-                    {
-                        onClick: () => toast.dismiss(),
-                    }
-                )
-                setIsConnecting(false)
-                return
-            }
-
             // Check if OKX wallet is already connected
             try {
-                const currentAccounts = await okx.bitcoin.getAccounts()
+                const currentAccounts = await okx.getAccounts()
                 if (currentAccounts && currentAccounts.length > 0) {
                     toast.info('OKX wallet connected', {
                         onClick: () => toast.dismiss(),
                     })
-                    handleAccountsChanged(currentAccounts, 'okx')
+                    setWalletAddress(currentAccounts[0])
+                    setWalletType('okx')
+                    getWalletInfo('okx')
                     setIsConnecting(false)
                     return
                 }
@@ -672,11 +359,12 @@ function Component() {
             }
 
             // Request accounts from OKX wallet
-            const result = await okx.bitcoin.requestAccounts()
+            const result = await okx.requestAccounts()
             if (result && result.length > 0) {
                 // Set wallet type explicitly (keeps exclusivity super clear)
                 setWalletType('okx')
-                handleAccountsChanged(result, 'okx')
+                setWalletAddress(result[0])
+                getWalletInfo('okx')
                 toast.success('Your OKX wallet is now connected', {
                     onClick: () => toast.dismiss(),
                 })
@@ -803,8 +491,6 @@ function Component() {
                         <WalletDropdown
                             isOpen={isUserDropdownOpen}
                             wallet={wallet}
-                            isDisconnecting={isDisconnecting}
-                            onDisconnect={handleDisconnect}
                             onClose={() => setIsUserDropdownOpen(false)}
                         />
                     </div>

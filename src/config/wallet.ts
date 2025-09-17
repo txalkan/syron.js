@@ -86,3 +86,12 @@ export const getCurrentNetworkConfig = () => ({
         : 'https://mempool.space',
     runesMinterAddress: getRunesMinterAddress(),
 })
+
+// Helper functions to safely access window objects
+const getUnisatWindow = () =>
+    typeof window !== 'undefined' ? (window as any).unisat : null
+const getOkxWindow = () =>
+    typeof window !== 'undefined' && (window as any).okxwallet
+        ? (window as any).okxwallet.bitcoin
+        : null
+export { getUnisatWindow, getOkxWindow }

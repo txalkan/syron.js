@@ -1,6 +1,7 @@
 import React from 'react'
 import styles from './styles.module.scss'
 import Big from 'big.js'
+import WalletDisconnect from '../WalletDisconnect'
 
 interface WalletDropdownProps {
     isOpen: boolean
@@ -9,24 +10,15 @@ interface WalletDropdownProps {
         address: string | null
         balance: Big | null
     }
-    isDisconnecting: boolean
-    onDisconnect: () => Promise<void>
     onClose: () => void
 }
 
 const WalletDropdown: React.FC<WalletDropdownProps> = ({
     isOpen,
     wallet,
-    isDisconnecting,
-    onDisconnect,
     onClose,
 }) => {
     if (!isOpen) return null
-
-    const handleDisconnect = async () => {
-        await onDisconnect()
-        onClose()
-    }
 
     return (
         <div className={styles.dropdown}>
@@ -65,15 +57,7 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({
 
             {/* Actions */}
             <div className={styles.actions}>
-                <button
-                    onClick={handleDisconnect}
-                    disabled={isDisconnecting}
-                    className={`${styles.disconnectButton} ${
-                        isDisconnecting ? styles.disabled : ''
-                    }`}
-                >
-                    {isDisconnecting ? 'Disconnecting...' : 'Disconnect Wallet'}
-                </button>
+                <WalletDisconnect onDisconnect={onClose} />
             </div>
         </div>
     )
