@@ -1,3 +1,5 @@
+// @deprecated file - to be removed soon
+
 import React, { createContext, useEffect, useRef, useState } from 'react'
 import { useStore } from 'react-stores'
 import { useDispatch, useSelector } from 'react-redux'

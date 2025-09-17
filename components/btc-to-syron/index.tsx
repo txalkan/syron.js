@@ -52,12 +52,12 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
     const syron = useStore($syron)
     const [sdb, setSDB] = useState('')
     useEffect(() => {
-        if (syron !== null) {
+        if (syron !== null && btcAddr) {
             console.log('Syron', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
         }
-    }, [syron?.sdb])
+    }, [syron?.sdb, btcAddr])
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)

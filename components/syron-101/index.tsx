@@ -144,7 +144,7 @@ function Component() {
     }, [identity, siwb, showSendModal, showBuyModal, isWalletConnected])
 
     useEffect(() => {
-        if (syron !== null) {
+        if (syron !== null && isWalletConnected) {
             console.log('Syron State: ', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
@@ -179,7 +179,7 @@ function Component() {
                     console.error('Error fetching BTC price:', error)
                 })
         }
-    }, [syron, getXR])
+    }, [syron, getXR, isWalletConnected])
 
     // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {

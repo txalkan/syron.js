@@ -56,7 +56,9 @@ class MyDocument extends Document {
                         dangerouslySetInnerHTML={{
                             __html: `
                                 // Apply body class immediately to ensure preloaded images are used
-                                document.body.classList.add('body');
+                                // Check for light mode preference and apply appropriate class
+                                const prefersLight = localStorage.getItem('isLight') === 'true';
+                                document.body.classList.add(prefersLight ? 'bodylight' : 'body');
                             `,
                         }}
                     />
