@@ -17,6 +17,7 @@ import {
     getUnisatWindow,
     getOkxWindow,
 } from '../../src/config/wallet'
+import { Big } from '../../src/utils/big'
 
 function Component() {
     const { updateWallet } = useBTCWalletHook()
@@ -168,7 +169,7 @@ function Component() {
                     const balanceAmount =
                         typeof balance === 'number' ? balance : balance.total
                     if (balanceAmount !== undefined) {
-                        setWalletBalance(balanceAmount)
+                        setWalletBalance(Big(balanceAmount))
                         await updateWallet(
                             address,
                             balanceAmount,

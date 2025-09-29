@@ -23,7 +23,7 @@ import type {
 } from '../types/zilliqa'
 import type { SwapPair } from '../types/swap'
 
-import Big from 'big.js'
+import { Big } from '../utils/big'
 
 import { Blockchain } from './custom-fetch'
 import { ZilPayBase } from './zilpay-base'
@@ -63,8 +63,6 @@ import { useDispatch } from 'react-redux'
 import { setTxId, setTxStatusLoading } from '../app/actions'
 import { updateModalTx, updateModalTxMinimized } from '../store/modal'
 //---
-
-Big.PE = 999
 
 export enum SwapDirection {
     ZilToToken,

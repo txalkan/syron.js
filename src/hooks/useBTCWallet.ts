@@ -1,6 +1,5 @@
 import { useWalletInfoStore } from '../store/wallet_info'
-import Big from 'big.js'
-Big.PE = 999
+import { Big } from '../utils/big'
 
 export function useBTCWalletHook() {
     const { updateWalletInfo } = useWalletInfoStore()

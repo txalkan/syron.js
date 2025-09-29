@@ -1,15 +1,13 @@
 import { useCallback } from 'react'
 import { basic_bitcoin_syron } from '../declarations/basic_bitcoin_tyron'
 import { $siwb, updateSyronSSI } from '../store/syron'
-import Big from 'big.js'
+import { Big } from '../utils/big'
 import { updateXR } from '../store/xr'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { mempoolFeeRate } from '../utils/unisat/httpUtils'
 import { useStore } from 'react-stores'
 import { decodeIcrcAccount } from '@dfinity/ledger-icrc'
 import { toNullable } from '@dfinity/utils'
-
-Big.PE = 999
 
 function useICPHook() {
     const identity = useStore($siwb).value

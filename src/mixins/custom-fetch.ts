@@ -37,8 +37,7 @@ import { ZERO_ADDR } from '../config/const'
 import { $net } from '../store/network'
 import { useSelector } from 'react-redux'
 import { RootState } from '../app/reducers'
-import Big from 'big.js'
-Big.PE = 999
+import { Big } from '../utils/big'
 
 type Params = string[] | number[] | (string | string[] | number[])[]
 

@@ -1,14 +1,14 @@
 import React from 'react'
 import styles from './styles.module.scss'
-import Big from 'big.js'
 import WalletDisconnect from '../WalletDisconnect'
+import { Big } from '../../src/utils/big'
 
 interface WalletDropdownProps {
     isOpen: boolean
     wallet: {
         type: 'unisat' | 'okx' | null
         address: string | null
-        balance: Big | null
+        balance: Big | number | null
     }
     onClose: () => void
 }
@@ -50,7 +50,23 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({
                 <div className={styles.section}>
                     <div className={styles.sectionLabel}>Balance</div>
                     <div className={styles.balanceValue}>
-                        {wallet.balance.div(1e8).toFixed(8)} BTC
+                        {(() => {
+                            try {
+                                // Handle both Big object and number types
+                                const balanceValue =
+                                    wallet.balance instanceof Big
+                                        ? wallet.balance
+                                        : Big(wallet.balance || 0)
+                                return balanceValue.div(1e8).toFixed(8)
+                            } catch (error) {
+                                console.error(
+                                    'Error formatting balance:',
+                                    error
+                                )
+                                return '0'
+                            }
+                        })()}{' '}
+                        BTC
                     </div>
                 </div>
             )}

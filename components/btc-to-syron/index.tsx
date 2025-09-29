@@ -1,7 +1,5 @@
 import styles from './index.module.scss'
-import _Big from 'big.js'
 import { useStore } from 'react-stores'
-import toformat from 'toformat'
 import React, { useEffect, useRef, useState } from 'react'
 import ThreeDots from '../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
@@ -25,10 +23,7 @@ import Spinner from '../Spinner'
 import { VaultPair } from '../../src/types/vault'
 import { BitcoinNetworkType } from '../../src/config/wallet'
 import { useWalletInfoStore } from '../../src/store/wallet_info'
-
-const Big = toformat(_Big)
-Big.PE = 999
-const _0 = Big(0)
+import { Big, _0 } from '../../src/utils/big'
 
 type Prop = {
     testBtc: boolean
@@ -37,8 +32,6 @@ type Prop = {
 
 export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
     const { t } = useTranslation()
-    const dispatch = useDispatch()
-
     const { wallet } = useWalletInfoStore()
     const btcAddr = wallet.address
 
