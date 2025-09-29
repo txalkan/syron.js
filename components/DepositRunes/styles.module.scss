@@ -838,6 +838,7 @@
 }
 
 .explorerButton {
+    text-transform: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -847,7 +848,7 @@
     border: 1px solid #cbd5e1;
     border-radius: 6px;
     padding: 8px 12px;
-    font-size: 12px;
+    font-size: 0.875rem;
     font-weight: 500;
     cursor: pointer;
     transition: all 0.2s ease;

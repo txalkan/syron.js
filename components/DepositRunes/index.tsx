@@ -12,7 +12,7 @@ import {
 } from '../Table'
 import { TransactionDetails } from './TransactionDetails'
 import LoadingSpinner from '../LoadingSpinner'
-import styles from './DepositRunes.module.scss'
+import styles from './styles.module.scss'
 
 // Constants
 const STABLE_DEPOSIT_THRESHOLD = 0.1
@@ -61,7 +61,7 @@ interface DepositRunesProps {
 }
 
 export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
-    const [editOpen, showEdit, closeEdit] = useToggleState()
+    const [confirmOpen, showConfirm, closeConfirm] = useToggleState()
     const [balanceToEdit, setBalanceToEdit] =
         React.useState<RunesDepositBalance | null>(null)
     const [runesBalances, setRunesBalances] = React.useState<
@@ -194,12 +194,12 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
             setBalanceToEdit(balance)
         }
 
-        showEdit()
+        showConfirm()
     }
 
     const onSave = () => {
         // update balance
-        closeEdit()
+        closeConfirm()
     }
 
     // Use fetched balances or fallback to default
@@ -216,12 +216,12 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
             >
                 <div className={styles.drawerHeader}>
                     <h3>
-                        {editOpen
+                        {confirmOpen
                             ? 'Deposit' + ' ' + balanceToEdit?.runeName
                             : 'Deposit Runes'}
                     </h3>
                     <div className={styles.headerActions}>
-                        {!editOpen && (
+                        {!confirmOpen && (
                             <button
                                 onClick={fetchRunesBalances}
                                 disabled={isLoading}
@@ -267,13 +267,13 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                     </div>
                 </div>
                 <div className={styles.drawerBody}>
-                    {editOpen ? (
+                    {confirmOpen ? (
                         <TransactionDetails
                             runeName={balanceToEdit?.runeName || ''}
                             depositedAmount={
                                 balanceToEdit?.depositedAmount || '0'
                             }
-                            onClose={closeEdit}
+                            onClose={closeConfirm}
                             onConfirm={() => onSave()}
                             sdbAddress={sdbAddress || ''}
                         />
@@ -692,14 +692,14 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                     )}
                 </div>
                 <div className={styles.drawerFooter}>
-                    {!editOpen && (
+                    {!confirmOpen ? (
                         <>
                             <Button
                                 variant="secondary"
                                 onClick={() => {
                                     if (sdbAddress) {
                                         window.open(
-                                            `https://mempool.space/address/${sdbAddress}`,
+                                            `https://uniscan.cc/address/${sdbAddress}?assets=runes`,
                                             '_blank'
                                         )
                                     }
@@ -739,12 +739,13 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                View on Mempool
+                                View on UniScan
                             </Button>
-                            {/* <Button variant="secondary" onClick={onClose}>
-                                Close
-                            </Button> */}
                         </>
+                    ) : (
+                        <Button variant="secondary" onClick={closeConfirm}>
+                            Go Back
+                        </Button>
                     )}
                 </div>
             </div>
