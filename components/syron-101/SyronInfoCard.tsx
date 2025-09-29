@@ -25,7 +25,7 @@ const SyronInfoCard = () => {
                 </li>
                 <li>
                     <strong>Multi-Token Support</strong> Withdrawals are
-                    supported as both BRC-20 & Rune tokens to your
+                    supported as both Runes & BRC-20 tokens to your
                     self-custodial Bitcoin wallet
                 </li>
             </ul>

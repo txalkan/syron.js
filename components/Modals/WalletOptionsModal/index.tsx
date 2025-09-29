@@ -151,6 +151,33 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                         </div>
                     </div>
                 </div>
+
+                <div className={styles.legalContainer}>
+                    <div className={styles.legalText}>
+                        By connecting your wallet, you agree to TyronDAO&apos;s{' '}
+                        <span
+                            className={styles.legalLink}
+                            onClick={() =>
+                                window.open(
+                                    'https://docs.tyrondao.org/legal/terms-of-service'
+                                )
+                            }
+                        >
+                            Terms of Service
+                        </span>{' '}
+                        &{' '}
+                        <span
+                            className={styles.legalLink}
+                            onClick={() =>
+                                window.open(
+                                    'https://docs.tyrondao.org/legal/privacy-policy'
+                                )
+                            }
+                        >
+                            Privacy Policy
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
     )

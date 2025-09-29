@@ -292,6 +292,39 @@
     }
 }
 
+.legalContainer {
+    margin-top: 20px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    cursor: default;
+}
+
+.legalText {
+    font-size: 0.75rem;
+    color: #6b7280;
+    text-align: center;
+    line-height: 1.4;
+    cursor: default;
+    font-family:
+        'Geist Sans',
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+}
+
+.legalLink {
+    color: #4b0082;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+    transition: color 0.2s ease;
+
+    &:hover {
+        color: #6b46c1;
+        text-decoration: none;
+    }
+}
+
 // Mobile responsive styles
 @media (max-width: 768px) {
     .modal {

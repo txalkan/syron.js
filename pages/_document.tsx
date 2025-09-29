@@ -36,20 +36,6 @@ class MyDocument extends Document {
                         type="image/jpeg"
                         media="(max-width: 576px)"
                     />
-                    <link
-                        rel="preload"
-                        as="image"
-                        href="/images/lightning.webp"
-                        type="image/webp"
-                        media="(supports: webp)"
-                    />
-                    <link
-                        rel="preload"
-                        as="image"
-                        href="/images/lightning_mobile.webp"
-                        type="image/webp"
-                        media="(max-width: 576px) and (supports: webp)"
-                    />
                 </Head>
                 <body>
                     <script
