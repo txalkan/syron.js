@@ -466,3 +466,43 @@ If you have any questions, comments or interest in pursuing any other use cases,
 .noBreak {
     white-space: nowrap;
 }
+
+// Validation styles - Minimal & Brutal
+.validationInfo {
+    width: 100%;
+    margin-top: 0.75rem;
+}
+
+.validationMessage {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+
+    &.valid {
+        color: green;
+        border-left: 3px solid green;
+        padding-left: 0.75rem;
+    }
+
+    &.invalid {
+        color: #ff0000;
+        border-left: 3px solid #ff0000;
+        padding-left: 0.75rem;
+    }
+}
+
+.validationIcon {
+    font-size: 0.9rem;
+    font-weight: 900;
+}
+
+.validationText {
+    flex: 1;
+    line-height: 1.2;
+}

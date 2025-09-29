@@ -1,0 +1,134 @@
+@import '../../styles/scss/mixins.scss';
+
+.inputAmountContainer {
+    margin: 1.25rem 0;
+    padding: 1.25rem;
+    background: #ffffff;
+    border: 0.125rem solid #e2e8f0;
+    border-radius: 0.75rem;
+    box-shadow:
+        0 0.125rem 0.25rem -0.0625rem rgba(0, 0, 0, 0.1),
+        0 0.0625rem 0.125rem -0.0625rem rgba(0, 0, 0, 0.06);
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 0.125rem;
+        background: linear-gradient(90deg, #f7931a, #ff9900);
+    }
+}
+
+.inputAmountHeader {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+}
+
+.inputAmountLabel {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+.inputAmountInfo {
+    text-align: left;
+    margin-left: 1rem;
+    font-size: 0.8125rem;
+    color: #64748b;
+    font-weight: 400;
+}
+
+.inputAmountWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+}
+
+.inputAmount {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    border: 0.125rem solid #e2e8f0;
+    border-radius: 0.5rem;
+    font-size: 1rem;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    color: #1e293b;
+    background: #f8fafc;
+    transition: all 0.2s ease;
+
+    &:focus {
+        outline: none;
+        border-color: #3b82f6;
+        background: #ffffff;
+        box-shadow: 0 0 0 0.1875rem rgba(59, 130, 246, 0.1);
+    }
+
+    &::placeholder {
+        color: #94a3b8 !important;
+        opacity: 1 !important;
+    }
+}
+
+.inputAmountUnit {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #64748b;
+    min-width: 2.5rem;
+}
+
+.inputAmountValidation {
+    margin-left: 1rem;
+    text-align: left;
+}
+
+.validationMessage {
+    font-size: 0.8125rem;
+    font-weight: 500;
+
+    &.valid {
+        color: #059669;
+    }
+
+    &.invalid {
+        color: #dc2626;
+    }
+}
+
+@media (max-width: 47.9375rem) {
+    .inputAmountContainer {
+        margin: 1rem 0;
+        padding: 1rem;
+    }
+
+    .inputAmount {
+        padding: 0.625rem 0.875rem;
+        font-size: 0.9375rem;
+    }
+}
+
+@media (max-width: 30rem) {
+    .inputAmountContainer {
+        margin: 0.75rem 0;
+        padding: 0.75rem;
+    }
+
+    .inputAmount {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+
+    .inputAmountLabel {
+        font-size: 0.875rem;
+    }
+
+    .inputAmountInfo {
+        font-size: 0.75rem;
+    }
+}

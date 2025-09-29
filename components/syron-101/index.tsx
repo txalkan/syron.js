@@ -12,7 +12,7 @@ import icoSYRON from '../../src/assets/logos/syron_susd_brand_mark.png'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
-import Big from 'big.js'
+import { Big, _0 } from '../../src/utils/big'
 import {
     $siwb,
     $syron,
@@ -34,14 +34,12 @@ import AuthGuard from '../AuthGuard'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { DelegationIdentity } from '@dfinity/identity'
 import SyronInfoCard from './SyronInfoCard'
-import { DepositRunes } from '../DepositRunes/DepositRunes'
+import { DepositRunes } from '../DepositRunes'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import CollateralRatioProgressBar from './CollateralRatioProgressBar'
 import { useWalletInfoStore } from '../../src/store/wallet_info'
 import { getMempoolUrl } from '../../src/config/wallet'
-
-Big.PE = 999
-const _0 = Big(0)
+import { DepositBTC } from '../DepositBitcoin/DepositPsbt'
 
 function Component() {
     const { getXR } = useMempoolHook()
@@ -84,6 +82,10 @@ function Component() {
         React.useState(false)
     const updateDepositRunes = () => {
         setShowDepositRunesModal(true)
+    }
+    const [showDepositBTCModal, setShowDepositBTCModal] = React.useState(false)
+    const updateDepositBTC = () => {
+        setShowDepositBTCModal(true)
     }
 
     useEffect(() => {
@@ -695,6 +697,14 @@ function Component() {
                 sdbAddress={syron?.sdb}
             />
         )
+    } else if (isWalletConnected && showDepositBTCModal) {
+        return (
+            <DepositBTC
+                open={showDepositBTCModal}
+                onClose={() => setShowDepositBTCModal(false)}
+                sdbAddress={syron?.sdb}
+            />
+        )
     } else {
         return (
             <div className={styles.container}>
@@ -880,21 +890,69 @@ function Component() {
                                         </div>
                                     </div>
                                     <div className={styles.boxWrapperInner}>
+                                        <div className={styles.stepIndicator}>
+                                            <div className={styles.step}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    1
+                                                </span>
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    DEPOSIT
+                                                </span>
+                                            </div>
+                                            <div className={styles.stepArrow}>
+                                                →
+                                            </div>
+                                            <div className={styles.step}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    2
+                                                </span>
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    BORROW
+                                                </span>
+                                            </div>
+                                        </div>
                                         <div className={styles.txtRowsInfo}>
                                             To add collateral, send Bitcoin to
                                             your Safety Deposit ₿ox address.
                                             <br />
                                             Minimum deposit: 3,000 sats (0.00003
                                             BTC).
-                                            <br />
-                                            <br />
+                                            <div className={styles.buttons}>
+                                                <div
+                                                    className={
+                                                        styles.buttonLabel
+                                                    }
+                                                >
+                                                    <button
+                                                        onClick={
+                                                            updateDepositBTC
+                                                        }
+                                                        className={
+                                                            'button primary'
+                                                        }
+                                                    >
+                                                        ₿
+                                                    </button>
+                                                    <div>Deposit BTC</div>
+                                                </div>
+                                            </div>
                                             <span>
-                                                <strong>Quick tip:</strong> Only
-                                                UTXOs ≥ 3,000 sats count as
-                                                collateral.
-                                                <br />
-                                                Smaller amounts are reserved for
-                                                fees.
+                                                <strong>Quick tip:</strong>{' '}
+                                                Deposits under 3,000 sats are
+                                                automatically set aside for
+                                                network fees.
                                             </span>
                                         </div>
                                         <div className={styles.subsection}>
@@ -920,9 +978,58 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
+                                        {Number(satsDeposited.div(1e8)) ===
+                                            0 && (
+                                            <div
+                                                className={
+                                                    styles.placeholderMessage
+                                                }
+                                            >
+                                                <span
+                                                    className={
+                                                        styles.placeholderText
+                                                    }
+                                                >
+                                                    Deposit BTC to get started
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className={styles.txtRow}>
+                                            Borrow stablecoins against your
+                                            Bitcoin deposits, adding SUSD to
+                                            your account balance.
+                                        </div>
+                                        <div className={styles.buttons}>
+                                            <div className={styles.buttonLabel}>
+                                                <button
+                                                    onClick={() =>
+                                                        updateBalance()
+                                                    }
+                                                    className={`button ${
+                                                        isLoading
+                                                            ? 'disabled'
+                                                            : 'primary'
+                                                    }`}
+                                                >
+                                                    {isLoading ? (
+                                                        <div
+                                                            className={
+                                                                styles.loading
+                                                            }
+                                                        >
+                                                            Loading
+                                                            <ThreeDots color="white" />
+                                                        </div>
+                                                    ) : (
+                                                        <>+</>
+                                                    )}
+                                                </button>
+                                                <div>borrow susd</div>
+                                            </div>
+                                        </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | Current collateral
+                                                | Collateral balance
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -1064,40 +1171,6 @@ function Component() {
                                                 </div>
                                             </div>
                                         )}
-                                        <br />
-                                        <div className={styles.txtRow}>
-                                            Borrow stablecoins against your
-                                            Bitcoin deposits, adding SUSD to
-                                            your account balance.
-                                        </div>
-                                        <div className={styles.buttons}>
-                                            <div className={styles.buttonLabel}>
-                                                <button
-                                                    onClick={() =>
-                                                        updateBalance()
-                                                    }
-                                                    className={`button ${
-                                                        isLoading
-                                                            ? 'disabled'
-                                                            : 'secondary'
-                                                    }`}
-                                                >
-                                                    {isLoading ? (
-                                                        <div
-                                                            className={
-                                                                styles.loading
-                                                            }
-                                                        >
-                                                            Loading
-                                                            <ThreeDots color="black" />
-                                                        </div>
-                                                    ) : (
-                                                        <>+</>
-                                                    )}
-                                                </button>
-                                                <div>borrow susd</div>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div className={styles.subtitleLabel}>
@@ -1391,7 +1464,7 @@ function Component() {
                         or Runes:
                     </div>
                     <br /> */}
-                    <div className={styles.tabWrapper}>
+                    {/* <div className={styles.tabWrapper}>
                         <div
                             onClick={() =>
                                 active !== 'GetSyron'
@@ -1434,7 +1507,7 @@ function Component() {
                             </div>
                             mint RUNE•DOLLAR
                         </div>
-                        {/* <div
+                        <div
                             onClick={() =>
                                 //toast.info('Coming soon')
                                 active !== 'LiquidSyron'
@@ -1448,15 +1521,15 @@ function Component() {
                             }
                         >
                             <div className={styles.iconGoldContainer}>
-                                    <Image
-                                        src={icoEarn}
-                                        alt={'earn-bitcoin'}
-                                        className={styles.icon}
-                                    />
-                                </div>
+                                <Image
+                                    src={icoEarn}
+                                    alt={'earn-bitcoin'}
+                                    className={styles.icon}
+                                />
+                            </div>
                             Earn Bitcoin
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
 
                     {active === 'GetSyronIsOff' && (
                         <div className={styles.cardSub}>
@@ -1466,6 +1539,7 @@ function Component() {
                                     startPair={start_pair}
                                 />
                             </div>
+                            Earn Bitcoin
                         </div>
                     )}
                     {active === 'GetSyronRunesIsOff' && (

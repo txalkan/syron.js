@@ -1,8 +1,6 @@
 import React from 'react'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
-import { useSelector } from 'react-redux'
-import { RootState } from '../../src/app/reducers'
 import { mempoolFeeRate } from '../../src/utils/unisat/httpUtils'
 import styles from './styles.module.scss'
 
@@ -23,9 +21,7 @@ export function DepositBitcoin({
     disabled = false,
     className = '',
 }: DepositBitcoinProps) {
-    // Get theme from Redux store
-    const isLight = true //useSelector((state: RootState) => state.modal.isLight)
-
+    const isLight = true
     const handleDeposit = async () => {
         if (!sdbAddress) {
             const error = new Error('SDB address not available')

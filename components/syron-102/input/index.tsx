@@ -122,8 +122,6 @@ export const BoxInput: React.FC<Prop> = ({
         []
     )
 
-    const walletConnected = useStore($walletConnected).isConnected
-
     return (
         <div className={classNames(styles.container)}>
             <div className={styles.formTxtInfoWrapper}>
@@ -143,60 +141,55 @@ export const BoxInput: React.FC<Prop> = ({
                             </span>
                         </div>
                         <div className={styles.info}>
-                            {walletConnected && (
-                                <>
-                                    | Wallet Balance
-                                    <span className={styles.infoBalance}>
-                                        {!isNaN(Number(btcBalance)) &&
-                                            Number(btcBalance) !== 0 && (
-                                                <span
-                                                    className={styles.infoColor}
-                                                >
-                                                    <span
-                                                        style={{
-                                                            paddingRight:
-                                                                '0.2rem',
-                                                        }}
-                                                    >
-                                                        ₿
-                                                    </span>
-                                                    {Number(
-                                                        btcBalance
-                                                    ).toLocaleString('en-US', {
-                                                        minimumFractionDigits: 8,
-                                                        maximumFractionDigits: 8,
-                                                    })}
-                                                </span>
-                                            )}
-                                        <span className={styles.infoPurple}>
-                                            {Number(balWorth) != 0 && (
-                                                <span
-                                                    style={{
-                                                        paddingRight: '0.2rem',
-                                                    }}
-                                                >
-                                                    ≈
-                                                </span>
-                                            )}
+                            | Wallet Balance
+                            <span className={styles.infoBalance}>
+                                {!isNaN(Number(btcBalance)) &&
+                                    Number(btcBalance) !== 0 && (
+                                        <span className={styles.infoColor}>
                                             <span
                                                 style={{
                                                     paddingRight: '0.2rem',
                                                 }}
                                             >
-                                                $
+                                                ₿
                                             </span>
-                                            {Number(balWorth) == 0
-                                                ? 0
-                                                : Number(
-                                                      balWorth
-                                                  ).toLocaleString('en-US', {
-                                                      minimumFractionDigits: 2,
-                                                      maximumFractionDigits: 2,
-                                                  })}
+                                            {Number(btcBalance).toLocaleString(
+                                                'en-US',
+                                                {
+                                                    minimumFractionDigits: 8,
+                                                    maximumFractionDigits: 8,
+                                                }
+                                            )}
                                         </span>
+                                    )}
+                                <span className={styles.infoPurple}>
+                                    {Number(balWorth) != 0 && (
+                                        <span
+                                            style={{
+                                                paddingRight: '0.2rem',
+                                            }}
+                                        >
+                                            ≈
+                                        </span>
+                                    )}
+                                    <span
+                                        style={{
+                                            paddingRight: '0.2rem',
+                                        }}
+                                    >
+                                        $
                                     </span>
-                                </>
-                            )}
+                                    {Number(balWorth) == 0
+                                        ? 0
+                                        : Number(balWorth).toLocaleString(
+                                              'en-US',
+                                              {
+                                                  minimumFractionDigits: 2,
+                                                  maximumFractionDigits: 2,
+                                              }
+                                          )}
+                                </span>
+                            </span>
                         </div>
 
                         {/* {Number(bal) != 0 && (
@@ -222,7 +215,7 @@ export const BoxInput: React.FC<Prop> = ({
 
             <div className={styles.inputContainer}>
                 <label htmlFor="deposit" className={styles.label}>
-                    Deposit bitcoin
+                    btc for collateral
                 </label>
                 {/* @dev Percentage buttons */}
                 <div className={styles.percentWrapper}>

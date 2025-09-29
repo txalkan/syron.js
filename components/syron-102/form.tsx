@@ -37,6 +37,7 @@ import ReleaseWarning from '../ReleaseWarning'
 type Prop = {
     startPair: VaultPair[]
     type: string
+    onCollateralAmountChange?: (amount: Big) => void
 }
 
 Big.PE = 999
@@ -44,7 +45,11 @@ const _0 = Big(0)
 
 const vault = new SSIVault()
 
-export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
+export const SyronForm: React.FC<Prop> = ({
+    startPair,
+    type,
+    onCollateralAmountChange,
+}) => {
     const syron = useStore($syron)
     const [sdb, setSDB] = useState('')
 
@@ -71,7 +76,11 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const [selectedData, setSelectedData] = React.useState<any>(null)
     const [incriptionTx, setInscTx] = React.useState<any>(null)
 
-    const [amount, setAmount] = React.useState(_0)
+    const [btcAmt, setBtcAmt] = React.useState(_0)
+    const [susdAmt, setAmount] = React.useState(_0)
+
+    // Validation state for collateral amount
+    const [isCollateralValid, setIsCollateralValid] = React.useState(false)
 
     const direction = React.useMemo(() => {
         return vault.getVaultDirection(vault_pair)
@@ -87,6 +96,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
         unLinkedPair[1].value = _0
         setPair(unLinkedPair)
         setAmount(_0)
+        setBtcAmt(_0)
     }, [vault_pair])
 
     const handleSubmit = React.useCallback(
@@ -114,6 +124,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
 
                     setPair(unLinkedPair)
                     setAmount(Big(amount))
+                    setBtcAmt(value)
                 }
             } catch (error) {
                 console.error(error)
@@ -134,6 +145,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
             setShowOutputTokenModal(false)
 
             setAmount(_0)
+            setBtcAmt(_0)
         },
         [vault_pair]
     )
@@ -142,7 +154,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     const onDexSwap = () => {
         const update_pair = JSON.parse(JSON.stringify(vault_pair))
 
-        update_pair[1].value = amount
+        update_pair[1].value = susdAmt
 
         setPair(update_pair)
         setConfirmModal(true)
@@ -158,6 +170,26 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
     useEffect(() => {
         if (xr != null) setDisabled(false)
     }, [xr])
+
+    // Validate collateral amount (minimum 3000 sats)
+    const validateCollateral = React.useCallback((btcAmount: Big) => {
+        const minCollateralSats = 3000
+        const isValid = btcAmount.gte(minCollateralSats)
+        setIsCollateralValid(isValid)
+        return btcAmount
+    }, [])
+
+    // Notify parent when amount changes
+    useEffect(() => {
+        if (onCollateralAmountChange) {
+            onCollateralAmountChange(btcAmt)
+        }
+    }, [btcAmt, onCollateralAmountChange])
+
+    // Validate collateral when Bitcoin amount changes
+    useEffect(() => {
+        validateCollateral(btcAmt)
+    }, [btcAmt, validateCollateral])
 
     if (type === 'GetSyron') {
         return (
@@ -232,7 +264,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 wallet.
                             </div> */}
                             <TransactionOutput
-                                amount={amount}
+                                amount={susdAmt}
                                 token={vault_pair[1].meta}
                             />
                             <BtcToSyron testBtc={false} pair={vault_pair} />
@@ -322,7 +354,7 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                                 wallet.
                             </div> */}
                             <TransactionOutput
-                                amount={amount}
+                                amount={susdAmt}
                                 token={vault_pair[1].meta}
                             />
                             <BtcToSyron testBtc={true} pair={vault_pair} />
@@ -337,6 +369,42 @@ export const SyronForm: React.FC<Prop> = ({ startPair, type }) => {
                         </div>
                     </form>
                 ) : null}
+            </>
+        )
+    }
+
+    if (type === 'DepositBTC') {
+        return (
+            <>
+                <ReleaseWarning />
+                <form className={styles.container} onSubmit={handleSubmit}>
+                    <div className={styles.contentWrapper}>
+                        <BoxInput
+                            value={vault_pair[0].value}
+                            token={vault_pair[0].meta}
+                            disabled={disabled}
+                            onInput={handleOnInput}
+                        />
+
+                        {/* Collateral validation info */}
+                        <div className={styles.validationInfo}>
+                            {btcAmt.gt(_0) && (
+                                <div
+                                    className={`${styles.validationMessage} ${isCollateralValid ? styles.valid : styles.invalid}`}
+                                >
+                                    <span className={styles.validationIcon}>
+                                        {isCollateralValid ? '✓' : '✗'}
+                                    </span>
+                                    <span className={styles.validationText}>
+                                        {isCollateralValid
+                                            ? `COLLATERAL: ${btcAmt.div(1e8).round(8, 0)} BTC`
+                                            : `INSUFFICIENT: MIN 0.00003 BTC REQUIRED`}
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+                </form>
             </>
         )
     }
