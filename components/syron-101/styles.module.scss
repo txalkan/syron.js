@@ -763,3 +763,119 @@
     color: #000;
     margin: 0 0.5rem;
 }
+
+/* Custom button styles for Syron-101 - Minimal & Brutal Design */
+.boxWrapper,
+.boxWrapperInner {
+    :global(.button) {
+        /* Base button styles - larger, bolder, more visible */
+        height: 3.5rem !important;
+        min-height: 3.5rem !important;
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+        border: 3px solid #000 !important;
+        border-radius: 0 !important;
+        letter-spacing: 0.05rem !important;
+        padding: 0 2rem !important;
+        transition: all 0.2s ease !important;
+        box-shadow: 4px 4px 0 #000 !important;
+        text-transform: uppercase !important;
+
+        /* Mobile: even larger */
+        @media only screen and (max-width: 768px) {
+            height: 4.5rem !important;
+            min-height: 4.5rem !important;
+            font-size: 1.2rem !important;
+            padding: 0 2.5rem !important;
+            box-shadow: 6px 6px 0 #000 !important;
+        }
+
+        /* Primary button - solid fill */
+        &.primary {
+            background-color: rgb(75, 0, 130) !important;
+            color: #fff !important;
+            border: 3px solid #000 !important;
+        }
+
+        &.primary:hover {
+            background-color: rgb(100, 20, 160) !important;
+            color: #fff !important;
+            transform: translate(-2px, -2px) !important;
+            box-shadow: 6px 6px 0 #000 !important;
+
+            @media only screen and (max-width: 768px) {
+                box-shadow: 8px 8px 0 #000 !important;
+            }
+        }
+
+        &.primary:active {
+            transform: translate(2px, 2px) !important;
+            box-shadow: 2px 2px 0 #000 !important;
+        }
+
+        /* Secondary button - outline style */
+        &.secondary {
+            background-color: #fff !important;
+            color: rgb(75, 0, 130) !important;
+            border: 3px solid rgb(75, 0, 130) !important;
+            height: 3.5rem !important;
+            min-height: 3.5rem !important;
+            font-size: 1.1rem !important;
+
+            @media only screen and (max-width: 768px) {
+                height: 4.5rem !important;
+                min-height: 4.5rem !important;
+                font-size: 1.2rem !important;
+            }
+        }
+
+        &.secondary:hover {
+            background-color: rgb(75, 0, 130) !important;
+            color: #fff !important;
+            border: 3px solid #000 !important;
+            transform: translate(-2px, -2px) !important;
+            box-shadow: 6px 6px 0 #000 !important;
+
+            @media only screen and (max-width: 768px) {
+                box-shadow: 8px 8px 0 #000 !important;
+            }
+        }
+
+        &.secondary:active {
+            transform: translate(2px, 2px) !important;
+            box-shadow: 2px 2px 0 #000 !important;
+        }
+
+        /* Disabled button */
+        &.disabled {
+            background-color: #e5e5e5 !important;
+            color: #999 !important;
+            border: 3px solid #ccc !important;
+            cursor: not-allowed !important;
+            opacity: 0.6 !important;
+            box-shadow: 4px 4px 0 #ccc !important;
+
+            @media only screen and (max-width: 768px) {
+                box-shadow: 6px 6px 0 #ccc !important;
+            }
+        }
+
+        &.disabled:hover {
+            transform: none !important;
+            box-shadow: 4px 4px 0 #ccc !important;
+            background-color: #e5e5e5 !important;
+
+            @media only screen and (max-width: 768px) {
+                box-shadow: 6px 6px 0 #ccc !important;
+            }
+        }
+    }
+}
+
+/* Button label text styling */
+.buttonLabel {
+    div {
+        font-weight: 600 !important;
+        letter-spacing: 0.05rem !important;
+    }
+}
