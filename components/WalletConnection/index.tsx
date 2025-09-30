@@ -45,17 +45,20 @@ function Component() {
 
             if (unisat) {
                 setUnisatInstalled(true)
-                clearInterval(intervalId)
+                // console.log('Unisat wallet installation confirmed')
             }
             if (okx) {
                 setOKXInstalled(true)
-                clearInterval(intervalId)
+                // console.log('OKX wallet installation confirmed')
             }
         }
 
         // Check for wallets every 100ms, up to 10 times
         const intervalId = setInterval(checkWalletInstallations, 100)
-        setTimeout(() => clearInterval(intervalId), 1000)
+        setTimeout(() => {
+            clearInterval(intervalId)
+            // console.log('Wallet installation check completed')
+        }, 1000)
 
         return () => clearInterval(intervalId)
     }, [])
@@ -231,41 +234,60 @@ function Component() {
             setIsConnecting(true)
 
             // Check if unisat is available
-            const unisat = getUnisatWindow()
+            let unisat = getUnisatWindow()
             if (!unisat) {
-                toast.error(
-                    'Unisat wallet not found. Please install Unisat extension.',
-                    {
-                        onClick: () => toast.dismiss(),
-                    }
+                // Try waiting a bit more for the extension to load
+                console.log(
+                    'Unisat not found, waiting for extension to load...'
                 )
-                setIsConnecting(false)
-                return
+                for (let i = 0; i < 5; i++) {
+                    await new Promise((resolve) => setTimeout(resolve, 200))
+                    unisat = getUnisatWindow()
+                    if (unisat) {
+                        console.log('Unisat loaded after waiting')
+                        break
+                    }
+                }
+
+                if (!unisat) {
+                    toast.error(
+                        'Unisat wallet not found. Please install Unisat extension and refresh the page.',
+                        {
+                            onClick: () => toast.dismiss(),
+                        }
+                    )
+                    setIsConnecting(false)
+                    return
+                }
             }
 
             // Check if unisat is already connected
-            const currentAccounts = await unisat.getAccounts()
-            if (currentAccounts && currentAccounts.length > 0) {
-                toast.info('UniSat wallet connected', {
-                    onClick: () => toast.dismiss(),
-                })
-                setWalletAddress(currentAccounts[0])
-                setWalletType('unisat')
-                getWalletInfo('unisat')
-                setIsConnecting(false)
-                return
+            try {
+                const currentAccounts = await unisat.getAccounts()
+                if (currentAccounts && currentAccounts.length > 0) {
+                    toast.info('UniSat wallet connected', {
+                        onClick: () => toast.dismiss(),
+                    })
+                    setWalletAddress(currentAccounts[0])
+                    setWalletType('unisat')
+                    getWalletInfo('unisat')
+                    setIsConnecting(false)
+                    return
+                }
+            } catch (getAccountsError) {
+                console.log(
+                    'No existing connection, proceeding with connection request'
+                )
             }
 
             // Get current network
-            const network = await unisat
-                .getChain()
-                .then((chain: { enum: any }) => chain.enum)
-                .catch((error: any) => {
-                    console.error('Error getting chain:', error)
-                    return null
-                })
-
-            if (!network) {
+            let network = null
+            try {
+                network = await unisat
+                    .getChain()
+                    .then((chain: { enum: any }) => chain.enum)
+            } catch (error) {
+                console.error('Error getting chain:', error)
                 toast.error('Failed to get wallet network', {
                     onClick: () => toast.dismiss(),
                 })
@@ -275,8 +297,8 @@ function Component() {
             //@network
             const target_network = getUnisatTargetNetwork()
 
-            // Switch network if needed
-            if (network !== target_network) {
+            // Switch network if needed (only if we got network info)
+            if (network && network !== target_network) {
                 try {
                     await unisat.switchChain(target_network)
                     setWalletNetwork(target_network)
@@ -288,7 +310,7 @@ function Component() {
                     })
                     return
                 }
-            } else {
+            } else if (network) {
                 if (typeof network === 'string' && network) {
                     setWalletNetwork(network)
                 }
@@ -311,7 +333,30 @@ function Component() {
             }
         } catch (error) {
             console.error('Error connecting wallet:', error)
-            toast.error('Failed to connect wallet', {
+
+            // Provide more specific error messages
+            let errorMessage = 'Failed to connect wallet'
+            if (error instanceof Error) {
+                if (
+                    error.message.includes('User rejected') ||
+                    error.message.includes('user rejected')
+                ) {
+                    errorMessage = 'Connection rejected by user'
+                } else if (
+                    error.message.includes('Extension') ||
+                    error.message.includes('extension')
+                ) {
+                    errorMessage =
+                        'Please check if the UniSat extension is properly installed and enabled'
+                } else if (
+                    error.message.includes('popup') ||
+                    error.message.includes('Popup')
+                ) {
+                    errorMessage = 'Please allow popups and try again'
+                }
+            }
+
+            toast.error(errorMessage, {
                 onClick: () => toast.dismiss(),
             })
         } finally {

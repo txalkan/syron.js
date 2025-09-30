@@ -73,12 +73,21 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                             {isUnisatInstalled ? (
                                 <button
                                     className={styles.connectButton}
-                                    onClick={async () => {
-                                        onConnectUnisat()
-                                        // Small delay to ensure state updates are processed
-                                        setTimeout(() => {
-                                            onClose()
-                                        }, 100)
+                                    onClick={async (e) => {
+                                        e.preventDefault()
+                                        e.stopPropagation()
+                                        try {
+                                            onConnectUnisat()
+                                            // Small delay to ensure state updates are processed
+                                            setTimeout(() => {
+                                                onClose()
+                                            }, 100)
+                                        } catch (error) {
+                                            console.error(
+                                                'Error in Unisat connection:',
+                                                error
+                                            )
+                                        }
                                     }}
                                 >
                                     {t('Connect')}

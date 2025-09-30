@@ -88,10 +88,41 @@ export const getCurrentNetworkConfig = () => ({
 })
 
 // Helper functions to safely access window objects
-const getUnisatWindow = () =>
-    typeof window !== 'undefined' ? (window as any).unisat : null
-const getOkxWindow = () =>
-    typeof window !== 'undefined' && (window as any).okxwallet
-        ? (window as any).okxwallet.bitcoin
-        : null
+const getUnisatWindow = () => {
+    if (typeof window === 'undefined') return null
+
+    // Check for unisat object
+    const unisat = (window as any).unisat
+    if (unisat) {
+        // console.log('Unisat wallet detected:', {
+        //     hasRequestAccounts: typeof unisat.requestAccounts === 'function',
+        //     hasGetAccounts: typeof unisat.getAccounts === 'function',
+        //     hasGetChain: typeof unisat.getChain === 'function',
+        //     hasSwitchChain: typeof unisat.switchChain === 'function',
+        // })
+        return unisat
+    }
+
+    console.log('Unisat wallet not found on window object')
+    return null
+}
+
+const getOkxWindow = () => {
+    if (typeof window === 'undefined') return null
+
+    if ((window as any).okxwallet) {
+        const okx = (window as any).okxwallet.bitcoin
+        if (okx) {
+            // console.log('OKX wallet detected:', {
+            //     hasRequestAccounts: typeof okx.requestAccounts === 'function',
+            //     hasGetAccounts: typeof okx.getAccounts === 'function',
+            // })
+            return okx
+        }
+    }
+
+    console.log('OKX wallet not found on window object')
+    return null
+}
+
 export { getUnisatWindow, getOkxWindow }
