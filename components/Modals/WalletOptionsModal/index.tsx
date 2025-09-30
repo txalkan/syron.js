@@ -5,6 +5,7 @@ import { CloseIcon } from '../../icons/close'
 import unisatLogo from '../../../src/assets/logos/unisat.svg'
 import okxLogo from '../../../src/assets/logos/okx.svg'
 import styles from './styles.module.scss'
+import { isOKXMobileBrowser } from '../../../src/config/wallet'
 
 interface WalletOptionsModalProps {
     isOpen: boolean
@@ -26,6 +27,9 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
     const { t } = useTranslation()
 
     if (!isOpen) return null
+
+    // Check if we're in OKX mobile browser
+    const isInOKXBrowser = isOKXMobileBrowser()
 
     return (
         <div className={styles.overlay}>
@@ -49,64 +53,97 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                 </div>
 
                 <div className={styles.content}>
-                    <div className={styles.walletOption}>
-                        <div className={styles.walletInfo}>
-                            <div className={styles.walletIcon}>
-                                <Image
-                                    src={unisatLogo}
-                                    alt="UniSat Wallet"
-                                    width={24}
-                                    height={24}
-                                />
+                    {/* Show info message when in OKX browser */}
+                    {isInOKXBrowser && (
+                        <div
+                            style={{
+                                padding: '12px',
+                                marginBottom: '16px',
+                                backgroundColor: '#f0f9ff',
+                                borderRadius: '8px',
+                                border: '1px solid #bae6fd',
+                            }}
+                        >
+                            <p
+                                style={{
+                                    margin: 0,
+                                    fontSize: '13px',
+                                    color: '#0c4a6e',
+                                    lineHeight: '1.5',
+                                }}
+                            >
+                                {t(
+                                    'You are using OKX Wallet browser. Connect with OKX for the best experience.'
+                                )}
+                            </p>
+                        </div>
+                    )}
+
+                    {/* Only show UniSat option if NOT in OKX mobile browser */}
+                    {!isInOKXBrowser && (
+                        <div className={styles.walletOption}>
+                            <div className={styles.walletInfo}>
+                                <div className={styles.walletIcon}>
+                                    <Image
+                                        src={unisatLogo}
+                                        alt="UniSat Wallet"
+                                        width={24}
+                                        height={24}
+                                    />
+                                </div>
+                                <div className={styles.walletDetails}>
+                                    <div className={styles.walletName}>
+                                        UniSat
+                                    </div>
+                                    {!isUnisatInstalled && (
+                                        <span
+                                            className={styles.notInstalledLabel}
+                                        >
+                                            {t('Not Installed')}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
-                            <div className={styles.walletDetails}>
-                                <div className={styles.walletName}>UniSat</div>
-                                {!isUnisatInstalled && (
-                                    <span className={styles.notInstalledLabel}>
-                                        {t('Not Installed')}
-                                    </span>
+
+                            <div className={styles.walletAction}>
+                                {isUnisatInstalled ? (
+                                    <button
+                                        className={styles.connectButton}
+                                        onClick={async (e) => {
+                                            e.preventDefault()
+                                            e.stopPropagation()
+                                            try {
+                                                onConnectUnisat()
+                                                // Small delay to ensure state updates are processed
+                                                setTimeout(() => {
+                                                    onClose()
+                                                }, 100)
+                                            } catch (error) {
+                                                console.error(
+                                                    'Error in Unisat connection:',
+                                                    error
+                                                )
+                                            }
+                                        }}
+                                    >
+                                        {t('Connect')}
+                                    </button>
+                                ) : (
+                                    <button
+                                        className={styles.installButton}
+                                        onClick={() =>
+                                            window.open(
+                                                'https://chromewebstore.google.com/detail/unisat-wallet/ppbibelpcjmhbdihakflkdcoccbgbkpo',
+                                                '_blank'
+                                            )
+                                        }
+                                    >
+                                        {t('Add to Chrome')}
+                                    </button>
                                 )}
                             </div>
                         </div>
-
-                        <div className={styles.walletAction}>
-                            {isUnisatInstalled ? (
-                                <button
-                                    className={styles.connectButton}
-                                    onClick={async (e) => {
-                                        e.preventDefault()
-                                        e.stopPropagation()
-                                        try {
-                                            onConnectUnisat()
-                                            // Small delay to ensure state updates are processed
-                                            setTimeout(() => {
-                                                onClose()
-                                            }, 100)
-                                        } catch (error) {
-                                            console.error(
-                                                'Error in Unisat connection:',
-                                                error
-                                            )
-                                        }
-                                    }}
-                                >
-                                    {t('Connect')}
-                                </button>
-                            ) : (
-                                <button
-                                    className={styles.installButton}
-                                    onClick={() =>
-                                        window.open(
-                                            'https://chromewebstore.google.com/detail/unisat-wallet/ppbibelpcjmhbdihakflkdcoccbgbkpo',
-                                            '_blank'
-                                        )
-                                    }
-                                >
-                                    {t('Add to Chrome')}
-                                </button>
-                            )}
-                        </div>
-                    </div>
+                    )}
 
                     <div className={styles.walletOption}>
                         <div className={styles.walletInfo}>

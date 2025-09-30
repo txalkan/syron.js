@@ -88,8 +88,35 @@ export const getCurrentNetworkConfig = () => ({
 })
 
 // Helper functions to safely access window objects
+
+/**
+ * Check if we're in OKX mobile in-app browser
+ * OKX mobile injects both window.unisat and window.okxwallet for compatibility
+ */
+const isOKXMobileBrowser = (): boolean => {
+    if (typeof window === 'undefined') return false
+
+    // Check if OKX wallet is present (primary indicator)
+    const hasOKX = !!(window as any).okxwallet
+
+    // Check user agent for OKX
+    const userAgent = navigator?.userAgent || ''
+    const isOKXUserAgent =
+        userAgent.includes('OKApp') || userAgent.includes('okx')
+
+    // If OKX wallet object exists OR user agent indicates OKX, we're in OKX browser
+    return hasOKX || isOKXUserAgent
+}
+
 const getUnisatWindow = () => {
     if (typeof window === 'undefined') return null
+
+    // If we're in OKX mobile browser, don't return unisat even if it exists
+    // This prevents confusion where OKX injects unisat for compatibility
+    if (isOKXMobileBrowser()) {
+        console.log('OKX mobile browser detected, skipping unisat check')
+        return null
+    }
 
     // Check for unisat object
     const unisat = (window as any).unisat
@@ -125,4 +152,4 @@ const getOkxWindow = () => {
     return null
 }
 
-export { getUnisatWindow, getOkxWindow }
+export { getUnisatWindow, getOkxWindow, isOKXMobileBrowser }
