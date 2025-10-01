@@ -27,7 +27,42 @@ export const inscribe_transfer = async (
         'receiveAddress for inscribe-transfer (brc20 minter)',
         receiveAddress
     )
-    if (!receiveAddress) throw new Error('The receiver address is not defined')
+
+    if (!receiveAddress) {
+        // Enhanced error message with environment variable debugging
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        const isTestnet = process.env.NEXT_PUBLIC_SYRON_VERSION === 'testnet'
+        const expectedEnvVar = isTestnet
+            ? 'NEXT_PUBLIC_SYRON_MINTER_TESTNET'
+            : version === '2'
+              ? 'NEXT_PUBLIC_SYRON_MINTER_MAINNET2'
+              : 'NEXT_PUBLIC_SYRON_MINTER_MAINNET'
+
+        console.error('Environment variable debugging:', {
+            version,
+            isTestnet,
+            expectedEnvVar,
+            NEXT_PUBLIC_SYRON_VERSION: process.env.NEXT_PUBLIC_SYRON_VERSION,
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_MAINNET
+                ? 'SET'
+                : 'NOT_SET',
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET2: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_MAINNET2
+                ? 'SET'
+                : 'NOT_SET',
+            NEXT_PUBLIC_SYRON_MINTER_TESTNET: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_TESTNET
+                ? 'SET'
+                : 'NOT_SET',
+        })
+
+        throw new Error(
+            `The receiver address is not defined. Expected environment variable: ${expectedEnvVar}. ` +
+                `Current version: ${version || 'undefined'}, isTestnet: ${isTestnet}. ` +
+                `Please check your environment configuration.`
+        )
+    }
 
     let devAddress
     let devFee

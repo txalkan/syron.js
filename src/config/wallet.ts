@@ -60,16 +60,76 @@ export function getMinterAddress(type: MinterType): string {
                 : 'NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET',
     }
 
+    let address = ''
+
     if (testnet) {
-        return process.env[envKeys.testnet] || ''
+        if (type === MinterType.BRC20) {
+            address = process.env.NEXT_PUBLIC_SYRON_MINTER_TESTNET || ''
+        } else {
+            address = process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_TESTNET || ''
+        }
+    } else if (version === '2') {
+        if (type === MinterType.BRC20) {
+            address = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2 || ''
+        } else {
+            address = process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET2 || ''
+        }
+    } else {
+        if (type === MinterType.BRC20) {
+            address = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET || ''
+        } else {
+            address = process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET || ''
+        }
     }
 
-    // Mainnet logic
-    if (version === '2') {
-        return process.env[envKeys.mainnet2] || ''
-    }
+    // Debug logging for environment variables
+    console.log('getMinterAddress debug:', {
+        type,
+        version,
+        testnet,
+        envKey: testnet
+            ? envKeys.testnet
+            : version === '2'
+              ? envKeys.mainnet2
+              : envKeys.mainnet,
+        address: address || 'EMPTY',
+        allEnvVars: {
+            NEXT_PUBLIC_SYRON_VERSION: process.env.NEXT_PUBLIC_SYRON_VERSION,
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_MAINNET
+                ? 'SET'
+                : 'NOT_SET',
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET2: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_MAINNET2
+                ? 'SET'
+                : 'NOT_SET',
+            NEXT_PUBLIC_SYRON_MINTER_TESTNET: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_TESTNET
+                ? 'SET'
+                : 'NOT_SET',
+        },
+        // Additional debugging - log the actual values (be careful with sensitive data)
+        actualValues: {
+            NEXT_PUBLIC_SYRON_VERSION: process.env.NEXT_PUBLIC_SYRON_VERSION,
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET:
+                process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET?.substring(0, 10) +
+                '...',
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET2:
+                process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2?.substring(
+                    0,
+                    10
+                ) + '...',
+            NEXT_PUBLIC_SYRON_MINTER_TESTNET:
+                process.env.NEXT_PUBLIC_SYRON_MINTER_TESTNET?.substring(0, 10) +
+                '...',
+        },
+        // Check if we're in browser environment
+        isBrowser: typeof window !== 'undefined',
+        // Check if process.env exists
+        hasProcessEnv: typeof process !== 'undefined' && process.env,
+    })
 
-    return process.env[envKeys.mainnet] || ''
+    return address
 }
 
 /**
