@@ -31,7 +31,7 @@ import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
 import ConfirmTransactionModal from '../confirm-txn'
 import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
-import { getRunesMinterAddress } from '../../../src/config/wallet'
+import { getMinterAddress, MinterType } from '../../../src/config/wallet'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -229,7 +229,7 @@ var ThisModal: React.FC<Prop> = function ({
 
             if (stablecoin === 'RUNES') {
                 // Use config function to get minter address
-                const receiveAddress = getRunesMinterAddress()
+                const receiveAddress = getMinterAddress(MinterType.RUNES)
 
                 const unisat = (window as any).unisat
                 const txId = await unisat.sendBitcoin(

@@ -30,22 +30,46 @@ export function getMempoolUrl(path: string): string {
 }
 
 /**
- * Get minter address based on Syron version and network
+ * Minter type enum for different token standards
  */
-export function getRunesMinterAddress(): string {
+export enum MinterType {
+    BRC20 = 'BRC20',
+    RUNES = 'RUNES',
+}
+
+/**
+ * Get minter address based on type, Syron version and network
+ */
+export function getMinterAddress(type: MinterType): string {
     const version = process.env.NEXT_PUBLIC_SYRON_VERSION
     const testnet = isTestnet()
 
+    // Determine environment variable keys based on minter type
+    const envKeys = {
+        testnet:
+            type === MinterType.BRC20
+                ? 'NEXT_PUBLIC_SYRON_MINTER_TESTNET'
+                : 'NEXT_PUBLIC_SYRON_RUNES_MINTER_TESTNET',
+        mainnet2:
+            type === MinterType.BRC20
+                ? 'NEXT_PUBLIC_SYRON_MINTER_MAINNET2'
+                : 'NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET2',
+        mainnet:
+            type === MinterType.BRC20
+                ? 'NEXT_PUBLIC_SYRON_MINTER_MAINNET'
+                : 'NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET',
+    }
+
     if (testnet) {
-        return process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_TESTNET || ''
+        return process.env[envKeys.testnet] || ''
     }
 
     // Mainnet logic
     if (version === '2') {
-        return process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET2 || ''
+        return process.env[envKeys.mainnet2] || ''
     }
 
-    return process.env.NEXT_PUBLIC_SYRON_RUNES_MINTER_MAINNET || ''
+    return process.env[envKeys.mainnet] || ''
 }
 
 /**
@@ -84,7 +108,7 @@ export const getCurrentNetworkConfig = () => ({
     mempoolUrl: isTestnet()
         ? 'https://mempool.space/testnet4'
         : 'https://mempool.space',
-    runesMinterAddress: getRunesMinterAddress(),
+    runesMinterAddress: getMinterAddress(MinterType.RUNES),
 })
 
 // Helper functions to safely access window objects
@@ -96,16 +120,17 @@ export const getCurrentNetworkConfig = () => ({
 const isOKXMobileBrowser = (): boolean => {
     if (typeof window === 'undefined') return false
 
-    // Check if OKX wallet is present (primary indicator)
-    const hasOKX = !!(window as any).okxwallet
-
-    // Check user agent for OKX
+    // Check user agent for OKX mobile app (most reliable indicator)
     const userAgent = navigator?.userAgent || ''
     const isOKXUserAgent =
         userAgent.includes('OKApp') || userAgent.includes('okx')
 
-    // If OKX wallet object exists OR user agent indicates OKX, we're in OKX browser
-    return hasOKX || isOKXUserAgent
+    // Check if OKX wallet is present
+    const hasOKX = !!(window as any).okxwallet
+
+    // BOTH conditions must be true: OKX wallet object exists AND user agent indicates OKX mobile
+    // This prevents false positives from desktop OKX extension
+    return hasOKX && isOKXUserAgent
 }
 
 const getUnisatWindow = () => {
@@ -152,4 +177,26 @@ const getOkxWindow = () => {
     return null
 }
 
-export { getUnisatWindow, getOkxWindow, isOKXMobileBrowser }
+/**
+ * Get the appropriate wallet window based on wallet type
+ * This provides a unified interface for wallet operations
+ *
+ * On desktop: Returns the specific wallet provider (unisat or okxwallet.bitcoin)
+ * On OKX mobile: OKX injects window.unisat for compatibility, so both work
+ *
+ * @param walletType - 'unisat' or 'okx'
+ * @returns The wallet provider object or null
+ */
+const getWalletWindow = (walletType: 'unisat' | 'okx' | null | undefined) => {
+    if (typeof window === 'undefined' || !walletType) return null
+
+    if (walletType === 'okx') {
+        return getOkxWindow()
+    } else if (walletType === 'unisat') {
+        return getUnisatWindow()
+    } else {
+        return null
+    }
+}
+
+export { getUnisatWindow, getOkxWindow, getWalletWindow, isOKXMobileBrowser }

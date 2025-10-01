@@ -2,7 +2,7 @@ import { useState, useRef } from 'react'
 import { toast } from 'react-toastify'
 import { useWalletInfoStore } from '../store/wallet_info'
 import { useBitcoinTransactionStore } from '../store/bitcoin_transactions'
-import { getUnisatWindow, getOkxWindow } from '../config/wallet'
+import { getWalletWindow } from '../config/wallet'
 
 /**
  * Custom hook for wallet disconnect functionality
@@ -32,31 +32,19 @@ export function useWalletDisconnect() {
             setIsDisconnecting(true)
 
             // Remove event listeners first to prevent stale data callbacks
-            if (wallet.type === 'unisat') {
-                const unisat = getUnisatWindow()
-                if (unisat && typeof unisat.removeAllListeners === 'function') {
-                    try {
-                        unisat.removeAllListeners()
-                        console.log('UniSat all event listeners removed')
-                    } catch (error) {
-                        console.log(
-                            'UniSat removeAllListeners not available:',
-                            error
-                        )
-                    }
-                }
-            } else if (wallet.type === 'okx') {
-                const okx = getOkxWindow()
-                if (okx && typeof okx.removeAllListeners === 'function') {
-                    try {
-                        okx.removeAllListeners()
-                        console.log('OKX all event listeners removed')
-                    } catch (error) {
-                        console.log(
-                            'OKX removeAllListeners not available:',
-                            error
-                        )
-                    }
+            const walletWindow = getWalletWindow(wallet.type)
+            if (
+                walletWindow &&
+                typeof walletWindow.removeAllListeners === 'function'
+            ) {
+                try {
+                    await walletWindow.removeAllListeners()
+                    console.log(`${wallet.type} all event listeners removed`)
+                } catch (error) {
+                    console.log(
+                        `${wallet.type} removeAllListeners not available:`,
+                        error
+                    )
                 }
             }
 
@@ -65,29 +53,14 @@ export function useWalletDisconnect() {
             clearAllTransactions()
 
             // Call wallet provider disconnect API
-            if (wallet.type === 'unisat') {
-                const unisat = getUnisatWindow()
-                if (unisat && unisat.disconnect) {
-                    try {
-                        await unisat.disconnect()
-                        console.log('UniSat wallet disconnected via API')
-                    } catch (disconnectError) {
-                        console.log(
-                            'UniSat disconnect API not available, using fallback'
-                        )
-                    }
-                }
-            } else if (wallet.type === 'okx') {
-                const okx = getOkxWindow()
-                if (okx && okx.disconnect) {
-                    try {
-                        await okx.disconnect()
-                        console.log('OKX wallet disconnected via API')
-                    } catch (disconnectError) {
-                        console.log(
-                            'OKX disconnect API not available, using fallback'
-                        )
-                    }
+            if (walletWindow && walletWindow.disconnect) {
+                try {
+                    await walletWindow.disconnect()
+                    console.log(`${wallet.type} wallet disconnected via API`)
+                } catch (disconnectError) {
+                    console.log(
+                        `${wallet.type} disconnect API not available, using fallback. Error: ${disconnectError}`
+                    )
                 }
             }
 
