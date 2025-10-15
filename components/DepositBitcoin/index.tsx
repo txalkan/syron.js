@@ -1,7 +1,7 @@
 import React from 'react'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
-import { mempoolFeeRate } from '../../src/utils/unisat/httpUtils'
+import { mempoolFeeRate } from '../../src/utils/bitcoin/mempool'
 import styles from './styles.module.scss'
 
 interface DepositBitcoinProps {

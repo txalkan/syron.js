@@ -4,7 +4,7 @@ import {
     getWalletWindow,
 } from '../../config/wallet'
 import { InscribeOrderData } from './api-types'
-import { transaction_status } from './httpUtils'
+import { transaction_status } from '../bitcoin/mempool'
 
 export const inscribe_transfer = async (
     sdb: string,

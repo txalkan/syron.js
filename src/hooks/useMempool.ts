@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { updateXR } from '../store/xr'
-import { mempoolPrice } from '../utils/unisat/httpUtils'
+import { mempoolPrice } from '../utils/bitcoin/mempool'
 import { useStore } from 'react-stores'
 import { $syron } from '../store/syron'
 

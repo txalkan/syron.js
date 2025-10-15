@@ -44,7 +44,7 @@ import {
     mempoolTxId,
     mempoolFeeRate,
     transaction_status,
-} from '../../../src/utils/unisat/httpUtils'
+} from '../../../src/utils/bitcoin/mempool'
 import refreshIco from '../../../src/assets/icons/refresh.svg'
 import Spinner from '../../Spinner'
 import { useBTCWalletHook } from '../../../src/hooks/useBTCWallet'

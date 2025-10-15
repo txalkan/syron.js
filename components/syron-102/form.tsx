@@ -29,7 +29,7 @@ import { unisatApi } from '../../src/utils/unisat/api'
 import {
     mempoolFeeRate,
     transaction_status,
-} from '../../src/utils/unisat/httpUtils'
+} from '../../src/utils/bitcoin/mempool'
 import ThreeDots from '../Spinner/ThreeDots'
 import { BtcToSyron } from '../btc-to-syron'
 import ReleaseWarning from '../ReleaseWarning'

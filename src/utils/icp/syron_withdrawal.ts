@@ -6,7 +6,7 @@ import {
     addInscriptionInfo,
     updateInscriptionInfo,
 } from '../unisat/inscription-info'
-import { mempoolFeeRate } from '../unisat/httpUtils'
+import { mempoolFeeRate } from '../bitcoin/mempool'
 import { useWalletInfoStore } from '../../store/wallet_info'
 
 Big.PE = 999

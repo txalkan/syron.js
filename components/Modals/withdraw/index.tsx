@@ -30,7 +30,7 @@ import { extractRejectText } from '../../../src/utils/unisat/utils'
 import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
 import ConfirmTransactionModal from '../confirm-txn'
-import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
+import { mempoolFeeRate } from '../../../src/utils/bitcoin/mempool'
 import { getMinterAddress, MinterType } from '../../../src/config/wallet'
 
 Big.PE = 999
