@@ -56,7 +56,7 @@ export const SyronForm: React.FC<Prop> = ({
         if (syron !== null) {
             setSDB(syron.sdb)
         }
-    }, [syron?.sdb])
+    }, [syron])
 
     const tokensStore = useStore($tokens)
 
@@ -112,24 +112,33 @@ export const SyronForm: React.FC<Prop> = ({
             try {
                 if (xr != null) {
                     setConfirmModal(false)
-                    const unLinkedPair = JSON.parse(JSON.stringify(vault_pair))
-                    unLinkedPair[0].value = value
-                    // unLinkedPair[1].value = dex.getRealPrice(unLinkedPair)
-                    //setPair(unLinkedPair)
-                    //@ssibrowsers
 
-                    const amount = vault.computeSU$D(unLinkedPair, xr.rate)
-                    unLinkedPair[1].value = amount
+                    setPair((prevPair) => {
+                        if (!prevPair || prevPair.length < 2) {
+                            return prevPair
+                        }
 
-                    setPair(unLinkedPair)
-                    setAmount(Big(amount))
+                        const nextPair = prevPair.map((pairItem) => ({
+                            ...pairItem,
+                        }))
+
+                        nextPair[0].value = value
+
+                        const amount = vault.computeSU$D(nextPair, xr.rate)
+                        nextPair[1].value = amount
+
+                        setAmount(Big(amount))
+
+                        return nextPair
+                    })
+
                     setBtcAmt(value)
                 }
             } catch (error) {
                 console.error(error)
             }
         },
-        [vault_pair, xr]
+        [xr]
     )
 
     const handleOnSelectToken = React.useCallback(
@@ -160,10 +169,12 @@ export const SyronForm: React.FC<Prop> = ({
     }
 
     useEffect(() => {
-        if (Number(vault_pair[0].value) > 0) {
-            handleOnInput(vault_pair[0].value)
+        if (!xr) return
+
+        if (btcAmt.gt(_0)) {
+            handleOnInput(btcAmt)
         }
-    }, [tokensStore])
+    }, [tokensStore, xr, btcAmt, handleOnInput])
 
     const [disabled, setDisabled] = React.useState(true)
     useEffect(() => {

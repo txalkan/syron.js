@@ -23,6 +23,7 @@ import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
 import { $icpTx, $inscriptionTx, updateIcpTx } from '../../../src/store/syron'
 import { useStore } from 'react-stores'
 import { useBitcoinTransactionStore } from '../../../src/store/bitcoin_transactions'
+import { getWithdrawTransactionKey } from '../../../src/utils/transaction-tracker'
 import Spinner from '../../Spinner'
 import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -116,7 +117,7 @@ var ThisModal: React.FC<Prop> = function ({
     // Zustand store for transaction state persistence
     const { runningTransactions, setTransactionRunning, clearTransaction } =
         useBitcoinTransactionStore()
-    const transactionKey = `withdraw_${stablecoin?.toLowerCase() || 'unknown'}`
+    const transactionKey = getWithdrawTransactionKey(stablecoin)
     const isTransactionRunning = runningTransactions[transactionKey] || false
 
     // Use Zustand state for transaction status when modal reopens
@@ -124,7 +125,7 @@ var ThisModal: React.FC<Prop> = function ({
         if (isTransactionRunning && !isLoading) {
             setIsLoading(true)
         }
-    }, [isTransactionRunning])
+    }, [isTransactionRunning, isLoading])
 
     // Cleanup transaction state when modal unmounts (but keep running transactions)
     useEffect(() => {
@@ -169,7 +170,7 @@ var ThisModal: React.FC<Prop> = function ({
                 gas_fee: `${gas_fee} sats`,
             }
         },
-        []
+        [BRC20_FEE_MULTIPLIER, RUNES_FEE_MULTIPLIER]
     )
 
     // Function to fetch fee rate and calculate network fee
@@ -211,7 +212,14 @@ var ThisModal: React.FC<Prop> = function ({
                 }))
             }
         }
-    }, [feeRate, isConfirmationOpen, amount, stablecoin, calculateFeeDetails])
+    }, [
+        feeRate,
+        isConfirmationOpen,
+        amount,
+        stablecoin,
+        onDetails,
+        calculateFeeDetails,
+    ])
 
     const handleConfirm = React.useCallback(async () => {
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
@@ -332,6 +340,11 @@ var ThisModal: React.FC<Prop> = function ({
         getBox,
         runes_withdrawal,
         syron_withdrawal,
+        BRC20_FEE_MULTIPLIER,
+        RUNES_FEE_MULTIPLIER,
+        clearTransaction,
+        setTransactionRunning,
+        transactionKey,
     ])
 
     const retryWithdrawal = React.useCallback(async () => {
@@ -431,6 +444,7 @@ var ThisModal: React.FC<Prop> = function ({
         getBox,
         runes_withdrawal,
         syron_withdrawal,
+        BRC20_FEE_MULTIPLIER,
     ])
 
     const copyToClipboard = (text: string) => {
@@ -528,7 +542,14 @@ var ThisModal: React.FC<Prop> = function ({
                 )
             }
         }
-    }, [amount, feeRate, stablecoin, fetchFeeRate, calculateFeeDetails])
+    }, [
+        isLoading,
+        amount,
+        feeRate,
+        stablecoin,
+        fetchFeeRate,
+        calculateFeeDetails,
+    ])
 
     const handleCloseConfirmation = () => {
         // Always close the confirmation modal
@@ -1036,8 +1057,8 @@ var ThisModal: React.FC<Prop> = function ({
                                 </div>
 
                                 <div className={styles.failedMessage}>
-                                    We&apos;re sorry, but your withdrawal request
-                                    could not be completed.
+                                    We&apos;re sorry, but your withdrawal
+                                    request could not be completed.
                                 </div>
                             </div>
 

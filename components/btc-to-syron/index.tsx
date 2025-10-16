@@ -1,6 +1,6 @@
 import styles from './index.module.scss'
 import { useStore } from 'react-stores'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ThreeDots from '../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import {
@@ -50,7 +50,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
 
             setSDB(syron.sdb)
         }
-    }, [syron?.sdb, btcAddr])
+    }, [syron, btcAddr])
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
@@ -99,9 +99,9 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
             (syron == null && walletConnected) ||
             icpTx.value === false
         )
-    }, [isLoading, syron, icpTx])
+    }, [isLoading, syron, icpTx, walletConnected])
 
-    const updateWalletBalance = async () => {
+    const updateWalletBalance = useCallback(async () => {
         if (!unisat) return
 
         const [address] = await unisat.getAccounts()
@@ -114,12 +114,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
             await updateWallet(address, Number(balance.confirmed), network)
 
         return address
-    }
-    const updateUserBalance = async () => {
+    }, [unisat, updateWallet])
+
+    const updateUserBalance = useCallback(async () => {
         const ssi = await updateWalletBalance()
         await getBox(ssi)
         console.log('User balance updated')
-    }
+    }, [updateWalletBalance, getBox])
 
     const { btc_to_syron } = useSyronWithdrawal()
 
@@ -261,24 +262,36 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         } finally {
             setIsLoading(false)
         }
-    }, [userSSI, sdb, collateral, amt])
+    }, [
+        userSSI,
+        sdb,
+        collateral,
+        amt,
+        btc_to_syron,
+        inscriptionTx.value,
+        updateUserBalance,
+        wallet.network,
+    ])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],
     })
     const self = selfRef.current
-    const handleAccountsChanged = (_accounts: string[]) => {
-        if (self.accounts[0] === _accounts[0]) {
-            // prevent from triggering twice
-            return
-        }
-        self.accounts = _accounts
-        if (_accounts.length > 0) {
-            updateWalletConnected(true)
-        } else {
-            updateWalletConnected(false)
-        }
-    }
+    const handleAccountsChanged = useCallback(
+        (_accounts: string[]) => {
+            if (self.accounts[0] === _accounts[0]) {
+                // prevent from triggering twice
+                return
+            }
+            self.accounts = _accounts
+            if (_accounts.length > 0) {
+                updateWalletConnected(true)
+            } else {
+                updateWalletConnected(false)
+            }
+        },
+        [self]
+    )
 
     const [shouldCheckUnisat, setShouldCheckUnisat] = useState(false)
     useEffect(() => {
@@ -304,7 +317,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         }
 
         if (shouldCheckUnisat) checkUnisat().then()
-    }, [shouldCheckUnisat])
+    }, [shouldCheckUnisat, handleAccountsChanged])
 
     // @dev Once the inscribe-transfer transaction is confirmed, update the display of wallet balance
     useEffect(() => {
@@ -313,7 +326,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         }
 
         if (inscriptionTx.value) updateWalletBal()
-    }, [inscriptionTx.value])
+    }, [inscriptionTx.value, updateWalletBalance])
 
     const handleButtonClick = async () => {
         if (testBtc) return toast.warn('Coming soon')
@@ -432,7 +445,15 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         }
 
         setIsLoading(false)
-    }, [userSSI, sdb, isLoading, inscriptionTx])
+    }, [
+        userSSI,
+        sdb,
+        isLoading,
+        inscriptionTx,
+        btc_to_syron,
+        updateUserBalance,
+        amt,
+    ])
 
     return (
         <div className={styles.container}>

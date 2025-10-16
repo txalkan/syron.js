@@ -222,13 +222,11 @@ export const PoolOverview: React.FC<Prop> = ({ loading }) => {
 
         return tokens
     }, [
+        zilusd_rate,
         wallet,
         dragondex_liquidity,
         tokensStore,
-        settings,
         tydradex_liquidity,
-        zilswap_liquidity,
-        aswap_liquidity,
         dexname,
     ])
     //@zilpay

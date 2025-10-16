@@ -205,7 +205,7 @@ function Component() {
             }
         }
         if (wallet.address) updateBox()
-    }, [wallet.address])
+    }, [wallet, getBox])
 
     const [isConnecting, setIsConnecting] = useState(false)
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)

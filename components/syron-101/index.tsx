@@ -140,7 +140,7 @@ function Component() {
         } else {
             console.error('SIWB session not found')
         }
-    }, [identity, siwb, showSendModal, showBuyModal, isWalletConnected])
+    }, [identity, siwb, showSendModal, showBuyModal, isWalletConnected, clear])
 
     useEffect(() => {
         if (syron !== null && isWalletConnected) {

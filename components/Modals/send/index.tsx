@@ -224,7 +224,16 @@ var ThisModal: React.FC<Prop> = function ({
         } finally {
             setIsLoading(false)
         }
-    }, [ssi, recipient, sdb, amount, isLoading, isDisabled])
+    }, [
+        ssi,
+        recipient,
+        amount,
+        isLoading,
+        isDisabled,
+        getBox,
+        isICP,
+        send_syron,
+    ])
 
     // const copyToClipboard = (text: string) => {
     //     navigator.clipboard.writeText(text)

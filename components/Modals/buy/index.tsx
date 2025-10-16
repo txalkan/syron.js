@@ -218,7 +218,17 @@ var ThisModal: React.FC<Prop> = function ({
             setIsConfirmationOpen(false)
             setIsLoading(false)
         }
-    }, [ssi, sdb, amount, btcAmount, isLoading, isDisabled, isTxnRes, isTxnErr])
+    }, [
+        amount,
+        btcAmount,
+        buy_btc,
+        getBox,
+        isDisabled,
+        isLoading,
+        onClose,
+        ssi,
+        syron,
+    ])
 
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
     const [onDetails, setOnDetails] = useState({})
@@ -313,7 +323,7 @@ var ThisModal: React.FC<Prop> = function ({
                 )
             }
         }
-    }, [isDisabled, btcAmount])
+    }, [isDisabled, btcAmount, amount, wallet.address])
 
     const handleCloseConfirmation = () => {
         setIsConfirmationOpen(false)

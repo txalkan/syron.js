@@ -126,7 +126,7 @@ export var TokensModal: React.FC<Prop> = function ({
 
             onSelect(token)
         },
-        [exceptions]
+        [exceptions, onSelect]
     )
 
     const handleSubmit = React.useCallback(
@@ -138,7 +138,7 @@ export var TokensModal: React.FC<Prop> = function ({
                 handleOnSelect(first.meta)
             }
         },
-        [tokens]
+        [tokens, handleOnSelect]
     )
 
     React.useEffect(() => {

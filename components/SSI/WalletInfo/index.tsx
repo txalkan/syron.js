@@ -138,7 +138,7 @@ function Component(props: InputType) {
 
     useEffect(() => {
         setToggleInfoZilpay(false)
-        // eslint-disable-next-line react-hooks/exhaustive-deps
+         
     }, [originator_address])
 
     useEffect(() => {

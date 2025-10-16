@@ -27,7 +27,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     const walletProvider = useMemo(
         () =>
-            wallet.type == 'okx'
+            wallet.type === 'okx'
                 ? 'okxwallet.bitcoin'
                 : (wallet.type as WalletProviderKey),
         [wallet.type]
@@ -76,7 +76,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     }, [
         attemptLogin,
         connectedBtcAddress,
-        clear,
         getAddress,
         identity,
         isPrepareLoginIdle,

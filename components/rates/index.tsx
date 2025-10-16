@@ -29,7 +29,7 @@ function Component() {
         usd_price = usd_price.round(4)
         setTyronSGDPrice(String(sgd_price))
         setTyronUSDPrice(String(usd_price))
-    }, [reserves])
+    }, [reserves, pools_])
 
     return (
         <div className={styles.dashboard}>

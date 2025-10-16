@@ -334,6 +334,9 @@ export function TransactionDetails({
         feeRate,
         gasFeeSats,
         syron,
+        depositSyronRunes,
+        isLight,
+        onConfirm,
     ])
 
     return (

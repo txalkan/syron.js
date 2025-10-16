@@ -3,6 +3,7 @@ import { Modal, Button, Typography } from 'antd'
 import styles from './index.module.scss'
 import ThreeDots from '../../Spinner/ThreeDots'
 import LoadingSpinner from '../../LoadingSpinner'
+import Image from 'next/image'
 import bitcoinIcon from '../../../src/assets/icons/bitcoin.png'
 import { toast } from 'react-toastify'
 
@@ -185,7 +186,12 @@ const ConfirmTransactionModal = ({
                 {onDetails.title === 'Confirm BTC Purchase' && (
                     <div className={styles.totalSection}>
                         <div className={styles.bitcoinLogo}>
-                            <img src={bitcoinIcon.src} alt="Bitcoin" />
+                            <Image
+                                src={bitcoinIcon}
+                                alt="Bitcoin"
+                                width={40}
+                                height={40}
+                            />
                         </div>
                         <div className={styles.totalLabel}>
                             You will receive around

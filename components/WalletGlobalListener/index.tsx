@@ -297,8 +297,7 @@ export function WalletGlobalListener() {
                 )
             }
         }
-        // re-run when wallet type or address changes
-    }, [wallet?.type, wallet?.address])
+    }, [wallet, disconnectWallet])
 
     // This component doesn't render anything - it's just for event listening
     return null

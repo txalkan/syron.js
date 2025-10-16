@@ -144,7 +144,7 @@ function useArConnect() {
                 })
             }
         },
-        [arConnect, walletSwitchListener, dispatchRedux]
+        [arConnect, walletSwitchListener, dispatchRedux, isLight]
     )
 
     const disconnect = useCallback(
@@ -184,7 +184,7 @@ function useArConnect() {
                 }
             }
         },
-        [arConnect, dispatchRedux, walletSwitchListener]
+        [arConnect, dispatchRedux, walletSwitchListener, isLight]
     )
 
     // const verifyArConnect = async (action: any) => {

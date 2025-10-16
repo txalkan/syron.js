@@ -71,22 +71,25 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
     const [isCopied, setIsCopied] = React.useState(false)
 
     // Runes deposit balance books
-    const runesDepositBalances: RunesDepositBalance[] = [
-        {
-            depositedAmount: '0',
-            runeId: '902268:517', // @review (alpha)
-            runeName: 'RUNE•DOLLAR',
-            summary:
-                'Current runes balance in your Safety Deposit Box. This balance represents the total amount of RUNE•DOLLAR runes available for deposits.',
-        },
-        {
-            depositedAmount: '0',
-            runeId: '908838:2480', // @review (alpha)
-            runeName: 'BTC•DOLLAR',
-            summary:
-                'Current runes balance in your Safety Deposit Box. This balance represents the total amount of BTC•DOLLAR runes available for deposits.',
-        },
-    ]
+    const runesDepositBalances = React.useMemo<RunesDepositBalance[]>(
+        () => [
+            {
+                depositedAmount: '0',
+                runeId: '902268:517', // @review (alpha)
+                runeName: 'RUNE•DOLLAR',
+                summary:
+                    'Current runes balance in your Safety Deposit Box. This balance represents the total amount of RUNE•DOLLAR runes available for deposits.',
+            },
+            {
+                depositedAmount: '0',
+                runeId: '908838:2480', // @review (alpha)
+                runeName: 'BTC•DOLLAR',
+                summary:
+                    'Current runes balance in your Safety Deposit Box. This balance represents the total amount of BTC•DOLLAR runes available for deposits.',
+            },
+        ],
+        []
+    )
 
     // Fetch runes balances from API
     const fetchRunesBalances = React.useCallback(async () => {
@@ -142,7 +145,7 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
         } finally {
             setIsLoading(false)
         }
-    }, [sdbAddress])
+    }, [sdbAddress, runesDepositBalances])
 
     // Fetch balances on component mount and when sdbAddress changes
     React.useEffect(() => {

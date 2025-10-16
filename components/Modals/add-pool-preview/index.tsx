@@ -108,7 +108,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         } else {
             return tokensStore.tokens[base_index].meta
         }
-    }, [tokensStore])
+    }, [tokensStore, base_index])
 
     console.log('@add_pool_preview ONLY_TYRON:', only_tyron)
     const [isSSI, setIsSSI] = React.useState(true)
@@ -143,7 +143,7 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
                 return dex.tokensToZil(Big(1), token1)
             }
         }
-    }, [token1])
+    }, [dexname, token1])
 
     const handleAddLiquidity = React.useCallback(async () => {
         setLoading(true)
@@ -263,18 +263,18 @@ export var AddPoolPreviewModal: React.FC<Prop> = function ({
         }
         setLoading(false)
     }, [
+        Router,
+        base_amount,
+        dispatch,
+        isDAO,
+        isSSI,
+        limit_amount,
+        net,
+        resolvedDomain,
+        subdomainNavigate,
         token0,
         token1,
-        base_amount,
-        limit_amount,
-        onClose,
-        // isAllow,
-        tokensStore,
-        tokenIndex,
         wallet,
-        hasPool,
-        isSSI,
-        isDAO,
     ])
 
     // const hanldeUpdate = React.useCallback(async () => {

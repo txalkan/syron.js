@@ -83,7 +83,7 @@ export const BoxLiquidInput: React.FC<Prop> = ({
                 onMax(input)
             }
         },
-        [syron, token, onMax]
+        [onMax, balance]
     )
 
     const handleOnInput = useCallback(

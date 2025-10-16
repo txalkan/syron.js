@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
 import { updateXR } from '../store/xr'
 import { mempoolPrice } from '../utils/bitcoin/mempool'
 import { useStore } from 'react-stores'
@@ -8,7 +8,7 @@ import { $syron } from '../store/syron'
 export function useMempoolHook() {
     const syron = useStore($syron)
 
-    const getXR = async (): Promise<number> => {
+    const getXR = useCallback(async (): Promise<number> => {
         try {
             const xr = await mempoolPrice()
             // console.log(
@@ -40,7 +40,7 @@ export function useMempoolHook() {
                 return Number(sdb.data.exchange_rate)
             }
         }
-    }
+    }, [syron])
 
     // @dev Update BTC exchange rate every minute
     useEffect(() => {
@@ -56,7 +56,7 @@ export function useMempoolHook() {
         const intervalId = setInterval(updateXRate, 1 * 60 * 1000)
 
         return () => clearInterval(intervalId) // Cleanup on unmount
-    }, [syron])
+    }, [getXR])
 
     return {
         getXR,

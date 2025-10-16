@@ -1,6 +1,12 @@
 // @deprecated file - to be removed soon
 
-import React, { createContext, useEffect, useRef, useState } from 'react'
+import React, {
+    createContext,
+    useCallback,
+    useEffect,
+    useRef,
+    useState,
+} from 'react'
 import { useStore } from 'react-stores'
 import { useDispatch, useSelector } from 'react-redux'
 import Image from 'next/image'
@@ -122,7 +128,7 @@ function Component() {
         setTimeout(() => clearInterval(intervalId), 1000) // Stop checking after 1 second
 
         return () => clearInterval(intervalId) // Cleanup interval on component unmount
-    }, [])
+    }, [unisat])
 
     const [accounts, setAccounts] = useState<string[]>([])
     const [publicKey, setPublicKey] = useState('')
@@ -135,7 +141,7 @@ function Component() {
     const [network_, setNetwork] = useState('BITCOIN_MAINNET') // defaults to mainnet
     const walletConnected = useStore($walletConnected).isConnected
 
-    const getWalletInfo = async () => {
+    const getWalletInfo = useCallback(async () => {
         try {
             //@network
             const network = await unisat.getChain().then((chain) => chain.enum)
@@ -168,7 +174,7 @@ function Component() {
             unisat.disconnect()
             console.error(error)
         }
-    }
+    }, [unisat])
 
     useEffect(() => {
         async function update() {
@@ -177,7 +183,7 @@ function Component() {
         }
 
         if (address_ !== '') update()
-    }, [address_, balance_, network_])
+    }, [address_, balance_, network_, updateWallet])
 
     const lastProcessedAddress = useRef<string | null>(null)
     useEffect(() => {
@@ -188,29 +194,32 @@ function Component() {
             }
         }
         if (address_ != '') updateBox()
-    }, [address_])
+    }, [address_, getBox])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],
     })
     const self = selfRef.current
-    const handleAccountsChanged = (_accounts: string[]) => {
-        if (self.accounts[0] === _accounts[0]) {
-            // prevent from triggering twice
-            return
-        }
-        self.accounts = _accounts
-        if (_accounts.length > 0) {
-            setAccounts(_accounts)
-            updateWalletConnected(true)
+    const handleAccountsChanged = useCallback(
+        (accounts: string[]) => {
+            if (self.accounts[0] === accounts[0]) {
+                // prevent from triggering twice
+                return
+            }
+            self.accounts = accounts
+            if (accounts.length > 0) {
+                setAccounts(accounts)
+                updateWalletConnected(true)
 
-            setAddress(_accounts[0])
+                setAddress(accounts[0])
 
-            getWalletInfo()
-        } else {
-            updateWalletConnected(false)
-        }
-    }
+                getWalletInfo()
+            } else {
+                updateWalletConnected(false)
+            }
+        },
+        [getWalletInfo, self]
+    )
 
     const [shouldCheckUnisat, setShouldCheckUnisat] = useState(false)
     useEffect(() => {
@@ -236,7 +245,7 @@ function Component() {
         }
 
         if (shouldCheckUnisat) checkUnisat().then()
-    }, [shouldCheckUnisat])
+    }, [getWalletInfo, handleAccountsChanged, shouldCheckUnisat])
 
     const handleButtonClick = async () => {
         try {

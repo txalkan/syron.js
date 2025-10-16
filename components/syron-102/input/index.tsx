@@ -62,7 +62,7 @@ export const BoxInput: React.FC<Prop> = ({
                 }
             }
         }
-    }, [wallet.balance, xr])
+    }, [wallet.balance, xr, addr_name, value_])
 
     const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 
