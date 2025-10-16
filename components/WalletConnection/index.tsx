@@ -28,6 +28,7 @@ function Component() {
         setWalletAddress,
         setWalletNetwork,
         setWalletBalance,
+        setPublicKey,
     } = useWalletInfoStore()
 
     // Derive connection state from wallet address
@@ -180,6 +181,9 @@ function Component() {
                         )
                     }
                 }
+
+                const publicKey = await walletInstance.getPublicKey()
+                setPublicKey(publicKey)
             } else {
                 setWalletAddress('')
             }

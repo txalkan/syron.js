@@ -8,6 +8,8 @@ import styles from './styles.module.scss'
 import { SyronForm } from '../syron-102'
 import { Big, _0 } from '../../src/utils/big'
 import { InputAmount } from './InputAmount'
+import { useDepositPsbt } from '../../src/utils/bitcoin/deposit-psbt'
+import { toast } from 'react-toastify'
 
 // Constants
 const start_pair = [
@@ -69,10 +71,14 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
     const [confirmOpen, showConfirm, closeConfirm] = useToggleState()
     const [isLoading, setIsLoading] = React.useState(false)
     const [isCopied, setIsCopied] = React.useState(false)
+    const [error, setError] = React.useState<string | null>(null)
 
     const [inputAmt, setInputAmount] = React.useState<string>('2999')
     const [feeAmount, setFeeAmount] = React.useState<Big>(_0)
     const [collateralAmount, setCollateralAmount] = React.useState<Big>(_0)
+
+    // Initialize the PSBT utility
+    const { createDeposit } = useDepositPsbt()
 
     const isFeeTooHigh = false
 
@@ -111,17 +117,56 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
         showConfirm()
     }
 
-    const handleConfirm = () => {
-        // Handle the actual deposit confirmation logic here
-        console.log('Confirming deposit:', {
-            collateralAmount,
-            feeAmount,
-            sdbAddress,
-        })
+    const handleConfirm = async () => {
+        if (!sdbAddress) {
+            setError('SDB address is required')
+            return
+        }
 
-        // For now, just close the modal
-        // In real implementation, this would handle the PSBT creation and signing
-        onClose()
+        setError(null)
+
+        try {
+            console.log(
+                'Confirming deposit:',
+                JSON.stringify(
+                    {
+                        collateralAmount,
+                        feeAmount,
+                        sdbAddress,
+                    },
+                    null,
+                    2
+                )
+            )
+
+            // Create and sign the deposit PSBT
+            const result = await createDeposit({
+                collateralAmount,
+                feeAmount,
+                sdbAddress,
+                setIsLoading,
+            })
+
+            if (result.success) {
+                console.log('Deposit PSBT created successfully:', result.txId)
+                // TODO: Handle success (maybe show success message, redirect, etc.)
+                onClose()
+            } else {
+                console.error('Failed to create deposit PSBT:', result.error)
+                setError(result.error || 'Failed to create deposit transaction')
+
+                toast.error(
+                    result.error || 'Failed to create deposit transaction'
+                )
+            }
+        } catch (error) {
+            console.error('Error in handleConfirm:', error)
+            setError(
+                error instanceof Error
+                    ? error.message
+                    : 'Unknown error occurred'
+            )
+        }
     }
 
     if (!open) return null
@@ -143,11 +188,15 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                     </div>
                 </div>
                 <div className={styles.drawerBody}>
+                    {error && (
+                        <div className={styles.errorMessage}>
+                            <span style={{ color: '#ef4444' }}>⚠️ {error}</span>
+                        </div>
+                    )}
                     {confirmOpen ? (
                         <TransactionDetails
                             collateralAmount={collateralAmount}
                             feeAmount={feeAmount}
-                            sdbAddress={sdbAddress || ''}
                         />
                     ) : (
                         <>
@@ -327,8 +376,12 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                                 variant="secondary"
                                 onClick={() => {
                                     if (sdbAddress) {
+                                        // window.open(
+                                        //     `https://mempool.space/address/${sdbAddress}`,
+                                        //     '_blank'
+                                        // )
                                         window.open(
-                                            `https://mempool.space/address/${sdbAddress}`,
+                                            `https://uniscan.cc/address/${sdbAddress}?assets=runes`,
                                             '_blank'
                                         )
                                     }
@@ -368,7 +421,7 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                View on Mempool
+                                View on UniScan
                             </Button>
                             {/* <Button variant="secondary" onClick={onClose}>
                                 Close
@@ -379,9 +432,17 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                             <Button
                                 variant="primary"
                                 onClick={handleConfirm}
+                                disabled={isLoading}
                                 className={styles.continueButton}
                             >
-                                Confirm Deposit
+                                {isLoading ? (
+                                    <>
+                                        <LoadingSpinner />
+                                        Sending Transaction...
+                                    </>
+                                ) : (
+                                    'Confirm Deposit'
+                                )}
                             </Button>
                             <Button variant="secondary" onClick={closeConfirm}>
                                 Go Back

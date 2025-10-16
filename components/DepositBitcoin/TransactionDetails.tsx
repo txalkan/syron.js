@@ -1,67 +1,33 @@
 import React from 'react'
-import { useStore } from 'react-stores'
-import { $syron } from '../../src/store/syron'
-import { useWalletInfoStore } from '../../src/store/wallet_info'
 import styles from './TransactionDetails.module.scss'
-import { toast } from 'react-toastify'
-import toastTheme from '../../src/hooks/toastTheme'
-import { mempoolFeeRate, unisatBalance } from '../../src/utils/unisat/httpUtils'
+import { mempoolFeeRate } from '../../src/utils/bitcoin/mempool'
+import { unisatBalance } from '../../src/utils/unisat/httpUtils'
 
 const TXN_VB = 364 // Virtual bytes for the transaction
 
 interface TransactionDetailsProps {
     collateralAmount: Big
     feeAmount: Big
-    sdbAddress: string
-    onConfirm?: () => void
 }
 
 export function TransactionDetails({
     collateralAmount,
     feeAmount,
-    onConfirm,
 }: TransactionDetailsProps) {
     const totalDeposit = collateralAmount.add(feeAmount)
-
-    // Get wallet address from store
-    const { wallet } = useWalletInfoStore()
-
-    // Get syron store
-    const syron = useStore($syron)
-
-    // Get theme from Redux store
-    const isLight = true //useSelector((state: RootState) => state.modal.isLight)
 
     // State for gas fee calculation
     const [gasFee, setGasFee] = React.useState<string>('Calculating...')
     const [isLoadingFee, setIsLoadingFee] = React.useState(true)
     const [feeRate, setFeeRate] = React.useState<number>(0)
-    const [isDepositing, setIsDepositing] = React.useState(false)
     const [depositStatus, setDepositStatus] = React.useState<{
         type: 'success' | 'error' | null
         message: string
     }>({ type: null, message: '' })
-    const [insufficientSatsError, setInsufficientSatsError] = React.useState<{
-        hasError: boolean
-        requiredSats: number
-        currentSats: number
-    }>({
-        hasError: false,
-        requiredSats: 0,
-        currentSats: 0,
-    })
-
-    // Calculate the required amounts once to avoid repetition
-    const missingAmount = React.useMemo(() => {
-        return (
-            insufficientSatsError.requiredSats -
-            insufficientSatsError.currentSats
-        )
-    }, [insufficientSatsError.requiredSats, insufficientSatsError.currentSats])
 
     const isFeeTooHigh = React.useMemo(() => {
-        return missingAmount > 2999
-    }, [missingAmount])
+        return feeRate > 5
+    }, [feeRate])
 
     // Fetch gas fee on component mount
     React.useEffect(() => {
@@ -90,125 +56,6 @@ export function TransactionDetails({
         console.log('Refresh button clicked!')
         await calculateGasFee()
     }
-
-    // Calculate total fee
-    const gasFeeSats =
-        gasFee === 'Calculating...' || gasFee === 'Error'
-            ? 0
-            : parseInt(gasFee.split(' ')[0])
-    const totalFee = gasFeeSats
-    const totalFeeText = isLoadingFee ? 'Calculating...' : `${totalFee} sats`
-
-    // Check for insufficient sats when component loads or gas fee changes
-    React.useEffect(() => {
-        const checkInsufficientSats = async () => {
-            if (syron && gasFeeSats > 0) {
-                const requiredSats = gasFeeSats
-
-                const currentDeposit = await unisatBalance(syron.sdb)
-                const currentCollateral = syron?.syron_btc
-                    ? Number(syron.syron_btc)
-                    : 0
-                const currentSats = currentDeposit - currentCollateral
-
-                console.log('Sats Debug Info:', {
-                    requiredSats,
-                    currentDeposit,
-                    currentCollateral,
-                    currentSats,
-                    gasFeeSats,
-                    hasInsufficientFunds: currentSats < requiredSats,
-                })
-
-                if (currentSats < requiredSats) {
-                    setInsufficientSatsError({
-                        hasError: true,
-                        requiredSats,
-                        currentSats,
-                    })
-                } else {
-                    setInsufficientSatsError({
-                        hasError: false,
-                        requiredSats: 0,
-                        currentSats: 0,
-                    })
-                }
-            }
-        }
-
-        checkInsufficientSats()
-    }, [gasFeeSats, syron])
-
-    // Handle deposit - Send PSBT
-    const handleDeposit = React.useCallback(async () => {
-        if (!wallet.address) {
-            toast.error(
-                'Wallet not connected. Please connect your wallet first.',
-                { theme: toastTheme(isLight) }
-            )
-            setDepositStatus({
-                type: 'error',
-                message: 'Wallet not connected',
-            })
-            return
-        }
-
-        setIsDepositing(true)
-        setDepositStatus({ type: null, message: '' })
-
-        try {
-            console.log('Sending PSBT for deposit:', {
-                walletAddress: wallet.address,
-                collateralAmount,
-                feeAmount,
-                feeRate: feeRate,
-            })
-
-            // Check if Unisat wallet is available
-            const unisat = (window as any).unisat
-            if (!unisat) {
-                throw new Error(
-                    'Unisat wallet not found. Please install Unisat wallet.'
-                )
-            }
-
-            // Convert collateral amount to sats
-            // Create PSBT for deposit
-            console.log('Creating PSBT with:', {
-                collateralAmount,
-                feeAmount,
-                feeRate: feeRate,
-            })
-
-            // Simulate PSBT signing and broadcasting
-            // In real implementation, this would be:
-            // const psbt = await createPSBT(...)
-            // const signedPsbt = await unisat.signPsbt(psbt)
-            // const txId = await unisat.pushPsbt(signedPsbt)
-
-            await new Promise((resolve) => setTimeout(resolve, 3000))
-            const mockTxId = 'mock_tx_id_' + Date.now()
-
-            const successMessage = `Successfully deposited ${totalDeposit.div(1e8).round(8, 0).toString()} BTC as collateral! Transaction ID: ${mockTxId}`
-            toast.success(successMessage, { theme: toastTheme(isLight) })
-            setDepositStatus({ type: 'success', message: successMessage })
-        } catch (error) {
-            console.error('Error during PSBT deposit:', error)
-            const errorMessage =
-                error instanceof Error
-                    ? error.message
-                    : 'An unexpected error occurred'
-            toast.error(`Deposit error: ${errorMessage}`, {
-                theme: toastTheme(isLight),
-            })
-            setDepositStatus({
-                type: 'error',
-                message: `Error: ${errorMessage}`,
-            })
-        } finally {
-            setIsDepositing(false)
-        }
-    }, [wallet.address, totalDeposit, feeRate])
 
     return (
         <div className={styles.container}>

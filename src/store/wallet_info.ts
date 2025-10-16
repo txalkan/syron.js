@@ -8,6 +8,7 @@ interface WalletInfo {
     network: string | null // e.g., 'mainnet', 'testnet'
     sdbAddress: string | null // Safety Deposit Box address
     balance: Big | null
+    publicKey: string | null // Public key in hex format
 }
 
 interface WalletInfoState {
@@ -18,6 +19,7 @@ interface WalletInfoState {
     setWalletNetwork: (network: string) => void
     setSdbAddress: (sdbAddress: string) => void
     setWalletBalance: (balance: Big) => void
+    setPublicKey: (publicKey: string) => void
     clearWallet: () => void
     updateWalletInfo: (updates: Partial<WalletInfo>) => void
 }
@@ -28,6 +30,7 @@ const initialWalletState: WalletInfo = {
     network: null,
     sdbAddress: null,
     balance: null,
+    publicKey: null,
 }
 
 export const useWalletInfoStore = create<WalletInfoState>()(
@@ -77,6 +80,14 @@ export const useWalletInfoStore = create<WalletInfoState>()(
                     wallet: {
                         ...state.wallet,
                         balance,
+                    },
+                })),
+
+            setPublicKey: (publicKey: string) =>
+                set((state) => ({
+                    wallet: {
+                        ...state.wallet,
+                        publicKey,
                     },
                 })),
 
