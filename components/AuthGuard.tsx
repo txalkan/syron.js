@@ -1,6 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
-import { Button } from 'antd'
 import Spinner from './Spinner'
 import { useWalletInfoStore } from '../src/store/wallet_info'
 import { WalletProviderKey } from 'ic-use-siwb-identity/dist/wallet'
@@ -26,23 +25,34 @@ export default function AuthGuard({ children }: AuthGuardProps) {
 
     const { wallet } = useWalletInfoStore()
 
-    const walletProvider =
-        wallet.type == 'okx'
-            ? 'okxwallet.bitcoin'
-            : (wallet.type as WalletProviderKey)
+    const walletProvider = useMemo(
+        () =>
+            wallet.type == 'okx'
+                ? 'okxwallet.bitcoin'
+                : (wallet.type as WalletProviderKey),
+        [wallet.type]
+    )
 
     const [loading, setLoading] = useState<boolean>(false)
     const [manually, setManually] = useState<boolean>(false)
-    const [addressRes, setAddressRes] = useState<string>('')
 
-    // useEffect(() => {
-    //     console.log({ isInitializing, identity })
-    // }, [isInitializing, identity])
+    const attemptLogin = useCallback(async () => {
+        setLoading(true)
+        try {
+            await login()
+        } catch (error: any) {
+            console.error('SIWB login failed.', error)
+            clear()
+        } finally {
+            setManually(false)
+            setLoading(false)
+        }
+    }, [clear, login])
 
-    useEffect(() => {
+    const ensurePreparedLogin = useCallback(() => {
         if (!isPrepareLoginIdle) return
 
-        let address: string | undefined = undefined
+        let address: string | undefined
         try {
             address = getAddress()
         } catch (error) {
@@ -50,59 +60,33 @@ export default function AuthGuard({ children }: AuthGuardProps) {
             return
         }
 
-        if (address) {
-            setAddressRes(address)
-            try {
-                prepareLogin()
-            } catch (error) {
-                console.error('Failed to prepare login:', error)
-                setLoading(false)
-                return
-            }
+        if (!address) return
 
-            if (connectedBtcAddress && !identity && manually) {
-                ;(async () => {
-                    setLoading(true)
-                    try {
-                        await login()
-                        setManually(false)
-                    } catch (error: any) {
-                        console.error('Sign in failed - ', error)
-                        // Handle specific error types
-                        if (
-                            error?.message?.includes('User rejected') ||
-                            error?.message?.includes('rejected') ||
-                            error?.message?.includes('cancelled') ||
-                            error?.code === 4001
-                        ) {
-                            console.log('User rejected the sign request')
-                        } else {
-                            console.error(
-                                'Unexpected error during sign in:',
-                                error
-                            )
-                        }
-                        // Reset state for retry in all error cases
-                        setManually(false)
-                        setAddressRes('')
-                        // Clear SIWB state to reset the hook
-                        clear()
-                    } finally {
-                        setAddressRes('')
-                        setLoading(false)
-                    }
-                })()
-            }
+        try {
+            prepareLogin()
+        } catch (error) {
+            console.error('Failed to prepare login:', error)
+            setLoading(false)
+            return
+        }
+
+        if (connectedBtcAddress && !identity && manually) {
+            void attemptLogin()
         }
     }, [
-        prepareLogin,
-        isPrepareLoginIdle,
-        getAddress,
-        login,
+        attemptLogin,
         connectedBtcAddress,
+        clear,
+        getAddress,
         identity,
+        isPrepareLoginIdle,
         manually,
+        prepareLogin,
     ])
+
+    useEffect(() => {
+        ensurePreparedLogin()
+    }, [ensurePreparedLogin])
 
     useEffect(() => {
         if (prepareLoginError) {
@@ -118,10 +102,9 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         }
     }, [loginError])
 
-    const handleClick = async () => {
+    const handleClick = useCallback(async () => {
         try {
             setLoading(true)
-
             console.log('Setting wallet provider:', walletProvider)
             await setWalletProvider(walletProvider)
             setManually(true)
@@ -129,7 +112,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
             console.error('Failed to set wallet provider:', error)
             setLoading(false)
         }
-    }
+    }, [setWalletProvider, walletProvider])
 
     if (isInitializing) {
         return null
@@ -138,15 +121,15 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     if (!isInitializing && !identity) {
         return (
             <>
-                <Button
-                    key="unisat"
-                    className={'button secondary'}
+                <button
+                    type="button"
+                    className="button secondary"
                     onClick={handleClick}
                     disabled={loading}
-                    block
+                    style={{ width: '100%' }}
                 >
                     {!loading ? <>Sign in</> : <Spinner />}
-                </Button>
+                </button>
             </>
         )
     }
