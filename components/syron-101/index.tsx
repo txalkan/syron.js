@@ -89,9 +89,6 @@ function Component() {
     }
 
     useEffect(() => {
-        console.log('SIWB identity: ', identity)
-        console.log('SIWB saved identity: ', siwb)
-
         // Reset authentication if wallet is disconnected
         if (!isWalletConnected) {
             console.log('Wallet disconnected, resetting authentication')
@@ -1282,6 +1279,9 @@ function Component() {
                                                 <div>Withdraw RUNES</div>
                                             </div>
                                         </div>
+                                        <div
+                                            className={styles.buttonSeparator}
+                                        />
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
@@ -1331,7 +1331,7 @@ function Component() {
                                                             className={
                                                                 styles.buttonSeparator
                                                             }
-                                                        ></div>
+                                                        />
                                                         <div
                                                             className={
                                                                 styles.buttonLabel
@@ -1353,7 +1353,7 @@ function Component() {
                                                             className={
                                                                 styles.buttonSeparator
                                                             }
-                                                        ></div>
+                                                        />
                                                         <div
                                                             className={
                                                                 styles.buttonLabel

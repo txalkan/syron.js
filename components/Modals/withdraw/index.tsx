@@ -1036,7 +1036,7 @@ var ThisModal: React.FC<Prop> = function ({
                                 </div>
 
                                 <div className={styles.failedMessage}>
-                                    We're sorry, but your withdrawal request
+                                    We&apos;re sorry, but your withdrawal request
                                     could not be completed.
                                 </div>
                             </div>

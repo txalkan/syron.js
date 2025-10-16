@@ -438,7 +438,7 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                                 {isLoading ? (
                                     <>
                                         <LoadingSpinner />
-                                        Sending Transaction...
+                                        Building Transaction...
                                     </>
                                 ) : (
                                     'Confirm Deposit'
