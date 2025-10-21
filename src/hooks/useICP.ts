@@ -1,16 +1,17 @@
 import { useCallback } from 'react'
 import { basic_bitcoin_syron } from '../declarations/basic_bitcoin_tyron'
-import { $siwb, updateSyronSSI } from '../store/syron'
+import { updateSyronSSI } from '../store/syron'
 import { Big } from '../utils/big'
 import { updateXR } from '../store/xr'
-import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import { mempoolFeeRate } from '../utils/bitcoin/mempool'
-import { useStore } from 'react-stores'
 import { decodeIcrcAccount } from '@dfinity/ledger-icrc'
 import { toNullable } from '@dfinity/utils'
+import { useWalletInfoStore } from '../store/wallet_info'
+import { useSiwbSessionStore } from '../store/siwb_session'
 
 function useICPHook() {
-    const identity = useStore($siwb).value
+    const { siwb_identity } = useSiwbSessionStore()
+    const { setSdbAddress } = useWalletInfoStore()
 
     // @network
     const version = process.env.NEXT_PUBLIC_SYRON_VERSION
@@ -35,6 +36,7 @@ function useICPHook() {
 
                     // if the sdb is not undefined, update the store
                     if (sdb.data) {
+                        setSdbAddress(sdb.data.address)
                         updateSyronSSI({
                             sdb: sdb.data.address,
                             collateral_ratio: Big(Number(sdb.data.ratio)),
@@ -214,13 +216,14 @@ function useICPHook() {
     const sendSyron = useCallback(
         async (ssi: string, recipient: string, amt: number, isICP: boolean) => {
             try {
-                if (identity === undefined || identity === null) {
+                if (siwb_identity === null) {
                     throw new Error('SIWB Identity is undefined')
                 }
                 console.log(
-                    `Initiating Syron transfer of amount (${amt}) to recipient (${recipient}) w/ internet identity: ${identity}`
+                    `Initiating Syron transfer of amount (${amt}) to recipient (${recipient}) w/ internet identity: ${JSON.stringify(siwb_identity, null, 2)}`
                 )
-                const syron = basic_bitcoin_syron(identity)
+
+                const syron = basic_bitcoin_syron(siwb_identity)
 
                 let txId
                 if (isICP) {
@@ -261,7 +264,7 @@ function useICPHook() {
                 throw error
             }
         },
-        [identity]
+        [siwb_identity]
     )
 
     const buyBtc = useCallback(
@@ -278,17 +281,17 @@ function useICPHook() {
                         'The gas fee is too high - please try again later'
                     )
 
-                if (identity === null || identity === undefined) {
+                if (siwb_identity === null) {
                     throw new Error('SIWB identity is undefined')
                 }
                 console.log(
                     `Initiating BTC purchase with ${amt} susd-sats; minimum BTC amount: ${btcAmt} sats; fee rate: ${fee_rate} sat/vB & identity: ${JSON.stringify(
-                        identity,
+                        siwb_identity,
                         null,
                         2
                     )}`
                 )
-                const syron = basic_bitcoin_syron(identity)
+                const syron = basic_bitcoin_syron(siwb_identity)
                 const tx_res = await syron.buy_btc(
                     { ssi, op: { payment: null } },
                     amt,
@@ -313,7 +316,7 @@ function useICPHook() {
                 throw error
             }
         },
-        [identity]
+        [siwb_identity]
     )
 
     const redemptionGas = async (ssi: string) => {
@@ -350,11 +353,11 @@ function useICPHook() {
                     'The gas fee is too high - please try again later'
                 )
 
-            if (identity === null || identity === undefined) {
+            if (siwb_identity === null || siwb_identity === undefined) {
                 throw new Error('SIWB identity is undefined')
             }
 
-            const syron = basic_bitcoin_syron(identity)
+            const syron = basic_bitcoin_syron(siwb_identity)
             const txId = await syron.redeem_btc(
                 {
                     ssi,
