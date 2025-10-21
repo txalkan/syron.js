@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './styles.module.scss'
 import { updateDonation } from '../../src/store/donation'
 import Image from 'next/image'
@@ -13,18 +13,13 @@ import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
 import { Big, _0 } from '../../src/utils/big'
-import {
-    $siwb,
-    $syron,
-    updateSiwb,
-    clearSiwbSession,
-} from '../../src/store/syron'
+import { $syron } from '../../src/store/syron'
+import { useSiwbSessionStore } from '../../src/store/siwb_session'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
 import { extractRejectText } from '../../src/utils/unisat/utils'
 import { unisatBalance } from '../../src/utils/unisat/httpUtils'
-import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { WithdrawModal, SendModal, BuyModal } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import LoadingSpinner from '../LoadingSpinner'
@@ -38,18 +33,22 @@ import { DepositRunes } from '../DepositRunes'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 import CollateralRatioProgressBar from './CollateralRatioProgressBar'
 import { useWalletInfoStore } from '../../src/store/wallet_info'
-import { getMempoolUrl } from '../../src/config/wallet'
+import { getMempoolUrl, getWalletWindow } from '../../src/config/wallet'
 import { DepositBTC } from '../DepositBitcoin/DepositPsbt'
+import SessionTransactions from '../Transactions/SessionTransactions'
 
 function Component() {
     const { getXR } = useMempoolHook()
-    const { wallet } = useWalletInfoStore()
+    const { wallet, setWalletBalance } = useWalletInfoStore()
     // Derive connection state from wallet address
     const isWalletConnected = !!wallet.address
     const syron = useStore($syron)
-    const siwb = useStore($siwb).value
+    const { siwb_identity, setSiwbIdentity, clearSiwbSession } =
+        useSiwbSessionStore()
     const { identity, clear } = useSiwbIdentity()
     const { t } = useTranslation()
+    const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
+        useICPHook()
 
     const [active, setActive] = useState('')
     const [sdb, setSDB] = useState('')
@@ -59,88 +58,135 @@ function Component() {
     const [loan, setLoan] = useState('')
     const [syronBal, setSyronBal] = useState('')
     const [isIdentified, setIsIdentified] = useState(false)
-
+    const [isRedeeming, setIsRedeeming] = useState(false)
     const [showWithdrawModal, setWithdrawModal] = React.useState(false)
     const [stablecoin, setStablecoin] = React.useState<'BRC-20' | 'RUNES'>(
         'BRC-20'
     )
-    const updateWithdraw = (token: 'BRC-20' | 'RUNES') => {
-        setStablecoin(token)
-        setWithdrawModal(true)
-    }
     const [showSendModal, setSendModal] = React.useState(false)
     const [isICP, setIsICP] = React.useState(false)
-    const updateSend = (is_icp: boolean) => {
-        setSendModal(true)
-        setIsICP(is_icp)
-    }
     const [showBuyModal, setBuyModal] = React.useState(false)
-    const updateBuy = () => {
-        setBuyModal(true)
-    }
     const [showDepositRunesModal, setShowDepositRunesModal] =
         React.useState(false)
-    const updateDepositRunes = () => {
-        setShowDepositRunesModal(true)
-    }
     const [showDepositBTCModal, setShowDepositBTCModal] = React.useState(false)
-    const updateDepositBTC = () => {
-        setShowDepositBTCModal(true)
-    }
+    const [isLoading, setIsLoading] = useState(false)
+    const [isRefreshingCollateral, setIsRefreshingCollateral] = useState(false)
+    const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+
+    const start_pair = [
+        {
+            value: _0,
+            meta: {
+                name: 'Bitcoin',
+                symbol: 'BTC',
+                decimals: 8,
+            },
+        },
+        {
+            value: _0,
+            meta: {
+                name: 'Syron SUSD',
+                symbol: 'Syron SUSD',
+                decimals: 8,
+            },
+        },
+    ]
+    const clearRef = useRef(clear)
+
+    const closeAllModals = useCallback(() => {
+        setWithdrawModal(false)
+        setSendModal(false)
+        setShowDepositRunesModal(false)
+        setShowDepositBTCModal(false)
+        setBuyModal(false)
+    }, [])
+
+    const closeSiwbModals = useCallback(() => {
+        setSendModal(false)
+        setBuyModal(false)
+    }, [])
+
+    useEffect(() => {
+        clearRef.current = clear
+    }, [clear])
+
+    useEffect(() => {
+        closeAllModals()
+    }, [closeAllModals])
+
+    useEffect(() => {
+        closeSiwbModals()
+    }, [closeSiwbModals])
 
     useEffect(() => {
         // Reset authentication if wallet is disconnected
         if (!isWalletConnected) {
             console.log('Wallet disconnected, resetting authentication')
             setIsIdentified(false)
+            closeAllModals()
             clearSiwbSession()
-            clear() // Clear the SIWB identity from the hook
+            clearRef.current?.() // Clear the SIWB identity from the hook
             return
         }
 
         let current_id: DelegationIdentity
-        if (siwb !== null) {
-            current_id = siwb
+        if (siwb_identity !== null) {
+            current_id = siwb_identity
             console.log('SIWB session still present')
         } else if (identity) {
             current_id = identity
         } else {
             console.log('SIWB session is invalid')
             setIsIdentified(false)
+            closeSiwbModals()
             clearSiwbSession()
-            clear() // Clear the SIWB identity from the hook
+            clearRef.current?.() // Clear the SIWB identity from the hook
             return
         }
 
         const id_str = JSON.stringify(current_id, null, 2)
-        // console.log('SIWB Identity: ', id_str)
+        console.log('SIWB Identity: ', id_str)
         const match = id_str.match(/"expiration":\s*"([0-9a-fA-F]+)"/)
         const expiration = match ? match[1] : null
 
         if (expiration !== null) {
             const exp = parseInt(expiration, 16) / 1e6
-            //console.log('Expiration: ', exp)
+            console.log(
+                `SIWB Expiration is ${new Date(exp).toISOString()} and current time is ${new Date().toISOString()}`
+            )
 
             const now = Math.floor(Date.now())
-            // console.log(now)
             if (exp > now) {
                 console.log('SIWB session not expired')
                 setIsIdentified(true)
 
-                if (siwb === null && identity) {
-                    updateSiwb(identity)
+                if (siwb_identity === null && identity) {
+                    setSiwbIdentity(identity)
                     console.log('SIWB session saved')
                 }
             } else {
                 console.log('SIWB session has expired')
                 setIsIdentified(false)
+                closeSiwbModals()
                 clearSiwbSession()
-                clear() // Clear the SIWB identity from the hook
+                clearRef.current?.() // Clear the SIWB identity from the hook
             }
         } else {
             console.error('SIWB session not found')
         }
-    }, [identity, siwb, showSendModal, showBuyModal, isWalletConnected, clear])
+    }, [
+        identity,
+        siwb_identity,
+        isWalletConnected,
+        showSendModal,
+        showWithdrawModal,
+        showDepositRunesModal,
+        showDepositBTCModal,
+        clearSiwbSession,
+        closeSiwbModals,
+        closeAllModals,
+        setSiwbIdentity,
+    ])
 
     useEffect(() => {
         if (syron !== null && isWalletConnected) {
@@ -210,6 +256,24 @@ function Component() {
         // }
     }, [syron?.sdb])
 
+    const updateWithdraw = (token: 'BRC-20' | 'RUNES') => {
+        setStablecoin(token)
+        setWithdrawModal(true)
+    }
+    const updateSend = (is_icp: boolean) => {
+        setSendModal(true)
+        setIsICP(is_icp)
+    }
+    const updateBuy = () => {
+        setBuyModal(true)
+    }
+    const updateDepositRunes = () => {
+        setShowDepositRunesModal(true)
+    }
+    const updateDepositBTC = () => {
+        setShowDepositBTCModal(true)
+    }
+
     const toggleActive = (id: string) => {
         resetState()
         if (id === active) {
@@ -222,31 +286,6 @@ function Component() {
         updateDonation(null)
     }
 
-    const start_pair = [
-        {
-            value: _0,
-            meta: {
-                name: 'Bitcoin',
-                symbol: 'BTC',
-                decimals: 8,
-            },
-        },
-        {
-            value: _0,
-            meta: {
-                name: 'Syron SUSD',
-                symbol: 'Syron SUSD',
-                decimals: 8,
-            },
-        },
-    ]
-
-    const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
-        useICPHook()
-
-    const unisat = (window as any).unisat
-
-    const [isRedeeming, setIsRedeeming] = useState(false)
     const handleRedeem = async () => {
         try {
             setIsRedeeming(true)
@@ -538,21 +577,22 @@ function Component() {
         }
     }
 
-    // @review (mainnet)
-    const { updateWallet } = useBTCWalletHook()
-
     const updateSession = async () => {
-        const [address] = await unisat.getAccounts()
-        const balance = await unisat.getBalance()
-        const network = await unisat.getNetwork()
-        await updateWallet(address, Number(balance.confirmed), network)
-        await getBox(address)
-        console.log('Session updated.')
-    }
+        const walletWindow = getWalletWindow(wallet.type)
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [isRefreshingCollateral, setIsRefreshingCollateral] = useState(false)
-    const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+        // Update wallet balance using the latest balance value
+        const balance = await walletWindow.getBalance()
+        if (balance) {
+            const balanceAmount =
+                typeof balance === 'number' ? balance : balance.total
+            if (balanceAmount !== undefined) {
+                setWalletBalance(Big(balanceAmount))
+            }
+        }
+
+        await getBox(wallet.address!)
+        console.log('Account up to date.')
+    }
 
     const refreshCollateral = async () => {
         try {
@@ -1563,6 +1603,8 @@ function Component() {
                         </div>
                     )}
                 </div>
+
+                {isWalletConnected && <SessionTransactions />}
             </div>
         )
     }

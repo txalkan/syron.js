@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
 import Image from 'next/image'
@@ -22,8 +22,15 @@ import LoadingSpinner from '../../LoadingSpinner'
 import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
 import { $icpTx, $inscriptionTx, updateIcpTx } from '../../../src/store/syron'
 import { useStore } from 'react-stores'
-import { useBitcoinTransactionStore } from '../../../src/store/bitcoin_transactions'
-import { getWithdrawTransactionKey } from '../../../src/utils/transaction-tracker'
+import {
+    formatTransactionKey,
+    useBitcoinTransactionStore,
+} from '../../../src/store/bitcoin_transactions'
+import {
+    WithdrawStablecoin,
+    DepositMechanism,
+    getWithdrawTransactionKey,
+} from '../../../src/utils/transaction-tracker'
 import Spinner from '../../Spinner'
 import useICPHook from '../../../src/hooks/useICP'
 import { toast } from 'react-toastify'
@@ -32,7 +39,12 @@ import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
 import ConfirmTransactionModal from '../confirm-txn'
 import { mempoolFeeRate } from '../../../src/utils/bitcoin/mempool'
-import { getMinterAddress, MinterType } from '../../../src/config/wallet'
+import {
+    getMinterAddress,
+    MinterType,
+    getWalletWindow,
+} from '../../../src/config/wallet'
+import { useWalletInfoStore } from '../../../src/store/wallet_info'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -54,92 +66,56 @@ var ThisModal: React.FC<Prop> = function ({
     show,
     onClose,
 }) {
+    const { wallet } = useWalletInfoStore()
+    const { t } = useTranslation()
+
+    // Zustand store for transaction state persistence
+    const {
+        nextNonce,
+        transactionHistory,
+        beginTransaction,
+        updateTransactionRecord,
+        clearTransaction,
+    } = useBitcoinTransactionStore()
+    const { syron_withdrawal, runes_withdrawal } = useSyronWithdrawal()
+    const { getBox } = useICPHook()
+    const icpTx = useStore($icpTx) //{ value: false } //
+    let inscriptionTx = useStore($inscriptionTx)
+
+    const [active, setActive] = useState(0)
+    const [checkedStep, setCheckedStep] = useState(Array())
+    const [amount, setAmount] = React.useState(_0)
+    const [isDisabled, setIsDisabled] = React.useState(false)
+    const [isLoading, setIsLoading] = React.useState(false)
+    const [feeRate, setFeeRate] = React.useState<number>(0)
+    const [isLoadingFee, setIsLoadingFee] = React.useState(false)
+    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
+    const [onDetails, setOnDetails] = useState({})
+    const [txError, setTxError] = useState('')
+
+    const walletWindow = getWalletWindow(wallet.type)
+
     // Create CryptoState object based on token type
     const tokenState: CryptoState = {
         name: stablecoin === 'BRC-20' ? 'Syron BRC-20' : 'RUNE•DOLLAR',
         symbol: stablecoin === 'BRC-20' ? 'SYRON BRC-20' : 'RUNE•DOLLAR',
         decimals: 8,
     }
-    useEffect(() => {
-        if (show) updateIcpTx(null)
-    }, [show])
-
-    const { t } = useTranslation()
-    const [active, setActive] = useState(0)
-    const [checkedStep, setCheckedStep] = useState(Array())
-
-    const menuActive = (id) => {
-        setCheckedStep([...checkedStep, active])
-        if (active === id) {
-            setActive(0)
-        } else {
-            setActive(id)
-        }
-    }
-
-    const isChecked = (id) => {
-        if (checkedStep.some((val) => val === id)) {
-            return true
-        } else {
-            return false
-        }
-    }
-
-    const [amount, setAmount] = React.useState(_0)
-
-    const handleOnInput = React.useCallback((value: Big) => {
-        setAmount(value)
-    }, [])
-
-    const [isDisabled, setIsDisabled] = React.useState(false)
-    const icpTx = useStore($icpTx) //{ value: false } //
-
-    useEffect(() => {
-        if (balance.eq(0) || icpTx.value === false) {
-            setIsDisabled(true)
-        } else {
-            setIsDisabled(false)
-        }
-    }, [balance, icpTx])
-
-    const [isLoading, setIsLoading] = React.useState(false)
-    const [feeRate, setFeeRate] = React.useState<number>(0)
-    const [isLoadingFee, setIsLoadingFee] = React.useState(false)
+    const transactionType = getWithdrawTransactionKey(
+        stablecoin === 'BRC-20'
+            ? WithdrawStablecoin.BRC20
+            : WithdrawStablecoin.RUNES
+    )
+    const transactionKey = formatTransactionKey(nextNonce, transactionType)
+    const isTransactionRunning =
+        transactionHistory[transactionKey]?.status === 'pending' || false
 
     // Fee multipliers for different transaction types
     const BRC20_FEE_MULTIPLIER = 220 * 2
     const RUNES_FEE_MULTIPLIER = 300 * 1.5
-    const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
-    const [onDetails, setOnDetails] = useState({})
-    const [txError, setTxError] = React.useState('')
-    let inscriptionTx = useStore($inscriptionTx)
-
-    // Zustand store for transaction state persistence
-    const { runningTransactions, setTransactionRunning, clearTransaction } =
-        useBitcoinTransactionStore()
-    const transactionKey = getWithdrawTransactionKey(stablecoin)
-    const isTransactionRunning = runningTransactions[transactionKey] || false
-
-    // Use Zustand state for transaction status when modal reopens
-    useEffect(() => {
-        if (isTransactionRunning && !isLoading) {
-            setIsLoading(true)
-        }
-    }, [isTransactionRunning, isLoading])
-
-    // Cleanup transaction state when modal unmounts (but keep running transactions)
-    useEffect(() => {
-        return () => {
-            // Don't clear running transactions - let them persist
-            // Only clear if they're completed/failed
-        }
-    }, [])
-
-    const { syron_withdrawal, runes_withdrawal } = useSyronWithdrawal()
-    const { getBox } = useICPHook()
 
     // Single function to calculate all fee information
-    const calculateFeeDetails = React.useCallback(
+    const calculateFeeDetails = useCallback(
         (
             amount: Big,
             currentFeeRate: number,
@@ -174,7 +150,7 @@ var ThisModal: React.FC<Prop> = function ({
     )
 
     // Function to fetch fee rate and calculate network fee
-    const fetchFeeRate = React.useCallback(async () => {
+    const fetchFeeRate = useCallback(async () => {
         try {
             setIsLoadingFee(true)
             const rate = await mempoolFeeRate()
@@ -185,6 +161,33 @@ var ThisModal: React.FC<Prop> = function ({
             toast.error('Failed to fetch network fee rate. Please try again.')
         } finally {
             setIsLoadingFee(false)
+        }
+    }, [])
+
+    useEffect(() => {
+        if (show) updateIcpTx(null)
+    }, [show])
+
+    useEffect(() => {
+        if (balance.eq(0) || icpTx.value === false) {
+            setIsDisabled(true)
+        } else {
+            setIsDisabled(false)
+        }
+    }, [balance, icpTx])
+
+    // Use Zustand state for transaction status when modal reopens
+    useEffect(() => {
+        if (isTransactionRunning && !isLoading) {
+            setIsLoading(true)
+        }
+    }, [isTransactionRunning, isLoading])
+
+    // Cleanup transaction state when modal unmounts (but keep running transactions)
+    useEffect(() => {
+        return () => {
+            // Don't clear running transactions - let them persist
+            // Only clear if they're completed/failed
         }
     }, [])
 
@@ -221,12 +224,38 @@ var ThisModal: React.FC<Prop> = function ({
         calculateFeeDetails,
     ])
 
-    const handleConfirm = React.useCallback(async () => {
+    const menuActive = (id) => {
+        setCheckedStep([...checkedStep, active])
+        if (active === id) {
+            setActive(0)
+        } else {
+            setActive(id)
+        }
+    }
+
+    const isChecked = (id) => {
+        if (checkedStep.some((val) => val === id)) {
+            return true
+        } else {
+            return false
+        }
+    }
+
+    const handleOnInput = useCallback((value: Big) => {
+        setAmount(value)
+    }, [])
+
+    const handleConfirm = useCallback(async () => {
         if (isLoading || isDisabled) return // @review (ui) even if disabled, it runs the first time (not the second)
 
         try {
             setIsLoading(true)
-            setTransactionRunning(transactionKey, true)
+
+            beginTransaction(
+                transactionType,
+                BigInt(amount.toFixed(0)),
+                wallet.address!
+            )
 
             // @test
             // const inscriptionTx = {
@@ -239,12 +268,13 @@ var ThisModal: React.FC<Prop> = function ({
                 // Use config function to get minter address
                 const receiveAddress = getMinterAddress(MinterType.RUNES)
 
-                const unisat = (window as any).unisat
-                const txId = await unisat.sendBitcoin(
+                const fee_sats = feeRate * RUNES_FEE_MULTIPLIER + 330
+                const txId = await walletWindow.sendBitcoin(
                     receiveAddress,
-                    feeRate * RUNES_FEE_MULTIPLIER + 330,
+                    fee_sats,
                     feeRate
                 )
+                beginTransaction(DepositMechanism.FEE, BigInt(fee_sats), txId)
 
                 toast.success(
                     `Transaction submitted successfully! Transaction ID: ${txId.slice(0, 8)}...${txId.slice(-8)}`
@@ -267,7 +297,6 @@ var ThisModal: React.FC<Prop> = function ({
 
             // Transaction successful - clear loading state and show success
             setIsLoading(false)
-            clearTransaction(transactionKey)
             toast.success('Withdrawal transaction submitted successfully!')
         } catch (error) {
             console.error('Syron Withdrawal', error)
@@ -324,8 +353,11 @@ var ThisModal: React.FC<Prop> = function ({
                     </div>
                 )
             }
-            setIsLoading(false)
+
+            // @todo set status to failed
             clearTransaction(transactionKey)
+        } finally {
+            setIsLoading(false)
         }
     }, [
         ssi,
@@ -343,11 +375,13 @@ var ThisModal: React.FC<Prop> = function ({
         BRC20_FEE_MULTIPLIER,
         RUNES_FEE_MULTIPLIER,
         clearTransaction,
-        setTransactionRunning,
+        transactionType,
+        beginTransaction,
+        walletWindow,
         transactionKey,
     ])
 
-    const retryWithdrawal = React.useCallback(async () => {
+    const retryWithdrawal = useCallback(async () => {
         if (isLoading) return
 
         try {
@@ -454,7 +488,7 @@ var ThisModal: React.FC<Prop> = function ({
         )
     }
 
-    const handleContinue = React.useCallback(async () => {
+    const handleContinue = useCallback(async () => {
         if (isLoading) return
         try {
             if (process.env.NEXT_PUBLIC_MINTING_PAUSE === 'true') {
@@ -556,6 +590,7 @@ var ThisModal: React.FC<Prop> = function ({
         setIsConfirmationOpen(false)
         // Don't reset isLoading - let the transaction continue in the background
     }
+
     return (
         <Modal show={show} onClose={onClose}>
             <div className={styles.container}>

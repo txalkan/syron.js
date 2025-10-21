@@ -18,6 +18,7 @@ import {
     getOkxWindow,
 } from '../../src/config/wallet'
 import { Big } from '../../src/utils/big'
+import { useMempoolHook } from '../../src/hooks/useMempool'
 
 function Component() {
     const { updateWallet } = useBTCWalletHook()
@@ -30,6 +31,7 @@ function Component() {
         setWalletBalance,
         setPublicKey,
     } = useWalletInfoStore()
+    const { subscribeSdb } = useMempoolHook()
 
     // Derive connection state from wallet address
     const isWalletConnected = !!wallet.address
@@ -206,6 +208,12 @@ function Component() {
         }
         if (wallet.address) updateBox()
     }, [wallet, getBox])
+
+    useEffect(() => {
+        if (wallet.sdbAddress) {
+            subscribeSdb()
+        }
+    }, [wallet.sdbAddress, subscribeSdb])
 
     const [isConnecting, setIsConnecting] = useState(false)
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
