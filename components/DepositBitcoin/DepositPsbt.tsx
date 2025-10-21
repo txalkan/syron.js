@@ -104,8 +104,8 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
     const handleCollateralAmountChange = React.useCallback((amount: Big) => {
         // Use Big's RoundingMode enum for the round method
         const collateral = amount.round(0, Big.roundDown)
-        console.log(`collateral amount ${collateral} sats`)
-        setCollateralAmount(amount)
+        //console.log(`collateral amount ${collateral} sats`)
+        setCollateralAmount(collateral)
     }, [])
 
     // Handle fee amount validation changes
@@ -141,8 +141,8 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
 
             // Create and sign the deposit PSBT
             const result = await createDeposit({
-                collateralAmount,
-                feeAmount,
+                collateralAmount: BigInt(collateralAmount.toString()),
+                feeAmount: BigInt(feeAmount.toString()),
                 sdbAddress,
                 setIsLoading,
             })

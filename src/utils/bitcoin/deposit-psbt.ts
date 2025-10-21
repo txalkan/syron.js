@@ -22,9 +22,9 @@ interface Utxo {
 
 interface DepositPsbtParams {
     /** Collateral amount in satoshis */
-    collateralAmount: Big
+    collateralAmount: bigint
     /** Fee amount in satoshis */
-    feeAmount: Big
+    feeAmount: bigint
     /** SDB address (recipient of the deposit) */
     sdbAddress: string
     /** Loading state setter function */
@@ -171,7 +171,7 @@ function buildPsbt({
     network,
 }: {
     utxos: Utxo[]
-    outputs: { address: string; value: number }[]
+    outputs: { address: string; value: bigint }[]
     network: btc.networks.Network
 }): btc.Psbt {
     const psbt = new btc.Psbt({ network })
@@ -189,7 +189,7 @@ function buildPsbt({
                     : (output as any)
             u.witnessUtxo = {
                 script,
-                value: BigInt(u.value),
+                value: u.value,
             }
         }
 
@@ -203,7 +203,7 @@ function buildPsbt({
     }
 
     for (const o of outputs) {
-        psbt.addOutput({ address: o.address, value: BigInt(o.value) })
+        psbt.addOutput({ address: o.address, value: o.value })
     }
 
     return psbt
@@ -284,27 +284,33 @@ const createDepositPsbt = async (
             }
         }
 
-        const depositAmount = Number(collateralAmount.add(feeAmount))
-        const { utxos, change } = await fetchWalletUtxos(
+        const { utxos, change, error } = await fetchWalletUtxos(
             wallet.address!,
             wallet.publicKey!,
-            BigInt(depositAmount),
+            collateralAmount + feeAmount,
             sdbAddress
         )
+
+        if (error) {
+            return {
+                success: false,
+                error: error,
+            }
+        }
 
         const outputs = [
             {
                 address: sdbAddress,
-                value: Number(collateralAmount),
+                value: collateralAmount,
             },
             {
                 address: sdbAddress,
-                value: Number(feeAmount),
+                value: feeAmount,
             },
         ]
 
         if (change > 0) {
-            outputs.push({ address: wallet.address!, value: Number(change) })
+            outputs.push({ address: wallet.address!, value: change })
         }
 
         // Determine network from wallet store's network (fallback to env)
@@ -479,7 +485,7 @@ async function fetchWalletUtxos(
     publicKey: string,
     depositAmount: bigint,
     sdbAddress: string
-): Promise<{ utxos: Utxo[]; change: bigint }> {
+): Promise<{ utxos: Utxo[]; change: bigint; error?: string }> {
     try {
         console.log(
             `Fetching UTXOs for wallet address: ${walletAddress}, publicKey: ${publicKey}`
@@ -513,7 +519,11 @@ async function fetchWalletUtxos(
         return { utxos: formattedUtxos, change: selection.change }
     } catch (error) {
         console.error('Error fetching wallet UTXOs:', error)
-        return { utxos: [], change: BigInt(0) }
+        return {
+            utxos: [],
+            change: BigInt(0),
+            error: error instanceof Error ? error.message : 'Unknown error',
+        }
     }
 }
 
@@ -556,6 +566,9 @@ async function selectNeededUtxos(
     }
 
     const feeRate = await mempoolFeeRate()
+    if (feeRate === 0) {
+        throw new Error('Fee rate is too high, please try again later.')
+    }
 
     const sorted = [...mempoolUtxosData].sort((a, b) => b.value - a.value)
 
