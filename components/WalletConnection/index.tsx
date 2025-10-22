@@ -1,13 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
+import clsx from 'clsx'
 import styles from './styles.module.scss'
-import powerIconBlack from '../../src/assets/icons/power_icon_black.svg'
+import connectedWalletIcon from '../../src/assets/icons/ssi_icon_key-based-wallet.svg'
+import accountIcon from '../../src/assets/icons/ssi_icon_defix.svg'
+
 import { useTranslation } from 'next-i18next'
 import useICPHook from '../../src/hooks/useICP'
-import { BitcoinNetworkType } from '../../src/config/wallet'
+import { BitcoinNetworkType, getMempoolUrl } from '../../src/config/wallet'
 import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
 import { useWalletInfoStore } from '../../src/store/wallet_info'
 import { toast } from 'react-toastify'
+import { CopyButton } from '../CopyButton'
 import WalletOptionsModal from '../Modals/WalletOptionsModal'
 import WalletDropdown from '../WalletDropdown'
 import {
@@ -20,7 +24,20 @@ import {
 import { Big } from '../../src/utils/big'
 import { useMempoolHook } from '../../src/hooks/useMempool'
 
-function Component() {
+interface WalletConnectionProps {
+    /**
+     * When true, renders a compact call-to-action variant suitable for hero sections.
+     * Dropdowns and floating positioning are disabled in this mode.
+     */
+    variant?: 'default' | 'hero'
+    /**
+     * Optional callback invoked when the hero CTA successfully opens the wallet modal.
+     */
+    onConnectIntent?: () => void
+}
+
+function Component(props: WalletConnectionProps) {
+    const { variant = 'default', onConnectIntent } = props
     const { updateWallet } = useBTCWalletHook()
     const { getBox } = useICPHook()
     const {
@@ -156,10 +173,8 @@ function Component() {
                         setWalletNetwork(target_network)
                     }
                     console.log(`Switched to ${target_network}`)
-                } else {
-                    if (typeof network === 'string' && network) {
-                        setWalletNetwork(network)
-                    }
+                } else if (typeof network === 'string' && network) {
+                    setWalletNetwork(network)
                 }
             } else if (typeof network === 'string' && network) {
                 setWalletNetwork(network)
@@ -197,17 +212,39 @@ function Component() {
 
     const lastProcessedAddress = useRef<string | null>(null)
     useEffect(() => {
-        async function updateBox() {
-            if (
-                wallet.address &&
-                wallet.address !== lastProcessedAddress.current
-            ) {
-                await getBox(wallet.address)
-                lastProcessedAddress.current = wallet.address
+        const address = wallet.address?.trim()
+
+        if (!address) {
+            lastProcessedAddress.current = null
+            return
+        }
+
+        const shouldFetch =
+            address !== lastProcessedAddress.current || !wallet.sdbAddress
+
+        if (!shouldFetch) {
+            return
+        }
+
+        let isCancelled = false
+
+        const updateBox = async () => {
+            try {
+                await getBox(address)
+                if (!isCancelled) {
+                    lastProcessedAddress.current = address
+                }
+            } catch (error) {
+                console.error('Error fetching SDB address:', error)
             }
         }
-        if (wallet.address) updateBox()
-    }, [wallet, getBox])
+
+        updateBox()
+
+        return () => {
+            isCancelled = true
+        }
+    }, [wallet.address, wallet.sdbAddress, getBox])
 
     useEffect(() => {
         if (wallet.sdbAddress) {
@@ -220,8 +257,16 @@ function Component() {
 
     const [isUserDropdownOpen, setIsUserDropdownOpen] = useState(false)
 
+    const isHeroVariant = variant === 'hero'
+    const shortAddress = wallet.sdbAddress
+        ? `${wallet.sdbAddress.slice(0, 6)}…${wallet.sdbAddress.slice(-4)}`
+        : ''
+    const wrapperClassName = isHeroVariant ? styles.heroWrapper : styles.wrapper
+
     // Close dropdown when clicking outside
     useEffect(() => {
+        if (isHeroVariant) return
+
         const handleClickOutside = (event: MouseEvent) => {
             if (isUserDropdownOpen) {
                 const target = event.target as HTMLElement
@@ -235,7 +280,7 @@ function Component() {
         return () => {
             document.removeEventListener('mousedown', handleClickOutside)
         }
-    }, [isUserDropdownOpen])
+    }, [isUserDropdownOpen, isHeroVariant])
 
     const handleUniSatConnect = async () => {
         try {
@@ -452,108 +497,170 @@ function Component() {
     }
 
     return (
-        <div className={styles.wrapper}>
-            <>
-                {!isWalletConnected ? (
+        <div className={wrapperClassName}>
+            {!isWalletConnected ? (
+                isHeroVariant ? (
                     <button
-                        className={'button primary'}
-                        onClick={() => setIsWalletModalOpen(true)}
+                        className={clsx(styles.connectButton, {
+                            [styles.connectButtonHero]: true,
+                            [styles.connectButtonPulse]: !isConnecting,
+                        })}
+                        onClick={() => {
+                            if (isHeroVariant && onConnectIntent) {
+                                onConnectIntent()
+                            }
+                            setIsWalletModalOpen(true)
+                        }}
                         disabled={isConnecting}
                     >
-                        {isConnecting ? t('CONNECTING...') : t('CONNECT')}
+                        {isConnecting
+                            ? t('CONNECTING...')
+                            : t('CONNECT WALLET')}
                     </button>
-                ) : (
-                    <div style={{ position: 'relative' }} data-user-dropdown>
-                        {/* User Icon Button */}
-                        <button
-                            onClick={() =>
-                                setIsUserDropdownOpen(!isUserDropdownOpen)
-                            }
+                ) : null
+            ) : isHeroVariant ? (
+                <div className={styles.heroConnectedCard}>
+                    <Image
+                        src={accountIcon}
+                        alt="Account Icon"
+                        width={56}
+                        height={56}
+                    />
+                    <div className={styles.heroConnectedContent}>
+                        <span className={styles.heroConnectedLabel}>
+                            safety deposit ₿ox
+                        </span>
+                        {wallet.sdbAddress ? (
+                            <span className={styles.heroConnectedAddress}>
+                                <div className={styles.heroAddressContainer}>
+                                    <div className={styles.heroAddressValue}>
+                                        {shortAddress}
+                                    </div>
+                                    <CopyButton
+                                        value={wallet.sdbAddress}
+                                        copyLabel="Copy Safety Deposit ₿ox address"
+                                        copiedLabel="Address copied to clipboard"
+                                        size="lg"
+                                        onCopied={(success) => {
+                                            if (success) {
+                                                toast.success(
+                                                    'Address copied to clipboard',
+                                                    {
+                                                        onClick: () =>
+                                                            toast.dismiss(),
+                                                    }
+                                                )
+                                            } else {
+                                                toast.error(
+                                                    'Failed to copy address',
+                                                    {
+                                                        onClick: () =>
+                                                            toast.dismiss(),
+                                                    }
+                                                )
+                                            }
+                                        }}
+                                    />
+                                </div>
+                                <div
+                                    className={styles.inspectLink}
+                                    onClick={() => {
+                                        const url = getMempoolUrl(
+                                            `/address/${wallet.sdbAddress}`
+                                        )
+                                        window.open(url)
+                                    }}
+                                >
+                                    Inspect ↗
+                                </div>
+                            </span>
+                        ) : (
+                            <span>Loading...</span>
+                        )}
+                    </div>
+                </div>
+            ) : (
+                <div style={{ position: 'relative' }} data-user-dropdown>
+                    {/* User Icon Button */}
+                    <button
+                        onClick={() =>
+                            setIsUserDropdownOpen(!isUserDropdownOpen)
+                        }
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                            padding: '8px 12px',
+                            backgroundColor: '#f8fafc',
+                            border: '2px solid #e5e7eb',
+                            borderRadius: '12px',
+                            cursor: 'pointer',
+                            transition: 'all 0.2s ease',
+                            minWidth: '120px',
+                            justifyContent: 'center',
+                        }}
+                        onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = '#f1f5f9'
+                            e.currentTarget.style.borderColor = '#d1d5db'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = '#f8fafc'
+                            e.currentTarget.style.borderColor = '#e5e7eb'
+                        }}
+                    >
+                        {/* User Icon */}
+                        <div
                             style={{
+                                width: '24px',
+                                height: '24px',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '8px',
-                                padding: '8px 12px',
-                                backgroundColor: '#f8fafc',
-                                border: '2px solid #e5e7eb',
-                                borderRadius: '12px',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                minWidth: '120px',
                                 justifyContent: 'center',
                             }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                    '#f1f5f9'
-                                e.currentTarget.style.borderColor = '#d1d5db'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.backgroundColor =
-                                    '#f8fafc'
-                                e.currentTarget.style.borderColor = '#e5e7eb'
+                        >
+                            <Image
+                                src={connectedWalletIcon}
+                                alt="Connected Wallet Icon"
+                                width={24}
+                                height={24}
+                            />
+                        </div>
+
+                        {/* Wallet Type */}
+                        <span
+                            style={{
+                                fontSize: '0.75rem',
+                                fontWeight: '600',
+                                color: '#374151',
                             }}
                         >
-                            {/* User Icon */}
-                            <div
-                                style={{
-                                    width: '24px',
-                                    height: '24px',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    justifyContent: 'center',
-                                }}
-                            >
-                                <Image
-                                    src={powerIconBlack}
-                                    alt="Power Icon"
-                                    width={24}
-                                    height={24}
-                                    style={{
-                                        filter: 'brightness(0) saturate(100%) invert(27%) sepia(51%) saturate(2878%) hue-rotate(346deg) brightness(104%) contrast(97%)',
-                                    }}
-                                />
-                            </div>
+                            wallet
+                        </span>
 
-                            {/* Wallet Type */}
-                            <span
-                                style={{
-                                    fontSize: '0.75rem',
-                                    fontWeight: '600',
-                                    color: '#374151',
-                                }}
-                            >
-                                {wallet.type === 'unisat'
-                                    ? 'UniSat'
-                                    : wallet.type === 'okx'
-                                      ? 'OKX'
-                                      : 'Wallet'}
-                            </span>
-
-                            {/* Dropdown Arrow */}
-                            <div
-                                style={{
-                                    width: '0',
-                                    height: '0',
-                                    borderLeft: '4px solid transparent',
-                                    borderRight: '4px solid transparent',
-                                    borderTop: '4px solid #6b7280',
-                                    transform: isUserDropdownOpen
-                                        ? 'rotate(180deg)'
-                                        : 'rotate(0deg)',
-                                    transition: 'transform 0.2s ease',
-                                }}
-                            />
-                        </button>
-
-                        {/* Dropdown Menu */}
-                        <WalletDropdown
-                            isOpen={isUserDropdownOpen}
-                            wallet={wallet}
-                            onClose={() => setIsUserDropdownOpen(false)}
+                        {/* Dropdown Arrow */}
+                        <div
+                            style={{
+                                width: '0',
+                                height: '0',
+                                borderLeft: '4px solid transparent',
+                                borderRight: '4px solid transparent',
+                                borderTop: '4px solid #6b7280',
+                                transform: isUserDropdownOpen
+                                    ? 'rotate(180deg)'
+                                    : 'rotate(0deg)',
+                                transition: 'transform 0.2s ease',
+                            }}
                         />
-                    </div>
-                )}
-            </>
+                    </button>
+
+                    {/* Dropdown Menu */}
+                    <WalletDropdown
+                        isOpen={isUserDropdownOpen}
+                        wallet={wallet}
+                        onClose={() => setIsUserDropdownOpen(false)}
+                    />
+                </div>
+            )}
             <WalletOptionsModal
                 isOpen={isWalletModalOpen}
                 onClose={() => setIsWalletModalOpen(false)}

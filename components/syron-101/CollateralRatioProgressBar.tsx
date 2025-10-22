@@ -85,7 +85,11 @@ const CollateralRatioProgressBar: React.FC<CollateralRatioProgressBarProps> = ({
                         </div>
                         <div
                             style={{
-                                color: '#ef4444',
+                                color: '#000',
+                                textDecoration: 'underline',
+                                textDecorationColor: 'red',
+                                textDecorationThickness: '1px',
+                                textUnderlineOffset: '2px',
                                 wordBreak: 'break-all',
                                 lineHeight: '1.2',
                             }}
@@ -121,7 +125,11 @@ const CollateralRatioProgressBar: React.FC<CollateralRatioProgressBarProps> = ({
                         </div>
                         <div
                             style={{
-                                color: '#f59e0b',
+                                color: '#000',
+                                textDecoration: 'underline',
+                                textDecorationColor: '#f59e0b',
+                                textDecorationThickness: '1px',
+                                textUnderlineOffset: '2px',
                                 wordBreak: 'break-all',
                                 lineHeight: '1.2',
                             }}
@@ -157,7 +165,11 @@ const CollateralRatioProgressBar: React.FC<CollateralRatioProgressBarProps> = ({
                         </div>
                         <div
                             style={{
-                                color: '#10b981',
+                                color: '#000',
+                                textDecoration: 'underline',
+                                textDecorationColor: '#10b981',
+                                textDecorationThickness: '1px',
+                                textUnderlineOffset: '2px',
                                 wordBreak: 'break-all',
                                 lineHeight: '1.2',
                             }}

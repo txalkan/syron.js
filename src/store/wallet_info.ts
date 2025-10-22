@@ -1,6 +1,6 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
-import Big from 'big.js'
+import { Big } from 'big.js'
 
 interface WalletInfo {
     type: 'unisat' | 'okx' | null

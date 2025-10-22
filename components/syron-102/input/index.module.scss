@@ -366,12 +366,27 @@ If you have any questions, comments or interest in pursuing any other use cases,
 }
 
 .label {
-    letter-spacing: normal !important;
-    color: #000;
-    margin: 2rem 0.5rem 0.5rem;
-    font-size: 0.9rem;
-    font-weight: 800;
     text-align: left;
+    padding-left: 0.5rem;
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: #222222;
+    margin-bottom: 8px;
     text-transform: uppercase;
-    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    letter-spacing: 0.5px;
+    font-family: 'GeistSans', sans-serif !important;
+}
+
+.labelUsd {
+    text-align: left;
+    padding-left: 1rem;
+    display: block;
+    font-size: 0.8rem;
+    font-weight: 400;
+    color: #222222;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+    font-family: 'GeistSans', sans-serif !important;
 }

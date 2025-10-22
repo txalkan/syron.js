@@ -13,6 +13,8 @@ import {
 import { TransactionDetails } from './TransactionDetails'
 import LoadingSpinner from '../LoadingSpinner'
 import styles from './styles.module.scss'
+import { CopyButton } from '../CopyButton'
+import { toast } from 'react-toastify'
 
 // Constants
 const STABLE_DEPOSIT_THRESHOLD = 0.1
@@ -68,7 +70,6 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
         RunesDepositBalance[]
     >([])
     const [isLoading, setIsLoading] = React.useState(false)
-    const [isCopied, setIsCopied] = React.useState(false)
 
     // Runes deposit balance books
     const runesDepositBalances = React.useMemo<RunesDepositBalance[]>(
@@ -432,7 +433,7 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                                                             gap: '6px',
                                                                         }}
                                                                     >
-                                                                        <LoadingSpinner size="sm" />
+                                                                        <LoadingSpinner size="md" />
                                                                         <span>
                                                                             Loading...
                                                                         </span>
@@ -625,70 +626,23 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                     <code className={styles.sdbAddress}>
                                         {sdbAddress || 'Loading...'}
                                     </code>
-                                    <button
-                                        onClick={() => {
-                                            if (sdbAddress) {
-                                                navigator.clipboard.writeText(
-                                                    sdbAddress
+                                    <CopyButton
+                                        value={sdbAddress}
+                                        copyLabel="Copy SDB address"
+                                        copiedLabel="SDB address copied"
+                                        onCopied={(success) => {
+                                            if (success) {
+                                                toast.success(
+                                                    'SDB address copied to clipboard!'
                                                 )
-                                                setIsCopied(true)
-                                                // Reset the copied state after 2 seconds
-                                                setTimeout(() => {
-                                                    setIsCopied(false)
-                                                }, 2000)
+                                            } else {
+                                                toast.error(
+                                                    'Failed to copy SDB address.'
+                                                )
                                             }
                                         }}
-                                        className={`${styles.copyButton} ${isCopied ? styles.copied : ''}`}
-                                        title={
-                                            isCopied
-                                                ? 'Copied!'
-                                                : 'Copy SDB address'
-                                        }
-                                    >
-                                        {isCopied ? (
-                                            <svg
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M20 6L9 17l-5-5"
-                                                    stroke="#10b981"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        ) : (
-                                            <svg
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                                <rect
-                                                    x="8"
-                                                    y="2"
-                                                    width="8"
-                                                    height="4"
-                                                    rx="1"
-                                                    ry="1"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                />
-                                            </svg>
-                                        )}
-                                    </button>
+                                        size="lg"
+                                    />
                                 </div>
                             </div>
                         </>

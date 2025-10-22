@@ -10,6 +10,8 @@ import { Big, _0 } from '../../src/utils/big'
 import { InputAmount } from './InputAmount'
 import { useDepositPsbt } from '../../src/utils/bitcoin/deposit-psbt'
 import { toast } from 'react-toastify'
+import { mempoolFeeRate } from '../../src/utils/bitcoin/mempool'
+import { CopyButton } from '../CopyButton'
 
 // Constants
 const start_pair = [
@@ -68,19 +70,47 @@ interface DepositProps {
 }
 
 export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
+    // Initialize the PSBT utility
+    const { createDeposit } = useDepositPsbt()
+
+    const [isLoadingFee, setIsLoadingFee] = React.useState(true)
+    const [feeRate, setFeeRate] = React.useState<number>(0)
     const [confirmOpen, showConfirm, closeConfirm] = useToggleState()
     const [isLoading, setIsLoading] = React.useState(false)
-    const [isCopied, setIsCopied] = React.useState(false)
     const [error, setError] = React.useState<string | null>(null)
 
     const [inputAmt, setInputAmount] = React.useState<string>('2999')
     const [feeAmount, setFeeAmount] = React.useState<Big>(_0)
     const [collateralAmount, setCollateralAmount] = React.useState<Big>(_0)
+    const [isFeeTooHigh, setIsFeeTooHigh] = React.useState(false)
 
-    // Initialize the PSBT utility
-    const { createDeposit } = useDepositPsbt()
+    // Fetch gas fee on component mount
+    React.useEffect(() => {
+        getGasFee()
+    }, [])
 
-    const isFeeTooHigh = false
+    // Function to update gas fee
+    async function getGasFee() {
+        setIsLoadingFee(true)
+        try {
+            const rate = await mempoolFeeRate()
+            setFeeRate(rate)
+            if (rate === 0) {
+                setIsFeeTooHigh(true)
+            } else {
+                setIsFeeTooHigh(false)
+            }
+        } catch (error) {
+            console.error('Error calculating gas fee:', error)
+        } finally {
+            setIsLoadingFee(false)
+        }
+    }
+
+    // Function to refresh gas fee
+    const handleRefreshFee = async () => {
+        await getGasFee()
+    }
 
     // Validation logic
     const isValidFeeAmount = React.useMemo(() => {
@@ -197,6 +227,7 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                         <TransactionDetails
                             collateralAmount={collateralAmount}
                             feeAmount={feeAmount}
+                            feeRate={feeRate}
                         />
                     ) : (
                         <>
@@ -210,6 +241,63 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                             <label htmlFor="deposit" className={styles.label}>
                                 btc for fees
                             </label>
+                            <div className={styles.gasFeeMeta}>
+                                <span className={styles.gasFeeLabel}>
+                                    Miner fee rate
+                                </span>
+                                <div className={styles.gasFeeContainer}>
+                                    <span className={styles.gasFeeValue}>
+                                        {isLoadingFee
+                                            ? 'Refreshing…'
+                                            : feeRate === 0
+                                              ? 'Too High'
+                                              : feeRate === 1
+                                                ? `${feeRate} sat/vB`
+                                                : `${feeRate} sats/vB`}
+                                    </span>
+                                    <button
+                                        onClick={handleRefreshFee}
+                                        disabled={isLoadingFee}
+                                        className={styles.refreshButton}
+                                        title="Refresh network fee"
+                                        type="button"
+                                    >
+                                        {isLoadingFee ? (
+                                            <LoadingSpinner size="md" />
+                                        ) : (
+                                            <svg
+                                                width="12"
+                                                height="12"
+                                                viewBox="0 0 18 18"
+                                                fill="none"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                            >
+                                                <path
+                                                    d="M1 3v4h4"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M17 15v-4h-4"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                                <path
+                                                    d="M15.37 6.75A6.75 6.75 0 0 0 4.23 4.23L1 7.5m16 3.5-3.23 3.02A6.75 6.75 0 0 1 2.63 11.25"
+                                                    stroke="currentColor"
+                                                    strokeWidth="1.5"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                />
+                                            </svg>
+                                        )}
+                                    </button>
+                                </div>
+                            </div>
                             <InputAmount
                                 min={1000}
                                 max={2999}
@@ -293,70 +381,23 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                                 <code className={styles.sdbAddress}>
                                     {sdbAddress || 'Loading...'}
                                 </code>
-                                <button
-                                    onClick={() => {
-                                        if (sdbAddress) {
-                                            navigator.clipboard.writeText(
-                                                sdbAddress
+                                <CopyButton
+                                    value={sdbAddress}
+                                    copyLabel="Copy SDB address"
+                                    copiedLabel="SDB address copied"
+                                    onCopied={(success) => {
+                                        if (success) {
+                                            toast.success(
+                                                'SDB address copied to clipboard.'
                                             )
-                                            setIsCopied(true)
-                                            // Reset the copied state after 2 seconds
-                                            setTimeout(() => {
-                                                setIsCopied(false)
-                                            }, 2000)
+                                        } else {
+                                            toast.error(
+                                                'Failed to copy SDB address.'
+                                            )
                                         }
                                     }}
-                                    className={`${styles.copyButton} ${isCopied ? styles.copied : ''}`}
-                                    title={
-                                        isCopied
-                                            ? 'Copied!'
-                                            : 'Copy SDB address'
-                                    }
-                                >
-                                    {isCopied ? (
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M20 6L9 17l-5-5"
-                                                stroke="#10b981"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                        </svg>
-                                    ) : (
-                                        <svg
-                                            width="16"
-                                            height="16"
-                                            viewBox="0 0 24 24"
-                                            fill="none"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                            />
-                                            <rect
-                                                x="8"
-                                                y="2"
-                                                width="8"
-                                                height="4"
-                                                rx="1"
-                                                ry="1"
-                                                stroke="currentColor"
-                                                strokeWidth="2"
-                                            />
-                                        </svg>
-                                    )}
-                                </button>
+                                    size="lg"
+                                />
                             </div>
                         </>
                     )}

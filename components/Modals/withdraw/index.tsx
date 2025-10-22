@@ -379,6 +379,7 @@ var ThisModal: React.FC<Prop> = function ({
         beginTransaction,
         walletWindow,
         transactionKey,
+        wallet.address,
     ])
 
     const retryWithdrawal = useCallback(async () => {
@@ -629,7 +630,7 @@ var ThisModal: React.FC<Prop> = function ({
                     {(isLoading || isTransactionRunning) && (
                         <div className={styles.transactionStatus}>
                             <div className={styles.statusIcon}>
-                                <LoadingSpinner size="sm" />
+                                <LoadingSpinner size="md" />
                             </div>
                             <div className={styles.statusContent}>
                                 <div className={styles.statusTitle}>

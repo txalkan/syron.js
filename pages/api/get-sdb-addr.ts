@@ -45,7 +45,7 @@ export default async function handler(
         const data = await fetchAccountData(id, address)
         response.status(200).json({ data })
     } catch (error) {
-        console.error('Error:', error)
+        console.error('@dev get-sdb-addr error:', error)
         response.status(500).json({
             error: error instanceof Error ? error.message : 'Unknown error',
         })

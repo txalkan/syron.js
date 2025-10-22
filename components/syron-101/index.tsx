@@ -8,7 +8,7 @@ import { useTranslation } from 'next-i18next'
 import { SyronForm } from '../syron-102'
 import icoBalance from '../../src/assets/icons/ssi_icon_balance.svg'
 import icoBTC from '../../src/assets/icons/bitcoin.png'
-import icoSYRON from '../../src/assets/logos/syron_susd_brand_mark.png'
+import icoSYRON from '../../src/assets/logos/btc_dollar.svg'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
@@ -20,7 +20,7 @@ import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
 import { extractRejectText } from '../../src/utils/unisat/utils'
 import { unisatBalance } from '../../src/utils/unisat/httpUtils'
-import { WithdrawModal, SendModal, BuyModal } from '..'
+import { WithdrawModal, SendModal, BuyModal, WalletConnection } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import LoadingSpinner from '../LoadingSpinner'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
@@ -694,6 +694,91 @@ function Component() {
         }
     }
 
+    const MetallicRefreshIcon = () => {
+        return (
+            <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                {/* Outer metallic effect glow */}
+                <defs>
+                    <linearGradient
+                        id="refreshMetallic"
+                        x1="0"
+                        y1="0"
+                        x2="24"
+                        y2="24"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop stopColor="#f8fafc" />
+                        <stop offset="0.35" stopColor="#e2e8f0" />
+                        <stop offset="0.7" stopColor="#cbd5f5" />
+                        <stop offset="1" stopColor="#94a3b8" />
+                    </linearGradient>
+                    <linearGradient
+                        id="refreshMetallicSecondary"
+                        x1="24"
+                        y1="24"
+                        x2="0"
+                        y2="0"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop stopColor="#94a3b8" />
+                        <stop offset="0.45" stopColor="#dbeafe" />
+                        <stop offset="1" stopColor="#f8fafc" />
+                    </linearGradient>
+                    <filter
+                        id="metallicShadow"
+                        x="-20%"
+                        y="-20%"
+                        width="140%"
+                        height="140%"
+                    >
+                        <feDropShadow
+                            dx="0"
+                            dy="1"
+                            stdDeviation="0.8"
+                            floodColor="rgba(148, 163, 184, 0.45)"
+                        />
+                        <feDropShadow
+                            dx="0"
+                            dy="0"
+                            stdDeviation="1.5"
+                            floodColor="rgba(255, 255, 255, 0.6)"
+                        />
+                    </filter>
+                </defs>
+                <path
+                    d="M1 4v6h6"
+                    stroke="url(#refreshMetallic)"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#metallicShadow)"
+                />
+                <path
+                    d="M23 20v-6h-6"
+                    stroke="url(#refreshMetallic)"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#metallicShadow)"
+                />
+                <path
+                    d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+                    stroke="url(#refreshMetallicSecondary)"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#metallicShadow)"
+                />
+            </svg>
+        )
+    }
+
     if (isWalletConnected && showWithdrawModal) {
         return (
             <WithdrawModal
@@ -745,7 +830,12 @@ function Component() {
     } else {
         return (
             <div className={styles.container}>
-                <SyronInfoCard />
+                <div className={styles.heroSection}>
+                    <SyronInfoCard />
+                    <div className={styles.heroCTA}>
+                        <WalletConnection variant="hero" />
+                    </div>
+                </div>
 
                 {/* @dev: private SDB */}
                 <div className={styles.boxWrapper}>
@@ -780,7 +870,7 @@ function Component() {
                                       </span> */}
                                     </div>
 
-                                    <div className={styles.subtitleLabel}>
+                                    {/* <div className={styles.subtitleLabel}>
                                         addresses
                                     </div>
                                     <div className={styles.boxWrapperInner}>
@@ -820,7 +910,7 @@ function Component() {
                                                     window.open(url)
                                                 }}
                                             >
-                                                ₿ox History ↗
+                                                Box Explorer ↗
                                             </div>
                                         </div>
                                         <br />
@@ -863,10 +953,10 @@ function Component() {
                                                     window.open(url)
                                                 }}
                                             >
-                                                Wallet History ↗
+                                                Wallet Explorer ↗
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     <div className={styles.subtitleLabel}>
                                         {/* <div className={styles.iconContainer}>
@@ -891,37 +981,9 @@ function Component() {
                                                 title="Refresh collateral data"
                                             >
                                                 {isRefreshingCollateral ? (
-                                                    <LoadingSpinner size="sm" />
+                                                    <LoadingSpinner size="md" />
                                                 ) : (
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M1 4v6h6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M23 20v-6h-6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
+                                                    <MetallicRefreshIcon />
                                                 )}
                                             </button>
                                         </div>
@@ -961,11 +1023,24 @@ function Component() {
                                             </div>
                                         </div>
                                         <div className={styles.txtRowsInfo}>
+                                            <div className={styles.stepRow}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    1
+                                                </span>{' '}
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    deposit bitcoin
+                                                </span>
+                                            </div>
                                             To add collateral, send Bitcoin to
                                             your Safety Deposit ₿ox address.
-                                            <br />
-                                            Minimum deposit: 3,000 sats (0.00003
-                                            BTC).
+                                            <br />- Minimum deposit: 3,000 sats
+                                            (0.00003 BTC).
                                             <div className={styles.buttons}>
                                                 <div
                                                     className={
@@ -976,17 +1051,130 @@ function Component() {
                                                         onClick={
                                                             updateDepositBTC
                                                         }
+                                                        className={`button primary ${styles.mainButton}`}
+                                                    >
+                                                        <span
+                                                            className={
+                                                                styles.mainButtonIcon
+                                                            }
+                                                        >
+                                                            ₿
+                                                        </span>
+                                                    </button>
+                                                    <div
                                                         className={
-                                                            'button primary'
+                                                            styles.buttonLabelText
                                                         }
                                                     >
-                                                        ₿
-                                                    </button>
-                                                    <div>Deposit BTC</div>
+                                                        Deposit BTC
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <span>
-                                                <strong>Quick tip:</strong>{' '}
+                                            <span className={styles.quickTip}>
+                                                <span
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        marginRight: 4,
+                                                    }}
+                                                >
+                                                    <svg
+                                                        width="16"
+                                                        height="16"
+                                                        viewBox="0 0 20 20"
+                                                        fill="none"
+                                                        style={{
+                                                            marginRight:
+                                                                '0.35em',
+                                                        }}
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <defs>
+                                                            <radialGradient
+                                                                id="metalGradient"
+                                                                cx="50%"
+                                                                cy="35%"
+                                                                r="70%"
+                                                            >
+                                                                <stop
+                                                                    offset="0%"
+                                                                    stopColor="#f8fafc"
+                                                                />
+                                                                <stop
+                                                                    offset="65%"
+                                                                    stopColor="#94a3b8"
+                                                                />
+                                                                <stop
+                                                                    offset="97%"
+                                                                    stopColor="#64748b"
+                                                                />
+                                                            </radialGradient>
+                                                            <linearGradient
+                                                                id="infoOutlineGradient"
+                                                                x1="0"
+                                                                y1="0"
+                                                                x2="20"
+                                                                y2="20"
+                                                                gradientUnits="userSpaceOnUse"
+                                                            >
+                                                                <stop stopColor="#f8fafc" />
+                                                                <stop
+                                                                    offset="0.45"
+                                                                    stopColor="#e2e8f0"
+                                                                />
+                                                                <stop
+                                                                    offset="0.8"
+                                                                    stopColor="#94a3b8"
+                                                                />
+                                                                <stop
+                                                                    offset="1"
+                                                                    stopColor="#64748b"
+                                                                />
+                                                            </linearGradient>
+                                                            <filter
+                                                                id="metalShadow"
+                                                                x="-20%"
+                                                                y="-20%"
+                                                                width="170%"
+                                                                height="170%"
+                                                            >
+                                                                <feDropShadow
+                                                                    dx="0"
+                                                                    dy="1"
+                                                                    stdDeviation="0.7"
+                                                                    floodColor="rgba(148,163,184,0.14)"
+                                                                />
+                                                                <feDropShadow
+                                                                    dx="0"
+                                                                    dy="0"
+                                                                    stdDeviation="2.1"
+                                                                    floodColor="rgba(255,255,255,0.38)"
+                                                                />
+                                                            </filter>
+                                                        </defs>
+                                                        <circle
+                                                            cx="10"
+                                                            cy="10"
+                                                            r="8"
+                                                            fill="url(#metalGradient)"
+                                                            stroke="url(#infoOutlineGradient)"
+                                                            strokeWidth="1.4"
+                                                            filter="url(#metalShadow)"
+                                                        />
+                                                        <text
+                                                            x="10"
+                                                            y="15"
+                                                            textAnchor="middle"
+                                                            fontSize="10.2"
+                                                            fill="#525875"
+                                                            fontWeight="bold"
+                                                            fontFamily="Arial, Helvetica, sans-serif"
+                                                            filter="url(#metalShadow)"
+                                                        >
+                                                            i
+                                                        </text>
+                                                    </svg>
+                                                </span>
                                                 Deposits under 3,000 sats are
                                                 automatically set aside for
                                                 network fees.
@@ -1031,37 +1219,68 @@ function Component() {
                                                 </span>
                                             </div>
                                         )}
-                                        <div className={styles.txtRow}>
-                                            Borrow stablecoins against your
-                                            Bitcoin deposits, adding SUSD to
-                                            your account balance.
-                                        </div>
-                                        <div className={styles.buttons}>
-                                            <div className={styles.buttonLabel}>
-                                                <button
-                                                    onClick={() =>
-                                                        updateBalance()
+                                        <div className={styles.txtRowsInfo}>
+                                            <div className={styles.stepRow}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
                                                     }
-                                                    className={`button ${
-                                                        isLoading
-                                                            ? 'disabled'
-                                                            : 'primary'
-                                                    }`}
                                                 >
-                                                    {isLoading ? (
-                                                        <div
-                                                            className={
-                                                                styles.loading
-                                                            }
-                                                        >
-                                                            Loading
-                                                            <ThreeDots color="white" />
-                                                        </div>
-                                                    ) : (
-                                                        <>+</>
-                                                    )}
-                                                </button>
-                                                <div>borrow susd</div>
+                                                    2
+                                                </span>{' '}
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    BORROW STABLECOIN
+                                                </span>
+                                            </div>
+                                            Borrow SUSD with your Bitcoin
+                                            collateral &mdash; it&rsquo;s
+                                            instantly added to your account
+                                            balance.
+                                            <div className={styles.buttons}>
+                                                <div
+                                                    className={
+                                                        styles.buttonLabel
+                                                    }
+                                                >
+                                                    <button
+                                                        onClick={() =>
+                                                            updateBalance()
+                                                        }
+                                                        className={`button primary ${styles.mainButton} ${
+                                                            isLoading
+                                                                ? 'disabled'
+                                                                : ''
+                                                        }`}
+                                                        disabled={isLoading}
+                                                    >
+                                                        {isLoading ? (
+                                                            <div
+                                                                className={
+                                                                    styles.loading
+                                                                }
+                                                            >
+                                                                <ThreeDots color="white" />
+                                                            </div>
+                                                        ) : (
+                                                            <span
+                                                                className={
+                                                                    styles.mainButtonIcon
+                                                                }
+                                                            >
+                                                                +
+                                                            </span>
+                                                        )}
+                                                    </button>
+                                                    <div
+                                                        className={
+                                                            styles.buttonLabelText
+                                                        }
+                                                    >
+                                                        borrow susd
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                         <div className={styles.subsection}>
@@ -1137,7 +1356,7 @@ function Component() {
                                         </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | Collateralization
+                                                • Collateralization
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -1229,37 +1448,9 @@ function Component() {
                                                 title="Refresh account balance"
                                             >
                                                 {isRefreshingBalance ? (
-                                                    <LoadingSpinner size="sm" />
+                                                    <LoadingSpinner size="md" />
                                                 ) : (
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M1 4v6h6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M23 20v-6h-6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
+                                                    <MetallicRefreshIcon />
                                                 )}
                                             </button>
                                         </div>
@@ -1268,7 +1459,7 @@ function Component() {
                                         {/* @dev Subsection Balance */}
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                SUSD balance
+                                                | SUSD balance
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -1292,31 +1483,18 @@ function Component() {
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
-                                                    onClick={() =>
-                                                        updateWithdraw('BRC-20')
-                                                    }
+                                                    onClick={updateDepositRunes}
+                                                    className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                >
+                                                    ↓
+                                                </button>
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.buttonLabelText
                                                     }
                                                 >
-                                                    ↗
-                                                </button>
-                                                <div>Withdraw BRC-20</div>
-                                            </div>
-                                        </div>
-                                        <div className={styles.buttons}>
-                                            <div className={styles.buttonLabel}>
-                                                <button
-                                                    onClick={() =>
-                                                        updateWithdraw('RUNES')
-                                                    }
-                                                    className={
-                                                        'button secondary'
-                                                    }
-                                                >
-                                                    ↗
-                                                </button>
-                                                <div>Withdraw RUNES</div>
+                                                    Deposit RUNES
+                                                </div>
                                             </div>
                                         </div>
                                         <div
@@ -1325,108 +1503,162 @@ function Component() {
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
-                                                    onClick={updateDepositRunes}
+                                                    onClick={() =>
+                                                        updateWithdraw('RUNES')
+                                                    }
+                                                    className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                >
+                                                    ↑
+                                                </button>
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.buttonLabelText
                                                     }
                                                 >
-                                                    ↓
+                                                    Withdraw RUNES
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div className={styles.buttons}>
+                                            <div className={styles.buttonLabel}>
+                                                <button
+                                                    onClick={() =>
+                                                        updateWithdraw('BRC-20')
+                                                    }
+                                                    className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                >
+                                                    ↑
                                                 </button>
-                                                <div>Deposit RUNES</div>
+                                                <div
+                                                    className={
+                                                        styles.buttonLabelText
+                                                    }
+                                                >
+                                                    Withdraw BRC-20
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                     {!isIdentified && (
                                         <div className={styles.subtitleLabel}>
-                                            Sign in for more features
+                                            Unlock more features — sign in with
+                                            your wallet
                                         </div>
                                     )}
                                     <div className={styles.boxWrapperInner}>
-                                        <div className={styles.subsectionSIWB}>
-                                            <div className={styles.buttons}>
-                                                {!isIdentified ? (
-                                                    <AuthGuard>
-                                                        <></>
-                                                    </AuthGuard>
-                                                ) : (
-                                                    <>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={() =>
-                                                                    updateSend(
-                                                                        false
-                                                                    )
+                                        <div
+                                            className={
+                                                isIdentified
+                                                    ? ''
+                                                    : styles.secondaryCardNotSignedIn
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.subsectionSIWB
+                                                }
+                                            >
+                                                <div className={styles.buttons}>
+                                                    {!isIdentified ? (
+                                                        <AuthGuard>
+                                                            <></>
+                                                        </AuthGuard>
+                                                    ) : (
+                                                        <>
+                                                            <div
+                                                                className={
+                                                                    styles.buttonLabel
                                                                 }
-                                                                className={`button secondary`}
                                                             >
-                                                                ↗
-                                                            </button>
-                                                            <div>send susd</div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        />
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={
-                                                                    updateBuy
-                                                                }
-                                                                className={`button secondary`}
-                                                            >
-                                                                ₿
-                                                            </button>
-                                                            <div>
-                                                                buy bitcoin
+                                                                <button
+                                                                    onClick={() =>
+                                                                        updateSend(
+                                                                            false
+                                                                        )
+                                                                    }
+                                                                    className={`${styles.mechanicalButton} ${styles.mechanicalAction}`}
+                                                                >
+                                                                    ↗
+                                                                </button>
+                                                                <div
+                                                                    className={
+                                                                        styles.buttonLabelText
+                                                                    }
+                                                                >
+                                                                    send susd
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        />
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={
-                                                                    handleRedeem
+                                                            <div
+                                                                className={
+                                                                    styles.buttonSeparator
                                                                 }
-                                                                className={`button ${
-                                                                    isRedeeming
-                                                                        ? 'disabled'
-                                                                        : 'secondary'
-                                                                }`}
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.buttonLabel
+                                                                }
                                                             >
-                                                                {isRedeeming ? (
-                                                                    <div
-                                                                        className={
-                                                                            styles.loading
-                                                                        }
-                                                                    >
-                                                                        Loading
-                                                                        <ThreeDots color="black" />
-                                                                    </div>
-                                                                ) : (
-                                                                    <>-</>
-                                                                )}
-                                                            </button>
-                                                            <div>
-                                                                redeem btc
+                                                                <button
+                                                                    onClick={
+                                                                        updateBuy
+                                                                    }
+                                                                    className={`${styles.mechanicalButton} ${styles.mechanicalAction}`}
+                                                                >
+                                                                    ₿
+                                                                </button>
+                                                                <div
+                                                                    className={
+                                                                        styles.buttonLabelText
+                                                                    }
+                                                                >
+                                                                    buy bitcoin
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        {/* <button
+                                                            <div
+                                                                className={
+                                                                    styles.buttonSeparator
+                                                                }
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.buttonLabel
+                                                                }
+                                                            >
+                                                                <button
+                                                                    onClick={
+                                                                        handleRedeem
+                                                                    }
+                                                                    className={`${styles.mechanicalButton} ${styles.mechanicalAction} ${
+                                                                        isRedeeming
+                                                                            ? styles.mechanicalDisabled
+                                                                            : ''
+                                                                    }`}
+                                                                    disabled={
+                                                                        isRedeeming
+                                                                    }
+                                                                >
+                                                                    {isRedeeming ? (
+                                                                        <div
+                                                                            className={
+                                                                                styles.loading
+                                                                            }
+                                                                        >
+                                                                            Loading
+                                                                            <ThreeDots color="black" />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <>-</>
+                                                                    )}
+                                                                </button>
+                                                                <div
+                                                                    className={
+                                                                        styles.buttonLabelText
+                                                                    }
+                                                                >
+                                                                    redeem btc
+                                                                </div>
+                                                            </div>
+                                                            {/* <button
                                                             onClick={() =>
                                                                 updateSend(true)
                                                             }
@@ -1435,16 +1667,17 @@ function Component() {
                                                             send syron to icp
                                                             address
                                                         </button> */}
-                                                    </>
-                                                )}
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                        {/* <div className={styles.txtRow}>
+                                            {/* <div className={styles.txtRow}>
                                             To buy BTC with your &apos;Available
                                             SUSD balance&apos;, make sure to
                                             Sign In With Bitcoin & click the
                                             &apos;Buy BTC&apos; button.
                                         </div> */}
+                                        </div>
                                     </div>
                                 </>
                             ) : (

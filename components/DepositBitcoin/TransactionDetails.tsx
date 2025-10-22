@@ -8,68 +8,41 @@ const TXN_VB = 364 // Virtual bytes for the transaction
 interface TransactionDetailsProps {
     collateralAmount: Big
     feeAmount: Big
+    feeRate: number
 }
 
 export function TransactionDetails({
     collateralAmount,
     feeAmount,
+    feeRate,
 }: TransactionDetailsProps) {
     const totalDeposit = collateralAmount.add(feeAmount)
 
     // State for gas fee calculation
     const [gasFee, setGasFee] = React.useState<string>('Calculating...')
-    const [isLoadingFee, setIsLoadingFee] = React.useState(true)
-    const [feeRate, setFeeRate] = React.useState<number>(0)
     const [depositStatus, setDepositStatus] = React.useState<{
         type: 'success' | 'error' | null
         message: string
     }>({ type: null, message: '' })
 
-    const isFeeTooHigh = React.useMemo(() => {
-        return feeRate > 5
-    }, [feeRate])
-
-    // Fetch gas fee on component mount
     React.useEffect(() => {
-        calculateGasFee()
-    }, [])
-
-    // Function to calculate gas fee
-    async function calculateGasFee() {
-        setIsLoadingFee(true)
-        try {
-            const rate = await mempoolFeeRate()
-
-            setFeeRate(rate)
-            const feeSats = TXN_VB * rate
-            setGasFee(`${feeSats} sats`)
-        } catch (error) {
-            console.error('Error calculating gas fee:', error)
-            setGasFee('Error')
-        } finally {
-            setIsLoadingFee(false)
-        }
-    }
-
-    // Function to refresh gas fee
-    const handleRefreshFee = async () => {
-        console.log('Refresh button clicked!')
-        await calculateGasFee()
-    }
+        setGasFee(`${feeRate * TXN_VB} sats`)
+    }, [feeRate])
 
     return (
         <div className={styles.container}>
             <div className={styles.header}>
                 <div className={styles.headerContent}>
                     <div className={styles.titleSubtitle}>
-                        Review your collateral amount and transaction fees
+                        Review your collateral deposit and the amount reserved
+                        for future transaction fees
                     </div>
                 </div>
                 <div className={styles.amountDisplay}>
                     <div className={styles.amountSection}>
                         <div className={styles.amountInfo}>
                             <span className={styles.amountLabel}>
-                                Collateral Amount
+                                AMOUNT FOR COLLATERAL{' '}
                             </span>
                             <span className={styles.amountDescription}>
                                 Bitcoin to be deposited as collateral
@@ -106,7 +79,7 @@ export function TransactionDetails({
                     <div className={styles.amountSection}>
                         <div className={styles.amountInfo}>
                             <span className={styles.amountLabel}>
-                                Fee Amount
+                                AMOUNT FOR FEES
                             </span>
                             <span className={styles.amountDescription}>
                                 To cover Safety Deposit ₿ox transaction fees
@@ -137,6 +110,7 @@ export function TransactionDetails({
                             </div>
                         </div>
                     </div>
+
                     <div className={styles.totalAmountSection}>
                         <div className={styles.totalAmountInfo}>
                             <div className={styles.totalAmountLabel}>
@@ -215,32 +189,6 @@ export function TransactionDetails({
                     <span className={styles.statusText}>
                         {depositStatus.message}
                     </span>
-                </div>
-            )}
-
-            {/* Fee Too High Error */}
-            {isFeeTooHigh && (
-                <div className={styles.feeTooHighError}>
-                    <div className={styles.errorHeader}>
-                        <svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                        >
-                            <path
-                                d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
-                                fill="#dc2626"
-                            />
-                        </svg>
-                        <span>Fee Too High</span>
-                    </div>
-                    <div className={styles.errorContent}>
-                        <p>
-                            Please try again later when network fees are lower.
-                        </p>
-                    </div>
                 </div>
             )}
         </div>

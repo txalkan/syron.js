@@ -75,6 +75,39 @@
     cursor: default;
 }
 
+.addressRow {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .addressValue {
+        flex: 1;
+        min-width: 0;
+    }
+}
+
+.inspectLink {
+    margin-left: 1rem;
+    font-family: 'GeistMono', monospace;
+    text-transform: none;
+    background: none;
+    border: none;
+    padding: 0;
+    color: #61a6ff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+        background-color: transparent !important;
+    }
+}
+
 .actions {
     padding: 12px;
     cursor: default;

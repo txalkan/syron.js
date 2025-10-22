@@ -20,7 +20,7 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
         <div className={styles.wrapper}>
             {/* <Image src={icoArrow} alt="arrow-icon" className={styles.img} /> */}
             <label htmlFor="borrow" className={styles.label}>
-                mint susd
+                SUSD AMOUNT THAT YOU CAN BORROW
             </label>
             <div className={styles.output}>
                 <input

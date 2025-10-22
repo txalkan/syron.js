@@ -47,7 +47,7 @@ import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
 import { useStore } from 'react-stores'
 import Image from 'next/image'
-import SyronLogo from '../../src/assets/logos/syron_concrete.png'
+import SyronLogo from '../../src/assets/logos/runes_of_syron.png'
 
 function Header() {
     const Router = useRouter()
@@ -297,8 +297,16 @@ function Header() {
                             {/* <Dashboard /> */}
                             <WalletConnection />
                         </div>
-                        <div className={styles.footer}>
-                            <Lang />
+                        <div
+                            onClick={() =>
+                                window.open(
+                                    'https://blog.tyrondao.org/governance/',
+                                    '_blank'
+                                )
+                            }
+                            className={styles.footer}
+                        >
+                            {/* <Lang /> */}
                             <div className={styles.logoWrapper}>
                                 <Image
                                     src={SyronLogo}

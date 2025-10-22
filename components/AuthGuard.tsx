@@ -3,6 +3,7 @@ import { useSiwbIdentity } from 'ic-use-siwb-identity'
 import Spinner from './Spinner'
 import { useWalletInfoStore } from '../src/store/wallet_info'
 import { WalletProviderKey } from 'ic-use-siwb-identity/dist/wallet'
+import styles from './AuthGuard.module.scss'
 
 type AuthGuardProps = {
     children: React.ReactNode
@@ -22,8 +23,10 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         connectedBtcAddress,
         identity,
     } = useSiwbIdentity()
-
     const { wallet } = useWalletInfoStore()
+
+    const [loading, setLoading] = useState<boolean>(false)
+    const [manually, setManually] = useState<boolean>(false)
 
     const walletProvider = useMemo(
         () =>
@@ -32,9 +35,6 @@ export default function AuthGuard({ children }: AuthGuardProps) {
                 : (wallet.type as WalletProviderKey),
         [wallet.type]
     )
-
-    const [loading, setLoading] = useState<boolean>(false)
-    const [manually, setManually] = useState<boolean>(false)
 
     const attemptLogin = useCallback(async () => {
         setLoading(true)
@@ -122,12 +122,11 @@ export default function AuthGuard({ children }: AuthGuardProps) {
             <>
                 <button
                     type="button"
-                    className="button secondary"
+                    className={styles.signInButton}
                     onClick={handleClick}
                     disabled={loading}
-                    style={{ width: '100%' }}
                 >
-                    {!loading ? <>Sign in</> : <Spinner />}
+                    {!loading ? <>Sign in 🔑</> : <Spinner />}
                 </button>
             </>
         )

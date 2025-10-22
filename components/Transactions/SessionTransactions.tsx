@@ -7,6 +7,7 @@ import {
     useBitcoinTransactionStore,
     type TransactionRecord,
 } from '../../src/store/bitcoin_transactions'
+import { updateModalGetStarted } from '../../src/store/modal'
 import { Big } from '../../src/utils/big'
 
 type MetadataKey = keyof typeof TRANSACTION_TYPE_METADATA
@@ -104,9 +105,19 @@ export const SessionTransactions: React.FC = () => {
                 <div className={styles.header}>
                     <div className={styles.emptyTitle}>No transactions yet</div>
                     <div className={styles.emptySubtitle}>
-                        Execute a transaction to see progress updates here.
+                        Execute a transaction to see progress updates here. For
+                        previous transactions, check the blockchain explorer.
                     </div>
                 </div>
+                {/* <div className={styles.emptyActions}>
+                    <button
+                        type="button"
+                        className={styles.emptyAction}
+                        onClick={() => updateModalGetStarted(true)}
+                    >
+                        How to start
+                    </button>
+                </div> */}
             </div>
         )
     }

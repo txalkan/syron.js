@@ -20,6 +20,10 @@
         padding: 16px;
         border-radius: 8px;
     }
+
+    &:hover {
+        cursor: default !important;
+    }
 }
 
 .header {
@@ -638,21 +642,6 @@
     }
 }
 
-.gasFeeContainer {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 2px;
-    border: 1px solid transparent;
-    border-radius: 4px;
-    pointer-events: auto;
-
-    &:hover {
-        border-color: #e5e7eb;
-        background: rgba(0, 0, 0, 0.02);
-    }
-}
-
 .refreshButton {
     background: #f9fafb;
     border: 1px solid #e5e7eb;
@@ -843,29 +832,6 @@
     border: 1px solid #e2e8f0;
 }
 
-.copyButton {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    cursor: pointer;
-    padding: 8px;
-    border-radius: 6px;
-    color: #64748b;
-    transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    &:hover {
-        background: #f1f5f9;
-        border-color: #cbd5e1;
-        color: #374151;
-        transform: scale(1.05);
-    }
-
-    &:active {
-        transform: scale(0.95);
-    }
-}
 
 .recommendedAmount {
     margin: 20px 0;

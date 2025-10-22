@@ -2,19 +2,26 @@
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
-    background: linear-gradient(135deg, #55585f 0%, #232326 70%, #b8b8b8 100%);
-
+    background:
+        radial-gradient(
+            120% 120% at 50% 0%,
+            rgba(255, 225, 100, 0.08) 0%,
+            rgba(255, 225, 100, 0) 42%
+        ),
+        linear-gradient(160deg, #1f2026 0%, #13141a 65%, #1a1710 100%);
     box-shadow:
-        0 6px 32px 0 rgba(8, 9, 19, 0.36),
-        0 1.5px 8px 0 rgba(30, 32, 48, 0.1);
+        0 10px 30px rgba(7, 8, 14, 0.45),
+        0 2px 12px rgba(20, 21, 27, 0.35);
     padding: 3.5rem 2rem 3.5rem 2rem;
     color: #fff;
     margin-bottom: 4rem;
     max-width: 100vw;
     width: 100%;
     align-self: center;
-    border: 1.5px solid rgba(255, 255, 255, 0.08);
-    transition: box-shadow 0.2s;
+    border: 1px solid rgba(255, 255, 255, 0.04);
+    transition:
+        box-shadow 0.2s,
+        border-color 0.2s;
     overflow-x: hidden;
 
     @media (min-width: 531px) {
@@ -33,7 +40,7 @@
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
-    margin-top: 2rem;
+    margin-top: 1rem;
 }
 
 .headerTitle {
@@ -137,6 +144,50 @@
 
 .emptySubtitle {
     font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.65);
+}
+
+.emptyActions {
+    display: flex;
+    justify-content: center;
+    margin-top: 1.5rem;
+}
+
+.emptyAction {
+    appearance: none;
+    background: transparent;
+    border: none;
+    color: #ffe14d;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+
+    &:focus-visible {
+        outline: 2px solid rgba(255, 225, 77, 0.7);
+        outline-offset: 2px;
+    }
+
+    &:hover {
+        background-color: rgba(255, 225, 77, 0.12);
+        color: #ffe966;
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
+        background-color: rgba(255, 225, 77, 0.2);
+    }
 }
 
 .amountContainer {

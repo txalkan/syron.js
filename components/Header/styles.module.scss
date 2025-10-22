@@ -64,10 +64,13 @@
 
 .logoWrapper {
     width: auto;
-    height: 100%;
+    height: 50%;
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .syronLogo {

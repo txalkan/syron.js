@@ -413,6 +413,10 @@ export const SyronForm: React.FC<Prop> = ({
                                 </div>
                             )}
                         </div>
+                        <TransactionOutput
+                            amount={susdAmt}
+                            token={vault_pair[1].meta}
+                        />
                     </div>
                 </form>
             </>

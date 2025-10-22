@@ -4,6 +4,162 @@
     right: 5px;
 }
 
+.heroWrapper {
+    position: static;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.85rem;
+    width: 100%;
+}
+
+.inspectLink {
+    background: none;
+    border: none;
+    padding: 0;
+    color: #61a6ff;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+
+    &:hover,
+    &:focus {
+        text-decoration: underline;
+    }
+}
+
+.connectButton {
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.9rem 1.6rem;
+    border-radius: 8px;
+    border: 2px solid #000;
+    background: linear-gradient(180deg, #4b2b6b 0%, #2b1740 100%);
+    color: #ffffff;
+    font-family: 'GeistMono', monospace;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+    box-shadow:
+        0 4px 0 #000,
+        inset 0 1px 0 #7642a8;
+
+    &:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow:
+            0 6px 0 #000,
+            0 0 10px rgba(150, 80, 255, 0.25),
+            inset 0 1px 0 #7642a8;
+    }
+
+    &:active:not(:disabled) {
+        transform: translateY(1px);
+        box-shadow: inset 0 3px 3px rgba(0, 0, 0, 0.5);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.6;
+        box-shadow: 0 2px 0 #000;
+    }
+}
+
+.connectButtonHero {
+    width: 100%;
+    max-width: 280px;
+    border-radius: 14px;
+}
+
+.connectButtonPulse {
+    animation: connectPulse 2s infinite;
+}
+
+@keyframes connectPulse {
+    0%,
+    100% {
+        box-shadow:
+            0 4px 0 #000,
+            inset 0 1px 0 #7642a8,
+            0 0 8px rgba(150, 80, 255, 0.18);
+    }
+
+    50% {
+        box-shadow:
+            0 6px 0 #000,
+            inset 0 1px 0 #7642a8,
+            0 0 14px rgba(150, 80, 255, 0.35);
+    }
+}
+
+.heroConnectedCard {
+    font-family: 'GeistMono', monospace;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    width: 100%;
+    max-width: 320px;
+    padding: 0.9rem 1.2rem;
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(14px);
+    color: #f8f8f8;
+    font-size: 0.75rem !important;
+}
+
+.heroConnectedIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.heroConnectedContent {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+}
+
+.heroConnectedLabel {
+    color: #ffff32 !important;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #f5f5f7;
+    opacity: 0.9;
+    white-space: nowrap !important;
+}
+
+.heroConnectedAddress {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    white-space: nowrap !important;
+    color: #fdfdfd;
+}
+
+.heroAddressContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.heroAddressValue {
+    font-weight: 600;
+}
+
 .wrapperIcon {
     display: flex;
     flex-direction: row;

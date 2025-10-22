@@ -1,23 +1,15 @@
-import * as tyron from 'tyron'
 import styles from './index.module.scss'
 import { useCallback, useEffect, useState } from 'react'
 import Image from 'next/image'
 import classNames from 'classnames'
-import ArrowDownReg from '../../../src/assets/icons/dashboard_arrow_down_icon.svg'
-import SwapIcon from '../../icons/swap'
 import icoSYRON from '../../../src/assets/icons/ssi_SYRON_iso.png'
-import icoORDI from '../../../src/assets/icons/brc-20-ORDI.png'
 import icoBTC from '../../../src/assets/icons/bitcoin.png'
 import { CryptoState } from '../../../src/types/vault'
 import { useStore } from 'react-stores'
-import { $walletConnected } from '../../../src/store/syron'
 import { useWalletInfoStore } from '../../../src/store/wallet_info'
-import Big from 'big.js'
 import { $xr } from '../../../src/store/xr'
-import icoArrow from '../../../src/assets/icons/ssi_icon_3arrowsDown.svg'
+import { Big, _0 } from '../../../src/utils/big'
 
-Big.PE = 999
-const _0 = Big(0)
 const dec = 1e8
 
 type Prop = {
@@ -43,7 +35,7 @@ export const BoxInput: React.FC<Prop> = ({
     const [satsBalance, setSatsBalance] = useState(_0)
     const [btcBalance, setBtcBalance] = useState(_0)
     const [inputVal, setInputVal] = useState(_0)
-    const [balWorth, setBalWorth] = useState(_0)
+    const [btcPrice, setBtcPrice] = useState<number | null>(null)
 
     useEffect(() => {
         if (addr_name == 'btc') {
@@ -56,13 +48,12 @@ export const BoxInput: React.FC<Prop> = ({
 
                 const btcBal = satsBig.div(dec)
                 setBtcBalance(btcBal)
-
-                if (xr != null) {
-                    setBalWorth(btcBal.mul(Big(xr.rate)))
-                }
             }
         }
-    }, [wallet.balance, xr, addr_name, value_])
+        if (xr != null) {
+            setBtcPrice(xr.rate)
+        }
+    }, [wallet.balance, addr_name, value_, xr])
 
     const [selectedPercent, setSelectedPercent] = useState<number | null>(null)
 
@@ -122,10 +113,28 @@ export const BoxInput: React.FC<Prop> = ({
         []
     )
 
+    const btcPriceLabel = btcPrice ? btcPrice.toLocaleString('en-US') : '...'
+
+    const walletUsd = btcPrice ? btcBalance.mul(btcPrice) : _0
+    const formattedWalletUsd = btcPrice
+        ? Number(walletUsd).toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+          })
+        : '0.00'
+
+    const inputUsd = btcPrice ? inputVal.mul(btcPrice) : _0
+    const formattedInputUsd = btcPrice
+        ? Number(inputUsd).toLocaleString('en-US', {
+              minimumFractionDigits: 2,
+              maximumFractionDigits: 2,
+          })
+        : '...'
+
     return (
         <div className={classNames(styles.container)}>
             <div className={styles.formTxtInfoWrapper}>
-                {xr == null ? (
+                {btcPrice == null ? (
                     <div className={styles.info}>&nbsp;| Loading...</div>
                 ) : (
                     <>
@@ -135,35 +144,34 @@ export const BoxInput: React.FC<Prop> = ({
                                 <span style={{ paddingRight: '0.2rem' }}>
                                     $
                                 </span>
-                                {xr?.rate
-                                    ? xr.rate.toLocaleString('en-US')
-                                    : '...'}
+                                {btcPriceLabel}
                             </span>
                         </div>
                         <div className={styles.info}>
                             | Wallet Balance
                             <span className={styles.infoBalance}>
-                                {!isNaN(Number(btcBalance)) &&
-                                    Number(btcBalance) !== 0 && (
-                                        <span className={styles.infoColor}>
-                                            <span
-                                                style={{
-                                                    paddingRight: '0.2rem',
-                                                }}
-                                            >
-                                                ₿
-                                            </span>
-                                            {Number(btcBalance).toLocaleString(
-                                                'en-US',
-                                                {
-                                                    minimumFractionDigits: 8,
-                                                    maximumFractionDigits: 8,
-                                                }
-                                            )}
+                                {!isNaN(Number(btcBalance)) && (
+                                    <span className={styles.infoColor}>
+                                        <span
+                                            style={{
+                                                paddingRight: '0.2rem',
+                                            }}
+                                        >
+                                            ₿
                                         </span>
-                                    )}
-                                <span className={styles.infoPurple}>
-                                    {Number(balWorth) != 0 && (
+                                        {Number(btcBalance) !== 0
+                                            ? Number(btcBalance).toLocaleString(
+                                                  'en-US',
+                                                  {
+                                                      minimumFractionDigits: 8,
+                                                      maximumFractionDigits: 8,
+                                                  }
+                                              )
+                                            : '0'}
+                                    </span>
+                                )}
+                                {Number(walletUsd) !== 0 && (
+                                    <span className={styles.infoPurple}>
                                         <span
                                             style={{
                                                 paddingRight: '0.2rem',
@@ -171,24 +179,16 @@ export const BoxInput: React.FC<Prop> = ({
                                         >
                                             ≈
                                         </span>
-                                    )}
-                                    <span
-                                        style={{
-                                            paddingRight: '0.2rem',
-                                        }}
-                                    >
-                                        $
+                                        <span
+                                            style={{
+                                                paddingRight: '0.2rem',
+                                            }}
+                                        >
+                                            $
+                                        </span>
+                                        {formattedWalletUsd}
                                     </span>
-                                    {Number(balWorth) == 0
-                                        ? 0
-                                        : Number(balWorth).toLocaleString(
-                                              'en-US',
-                                              {
-                                                  minimumFractionDigits: 2,
-                                                  maximumFractionDigits: 2,
-                                              }
-                                          )}
-                                </span>
+                                )}
                             </span>
                         </div>
 
@@ -278,6 +278,10 @@ export const BoxInput: React.FC<Prop> = ({
                     </div>
                     {/* <div className={styles.tokenInfo}>| BTC</div> */}
                 </div>
+                {/* the input amount multiplied by the price of bitcoin */}
+                <label className={styles.labelUsd}>
+                    ≈ $ {formattedInputUsd}
+                </label>
             </div>
 
             {/* @review (burn) */}

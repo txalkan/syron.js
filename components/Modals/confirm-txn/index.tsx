@@ -95,7 +95,7 @@ const ConfirmTransactionModal = ({
                             title="Reload fee information"
                         >
                             {isReloadingFees ? (
-                                <LoadingSpinner size="sm" />
+                                <LoadingSpinner size="md" />
                             ) : (
                                 <span>↻</span>
                             )}

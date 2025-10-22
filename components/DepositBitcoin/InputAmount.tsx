@@ -90,8 +90,8 @@ export function InputAmount({
                     <span
                         className={`${styles.validationMessage} ${styles.invalid}`}
                     >
-                        ⚠ Network fees are currently too high. Please try again
-                        later.
+                        ⚠ Bitcoin miner fees are currently too high. Please try
+                        again later.
                     </span>
                 ) : value ? (
                     <span

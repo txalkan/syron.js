@@ -2,6 +2,9 @@ import React from 'react'
 import styles from './styles.module.scss'
 import WalletDisconnect from '../WalletDisconnect'
 import { Big } from '../../src/utils/big'
+import { CopyButton } from '../CopyButton'
+import { toast } from 'react-toastify'
+import { getMempoolUrl } from '../../src/config/wallet'
 
 interface WalletDropdownProps {
     isOpen: boolean
@@ -41,7 +44,42 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({
             {wallet.address && (
                 <div className={styles.section}>
                     <div className={styles.sectionLabel}>Address</div>
-                    <div className={styles.addressValue}>{wallet.address}</div>
+                    <div className={styles.addressRow}>
+                        <div className={styles.addressValue}>
+                            {wallet.address}
+                        </div>
+                        <CopyButton
+                            value={wallet.address}
+                            size="lg"
+                            copyLabel="Copy wallet address"
+                            copiedLabel="Address copied to clipboard"
+                            onCopied={(success) => {
+                                if (!success) {
+                                    toast.error('Failed to copy address', {
+                                        onClick: () => toast.dismiss(),
+                                    })
+                                    return
+                                }
+
+                                toast.success('Address copied to clipboard', {
+                                    onClick: () => toast.dismiss(),
+                                })
+                            }}
+                        />
+                    </div>
+                    <button
+                        type="button"
+                        className={styles.inspectLink}
+                        onClick={() => {
+                            if (!wallet.address) return
+                            const url = getMempoolUrl(
+                                `/address/${wallet.address}`
+                            )
+                            window.open(url)
+                        }}
+                    >
+                        Inspect ↗
+                    </button>
                 </div>
             )}
 

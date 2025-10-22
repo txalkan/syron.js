@@ -44,14 +44,12 @@
         width: 100%;
         max-width: 100%;
         height: calc(100vh - 120px);
-        border-radius: 12px;
         border: 1px solid #e5e7eb;
         box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 24px 0px;
     }
 
     @media (max-width: 480px) {
         height: calc(100vh - 100px);
-        border-radius: 8px;
     }
 }
 
@@ -619,69 +617,6 @@
     }
 }
 
-.copyButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 28px;
-    height: 28px;
-    background: #ffffff;
-    border: 1px solid #d1d5db;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    color: #6b7280;
-    flex-shrink: 0;
-
-    &:hover {
-        background: #f3f4f6;
-        border-color: #9ca3af;
-        color: #374151;
-    }
-
-    &:active {
-        background: #e5e7eb;
-        transform: scale(0.95);
-    }
-
-    &.copied {
-        background: #ecfdf5;
-        border-color: #10b981;
-        color: #10b981;
-
-        &:hover {
-            background: #d1fae5;
-            border-color: #059669;
-            color: #059669;
-        }
-    }
-
-    svg {
-        width: 14px;
-        height: 14px;
-        transition: all 0.2s ease;
-    }
-
-    @media (max-width: 767px) {
-        width: 24px;
-        height: 24px;
-
-        svg {
-            width: 12px;
-            height: 12px;
-        }
-    }
-
-    @media (max-width: 480px) {
-        width: 22px;
-        height: 22px;
-
-        svg {
-            width: 10px;
-            height: 10px;
-        }
-    }
-}
 
 .authorCell {
     white-space: nowrap;
@@ -1206,5 +1141,64 @@
         outline: none;
         border-color: #7c3aed;
         box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
+}
+
+.gasFeeContainer {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 2px;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    pointer-events: auto;
+}
+
+.gasFeeMeta {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+
+    @media (max-width: 767px) {
+        margin-top: 6px;
+        gap: 3px;
+    }
+
+    @media (max-width: 480px) {
+        margin-top: 4px;
+        gap: 2px;
+    }
+}
+
+.gasFeeLabel {
+    font-size: 11px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #94a3b8;
+
+    @media (max-width: 767px) {
+        font-size: 10px;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 9px;
+    }
+}
+
+.gasFeeValue {
+    font-size: 13px;
+    font-weight: 600;
+    color: #334155;
+    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+
+    @media (max-width: 767px) {
+        font-size: 12px;
+    }
+
+    @media (max-width: 480px) {
+        font-size: 11px;
     }
 }

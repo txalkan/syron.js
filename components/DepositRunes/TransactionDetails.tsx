@@ -18,6 +18,7 @@ import { unisatBalance } from '../../src/utils/unisat/httpUtils'
 import { DepositBitcoin } from '../DepositBitcoin'
 import useICPHook from '../../src/hooks/useICP'
 import LoadingSpinner from '../LoadingSpinner'
+import { CopyButton } from '../CopyButton'
 
 // Constants
 const STABLE_DEPOSIT_THRESHOLD = 0.1
@@ -798,45 +799,25 @@ export function TransactionDetails({
                                 <code className={styles.sdbAddress}>
                                     {sdbAddress || 'Loading...'}
                                 </code>
-                                <button
-                                    onClick={() => {
-                                        if (sdbAddress) {
-                                            navigator.clipboard.writeText(
-                                                sdbAddress
-                                            )
+                                <CopyButton
+                                    value={sdbAddress}
+                                    copyLabel="Copy SDB address"
+                                    copiedLabel="SDB address copied"
+                                    onCopied={(success) => {
+                                        if (success) {
                                             toast.success(
                                                 'SDB address copied to clipboard!',
                                                 { theme: toastTheme(isLight) }
                                             )
+                                        } else {
+                                            toast.error(
+                                                'Failed to copy SDB address.',
+                                                { theme: toastTheme(isLight) }
+                                            )
                                         }
                                     }}
-                                    className={styles.copyButton}
-                                    title="Copy SDB address"
-                                >
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <rect
-                                            x="9"
-                                            y="9"
-                                            width="13"
-                                            height="13"
-                                            rx="2"
-                                            ry="2"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                        />
-                                        <path
-                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                        />
-                                    </svg>
-                                </button>
+                                    size="lg"
+                                />
                             </div>
                             {/* <div className={styles.recommendedAmount}>
                                 <p>
