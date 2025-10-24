@@ -31,11 +31,14 @@ import { DelegationIdentity } from '@dfinity/identity'
 import SyronInfoCard from './SyronInfoCard'
 import { DepositRunes } from '../DepositRunes'
 import { useMempoolHook } from '../../src/hooks/useMempool'
+import { $xr } from '../../src/store/xr'
 import CollateralRatioProgressBar from './CollateralRatioProgressBar'
 import { useWalletInfoStore } from '../../src/store/wallet_info'
 import { getMempoolUrl, getWalletWindow } from '../../src/config/wallet'
 import { DepositBTC } from '../DepositBitcoin/DepositPsbt'
 import SessionTransactions from '../Transactions/SessionTransactions'
+
+const isDev = process.env.NODE_ENV !== 'production'
 
 function Component() {
     const { getXR } = useMempoolHook()
@@ -43,6 +46,7 @@ function Component() {
     // Derive connection state from wallet address
     const isWalletConnected = !!wallet.address
     const syron = useStore($syron)
+    const xr = useStore($xr)
     const { siwb_identity, setSiwbIdentity, clearSiwbSession } =
         useSiwbSessionStore()
     const { identity, clear } = useSiwbIdentity()
@@ -189,42 +193,67 @@ function Component() {
     ])
 
     useEffect(() => {
-        if (syron !== null && isWalletConnected) {
-            console.log('Syron State: ', JSON.stringify(syron, null, 2))
-
-            setSDB(syron.sdb)
-            setSatsDeposited(syron.sdb_btc)
-
-            const collateral = syron.syron_btc.div(1e8).round(8, 0).toString()
-            setSatsCollateral(collateral)
-
-            const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
-            setLoan(loan_)
-
-            const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
-            setSyronBal(bal_)
-
-            // Fetch BTC price and calculate collateral ratio
-            getXR()
-                .then((btcPrice) => {
-                    // Check for division by zero - if no loan, collateral ratio is undefined
-                    if (syron.syron_usd_loan.eq(0)) {
-                        setCollateralRatio('') // Set to null when no loan exists
-                    } else {
-                        const collateral_ratio = syron.syron_btc
-                            .mul(btcPrice)
-                            .div(syron.syron_usd_loan)
-                            .mul(100)
-                            .round(1, 1)
-                            .toString()
-                        setCollateralRatio(collateral_ratio)
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error fetching BTC price:', error)
-                })
+        if (syron.sdb === '' || !isWalletConnected) {
+            return
         }
-    }, [syron, getXR, isWalletConnected])
+
+        if (isDev) {
+            console.log('Syron State: ', JSON.stringify(syron, null, 2))
+        }
+
+        setSDB(syron!.sdb)
+        setSatsDeposited(syron!.sdb_btc)
+
+        const collateral = syron.syron_btc.div(1e8).round(8, 0).toString()
+        setSatsCollateral(collateral)
+
+        const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
+        setLoan(loan_)
+
+        const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
+        setSyronBal(bal_)
+
+        const applyExchangeRate = (btcPrice: number) => {
+            if (syron!.syron_usd_loan.eq(0)) {
+                setCollateralRatio('')
+                return
+            }
+
+            if (!Number.isFinite(btcPrice) || btcPrice <= 0) {
+                return
+            }
+
+            const collateral_ratio = syron.syron_btc
+                .mul(btcPrice)
+                .div(syron!.syron_usd_loan)
+                .mul(100)
+                .round(1, 1)
+                .toString()
+            setCollateralRatio(collateral_ratio)
+        }
+
+        const cachedRate = xr?.rate
+        if (Number.isFinite(cachedRate) && cachedRate! > 0) {
+            applyExchangeRate(cachedRate!)
+            return
+        }
+
+        let cancelled = false
+
+        getXR()
+            .then((btcPrice) => {
+                if (!cancelled) {
+                    applyExchangeRate(btcPrice)
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching BTC price:', error)
+            })
+
+        return () => {
+            cancelled = true
+        }
+    }, [syron, xr?.rate, getXR, isWalletConnected])
 
     // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {

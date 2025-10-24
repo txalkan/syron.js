@@ -81,6 +81,9 @@ async function fetchAccountData(id: string, address: string) {
     const syron = basic_bitcoin_syron()
 
     // Get BTC balance (always fetch fresh - no caching)
+    console.log(
+        `[${new Date().toLocaleString()}] Fetching BTC balance for address: ${address}`
+    )
     const balance = await unisatBalance(address)
 
     // Get account data from Syron

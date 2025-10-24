@@ -3,6 +3,7 @@ import { toast } from 'react-toastify'
 import { useWalletInfoStore } from '../store/wallet_info'
 import { useBitcoinTransactionStore } from '../store/bitcoin_transactions'
 import { getWalletWindow } from '../config/wallet'
+import { clearSyronSSI } from '../store/syron'
 
 /**
  * Custom hook for wallet disconnect functionality
@@ -51,6 +52,7 @@ export function useWalletDisconnect() {
             // Clear all app data
             clearWallet()
             clearAllTransactions()
+            clearSyronSSI()
 
             // Call wallet provider disconnect API
             if (walletWindow && walletWindow.disconnect) {

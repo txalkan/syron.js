@@ -219,23 +219,26 @@ function Component(props: WalletConnectionProps) {
             return
         }
 
-        const shouldFetch =
-            address !== lastProcessedAddress.current || !wallet.sdbAddress
-
-        if (!shouldFetch) {
+        // Only run when the address changes.
+        if (address === lastProcessedAddress.current) {
             return
         }
 
         let isCancelled = false
+        // Save a reference to the exact getBox this run, so if the dep changes, we don't accidentally treat it as address change.
+        const currentGetBox = getBox
 
         const updateBox = async () => {
+            if (isCancelled) return
             try {
-                await getBox(address)
+                await currentGetBox(address)
                 if (!isCancelled) {
                     lastProcessedAddress.current = address
                 }
             } catch (error) {
-                console.error('Error fetching SDB address:', error)
+                if (!isCancelled) {
+                    console.error('Error fetching SDB address:', error)
+                }
             }
         }
 
@@ -244,13 +247,15 @@ function Component(props: WalletConnectionProps) {
         return () => {
             isCancelled = true
         }
-    }, [wallet.address, wallet.sdbAddress, getBox])
+        // Only depend on address; don't retrigger for getBox reference changes
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [wallet.address])
 
     useEffect(() => {
-        if (wallet.sdbAddress) {
+        if (wallet.address && wallet.sdbAddress) {
             subscribeSdb()
         }
-    }, [wallet.sdbAddress, subscribeSdb])
+    }, [wallet.address, wallet.sdbAddress, subscribeSdb])
 
     const [isConnecting, setIsConnecting] = useState(false)
     const [isWalletModalOpen, setIsWalletModalOpen] = useState(false)
@@ -530,7 +535,7 @@ function Component(props: WalletConnectionProps) {
                         <span className={styles.heroConnectedLabel}>
                             safety deposit ₿ox
                         </span>
-                        {wallet.sdbAddress ? (
+                        {wallet.address && wallet.sdbAddress ? (
                             <span className={styles.heroConnectedAddress}>
                                 <div className={styles.heroAddressContainer}>
                                     <div className={styles.heroAddressValue}>

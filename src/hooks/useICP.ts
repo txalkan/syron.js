@@ -2,7 +2,6 @@ import { useCallback } from 'react'
 import { basic_bitcoin_syron } from '../declarations/basic_bitcoin_tyron'
 import { updateSyronSSI } from '../store/syron'
 import { Big } from '../utils/big'
-import { updateXR } from '../store/xr'
 import { mempoolFeeRate } from '../utils/bitcoin/mempool'
 import { decodeIcrcAccount } from '@dfinity/ledger-icrc'
 import { toNullable } from '@dfinity/utils'
@@ -21,38 +20,50 @@ function useICPHook() {
     }
 
     const getBox = async (ssi: string) => {
+        const normalizedSSI = ssi?.trim()
+        if (!normalizedSSI) {
+            return
+        }
+
+        const isCurrentWallet = () => {
+            const { wallet } = useWalletInfoStore.getState()
+            return wallet.address !== null && wallet.address === normalizedSSI
+        }
+
+        if (!isCurrentWallet()) {
+            // Wallet was disconnected or switched before fetch kicked off
+            return
+        }
+
         try {
             console.log('Fetch Box details...')
-            await fetch(`/api/get-sdb-addr?id=${ssi}`)
-                .then(async (response) => {
-                    const sdb = await response.json()
-                    console.log(
-                        'tyron gateway response for deposit box details: ',
-                        JSON.stringify(sdb, null, 2)
-                    )
+            const response = await fetch(
+                `/api/get-sdb-addr?id=${normalizedSSI}`
+            )
+            const sdb = await response.json()
 
-                    // @dev Get the BTC balance of the SDB using ICP (deprecated in favour of Mempool API)
-                    // const box_balance = await syron.get_balance(sdb.data.address)
+            if (!isCurrentWallet()) {
+                // Wallet changed while fetching, prevent stale updates
+                return
+            }
 
-                    // if the sdb is not undefined, update the store
-                    if (sdb.data) {
-                        setSdbAddress(sdb.data.address)
-                        updateSyronSSI({
-                            sdb: sdb.data.address,
-                            collateral_ratio: Big(Number(sdb.data.ratio)),
-                            sdb_btc: Big(Number(sdb.data.balance ?? 0)),
-                            syron_btc: Big(Number(sdb.data.btc)), // @review (mainnet)
-                            syron_usd_loan: Big(Number(sdb.data.susd)),
-                            syron_usd_bal: Big(Number(sdb.data.bal)),
-                            exchange_rate: Big(Number(sdb.data.exchange_rate)),
-                        })
-                    }
+            console.log(
+                'tyron gateway response for deposit box details: ',
+                JSON.stringify(sdb, null, 2)
+            )
+
+            if (sdb.data) {
+                setSdbAddress(sdb.data.address)
+                updateSyronSSI({
+                    sdb: sdb.data.address,
+                    collateral_ratio: Big(Number(sdb.data.ratio)),
+                    sdb_btc: Big(Number(sdb.data.balance ?? 0)),
+                    syron_btc: Big(Number(sdb.data.btc)), // @review (mainnet)
+                    syron_usd_loan: Big(Number(sdb.data.susd)),
+                    syron_usd_bal: Big(Number(sdb.data.bal)),
+                    exchange_rate: Big(Number(sdb.data.exchange_rate)),
                 })
-                .catch((error) => {
-                    throw error
-                })
-
-            //}
+            }
         } catch (err) {
             console.error(err)
         }
