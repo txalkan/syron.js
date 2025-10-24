@@ -13,6 +13,111 @@
     width: 100%;
 }
 
+.dropdownTriggerWrapper {
+    position: relative;
+}
+
+.dropdownTrigger {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.65rem 1.1rem;
+    min-width: 132px;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    background: rgba(17, 24, 39, 0.26);
+    color: #f8fafc;
+    font-family: 'GeistMono', monospace;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition:
+        transform 0.18s ease,
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        background 0.18s ease;
+    box-shadow:
+        0 20px 40px rgba(15, 23, 42, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(16px);
+    isolation: isolate;
+
+    &:hover,
+    &:focus-visible {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.45);
+        box-shadow:
+            0 26px 48px rgba(15, 23, 42, 0.34),
+            inset 0 1px 0 rgba(255, 255, 255, 0.14);
+        background: rgba(17, 24, 39, 0.32);
+    }
+
+    &:active {
+        transform: translateY(1px);
+        box-shadow:
+            0 16px 32px rgba(15, 23, 42, 0.3),
+            inset 0 2px 4px rgba(0, 0, 0, 0.4);
+    }
+}
+
+.dropdownTriggerOpen {
+    border-color: rgba(94, 234, 212, 0.55);
+    background:
+        linear-gradient(
+            130deg,
+            rgba(45, 212, 191, 0.18),
+            rgba(59, 130, 246, 0.16)
+        ),
+        rgba(17, 24, 39, 0.26);
+    box-shadow:
+        0 30px 60px rgba(56, 189, 248, 0.26),
+        inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    transform: translateY(-2px);
+}
+
+.dropdownTriggerGlow {
+    position: absolute;
+    inset: 2px;
+    border-radius: 12px;
+    background: radial-gradient(
+        ellipse at top,
+        rgba(56, 189, 248, 0.2),
+        transparent 65%
+    );
+    pointer-events: none;
+    opacity: 0.75;
+    z-index: -1;
+}
+
+.dropdownTriggerIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdownTriggerLabel {
+    text-transform: uppercase;
+    font-size: 0.75rem;
+    letter-spacing: 0.16em;
+}
+
+.dropdownTriggerCaret {
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 5px solid rgba(226, 232, 240, 0.9);
+    transition: transform 0.26s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.dropdownTriggerOpen .dropdownTriggerCaret {
+    transform: rotate(180deg) translateY(-1px);
+}
+
 .inspectLink {
     background: none;
     border: none;
@@ -24,6 +129,9 @@
     display: inline-flex;
     align-items: center;
     gap: 4px;
+    flex-shrink: 0;
+    margin-left: auto;
+    padding-left: 1.25rem;
 
     &:hover,
     &:focus {
@@ -105,8 +213,7 @@
     display: flex;
     align-items: center;
     gap: 0.9rem;
-    width: 100%;
-    max-width: 320px;
+    width: min(100%, 420px);
     padding: 0.9rem 1.2rem;
     border-radius: 16px;
     border: 1px solid rgba(255, 255, 255, 0.28);
@@ -143,21 +250,30 @@
     display: flex;
     flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
+    gap: 1rem;
     font-size: 0.75rem;
     letter-spacing: 0.04em;
-    white-space: nowrap !important;
     color: #fdfdfd;
+    width: 100%;
+    flex-wrap: nowrap;
+    white-space: nowrap !important;
+    overflow: hidden;
 }
 
 .heroAddressContainer {
     display: flex;
     align-items: center;
     gap: 0.4rem;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .heroAddressValue {
     font-weight: 600;
+    color: #fdfdfd;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .wrapperIcon {

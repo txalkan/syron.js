@@ -641,7 +641,6 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                                 )
                                             }
                                         }}
-                                        size="lg"
                                     />
                                 </div>
                             </div>

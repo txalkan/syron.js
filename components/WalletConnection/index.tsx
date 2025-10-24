@@ -267,6 +267,9 @@ function Component(props: WalletConnectionProps) {
         ? `${wallet.sdbAddress.slice(0, 6)}…${wallet.sdbAddress.slice(-4)}`
         : ''
     const wrapperClassName = isHeroVariant ? styles.heroWrapper : styles.wrapper
+    const dropdownTriggerClassName = clsx(styles.dropdownTrigger, {
+        [styles.dropdownTriggerOpen]: isUserDropdownOpen,
+    })
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -545,7 +548,6 @@ function Component(props: WalletConnectionProps) {
                                         value={wallet.sdbAddress}
                                         copyLabel="Copy Safety Deposit ₿ox address"
                                         copiedLabel="Address copied to clipboard"
-                                        size="lg"
                                         onCopied={(success) => {
                                             if (success) {
                                                 toast.success(
@@ -585,76 +587,35 @@ function Component(props: WalletConnectionProps) {
                     </div>
                 </div>
             ) : (
-                <div style={{ position: 'relative' }} data-user-dropdown>
+                <div
+                    className={styles.dropdownTriggerWrapper}
+                    data-user-dropdown
+                >
                     {/* User Icon Button */}
                     <button
+                        type="button"
+                        className={dropdownTriggerClassName}
+                        aria-haspopup="true"
+                        aria-expanded={isUserDropdownOpen}
                         onClick={() =>
                             setIsUserDropdownOpen(!isUserDropdownOpen)
                         }
-                        style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px',
-                            padding: '8px 12px',
-                            backgroundColor: '#f8fafc',
-                            border: '2px solid #e5e7eb',
-                            borderRadius: '12px',
-                            cursor: 'pointer',
-                            transition: 'all 0.2s ease',
-                            minWidth: '120px',
-                            justifyContent: 'center',
-                        }}
-                        onMouseEnter={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f1f5f9'
-                            e.currentTarget.style.borderColor = '#d1d5db'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.currentTarget.style.backgroundColor = '#f8fafc'
-                            e.currentTarget.style.borderColor = '#e5e7eb'
-                        }}
                     >
-                        {/* User Icon */}
-                        <div
-                            style={{
-                                width: '24px',
-                                height: '24px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                            }}
-                        >
+                        <span className={styles.dropdownTriggerGlow} />
+                        <span className={styles.dropdownTriggerIcon}>
                             <Image
                                 src={connectedWalletIcon}
-                                alt="Connected Wallet Icon"
+                                alt="Connected wallet icon"
                                 width={24}
                                 height={24}
                             />
-                        </div>
-
-                        {/* Wallet Type */}
-                        <span
-                            style={{
-                                fontSize: '0.75rem',
-                                fontWeight: '600',
-                                color: '#374151',
-                            }}
-                        >
+                        </span>
+                        <span className={styles.dropdownTriggerLabel}>
                             wallet
                         </span>
-
-                        {/* Dropdown Arrow */}
-                        <div
-                            style={{
-                                width: '0',
-                                height: '0',
-                                borderLeft: '4px solid transparent',
-                                borderRight: '4px solid transparent',
-                                borderTop: '4px solid #6b7280',
-                                transform: isUserDropdownOpen
-                                    ? 'rotate(180deg)'
-                                    : 'rotate(0deg)',
-                                transition: 'transform 0.2s ease',
-                            }}
+                        <span
+                            className={styles.dropdownTriggerCaret}
+                            aria-hidden
                         />
                     </button>
 

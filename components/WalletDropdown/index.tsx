@@ -50,7 +50,6 @@ const WalletDropdown: React.FC<WalletDropdownProps> = ({
                         </div>
                         <CopyButton
                             value={wallet.address}
-                            size="lg"
                             copyLabel="Copy wallet address"
                             copiedLabel="Address copied to clipboard"
                             onCopied={(success) => {

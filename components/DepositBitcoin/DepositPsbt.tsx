@@ -396,7 +396,6 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                                             )
                                         }
                                     }}
-                                    size="lg"
                                 />
                             </div>
                         </>

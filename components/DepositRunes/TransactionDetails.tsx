@@ -816,7 +816,6 @@ export function TransactionDetails({
                                             )
                                         }
                                     }}
-                                    size="lg"
                                 />
                             </div>
                             {/* <div className={styles.recommendedAmount}>
