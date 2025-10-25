@@ -138,7 +138,7 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                                             )
                                         }
                                     >
-                                        {t('Add to Chrome')}
+                                        {t('Add Wallet')}
                                     </button>
                                 )}
                             </div>
@@ -191,7 +191,7 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                                         )
                                     }
                                 >
-                                    {t('Add to Chrome')}
+                                    {t('Add Wallet')}
                                 </button>
                             )}
                         </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
+import gstyles from '../styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import Close from '../../../src/assets/icons/ic_cross_black.svg'
@@ -383,7 +384,12 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div>
 
-                    <div className={styles.label}>amount to spend (susd)</div>
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>
+                            amount to spend (susd)
+                        </div>
+                        <div className={gstyles.headerDivider}></div>
+                    </div>
                     <SyronInput
                         balance={balance}
                         token={token}
@@ -391,7 +397,12 @@ var ThisModal: React.FC<Prop> = function ({
                         disabled={isDisabled}
                     />
 
-                    <div className={styles.label}>amount to receive (btc)</div>
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>
+                            amount to receive (btc)
+                        </div>
+                        <div className={gstyles.headerDivider}></div>
+                    </div>
                     <div className={styles.txtRow}>
                         You will buy the BTC amount shown below and receive it
                         directly in your connected Bitcoin wallet.

@@ -13,6 +13,7 @@ import {
 import { TransactionDetails } from './TransactionDetails'
 import LoadingSpinner from '../LoadingSpinner'
 import styles from './styles.module.scss'
+import gstyles from '../global.module.scss'
 import { CopyButton } from '../CopyButton'
 import { toast } from 'react-toastify'
 
@@ -622,7 +623,7 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                     To make a new deposit, send a rune transfer
                                     to your Safety Deposit Box address:
                                 </p>
-                                <div className={styles.sdbAddressContainer}>
+                                <div className={gstyles.sdbAddressContainer}>
                                     <code className={styles.sdbAddress}>
                                         {sdbAddress || 'Loading...'}
                                     </code>

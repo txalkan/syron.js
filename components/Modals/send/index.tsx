@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
+import gstyles from '../styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 
@@ -644,7 +645,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            YOUR account&apos;s BALANCE (Sender)
+                            YOUR ACCOUNT BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
@@ -672,7 +673,12 @@ var ThisModal: React.FC<Prop> = function ({
                         )}
                     </div>
 
-                    <div className={styles.label}>Recipient&apos;s Address</div>
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>
+                            Recipient&apos;s Address
+                        </div>
+                        <div className={gstyles.headerDivider}></div>
+                    </div>
                     <div className={styles.inputWrapper}>
                         <input
                             type="text"
@@ -712,15 +718,16 @@ var ThisModal: React.FC<Prop> = function ({
 
                     {isICP ? null : (
                         <div className={styles.txt}>
-                            Syron will be transferred from your available SUSD
-                            balance to the recipient&apos;s Tyron account. The
-                            recipient must log in with their Bitcoin personal
-                            wallet to access the funds.
+                            Syron will be transferred from your account balance
+                            to the recipient&apos;s Tyron account. The recipient
+                            must log in with their Bitcoin self-custodial wallet
+                            to access the funds.
                         </div>
                     )}
 
-                    <div className={styles.label}>
-                        amount to transfer (susd)
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>AMOUNT TO transfer</div>
+                        <div className={gstyles.headerDivider}></div>
                     </div>
                     <SyronInput
                         balance={balance}

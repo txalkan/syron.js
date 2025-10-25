@@ -1,6 +1,8 @@
 import React, { useEffect, useState, useCallback } from 'react'
+import classNames from 'classnames'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
+import gstyles from '../styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 
@@ -200,29 +202,26 @@ var ThisModal: React.FC<Prop> = function ({
 
     // Update onDetails when fee rate changes and confirmation modal is open
     useEffect(() => {
-        if (
-            isConfirmationOpen &&
-            feeRate > 0 &&
-            onDetails &&
-            typeof onDetails === 'object' &&
-            'amount' in onDetails
-        ) {
-            const feeDetails = calculateFeeDetails(amount, feeRate, stablecoin)
-            if (feeDetails) {
-                setOnDetails((prev) => ({
-                    ...prev,
-                    gas: feeDetails.gas_fee,
-                }))
+        if (!isConfirmationOpen || feeRate <= 0) return
+
+        setOnDetails((prev) => {
+            if (!prev || typeof prev !== 'object' || !('amount' in prev)) {
+                return prev
             }
-        }
-    }, [
-        feeRate,
-        isConfirmationOpen,
-        amount,
-        stablecoin,
-        onDetails,
-        calculateFeeDetails,
-    ])
+
+            const feeDetails = calculateFeeDetails(amount, feeRate, stablecoin)
+            if (!feeDetails) return prev
+
+            if ('gas' in prev && prev.gas === feeDetails.gas_fee) {
+                return prev
+            }
+
+            return {
+                ...prev,
+                gas: feeDetails.gas_fee,
+            }
+        })
+    }, [feeRate, isConfirmationOpen, amount, stablecoin, calculateFeeDetails])
 
     const menuActive = (id) => {
         setCheckedStep([...checkedStep, active])
@@ -997,7 +996,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            TYRON ACCOUNT BALANCE (Sender)
+                            YOUR ACCOUNT BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>
@@ -1009,19 +1008,17 @@ var ThisModal: React.FC<Prop> = function ({
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>▼</p>
                         <p className={styles.diagramLineLabel}>
-                            SELF-CUSTODIAL BITCOIN WALLET (Receiver)
+                            YOUR BITCOIN WALLET (Receiver)
                         </p>
                         <p className={styles.diagramCaption}>
-                            Syron SUD will be sent to your connected Bitcoin
-                            Wallet Address.
+                            You will send Syron SUSD to your connected Bitcoin
+                            wallet.
                         </p>
                     </div>
 
-                    <div className={styles.label}>
-                        amount to withdraw{' '}
-                        {stablecoin === 'BRC-20'
-                            ? '(SYRON BRC-20)'
-                            : '(RUNE•DOLLAR)'}
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>AMOUNT TO WITHDRAW</div>
+                        <div className={gstyles.headerDivider}></div>
                     </div>
                     <SyronInput
                         balance={balance}
@@ -1031,15 +1028,12 @@ var ThisModal: React.FC<Prop> = function ({
                     />
                     <div className={styles.btnConfirmWrapper}>
                         <button
-                            // className={
-                            //     isDisabled || isLoading
-                            //         ? styles.btnConfirmDisabled
-                            //         : styles.btnConfirm
-                            // }
-                            className={`button ${
-                                isDisabled || isLoading ? 'disabled' : 'primary'
-                            }`}
+                            className={classNames(styles.continueButton, {
+                                [styles.continueButtonDisabled]:
+                                    isDisabled || isLoading,
+                            })}
                             onClick={handleContinue}
+                            disabled={isDisabled || isLoading}
                         >
                             {isLoading ? (
                                 <ThreeDots color="yellow" />

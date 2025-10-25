@@ -90,7 +90,7 @@ function Component() {
             value: _0,
             meta: {
                 name: 'Syron SUSD',
-                symbol: 'Syron SUSD',
+                symbol: 'SUSD',
                 decimals: 8,
             },
         },
@@ -1515,7 +1515,7 @@ function Component() {
                                                     onClick={updateDepositRunes}
                                                     className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
                                                 >
-                                                    ↓
+                                                    <i className="ri-align-bottom"></i>
                                                 </button>
                                                 <div
                                                     className={
@@ -1537,7 +1537,7 @@ function Component() {
                                                     }
                                                     className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
                                                 >
-                                                    ↑
+                                                    <i className="ri-align-top"></i>
                                                 </button>
                                                 <div
                                                     className={
@@ -1548,25 +1548,33 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div className={styles.buttons}>
-                                            <div className={styles.buttonLabel}>
-                                                <button
-                                                    onClick={() =>
-                                                        updateWithdraw('BRC-20')
-                                                    }
-                                                    className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
-                                                >
-                                                    ↑
-                                                </button>
+                                        {wallet.type === 'unisat' && (
+                                            <div className={styles.buttons}>
                                                 <div
                                                     className={
-                                                        styles.buttonLabelText
+                                                        styles.buttonLabel
                                                     }
                                                 >
-                                                    Withdraw BRC-20
+                                                    <button
+                                                        onClick={() =>
+                                                            updateWithdraw(
+                                                                'BRC-20'
+                                                            )
+                                                        }
+                                                        className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                    >
+                                                        <i className="ri-arrow-up-long-line"></i>
+                                                    </button>
+                                                    <div
+                                                        className={
+                                                            styles.buttonLabelText
+                                                        }
+                                                    >
+                                                        Withdraw BRC-20
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                     {!isIdentified && (
                                         <div className={styles.subtitleLabel}>
@@ -1607,7 +1615,7 @@ function Component() {
                                                                     }
                                                                     className={`${styles.mechanicalButton} ${styles.mechanicalAction}`}
                                                                 >
-                                                                    ↗
+                                                                    <i className="ri-flashlight-line"></i>
                                                                 </button>
                                                                 <div
                                                                     className={
@@ -1676,7 +1684,7 @@ function Component() {
                                                                             <ThreeDots color="black" />
                                                                         </div>
                                                                     ) : (
-                                                                        <>-</>
+                                                                        <i className="ri-user-minus-line"></i>
                                                                     )}
                                                                 </button>
                                                                 <div

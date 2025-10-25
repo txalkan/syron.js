@@ -5,6 +5,7 @@ import { Button } from '../Button'
 import { TransactionDetails } from './TransactionDetails'
 import LoadingSpinner from '../LoadingSpinner'
 import styles from './styles.module.scss'
+import gstyles from '../global.module.scss'
 import { SyronForm } from '../syron-102'
 import { Big, _0 } from '../../src/utils/big'
 import { InputAmount } from './InputAmount'
@@ -377,7 +378,7 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                                 Alternatively, you can deposit by sending BTC
                                 directly to your Safety Deposit ₿ox address:
                             </p>
-                            <div className={styles.sdbAddressContainer}>
+                            <div className={gstyles.sdbAddressContainer}>
                                 <code className={styles.sdbAddress}>
                                     {sdbAddress || 'Loading...'}
                                 </code>

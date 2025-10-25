@@ -89,52 +89,68 @@ export const SyronInput: React.FC<Prop> = ({
         []
     )
 
+    const formattedBalance = Number(balance).toLocaleString('en-US', {
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 2,
+    })
+
     return (
         <div className={classNames(styles.container)}>
-            <div className={styles.inputContainer}>
-                {/* @dev Percentage buttons */}
-                <div className={styles.infoWrapper}>
-                    Available
-                    <span className={styles.infoSyron}>
-                        {Number(balance).toLocaleString('en-US', {
-                            minimumFractionDigits: 0,
-                            maximumFractionDigits: 2,
-                        })}{' '}
-                        {token?.symbol}
+            <div className={styles.glassPanel}>
+                <div className={styles.availableRow}>
+                    <span className={styles.availableLabel}>
+                        Available balance
                     </span>
                 </div>
-                <div>
-                    {disabled ? null : (
-                        <div className={styles.percentWrapper}>
-                            <div className={styles.row}>
-                                {list.map((n) => (
-                                    <div
-                                        key={n}
-                                        className={
-                                            n === selectedPercent
-                                                ? styles.percentActiveSyron
-                                                : styles.percentSyron
-                                        }
-                                        onClick={() => handlePercent(n)}
-                                    >
-                                        {n}%
-                                    </div>
-                                ))}
-                            </div>
-                        </div>
-                    )}
+                <div
+                    className={styles.availableRow}
+                    style={{ justifyContent: 'flex-end' }}
+                >
+                    <span className={styles.availableValue}>
+                        {formattedBalance}
+                    </span>
+                    <span className={styles.availableToken}>
+                        {token.symbol}
+                    </span>
                 </div>
-                {/* @dev Input Box */}
+
+                {!disabled && (
+                    <div className={styles.percentWrapper}>
+                        {list.map((n) => {
+                            const isActive = n === selectedPercent
+                            return (
+                                <div
+                                    key={n}
+                                    className={
+                                        isActive
+                                            ? styles.percentActiveSyron
+                                            : styles.percentSyron
+                                    }
+                                    onClick={() => handlePercent(n)}
+                                    title={`Withdraw ${n}% of your available balance.`}
+                                    aria-label={`Withdraw ${n}% of your available balance.`}
+                                >
+                                    {n}%
+                                </div>
+                            )
+                        })}
+                    </div>
+                )}
+
+                <div className={styles.dottedRail} aria-hidden="true"></div>
+
                 <div className={styles.flexContainer}>
                     <div className={styles.wrapper}>
                         <input
                             className={styles.inputAmt}
                             type="number"
+                            lang="en"
                             placeholder="0"
                             onInput={handleOnInput}
-                            value={Number(val_)}
+                            value={val_.toString()}
                             disabled={disabled}
                             step="0.01"
+                            inputMode="decimal"
                             min="0"
                             onBlur={handleOnBlur}
                         />
@@ -146,7 +162,6 @@ export const SyronInput: React.FC<Prop> = ({
                             />
                         )}
                     </div>
-                    {/* <div className={styles.tokenInfo}>| SYRON</div> */}
                 </div>
             </div>
         </div>

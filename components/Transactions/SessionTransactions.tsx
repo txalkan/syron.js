@@ -106,7 +106,7 @@ export const SessionTransactions: React.FC = () => {
                     <div className={styles.emptyTitle}>No transactions yet</div>
                     <div className={styles.emptySubtitle}>
                         Execute a transaction to see progress updates here. For
-                        previous transactions, check the blockchain explorer.
+                        previous transactions, inspect the blockchain explorer.
                     </div>
                 </div>
                 {/* <div className={styles.emptyActions}>
