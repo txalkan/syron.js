@@ -23,6 +23,7 @@ import {
 } from '../../src/config/wallet'
 import { Big } from '../../src/utils/big'
 import { useMempoolHook } from '../../src/hooks/useMempool'
+import { isMainnetSegwit } from '../../src/utils/bitcoin/segwit'
 
 interface WalletConnectionProps {
     /**
@@ -183,7 +184,17 @@ function Component(props: WalletConnectionProps) {
             // Update Zustand store with wallet info
             if (accounts && accounts.length > 0) {
                 const [address] = accounts
-                setWalletAddress(address)
+                if (isMainnetSegwit(address)) {
+                    setWalletAddress(address)
+                } else {
+                    toast.error(
+                        'Only SegWit wallets (Native SegWit or Taproot) are supported. Please switch to a SegWit address in your wallet.',
+                        {
+                            onClick: () => toast.dismiss(),
+                        }
+                    )
+                    return
+                }
 
                 // Update wallet balance using the latest balance value
                 if (balance) {
@@ -201,8 +212,6 @@ function Component(props: WalletConnectionProps) {
 
                 const publicKey = await walletInstance.getPublicKey()
                 setPublicKey(publicKey)
-            } else {
-                setWalletAddress('')
             }
         } catch (error) {
             console.error('Error getting wallet info:', error)
@@ -330,10 +339,6 @@ function Component(props: WalletConnectionProps) {
             try {
                 const currentAccounts = await unisat.getAccounts()
                 if (currentAccounts && currentAccounts.length > 0) {
-                    toast.info('UniSat wallet connected', {
-                        onClick: () => toast.dismiss(),
-                    })
-                    setWalletAddress(currentAccounts[0])
                     setWalletType('unisat')
                     getWalletInfo('unisat')
                     setIsConnecting(false)
@@ -384,13 +389,8 @@ function Component(props: WalletConnectionProps) {
             // Request accounts
             const result = await unisat.requestAccounts()
             if (result && result.length > 0) {
-                // Set wallet type explicitly (keeps exclusivity super clear)
                 setWalletType('unisat')
-                setWalletAddress(result[0])
                 getWalletInfo('unisat')
-                toast.success('Your UniSat wallet is now connected', {
-                    onClick: () => toast.dismiss(),
-                })
             } else {
                 toast.error('No accounts returned from wallet', {
                     onClick: () => toast.dismiss(),
@@ -454,10 +454,6 @@ function Component(props: WalletConnectionProps) {
             try {
                 const currentAccounts = await okx.getAccounts()
                 if (currentAccounts && currentAccounts.length > 0) {
-                    toast.info('OKX wallet connected', {
-                        onClick: () => toast.dismiss(),
-                    })
-                    setWalletAddress(currentAccounts[0])
                     setWalletType('okx')
                     getWalletInfo('okx')
                     setIsConnecting(false)
@@ -472,13 +468,8 @@ function Component(props: WalletConnectionProps) {
             // Request accounts from OKX wallet
             const result = await okx.requestAccounts()
             if (result && result.length > 0) {
-                // Set wallet type explicitly (keeps exclusivity super clear)
                 setWalletType('okx')
-                setWalletAddress(result[0])
                 getWalletInfo('okx')
-                toast.success('Your OKX wallet is now connected', {
-                    onClick: () => toast.dismiss(),
-                })
             } else {
                 toast.error('No accounts returned from OKX wallet', {
                     onClick: () => toast.dismiss(),
