@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import styles from './styles.module.scss'
 import { updateDonation } from '../../src/store/donation'
 import Image from 'next/image'
@@ -12,22 +12,15 @@ import icoSYRON from '../../src/assets/logos/syron_susd_brand_mark.png'
 import icoThunder from '../../src/assets/icons/ssi_icon_thunder.svg'
 import icoShield from '../../src/assets/icons/ssi_icon_shield.svg'
 import icoCopy from '../../src/assets/icons/copy.svg'
-import Big from 'big.js'
-import {
-    $btc_wallet,
-    $siwb,
-    $syron,
-    $walletConnected,
-    updateSiwb,
-    clearSiwbSession,
-} from '../../src/store/syron'
+import { Big, _0 } from '../../src/utils/big'
+import { $syron } from '../../src/store/syron'
+import { useSiwbSessionStore } from '../../src/store/siwb_session'
 import { useStore } from 'react-stores'
 import useICPHook from '../../src/hooks/useICP'
 import { toast } from 'react-toastify'
 import { extractRejectText } from '../../src/utils/unisat/utils'
 import { unisatBalance } from '../../src/utils/unisat/httpUtils'
-import { useBTCWalletHook } from '../../src/hooks/useBTCWallet'
-import { WithdrawModal, SendModal, BuyModal } from '..'
+import { WithdrawModal, SendModal, BuyModal, WalletConnection } from '..'
 import ThreeDots from '../Spinner/ThreeDots'
 import LoadingSpinner from '../LoadingSpinner'
 import icoPrint from '../../src/assets/icons/ico_print_syron.svg'
@@ -38,18 +31,28 @@ import { DelegationIdentity } from '@dfinity/identity'
 import SyronInfoCard from './SyronInfoCard'
 import { DepositRunes } from '../DepositRunes'
 import { useMempoolHook } from '../../src/hooks/useMempool'
+import { $xr } from '../../src/store/xr'
 import CollateralRatioProgressBar from './CollateralRatioProgressBar'
+import { useWalletInfoStore } from '../../src/store/wallet_info'
+import { getMempoolUrl, getWalletWindow } from '../../src/config/wallet'
+import { DepositBTC } from '../DepositBitcoin/DepositPsbt'
+import SessionTransactions from '../Transactions/SessionTransactions'
 
-Big.PE = 999
-const _0 = Big(0)
+const isDev = process.env.NODE_ENV !== 'production'
 
 function Component() {
     const { getXR } = useMempoolHook()
-    const walletConnected = useStore($walletConnected).isConnected
+    const { wallet, setWalletBalance } = useWalletInfoStore()
+    // Derive connection state from wallet address
+    const isWalletConnected = !!wallet.address
     const syron = useStore($syron)
-    const siwb = useStore($siwb).value
+    const xr = useStore($xr)
+    const { siwb_identity, setSiwbIdentity, clearSiwbSession } =
+        useSiwbSessionStore()
     const { identity, clear } = useSiwbIdentity()
     const { t } = useTranslation()
+    const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
+        useICPHook()
 
     const [active, setActive] = useState('')
     const [sdb, setSDB] = useState('')
@@ -59,120 +62,198 @@ function Component() {
     const [loan, setLoan] = useState('')
     const [syronBal, setSyronBal] = useState('')
     const [isIdentified, setIsIdentified] = useState(false)
-
+    const [isRedeeming, setIsRedeeming] = useState(false)
     const [showWithdrawModal, setWithdrawModal] = React.useState(false)
     const [stablecoin, setStablecoin] = React.useState<'BRC-20' | 'RUNES'>(
         'BRC-20'
     )
-    const updateWithdraw = (token: 'BRC-20' | 'RUNES') => {
-        setStablecoin(token)
-        setWithdrawModal(true)
-    }
     const [showSendModal, setSendModal] = React.useState(false)
     const [isICP, setIsICP] = React.useState(false)
-    const updateSend = (is_icp: boolean) => {
-        setSendModal(true)
-        setIsICP(is_icp)
-    }
     const [showBuyModal, setBuyModal] = React.useState(false)
-    const updateBuy = () => {
-        setBuyModal(true)
-    }
     const [showDepositRunesModal, setShowDepositRunesModal] =
         React.useState(false)
-    const updateDepositRunes = () => {
-        setShowDepositRunesModal(true)
-    }
+    const [showDepositBTCModal, setShowDepositBTCModal] = React.useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isRefreshingCollateral, setIsRefreshingCollateral] = useState(false)
+    const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+
+    const start_pair = [
+        {
+            value: _0,
+            meta: {
+                name: 'Bitcoin',
+                symbol: 'BTC',
+                decimals: 8,
+            },
+        },
+        {
+            value: _0,
+            meta: {
+                name: 'Syron SUSD',
+                symbol: 'SUSD',
+                decimals: 8,
+            },
+        },
+    ]
+    const clearRef = useRef(clear)
+
+    const closeAllModals = useCallback(() => {
+        setWithdrawModal(false)
+        setSendModal(false)
+        setShowDepositRunesModal(false)
+        setShowDepositBTCModal(false)
+        setBuyModal(false)
+    }, [])
+
+    const closeSiwbModals = useCallback(() => {
+        setSendModal(false)
+        setBuyModal(false)
+    }, [])
 
     useEffect(() => {
-        console.log('SIWB identity: ', identity)
-        console.log('SIWB saved identity: ', siwb)
+        clearRef.current = clear
+    }, [clear])
 
+    useEffect(() => {
+        closeAllModals()
+    }, [closeAllModals])
+
+    useEffect(() => {
+        closeSiwbModals()
+    }, [closeSiwbModals])
+
+    useEffect(() => {
         // Reset authentication if wallet is disconnected
-        if (!walletConnected) {
+        if (!isWalletConnected) {
             console.log('Wallet disconnected, resetting authentication')
             setIsIdentified(false)
+            closeAllModals()
             clearSiwbSession()
-            clear() // Clear the SIWB identity from the hook
+            clearRef.current?.() // Clear the SIWB identity from the hook
             return
         }
 
         let current_id: DelegationIdentity
-        if (siwb !== null) {
-            current_id = siwb
+        if (siwb_identity !== null) {
+            current_id = siwb_identity
             console.log('SIWB session still present')
         } else if (identity) {
             current_id = identity
         } else {
             console.log('SIWB session is invalid')
             setIsIdentified(false)
+            closeSiwbModals()
             clearSiwbSession()
-            clear() // Clear the SIWB identity from the hook
+            clearRef.current?.() // Clear the SIWB identity from the hook
             return
         }
 
         const id_str = JSON.stringify(current_id, null, 2)
-        // console.log('SIWB Identity: ', id_str)
+        console.log('SIWB Identity: ', id_str)
         const match = id_str.match(/"expiration":\s*"([0-9a-fA-F]+)"/)
         const expiration = match ? match[1] : null
 
         if (expiration !== null) {
             const exp = parseInt(expiration, 16) / 1e6
-            //console.log('Expiration: ', exp)
+            console.log(
+                `SIWB Expiration is ${new Date(exp).toISOString()} and current time is ${new Date().toISOString()}`
+            )
 
             const now = Math.floor(Date.now())
-            // console.log(now)
             if (exp > now) {
                 console.log('SIWB session not expired')
                 setIsIdentified(true)
 
-                if (siwb === null && identity) {
-                    updateSiwb(identity)
+                if (siwb_identity === null && identity) {
+                    setSiwbIdentity(identity)
                     console.log('SIWB session saved')
                 }
             } else {
                 console.log('SIWB session has expired')
                 setIsIdentified(false)
+                closeSiwbModals()
                 clearSiwbSession()
-                clear() // Clear the SIWB identity from the hook
+                clearRef.current?.() // Clear the SIWB identity from the hook
             }
         } else {
             console.error('SIWB session not found')
         }
-    }, [identity, siwb, showSendModal, showBuyModal, walletConnected])
+    }, [
+        identity,
+        siwb_identity,
+        isWalletConnected,
+        showSendModal,
+        showWithdrawModal,
+        showDepositRunesModal,
+        showDepositBTCModal,
+        clearSiwbSession,
+        closeSiwbModals,
+        closeAllModals,
+        setSiwbIdentity,
+    ])
 
     useEffect(() => {
-        if (syron !== null) {
-            console.log('Syron State: ', JSON.stringify(syron, null, 2))
-
-            setSDB(syron.sdb)
-            setSatsDeposited(syron.sdb_btc)
-
-            const collateral = syron.syron_btc.div(1e8).round(8, 0).toString()
-            setSatsCollateral(collateral)
-
-            const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
-            setLoan(loan_)
-
-            const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
-            setSyronBal(bal_)
-
-            // Fetch BTC price and calculate collateral ratio
-            getXR()
-                .then((btcPrice) => {
-                    const collateral_ratio = syron.syron_btc
-                        .mul(btcPrice)
-                        .div(syron.syron_usd_loan)
-                        .mul(100)
-                        .round(1, 1)
-                        .toString()
-                    setCollateralRatio(collateral_ratio)
-                })
-                .catch((error) => {
-                    console.error('Error fetching BTC price:', error)
-                })
+        if (syron.sdb === '' || !isWalletConnected) {
+            return
         }
-    }, [syron?.sdb_btc, syron?.syron_usd_loan, syron?.syron_usd_bal, getXR])
+
+        if (isDev) {
+            console.log('Syron State: ', JSON.stringify(syron, null, 2))
+        }
+
+        setSDB(syron!.sdb)
+        setSatsDeposited(syron!.sdb_btc)
+
+        const collateral = syron.syron_btc.div(1e8).round(8, 0).toString()
+        setSatsCollateral(collateral)
+
+        const loan_ = syron.syron_usd_loan.div(1e8).round(2, 0).toString()
+        setLoan(loan_)
+
+        const bal_ = syron.syron_usd_bal.div(1e8).round(2, 0).toString()
+        setSyronBal(bal_)
+
+        const applyExchangeRate = (btcPrice: number) => {
+            if (syron!.syron_usd_loan.eq(0)) {
+                setCollateralRatio('')
+                return
+            }
+
+            if (!Number.isFinite(btcPrice) || btcPrice <= 0) {
+                return
+            }
+
+            const collateral_ratio = syron.syron_btc
+                .mul(btcPrice)
+                .div(syron!.syron_usd_loan)
+                .mul(100)
+                .round(1, 1)
+                .toString()
+            setCollateralRatio(collateral_ratio)
+        }
+
+        const cachedRate = xr?.rate
+        if (Number.isFinite(cachedRate) && cachedRate! > 0) {
+            applyExchangeRate(cachedRate!)
+            return
+        }
+
+        let cancelled = false
+
+        getXR()
+            .then((btcPrice) => {
+                if (!cancelled) {
+                    applyExchangeRate(btcPrice)
+                }
+            })
+            .catch((error) => {
+                console.error('Error fetching BTC price:', error)
+            })
+
+        return () => {
+            cancelled = true
+        }
+    }, [syron, xr?.rate, getXR, isWalletConnected])
 
     // @dev Read for new BTC deposits every half minute @review
     useEffect(() => {
@@ -204,6 +285,24 @@ function Component() {
         // }
     }, [syron?.sdb])
 
+    const updateWithdraw = (token: 'BRC-20' | 'RUNES') => {
+        setStablecoin(token)
+        setWithdrawModal(true)
+    }
+    const updateSend = (is_icp: boolean) => {
+        setSendModal(true)
+        setIsICP(is_icp)
+    }
+    const updateBuy = () => {
+        setBuyModal(true)
+    }
+    const updateDepositRunes = () => {
+        setShowDepositRunesModal(true)
+    }
+    const updateDepositBTC = () => {
+        setShowDepositBTCModal(true)
+    }
+
     const toggleActive = (id: string) => {
         resetState()
         if (id === active) {
@@ -216,33 +315,6 @@ function Component() {
         updateDonation(null)
     }
 
-    const start_pair = [
-        {
-            value: _0,
-            meta: {
-                name: 'Bitcoin',
-                symbol: 'BTC',
-                decimals: 8,
-            },
-        },
-        {
-            value: _0,
-            meta: {
-                name: 'Syron SUSD',
-                symbol: 'Syron SUSD',
-                decimals: 8,
-            },
-        },
-    ]
-
-    const { redemptionGas, redeemBTC, getBox, updateSyronBalance } =
-        useICPHook()
-
-    const btc_wallet = useStore($btc_wallet)
-
-    const unisat = (window as any).unisat
-
-    const [isRedeeming, setIsRedeeming] = useState(false)
     const handleRedeem = async () => {
         try {
             setIsRedeeming(true)
@@ -267,7 +339,7 @@ function Component() {
                 )
                 return
             } else if (balance >= loan_amt) {
-                await redeemBTC(btc_wallet?.btc_addr!)
+                await redeemBTC(wallet.address!)
                 toast.info(`You have redeemed your BTC!`, {
                     autoClose: false,
                     closeOnClick: true,
@@ -534,21 +606,22 @@ function Component() {
         }
     }
 
-    // @review (mainnet)
-    const { updateWallet } = useBTCWalletHook()
-
     const updateSession = async () => {
-        const [address] = await unisat.getAccounts()
-        const balance = await unisat.getBalance()
-        const network = await unisat.getNetwork()
-        await updateWallet(address, Number(balance.confirmed), network)
-        await getBox(address)
-        console.log('Session updated.')
-    }
+        const walletWindow = getWalletWindow(wallet.type)
 
-    const [isLoading, setIsLoading] = useState(false)
-    const [isRefreshingCollateral, setIsRefreshingCollateral] = useState(false)
-    const [isRefreshingBalance, setIsRefreshingBalance] = useState(false)
+        // Update wallet balance using the latest balance value
+        const balance = await walletWindow.getBalance()
+        if (balance) {
+            const balanceAmount =
+                typeof balance === 'number' ? balance : balance.total
+            if (balanceAmount !== undefined) {
+                setWalletBalance(Big(balanceAmount))
+            }
+        }
+
+        await getBox(wallet.address!)
+        console.log('Account up to date.')
+    }
 
     const refreshCollateral = async () => {
         try {
@@ -582,7 +655,7 @@ function Component() {
     const updateBalance = async () => {
         try {
             setIsLoading(true)
-            await updateSyronBalance(btc_wallet?.btc_addr!)
+            await updateSyronBalance(wallet.address!)
             await updateSession()
         } catch (error) {
             if (typeof error === 'object' && Object.keys(error!).length !== 0) {
@@ -650,10 +723,95 @@ function Component() {
         }
     }
 
-    if (walletConnected && showWithdrawModal) {
+    const MetallicRefreshIcon = () => {
+        return (
+            <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+            >
+                {/* Outer metallic effect glow */}
+                <defs>
+                    <linearGradient
+                        id="refreshMetallic"
+                        x1="0"
+                        y1="0"
+                        x2="24"
+                        y2="24"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop stopColor="#f8fafc" />
+                        <stop offset="0.35" stopColor="#e2e8f0" />
+                        <stop offset="0.7" stopColor="#cbd5f5" />
+                        <stop offset="1" stopColor="#94a3b8" />
+                    </linearGradient>
+                    <linearGradient
+                        id="refreshMetallicSecondary"
+                        x1="24"
+                        y1="24"
+                        x2="0"
+                        y2="0"
+                        gradientUnits="userSpaceOnUse"
+                    >
+                        <stop stopColor="#94a3b8" />
+                        <stop offset="0.45" stopColor="#dbeafe" />
+                        <stop offset="1" stopColor="#f8fafc" />
+                    </linearGradient>
+                    <filter
+                        id="metallicShadow"
+                        x="-20%"
+                        y="-20%"
+                        width="140%"
+                        height="140%"
+                    >
+                        <feDropShadow
+                            dx="0"
+                            dy="1"
+                            stdDeviation="0.8"
+                            floodColor="rgba(148, 163, 184, 0.45)"
+                        />
+                        <feDropShadow
+                            dx="0"
+                            dy="0"
+                            stdDeviation="1.5"
+                            floodColor="rgba(255, 255, 255, 0.6)"
+                        />
+                    </filter>
+                </defs>
+                <path
+                    d="M1 4v6h6"
+                    stroke="url(#refreshMetallic)"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#metallicShadow)"
+                />
+                <path
+                    d="M23 20v-6h-6"
+                    stroke="url(#refreshMetallic)"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#metallicShadow)"
+                />
+                <path
+                    d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
+                    stroke="url(#refreshMetallicSecondary)"
+                    strokeWidth="1.7"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    filter="url(#metallicShadow)"
+                />
+            </svg>
+        )
+    }
+
+    if (isWalletConnected && showWithdrawModal) {
         return (
             <WithdrawModal
-                ssi={btc_wallet?.btc_addr!}
+                ssi={wallet.address!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
                 stablecoin={stablecoin}
@@ -661,10 +819,10 @@ function Component() {
                 onClose={() => setWithdrawModal(false)}
             />
         )
-    } else if (walletConnected && showSendModal) {
+    } else if (isWalletConnected && showSendModal) {
         return (
             <SendModal
-                ssi={btc_wallet?.btc_addr!}
+                ssi={wallet.address!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showSendModal}
@@ -672,17 +830,17 @@ function Component() {
                 isICP={isICP}
             />
         )
-    } else if (walletConnected && showBuyModal) {
+    } else if (isWalletConnected && showBuyModal) {
         return (
             <BuyModal
-                ssi={btc_wallet?.btc_addr!}
+                ssi={wallet.address!}
                 sdb={sdb}
                 balance={syronBal ? Big(syronBal) : _0}
                 show={showBuyModal}
                 onClose={() => setBuyModal(false)}
             />
         )
-    } else if (walletConnected && showDepositRunesModal) {
+    } else if (isWalletConnected && showDepositRunesModal) {
         return (
             <DepositRunes
                 open={showDepositRunesModal}
@@ -690,14 +848,27 @@ function Component() {
                 sdbAddress={syron?.sdb}
             />
         )
+    } else if (isWalletConnected && showDepositBTCModal) {
+        return (
+            <DepositBTC
+                open={showDepositBTCModal}
+                onClose={() => setShowDepositBTCModal(false)}
+                sdbAddress={syron?.sdb}
+            />
+        )
     } else {
         return (
             <div className={styles.container}>
-                <SyronInfoCard />
+                <div className={styles.heroSection}>
+                    <SyronInfoCard theme="classic" />
+                    <div className={styles.heroCTA}>
+                        <WalletConnection variant="hero" />
+                    </div>
+                </div>
 
                 {/* @dev: private SDB */}
                 <div className={styles.boxWrapper}>
-                    {walletConnected ? (
+                    {isWalletConnected ? (
                         <>
                             {sdb ? (
                                 <>
@@ -728,7 +899,7 @@ function Component() {
                                       </span> */}
                                     </div>
 
-                                    <div className={styles.subtitleLabel}>
+                                    {/* <div className={styles.subtitleLabel}>
                                         addresses
                                     </div>
                                     <div className={styles.boxWrapperInner}>
@@ -762,22 +933,13 @@ function Component() {
                                             <div
                                                 className={styles.link}
                                                 onClick={() => {
-                                                    //@network defaults to mainnet
-                                                    let url: URL = new URL(
-                                                        `https://mempool.space/address/${syron?.sdb}`
+                                                    const url = getMempoolUrl(
+                                                        `/address/${syron?.sdb}`
                                                     )
-                                                    const version =
-                                                        process.env
-                                                            .NEXT_PUBLIC_SYRON_VERSION
-                                                    if (version === 'testnet') {
-                                                        url = new URL(
-                                                            `https://mempool.space/testnet4/address/${syron?.sdb}`
-                                                        )
-                                                    }
                                                     window.open(url)
                                                 }}
                                             >
-                                                ₿ox History ↗
+                                                Box Explorer ↗
                                             </div>
                                         </div>
                                         <br />
@@ -792,7 +954,7 @@ function Component() {
                                                 className={styles.sdb}
                                                 onClick={() =>
                                                     handleCopy(
-                                                        btc_wallet?.btc_addr as string
+                                                        wallet.address as string
                                                     )
                                                 }
                                             >
@@ -808,31 +970,22 @@ function Component() {
                                                     />
                                                 </div>
                                                 <div className={styles.sdbText}>
-                                                    {btc_wallet?.btc_addr}
+                                                    {wallet.address}
                                                 </div>
                                             </div>
                                             <div
                                                 className={styles.link}
                                                 onClick={() => {
-                                                    //@network defaults to mainnet
-                                                    let url: URL = new URL(
-                                                        `https://mempool.space/address/${btc_wallet?.btc_addr}`
+                                                    const url = getMempoolUrl(
+                                                        `/address/${wallet.address}`
                                                     )
-                                                    const version =
-                                                        process.env
-                                                            .NEXT_PUBLIC_SYRON_VERSION
-                                                    if (version === 'testnet') {
-                                                        url = new URL(
-                                                            `https://mempool.space/testnet4/address/${btc_wallet?.btc_addr}`
-                                                        )
-                                                    }
                                                     window.open(url)
                                                 }}
                                             >
-                                                Wallet History ↗
+                                                Wallet Explorer ↗
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> */}
 
                                     <div className={styles.subtitleLabel}>
                                         {/* <div className={styles.iconContainer}>
@@ -857,57 +1010,203 @@ function Component() {
                                                 title="Refresh collateral data"
                                             >
                                                 {isRefreshingCollateral ? (
-                                                    <LoadingSpinner size="sm" />
+                                                    <LoadingSpinner size="md" />
                                                 ) : (
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M1 4v6h6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M23 20v-6h-6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
+                                                    <MetallicRefreshIcon />
                                                 )}
                                             </button>
                                         </div>
                                     </div>
                                     <div className={styles.boxWrapperInner}>
+                                        <div className={styles.stepIndicator}>
+                                            <div className={styles.step}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    1
+                                                </span>
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    DEPOSIT
+                                                </span>
+                                            </div>
+                                            <div className={styles.stepArrow}>
+                                                →
+                                            </div>
+                                            <div className={styles.step}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    2
+                                                </span>
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    BORROW
+                                                </span>
+                                            </div>
+                                        </div>
                                         <div className={styles.txtRowsInfo}>
+                                            <div className={styles.stepRow}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    1
+                                                </span>{' '}
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    deposit bitcoin
+                                                </span>
+                                            </div>
                                             To add collateral, send Bitcoin to
                                             your Safety Deposit ₿ox address.
-                                            <br />
-                                            Minimum deposit: 3,000 sats (0.00003
-                                            BTC).
-                                            <br />
-                                            <br />
-                                            <span>
-                                                <strong>Quick tip:</strong> Only
-                                                UTXOs ≥ 3,000 sats count as
-                                                collateral.
-                                                <br />
-                                                Smaller amounts are reserved for
-                                                fees.
+                                            <br />- Minimum deposit: 3,000 sats
+                                            (0.00003 BTC).
+                                            <div className={styles.buttons}>
+                                                <div
+                                                    className={
+                                                        styles.buttonLabel
+                                                    }
+                                                >
+                                                    <button
+                                                        onClick={
+                                                            updateDepositBTC
+                                                        }
+                                                        className={`button primary ${styles.mainButton}`}
+                                                    >
+                                                        <span
+                                                            className={
+                                                                styles.mainButtonIcon
+                                                            }
+                                                        >
+                                                            ₿
+                                                        </span>
+                                                    </button>
+                                                    <div
+                                                        className={
+                                                            styles.buttonLabelText
+                                                        }
+                                                    >
+                                                        Deposit BTC
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <span className={styles.quickTip}>
+                                                <span
+                                                    style={{
+                                                        display: 'inline-flex',
+                                                        alignItems: 'center',
+                                                        marginRight: 4,
+                                                    }}
+                                                >
+                                                    <svg
+                                                        width="16"
+                                                        height="16"
+                                                        viewBox="0 0 20 20"
+                                                        fill="none"
+                                                        style={{
+                                                            marginRight:
+                                                                '0.35em',
+                                                        }}
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <defs>
+                                                            <radialGradient
+                                                                id="metalGradient"
+                                                                cx="50%"
+                                                                cy="35%"
+                                                                r="70%"
+                                                            >
+                                                                <stop
+                                                                    offset="0%"
+                                                                    stopColor="#f8fafc"
+                                                                />
+                                                                <stop
+                                                                    offset="65%"
+                                                                    stopColor="#94a3b8"
+                                                                />
+                                                                <stop
+                                                                    offset="97%"
+                                                                    stopColor="#64748b"
+                                                                />
+                                                            </radialGradient>
+                                                            <linearGradient
+                                                                id="infoOutlineGradient"
+                                                                x1="0"
+                                                                y1="0"
+                                                                x2="20"
+                                                                y2="20"
+                                                                gradientUnits="userSpaceOnUse"
+                                                            >
+                                                                <stop stopColor="#f8fafc" />
+                                                                <stop
+                                                                    offset="0.45"
+                                                                    stopColor="#e2e8f0"
+                                                                />
+                                                                <stop
+                                                                    offset="0.8"
+                                                                    stopColor="#94a3b8"
+                                                                />
+                                                                <stop
+                                                                    offset="1"
+                                                                    stopColor="#64748b"
+                                                                />
+                                                            </linearGradient>
+                                                            <filter
+                                                                id="metalShadow"
+                                                                x="-20%"
+                                                                y="-20%"
+                                                                width="170%"
+                                                                height="170%"
+                                                            >
+                                                                <feDropShadow
+                                                                    dx="0"
+                                                                    dy="1"
+                                                                    stdDeviation="0.7"
+                                                                    floodColor="rgba(148,163,184,0.14)"
+                                                                />
+                                                                <feDropShadow
+                                                                    dx="0"
+                                                                    dy="0"
+                                                                    stdDeviation="2.1"
+                                                                    floodColor="rgba(255,255,255,0.38)"
+                                                                />
+                                                            </filter>
+                                                        </defs>
+                                                        <circle
+                                                            cx="10"
+                                                            cy="10"
+                                                            r="8"
+                                                            fill="url(#metalGradient)"
+                                                            stroke="url(#infoOutlineGradient)"
+                                                            strokeWidth="1.4"
+                                                            filter="url(#metalShadow)"
+                                                        />
+                                                        <text
+                                                            x="10"
+                                                            y="15"
+                                                            textAnchor="middle"
+                                                            fontSize="10.2"
+                                                            fill="#525875"
+                                                            fontWeight="bold"
+                                                            fontFamily="Arial, Helvetica, sans-serif"
+                                                            filter="url(#metalShadow)"
+                                                        >
+                                                            i
+                                                        </text>
+                                                    </svg>
+                                                </span>
+                                                Deposits under 3,000 sats are
+                                                automatically set aside for
+                                                network fees.
                                             </span>
                                         </div>
                                         <div className={styles.subsection}>
@@ -933,9 +1232,89 @@ function Component() {
                                                 </div>
                                             </div>
                                         </div>
+                                        {Number(satsDeposited.div(1e8)) ===
+                                            0 && (
+                                            <div
+                                                className={
+                                                    styles.placeholderMessage
+                                                }
+                                            >
+                                                <span
+                                                    className={
+                                                        styles.placeholderText
+                                                    }
+                                                >
+                                                    Deposit BTC to get started
+                                                </span>
+                                            </div>
+                                        )}
+                                        <div className={styles.txtRowsInfo}>
+                                            <div className={styles.stepRow}>
+                                                <span
+                                                    className={
+                                                        styles.stepNumber
+                                                    }
+                                                >
+                                                    2
+                                                </span>{' '}
+                                                <span
+                                                    className={styles.stepLabel}
+                                                >
+                                                    BORROW STABLECOIN
+                                                </span>
+                                            </div>
+                                            Borrow SUSD with your Bitcoin
+                                            collateral &mdash; it&rsquo;s
+                                            instantly added to your account
+                                            balance.
+                                            <div className={styles.buttons}>
+                                                <div
+                                                    className={
+                                                        styles.buttonLabel
+                                                    }
+                                                >
+                                                    <button
+                                                        onClick={() =>
+                                                            updateBalance()
+                                                        }
+                                                        className={`button primary ${styles.mainButton} ${
+                                                            isLoading
+                                                                ? 'disabled'
+                                                                : ''
+                                                        }`}
+                                                        disabled={isLoading}
+                                                    >
+                                                        {isLoading ? (
+                                                            <div
+                                                                className={
+                                                                    styles.loading
+                                                                }
+                                                            >
+                                                                <ThreeDots color="white" />
+                                                            </div>
+                                                        ) : (
+                                                            <span
+                                                                className={
+                                                                    styles.mainButtonIcon
+                                                                }
+                                                            >
+                                                                +
+                                                            </span>
+                                                        )}
+                                                    </button>
+                                                    <div
+                                                        className={
+                                                            styles.buttonLabelText
+                                                        }
+                                                    >
+                                                        borrow susd
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | Current collateral
+                                                | Collateral balance
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -1006,7 +1385,7 @@ function Component() {
                                         </div>
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                | Collateralization
+                                                • Collateralization
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -1077,40 +1456,6 @@ function Component() {
                                                 </div>
                                             </div>
                                         )}
-                                        <br />
-                                        <div className={styles.txtRow}>
-                                            Borrow stablecoins against your
-                                            Bitcoin deposits, adding SUSD to
-                                            your account balance.
-                                        </div>
-                                        <div className={styles.buttons}>
-                                            <div className={styles.buttonLabel}>
-                                                <button
-                                                    onClick={() =>
-                                                        updateBalance()
-                                                    }
-                                                    className={`button ${
-                                                        isLoading
-                                                            ? 'disabled'
-                                                            : 'secondary'
-                                                    }`}
-                                                >
-                                                    {isLoading ? (
-                                                        <div
-                                                            className={
-                                                                styles.loading
-                                                            }
-                                                        >
-                                                            Loading
-                                                            <ThreeDots color="black" />
-                                                        </div>
-                                                    ) : (
-                                                        <>+</>
-                                                    )}
-                                                </button>
-                                                <div>borrow susd</div>
-                                            </div>
-                                        </div>
                                     </div>
 
                                     <div className={styles.subtitleLabel}>
@@ -1132,37 +1477,9 @@ function Component() {
                                                 title="Refresh account balance"
                                             >
                                                 {isRefreshingBalance ? (
-                                                    <LoadingSpinner size="sm" />
+                                                    <LoadingSpinner size="md" />
                                                 ) : (
-                                                    <svg
-                                                        width="16"
-                                                        height="16"
-                                                        viewBox="0 0 24 24"
-                                                        fill="none"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                    >
-                                                        <path
-                                                            d="M1 4v6h6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M23 20v-6h-6"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                        <path
-                                                            d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        />
-                                                    </svg>
+                                                    <MetallicRefreshIcon />
                                                 )}
                                             </button>
                                         </div>
@@ -1171,7 +1488,7 @@ function Component() {
                                         {/* @dev Subsection Balance */}
                                         <div className={styles.subsection}>
                                             <div className={styles.info}>
-                                                SUSD balance
+                                                | SUSD balance
                                             </div>
                                             <div className={styles.value}>
                                                 <span className={styles.color}>
@@ -1195,138 +1512,190 @@ function Component() {
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
-                                                    onClick={() =>
-                                                        updateWithdraw('BRC-20')
-                                                    }
+                                                    onClick={updateDepositRunes}
+                                                    className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                >
+                                                    <i className="ri-align-bottom"></i>
+                                                </button>
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.buttonLabelText
                                                     }
                                                 >
-                                                    ↗
-                                                </button>
-                                                <div>Withdraw BRC-20</div>
+                                                    Deposit RUNES
+                                                </div>
                                             </div>
                                         </div>
+                                        <div
+                                            className={styles.buttonSeparator}
+                                        />
                                         <div className={styles.buttons}>
                                             <div className={styles.buttonLabel}>
                                                 <button
                                                     onClick={() =>
                                                         updateWithdraw('RUNES')
                                                     }
+                                                    className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                >
+                                                    <i className="ri-align-top"></i>
+                                                </button>
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.buttonLabelText
                                                     }
                                                 >
-                                                    ↗
-                                                </button>
-                                                <div>Withdraw RUNES</div>
+                                                    Withdraw RUNES
+                                                </div>
                                             </div>
                                         </div>
-                                        <div className={styles.buttons}>
-                                            <div className={styles.buttonLabel}>
-                                                <button
-                                                    onClick={updateDepositRunes}
+                                        {wallet.type === 'unisat' && (
+                                            <div className={styles.buttons}>
+                                                <div
                                                     className={
-                                                        'button secondary'
+                                                        styles.buttonLabel
                                                     }
                                                 >
-                                                    ↓
-                                                </button>
-                                                <div>Deposit RUNES</div>
+                                                    <button
+                                                        onClick={() =>
+                                                            updateWithdraw(
+                                                                'BRC-20'
+                                                            )
+                                                        }
+                                                        className={`${styles.mechanicalButton} ${styles.mechanicalWithdraw}`}
+                                                    >
+                                                        <i className="ri-arrow-up-long-line"></i>
+                                                    </button>
+                                                    <div
+                                                        className={
+                                                            styles.buttonLabelText
+                                                        }
+                                                    >
+                                                        Withdraw BRC-20
+                                                    </div>
+                                                </div>
                                             </div>
-                                        </div>
+                                        )}
                                     </div>
                                     {!isIdentified && (
                                         <div className={styles.subtitleLabel}>
-                                            Sign in for more features
+                                            Unlock more features — sign in with
+                                            your wallet
                                         </div>
                                     )}
                                     <div className={styles.boxWrapperInner}>
-                                        <div className={styles.subsectionSIWB}>
-                                            <div className={styles.buttons}>
-                                                {!isIdentified ? (
-                                                    <AuthGuard>
-                                                        <></>
-                                                    </AuthGuard>
-                                                ) : (
-                                                    <>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={() =>
-                                                                    updateSend(
-                                                                        false
-                                                                    )
+                                        <div
+                                            className={
+                                                isIdentified
+                                                    ? ''
+                                                    : styles.secondaryCardNotSignedIn
+                                            }
+                                        >
+                                            <div
+                                                className={
+                                                    styles.subsectionSIWB
+                                                }
+                                            >
+                                                <div className={styles.buttons}>
+                                                    {!isIdentified ? (
+                                                        <AuthGuard>
+                                                            <></>
+                                                        </AuthGuard>
+                                                    ) : (
+                                                        <>
+                                                            <div
+                                                                className={
+                                                                    styles.buttonLabel
                                                                 }
-                                                                className={`button secondary`}
                                                             >
-                                                                ↗
-                                                            </button>
-                                                            <div>send susd</div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        ></div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={
-                                                                    updateBuy
-                                                                }
-                                                                className={`button secondary`}
-                                                            >
-                                                                ₿
-                                                            </button>
-                                                            <div>
-                                                                buy bitcoin
+                                                                <button
+                                                                    onClick={() =>
+                                                                        updateSend(
+                                                                            false
+                                                                        )
+                                                                    }
+                                                                    className={`${styles.mechanicalButton} ${styles.mechanicalAction}`}
+                                                                >
+                                                                    <i className="ri-flashlight-line"></i>
+                                                                </button>
+                                                                <div
+                                                                    className={
+                                                                        styles.buttonLabelText
+                                                                    }
+                                                                >
+                                                                    send susd
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonSeparator
-                                                            }
-                                                        ></div>
-                                                        <div
-                                                            className={
-                                                                styles.buttonLabel
-                                                            }
-                                                        >
-                                                            <button
-                                                                onClick={
-                                                                    handleRedeem
+                                                            <div
+                                                                className={
+                                                                    styles.buttonSeparator
                                                                 }
-                                                                className={`button ${
-                                                                    isRedeeming
-                                                                        ? 'disabled'
-                                                                        : 'secondary'
-                                                                }`}
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.buttonLabel
+                                                                }
                                                             >
-                                                                {isRedeeming ? (
-                                                                    <div
-                                                                        className={
-                                                                            styles.loading
-                                                                        }
-                                                                    >
-                                                                        Loading
-                                                                        <ThreeDots color="black" />
-                                                                    </div>
-                                                                ) : (
-                                                                    <>-</>
-                                                                )}
-                                                            </button>
-                                                            <div>
-                                                                redeem btc
+                                                                <button
+                                                                    onClick={
+                                                                        updateBuy
+                                                                    }
+                                                                    className={`${styles.mechanicalButton} ${styles.mechanicalAction}`}
+                                                                >
+                                                                    ₿
+                                                                </button>
+                                                                <div
+                                                                    className={
+                                                                        styles.buttonLabelText
+                                                                    }
+                                                                >
+                                                                    buy bitcoin
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                        {/* <button
+                                                            <div
+                                                                className={
+                                                                    styles.buttonSeparator
+                                                                }
+                                                            />
+                                                            <div
+                                                                className={
+                                                                    styles.buttonLabel
+                                                                }
+                                                            >
+                                                                <button
+                                                                    onClick={
+                                                                        handleRedeem
+                                                                    }
+                                                                    className={`${styles.mechanicalButton} ${styles.mechanicalAction} ${
+                                                                        isRedeeming
+                                                                            ? styles.mechanicalDisabled
+                                                                            : ''
+                                                                    }`}
+                                                                    disabled={
+                                                                        isRedeeming
+                                                                    }
+                                                                >
+                                                                    {isRedeeming ? (
+                                                                        <div
+                                                                            className={
+                                                                                styles.loading
+                                                                            }
+                                                                        >
+                                                                            Loading
+                                                                            <ThreeDots color="black" />
+                                                                        </div>
+                                                                    ) : (
+                                                                        <i className="ri-user-minus-line"></i>
+                                                                    )}
+                                                                </button>
+                                                                <div
+                                                                    className={
+                                                                        styles.buttonLabelText
+                                                                    }
+                                                                >
+                                                                    redeem btc
+                                                                </div>
+                                                            </div>
+                                                            {/* <button
                                                             onClick={() =>
                                                                 updateSend(true)
                                                             }
@@ -1335,16 +1704,17 @@ function Component() {
                                                             send syron to icp
                                                             address
                                                         </button> */}
-                                                    </>
-                                                )}
+                                                        </>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </div>
-                                        {/* <div className={styles.txtRow}>
+                                            {/* <div className={styles.txtRow}>
                                             To buy BTC with your &apos;Available
                                             SUSD balance&apos;, make sure to
                                             Sign In With Bitcoin & click the
                                             &apos;Buy BTC&apos; button.
                                         </div> */}
+                                        </div>
                                     </div>
                                 </>
                             ) : (
@@ -1355,7 +1725,7 @@ function Component() {
                         </>
                     ) : (
                         <div style={{ fontSize: '0.8rem' }}>
-                            Connect Wallet to access your Tyron account
+                            Connect Wallet to access your Tyron Account
                         </div>
                     )}
                 </div>
@@ -1404,7 +1774,7 @@ function Component() {
                         or Runes:
                     </div>
                     <br /> */}
-                    <div className={styles.tabWrapper}>
+                    {/* <div className={styles.tabWrapper}>
                         <div
                             onClick={() =>
                                 active !== 'GetSyron'
@@ -1447,7 +1817,7 @@ function Component() {
                             </div>
                             mint RUNE•DOLLAR
                         </div>
-                        {/* <div
+                        <div
                             onClick={() =>
                                 //toast.info('Coming soon')
                                 active !== 'LiquidSyron'
@@ -1461,15 +1831,15 @@ function Component() {
                             }
                         >
                             <div className={styles.iconGoldContainer}>
-                                    <Image
-                                        src={icoEarn}
-                                        alt={'earn-bitcoin'}
-                                        className={styles.icon}
-                                    />
-                                </div>
+                                <Image
+                                    src={icoEarn}
+                                    alt={'earn-bitcoin'}
+                                    className={styles.icon}
+                                />
+                            </div>
                             Earn Bitcoin
-                        </div> */}
-                    </div>
+                        </div>
+                    </div> */}
 
                     {active === 'GetSyronIsOff' && (
                         <div className={styles.cardSub}>
@@ -1479,6 +1849,7 @@ function Component() {
                                     startPair={start_pair}
                                 />
                             </div>
+                            Earn Bitcoin
                         </div>
                     )}
                     {active === 'GetSyronRunesIsOff' && (
@@ -1502,6 +1873,8 @@ function Component() {
                         </div>
                     )}
                 </div>
+
+                {isWalletConnected && <SessionTransactions />}
             </div>
         )
     }

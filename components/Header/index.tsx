@@ -4,8 +4,8 @@ import { useRouter } from 'next/router'
 import React, { useState, useEffect } from 'react'
 import { toast, ToastContainer } from 'react-toastify'
 import {
-    // Connect,
-    Dashboard,
+    WalletConnection,
+    // Dashboard,
     Logo,
     Menu,
     SearchBar,
@@ -47,7 +47,7 @@ import { RootState } from '../../src/app/reducers'
 import toastTheme from '../../src/hooks/toastTheme'
 import { useStore } from 'react-stores'
 import Image from 'next/image'
-import SyronLogo from '../../src/assets/logos/syron_concrete.png'
+import SyronLogo from '../../src/assets/logos/runes_of_syron.png'
 
 function Header() {
     const Router = useRouter()
@@ -294,16 +294,25 @@ function Header() {
                             <div className={styles.logo}>
                                 <Logo />
                             </div>
-                            <Dashboard />
-                            {/* <Connect /> */}
+                            {/* <Dashboard /> */}
+                            <WalletConnection />
                         </div>
-                        <div className={styles.footer}>
-                            <Lang />
+                        <div
+                            onClick={() =>
+                                window.open(
+                                    'https://blog.tyrondao.org/governance/',
+                                    '_blank'
+                                )
+                            }
+                            className={styles.footer}
+                        >
+                            {/* <Lang /> */}
                             <div className={styles.logoWrapper}>
                                 <Image
                                     src={SyronLogo}
                                     alt="syron-logo"
                                     className={styles.syronLogo}
+                                    priority
                                 />
                             </div>
                         </div>

@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useSiwbIdentity } from 'ic-use-siwb-identity'
-import { Button } from 'antd'
 import Spinner from './Spinner'
+import { useWalletInfoStore } from '../src/store/wallet_info'
+import { WalletProviderKey } from 'ic-use-siwb-identity/dist/wallet'
+import styles from './AuthGuard.module.scss'
 
 type AuthGuardProps = {
     children: React.ReactNode
@@ -21,81 +23,95 @@ export default function AuthGuard({ children }: AuthGuardProps) {
         connectedBtcAddress,
         identity,
     } = useSiwbIdentity()
+    const { wallet } = useWalletInfoStore()
 
     const [loading, setLoading] = useState<boolean>(false)
     const [manually, setManually] = useState<boolean>(false)
-    const [addressRes, setAddressRes] = useState<string>('')
 
-    useEffect(() => {
-        clear()
-    }, [])
+    const walletProvider = useMemo(
+        () =>
+            wallet.type === 'okx'
+                ? 'okxwallet.bitcoin'
+                : (wallet.type as WalletProviderKey),
+        [wallet.type]
+    )
 
-    // useEffect(() => {
-    //     console.log({ isInitializing, identity })
-    // }, [isInitializing, identity])
+    const attemptLogin = useCallback(async () => {
+        setLoading(true)
+        try {
+            await login()
+        } catch (error: any) {
+            console.error('SIWB login failed.', error)
+            clear()
+        } finally {
+            setManually(false)
+            setLoading(false)
+        }
+    }, [clear, login])
 
-    useEffect(() => {
+    const ensurePreparedLogin = useCallback(() => {
         if (!isPrepareLoginIdle) return
-        const address = getAddress()
 
-        if (address) {
-            setAddressRes(address)
+        let address: string | undefined
+        try {
+            address = getAddress()
+        } catch (error) {
+            console.error('Failed to get address:', error)
+            return
+        }
+
+        if (!address) return
+
+        try {
             prepareLogin()
-            if (connectedBtcAddress && !identity && manually) {
-                ;(async () => {
-                    setLoading(true)
-                    try {
-                        await login()
-                        setManually(false)
-                    } catch (error: any) {
-                        console.error('Sign in failed - ', error)
-                    } finally {
-                        setAddressRes('')
-                        setLoading(false)
-                    }
-                })()
-            }
+        } catch (error) {
+            console.error('Failed to prepare login:', error)
+            setLoading(false)
+            return
+        }
+
+        if (connectedBtcAddress && !identity && manually) {
+            void attemptLogin()
         }
     }, [
-        prepareLogin,
-        isPrepareLoginIdle,
-        getAddress,
-        login,
+        attemptLogin,
         connectedBtcAddress,
+        getAddress,
         identity,
+        isPrepareLoginIdle,
         manually,
+        prepareLogin,
     ])
 
     useEffect(() => {
+        ensurePreparedLogin()
+    }, [ensurePreparedLogin])
+
+    useEffect(() => {
         if (prepareLoginError) {
-            console.error('Failed to prepare login')
+            console.error('Failed to prepare login:', prepareLoginError)
+            setLoading(false)
         }
     }, [prepareLoginError])
 
     useEffect(() => {
         if (loginError) {
-            console.error('Failed to login')
+            console.error('Failed to login:', loginError)
+            setLoading(false)
         }
     }, [loginError])
 
-    const handleClick = async () => {
+    const handleClick = useCallback(async () => {
         try {
             setLoading(true)
-            await setWalletProvider('unisat')
+            console.log('Setting wallet provider:', walletProvider)
+            await setWalletProvider(walletProvider)
             setManually(true)
-
-            setTimeout(async () => {
-                if (addressRes.length === 0) {
-                    await setWalletProvider('unisat')
-                    setManually(true)
-                }
-            }, 100)
         } catch (error) {
-            console.error('Failed to sign in')
-        } finally {
+            console.error('Failed to set wallet provider:', error)
             setLoading(false)
         }
-    }
+    }, [setWalletProvider, walletProvider])
 
     if (isInitializing) {
         return null
@@ -104,15 +120,14 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     if (!isInitializing && !identity) {
         return (
             <>
-                <Button
-                    key="unisat"
-                    className={'button secondary'}
+                <button
+                    type="button"
+                    className={styles.signInButton}
                     onClick={handleClick}
                     disabled={loading}
-                    block
                 >
-                    {!loading ? <>Sign in</> : <Spinner />}
-                </Button>
+                    {!loading ? <>Sign in 🔑</> : <Spinner />}
+                </button>
             </>
         )
     }

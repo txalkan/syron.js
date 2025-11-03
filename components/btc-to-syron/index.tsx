@@ -1,12 +1,9 @@
 import styles from './index.module.scss'
-import _Big from 'big.js'
 import { useStore } from 'react-stores'
-import toformat from 'toformat'
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ThreeDots from '../Spinner/ThreeDots'
 import { toast } from 'react-toastify'
 import {
-    $btc_wallet,
     $icpTx,
     $inscriptionTx,
     $syron,
@@ -24,11 +21,9 @@ import { setTxId, setTxStatusLoading } from '../../src/app/actions'
 import useSyronWithdrawal from '../../src/utils/icp/syron_withdrawal'
 import Spinner from '../Spinner'
 import { VaultPair } from '../../src/types/vault'
-import { UnisatNetworkType } from '../../src/utils/unisat/httpUtils'
-
-const Big = toformat(_Big)
-Big.PE = 999
-const _0 = Big(0)
+import { BitcoinNetworkType } from '../../src/config/wallet'
+import { useWalletInfoStore } from '../../src/store/wallet_info'
+import { Big, _0 } from '../../src/utils/big'
 
 type Prop = {
     testBtc: boolean
@@ -37,10 +32,8 @@ type Prop = {
 
 export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
     const { t } = useTranslation()
-    const dispatch = useDispatch()
-
-    const btcWallet = useStore($btc_wallet)
-    const btcAddr = btcWallet?.btc_addr
+    const { wallet } = useWalletInfoStore()
+    const btcAddr = wallet.address
 
     const [userSSI, setSSI] = useState('')
     useEffect(() => {
@@ -52,12 +45,12 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
     const syron = useStore($syron)
     const [sdb, setSDB] = useState('')
     useEffect(() => {
-        if (syron !== null) {
+        if (syron !== null && btcAddr) {
             console.log('Syron', JSON.stringify(syron, null, 2))
 
             setSDB(syron.sdb)
         }
-    }, [syron?.sdb])
+    }, [syron, btcAddr])
 
     const unisat = (window as any).unisat
     const [unisatInstalled, setUnisatInstalled] = useState(false)
@@ -106,9 +99,9 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
             (syron == null && walletConnected) ||
             icpTx.value === false
         )
-    }, [isLoading, syron, icpTx])
+    }, [isLoading, syron, icpTx, walletConnected])
 
-    const updateWalletBalance = async () => {
+    const updateWalletBalance = useCallback(async () => {
         if (!unisat) return
 
         const [address] = await unisat.getAccounts()
@@ -121,12 +114,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
             await updateWallet(address, Number(balance.confirmed), network)
 
         return address
-    }
-    const updateUserBalance = async () => {
+    }, [unisat, updateWallet])
+
+    const updateUserBalance = useCallback(async () => {
         const ssi = await updateWalletBalance()
         await getBox(ssi)
         console.log('User balance updated')
-    }
+    }, [updateWalletBalance, getBox])
 
     const { btc_to_syron } = useSyronWithdrawal()
 
@@ -152,13 +146,13 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
             // @network move to updateWallet
             const version = process.env.NEXT_PUBLIC_SYRON_VERSION
             if (version === '2') {
-                if (btcWallet?.network != 'BITCOIN_MAINNET') {
-                    console.log('Network:', btcWallet?.network)
+                if (wallet.network != 'BITCOIN_MAINNET') {
+                    console.log('Network:', wallet.network)
                     throw new Error('Use Bitcoin Mainnet')
                 }
             } else if (version === 'testnet') {
-                if (btcWallet?.network != 'BITCOIN_TESTNET4') {
-                    console.log('Network:', btcWallet?.network)
+                if (wallet.network != 'BITCOIN_TESTNET4') {
+                    console.log('Network:', wallet.network)
                     throw new Error('Use Bitcoin Testnet4')
                 }
             }
@@ -268,24 +262,36 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         } finally {
             setIsLoading(false)
         }
-    }, [userSSI, sdb, collateral, amt])
+    }, [
+        userSSI,
+        sdb,
+        collateral,
+        amt,
+        btc_to_syron,
+        inscriptionTx.value,
+        updateUserBalance,
+        wallet.network,
+    ])
 
     const selfRef = useRef<{ accounts: string[] }>({
         accounts: [],
     })
     const self = selfRef.current
-    const handleAccountsChanged = (_accounts: string[]) => {
-        if (self.accounts[0] === _accounts[0]) {
-            // prevent from triggering twice
-            return
-        }
-        self.accounts = _accounts
-        if (_accounts.length > 0) {
-            updateWalletConnected(true)
-        } else {
-            updateWalletConnected(false)
-        }
-    }
+    const handleAccountsChanged = useCallback(
+        (_accounts: string[]) => {
+            if (self.accounts[0] === _accounts[0]) {
+                // prevent from triggering twice
+                return
+            }
+            self.accounts = _accounts
+            if (_accounts.length > 0) {
+                updateWalletConnected(true)
+            } else {
+                updateWalletConnected(false)
+            }
+        },
+        [self]
+    )
 
     const [shouldCheckUnisat, setShouldCheckUnisat] = useState(false)
     useEffect(() => {
@@ -311,7 +317,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         }
 
         if (shouldCheckUnisat) checkUnisat().then()
-    }, [shouldCheckUnisat])
+    }, [shouldCheckUnisat, handleAccountsChanged])
 
     // @dev Once the inscribe-transfer transaction is confirmed, update the display of wallet balance
     useEffect(() => {
@@ -320,7 +326,7 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         }
 
         if (inscriptionTx.value) updateWalletBal()
-    }, [inscriptionTx.value])
+    }, [inscriptionTx.value, updateWalletBalance])
 
     const handleButtonClick = async () => {
         if (testBtc) return toast.warn('Coming soon')
@@ -338,8 +344,8 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
                 const version = process.env.NEXT_PUBLIC_SYRON_VERSION
                 const target_network =
                     version === 'testnet'
-                        ? UnisatNetworkType.testnet4
-                        : UnisatNetworkType.mainnet
+                        ? BitcoinNetworkType.testnet4
+                        : BitcoinNetworkType.mainnet
                 if (network !== target_network) {
                     await unisat.switchChain(target_network)
                     console.log(`Switched to ${target_network}`)
@@ -439,7 +445,15 @@ export var BtcToSyron: React.FC<Prop> = function ({ pair, testBtc }) {
         }
 
         setIsLoading(false)
-    }, [userSSI, sdb, isLoading, inscriptionTx])
+    }, [
+        userSSI,
+        sdb,
+        isLoading,
+        inscriptionTx,
+        btc_to_syron,
+        updateUserBalance,
+        amt,
+    ])
 
     return (
         <div className={styles.container}>

@@ -6,7 +6,8 @@ import {
     addInscriptionInfo,
     updateInscriptionInfo,
 } from '../unisat/inscription-info'
-import { mempoolFeeRate } from '../unisat/httpUtils'
+import { mempoolFeeRate } from '../bitcoin/mempool'
+import { useWalletInfoStore } from '../../store/wallet_info'
 
 Big.PE = 999
 
@@ -18,6 +19,8 @@ function useSyronWithdrawal() {
         sendSyron,
         buyBtc,
     } = useICPHook()
+
+    const { wallet } = useWalletInfoStore()
 
     const btc_to_syron = async (
         ssi: string,
@@ -43,6 +46,7 @@ function useSyronWithdrawal() {
                     sdb,
                     Number(amt),
                     fee,
+                    wallet.type,
                     collateral
                 )
             }
@@ -81,6 +85,7 @@ function useSyronWithdrawal() {
                 sdb,
                 Number(amt),
                 fee_rate,
+                wallet.type,
                 undefined, // collateral - not needed for withdrawal
                 network_fee
             )
@@ -102,7 +107,10 @@ function useSyronWithdrawal() {
 
             await updateInscriptionInfo(txId)
             updateInscriptionTx(null)
-            return res
+            return {
+                txId,
+                result: res,
+            }
         } catch (error) {
             updateIcpTx(false)
             throw error

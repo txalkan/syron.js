@@ -1,8 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
-import { Modal } from 'antd'
-import { Button } from './Button'
+import React from 'react'
+import { Button } from '../Button'
 import {
     Table,
     TableHead,
@@ -10,10 +9,13 @@ import {
     TableRow,
     TableCell,
     TableHeaderCell,
-} from './Table'
-import { TransactionDetails } from './DepositRunes/TransactionDetails'
-import LoadingSpinner from './LoadingSpinner'
-import styles from './DepositRunes.module.scss'
+} from '../Table'
+import { TransactionDetails } from './TransactionDetails'
+import LoadingSpinner from '../LoadingSpinner'
+import styles from './styles.module.scss'
+import gstyles from '../global.module.scss'
+import { CopyButton } from '../CopyButton'
+import { toast } from 'react-toastify'
 
 // Constants
 const STABLE_DEPOSIT_THRESHOLD = 0.1
@@ -62,32 +64,34 @@ interface DepositRunesProps {
 }
 
 export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
-    const [editOpen, showEdit, closeEdit] = useToggleState()
+    const [confirmOpen, showConfirm, closeConfirm] = useToggleState()
     const [balanceToEdit, setBalanceToEdit] =
         React.useState<RunesDepositBalance | null>(null)
     const [runesBalances, setRunesBalances] = React.useState<
         RunesDepositBalance[]
     >([])
     const [isLoading, setIsLoading] = React.useState(false)
-    const [isCopied, setIsCopied] = React.useState(false)
 
     // Runes deposit balance books
-    const runesDepositBalances: RunesDepositBalance[] = [
-        {
-            depositedAmount: '0',
-            runeId: '902268:517', // @review (alpha)
-            runeName: 'RUNE•DOLLAR',
-            summary:
-                'Current runes balance in your Safety Deposit Box. This balance represents the total amount of RUNE•DOLLAR runes available for deposits.',
-        },
-        {
-            depositedAmount: '0',
-            runeId: '908838:2480', // @review (alpha)
-            runeName: 'BTC•DOLLAR',
-            summary:
-                'Current runes balance in your Safety Deposit Box. This balance represents the total amount of BTC•DOLLAR runes available for deposits.',
-        },
-    ]
+    const runesDepositBalances = React.useMemo<RunesDepositBalance[]>(
+        () => [
+            {
+                depositedAmount: '0',
+                runeId: '902268:517', // @review (alpha)
+                runeName: 'RUNE•DOLLAR',
+                summary:
+                    'Current runes balance in your Safety Deposit Box. This balance represents the total amount of RUNE•DOLLAR runes available for deposits.',
+            },
+            {
+                depositedAmount: '0',
+                runeId: '908838:2480', // @review (alpha)
+                runeName: 'BTC•DOLLAR',
+                summary:
+                    'Current runes balance in your Safety Deposit Box. This balance represents the total amount of BTC•DOLLAR runes available for deposits.',
+            },
+        ],
+        []
+    )
 
     // Fetch runes balances from API
     const fetchRunesBalances = React.useCallback(async () => {
@@ -143,7 +147,7 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
         } finally {
             setIsLoading(false)
         }
-    }, [sdbAddress])
+    }, [sdbAddress, runesDepositBalances])
 
     // Fetch balances on component mount and when sdbAddress changes
     React.useEffect(() => {
@@ -195,12 +199,12 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
             setBalanceToEdit(balance)
         }
 
-        showEdit()
+        showConfirm()
     }
 
     const onSave = () => {
         // update balance
-        closeEdit()
+        closeConfirm()
     }
 
     // Use fetched balances or fallback to default
@@ -217,12 +221,12 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
             >
                 <div className={styles.drawerHeader}>
                     <h3>
-                        {editOpen
+                        {confirmOpen
                             ? 'Deposit' + ' ' + balanceToEdit?.runeName
                             : 'Deposit Runes'}
                     </h3>
                     <div className={styles.headerActions}>
-                        {!editOpen && (
+                        {!confirmOpen && (
                             <button
                                 onClick={fetchRunesBalances}
                                 disabled={isLoading}
@@ -268,13 +272,13 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                     </div>
                 </div>
                 <div className={styles.drawerBody}>
-                    {editOpen ? (
+                    {confirmOpen ? (
                         <TransactionDetails
                             runeName={balanceToEdit?.runeName || ''}
                             depositedAmount={
                                 balanceToEdit?.depositedAmount || '0'
                             }
-                            onClose={closeEdit}
+                            onClose={closeConfirm}
                             onConfirm={() => onSave()}
                             sdbAddress={sdbAddress || ''}
                         />
@@ -430,7 +434,7 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                                                             gap: '6px',
                                                                         }}
                                                                     >
-                                                                        <LoadingSpinner size="sm" />
+                                                                        <LoadingSpinner size="md" />
                                                                         <span>
                                                                             Loading...
                                                                         </span>
@@ -619,88 +623,40 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                     To make a new deposit, send a rune transfer
                                     to your Safety Deposit Box address:
                                 </p>
-                                <div className={styles.sdbAddressContainer}>
+                                <div className={gstyles.sdbAddressContainer}>
                                     <code className={styles.sdbAddress}>
                                         {sdbAddress || 'Loading...'}
                                     </code>
-                                    <button
-                                        onClick={() => {
-                                            if (sdbAddress) {
-                                                navigator.clipboard.writeText(
-                                                    sdbAddress
+                                    <CopyButton
+                                        value={sdbAddress}
+                                        copyLabel="Copy SDB address"
+                                        copiedLabel="SDB address copied"
+                                        onCopied={(success) => {
+                                            if (success) {
+                                                toast.success(
+                                                    'SDB address copied to clipboard!'
                                                 )
-                                                setIsCopied(true)
-                                                // Reset the copied state after 2 seconds
-                                                setTimeout(() => {
-                                                    setIsCopied(false)
-                                                }, 2000)
+                                            } else {
+                                                toast.error(
+                                                    'Failed to copy SDB address.'
+                                                )
                                             }
                                         }}
-                                        className={`${styles.copyButton} ${isCopied ? styles.copied : ''}`}
-                                        title={
-                                            isCopied
-                                                ? 'Copied!'
-                                                : 'Copy SDB address'
-                                        }
-                                    >
-                                        {isCopied ? (
-                                            <svg
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M20 6L9 17l-5-5"
-                                                    stroke="#10b981"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        ) : (
-                                            <svg
-                                                width="16"
-                                                height="16"
-                                                viewBox="0 0 24 24"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path
-                                                    d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                                <rect
-                                                    x="8"
-                                                    y="2"
-                                                    width="8"
-                                                    height="4"
-                                                    rx="1"
-                                                    ry="1"
-                                                    stroke="currentColor"
-                                                    strokeWidth="2"
-                                                />
-                                            </svg>
-                                        )}
-                                    </button>
+                                    />
                                 </div>
                             </div>
                         </>
                     )}
                 </div>
                 <div className={styles.drawerFooter}>
-                    {!editOpen && (
+                    {!confirmOpen ? (
                         <>
                             <Button
                                 variant="secondary"
                                 onClick={() => {
                                     if (sdbAddress) {
                                         window.open(
-                                            `https://mempool.space/address/${sdbAddress}`,
+                                            `https://uniscan.cc/address/${sdbAddress}?assets=runes`,
                                             '_blank'
                                         )
                                     }
@@ -740,12 +696,13 @@ export function DepositRunes({ open, onClose, sdbAddress }: DepositRunesProps) {
                                         strokeLinejoin="round"
                                     />
                                 </svg>
-                                View on Mempool
+                                View on UniScan
                             </Button>
-                            {/* <Button variant="secondary" onClick={onClose}>
-                                Close
-                            </Button> */}
                         </>
+                    ) : (
+                        <Button variant="secondary" onClick={closeConfirm}>
+                            Go Back
+                        </Button>
                     )}
                 </div>
             </div>

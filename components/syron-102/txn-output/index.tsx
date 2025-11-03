@@ -19,9 +19,11 @@ export const TransactionOutput: React.FC<Prop> = ({ amount, token }) => {
     return (
         <div className={styles.wrapper}>
             {/* <Image src={icoArrow} alt="arrow-icon" className={styles.img} /> */}
-            <label htmlFor="borrow" className={styles.label}>
-                mint susd
-            </label>
+            {token.symbol === 'Syron SUSD' && (
+                <label htmlFor="borrow" className={styles.label}>
+                    SUSD AMOUNT THAT YOU CAN BORROW
+                </label>
+            )}
             <div className={styles.output}>
                 <input
                     disabled

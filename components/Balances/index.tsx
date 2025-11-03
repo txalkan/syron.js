@@ -57,15 +57,11 @@ import { getIconURL } from '../../src/lib/viewblock'
 import iconTyronSSI from '../../src/assets/icons/ssi_tyron_LPtoken.svg'
 import { $tyron_liquidity } from '../../src/store/shares'
 import { DragonDex } from '../../src/mixins/dex'
-import _Big from 'big.js'
-import toformat from 'toformat'
 import ThreeDots from '../Spinner/ThreeDots'
 
 const provider = new Blockchain()
 const dex = new DragonDex()
-const Big = toformat(_Big)
-Big.PE = 999
-const _0 = Big(0)
+import { Big, _0 } from '../../src/utils/big'
 
 function Component() {
     const resolvedInfo = useStore($resolvedInfo)

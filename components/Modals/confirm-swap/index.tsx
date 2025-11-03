@@ -315,6 +315,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         liquidity_,
         liquidity_zilswap,
         liquidity_aswap,
+        liquidity_tydradex,
     ])
 
     const expectedOutputAfterSleepage = React.useMemo(() => {
@@ -322,7 +323,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         return Big(dex.sleepageCalc(String(limitToken.value)))
             .round(4)
             .toFormat()
-    }, [pair, settings])
+    }, [pair])
 
     const disabled = React.useMemo(() => {
         return loading || Big(priceInfo.impact) > 10
@@ -362,7 +363,7 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         //     console.error('hanldeUpdate', err)
         // }
         setLoading(false)
-    }, [pair, exact])
+    }, [pair])
 
     //@dex-mainnet-dex
     //@ssibrowser
@@ -609,17 +610,22 @@ export var ConfirmSwapModal: React.FC<Prop> = function ({
         setLoading(false)
     }, [
         pair,
-        /*isAllow,*/ exact,
+        exact,
         limit,
         direction,
         wallet,
         onClose,
-        /*approveToken,*/
+        controller_,
+        zilpay_addr,
+        isDEFIx,
+        resolvedDomain,
+        selectedDex,
+        isLight,
     ])
 
     React.useEffect(() => {
         hanldeUpdate()
-    }, [])
+    }, [hanldeUpdate])
 
     return (
         <>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
+import gstyles from '../styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 
@@ -15,7 +16,7 @@ import c3 from '../../../src/assets/icons/checkpoint_3_dark.svg'
 import cs from '../../../src/assets/icons/checkpoint_selected_dark.svg'
 import Close from '../../../src/assets/icons/ic_cross_black.svg'
 import { SyronInput } from '../../syron-102/input/syron-input'
-import Big from 'big.js'
+import { Big, _0 } from '../../../src/utils/big'
 import { CryptoState } from '../../../src/types/vault'
 import ThreeDots from '../../Spinner/ThreeDots'
 import useSyronWithdrawal from '../../../src/utils/icp/syron_withdrawal'
@@ -25,9 +26,14 @@ import { toast } from 'react-toastify'
 import { extractRejectText } from '../../../src/utils/unisat/utils'
 import icoThunder from '../../../src/assets/icons/ssi_icon_thunder.svg'
 import icoCopy from '../../../src/assets/icons/copy.svg'
-
-Big.PE = 999
-const _0 = Big(0)
+import {
+    getWithdrawTransactionKey,
+    WithdrawStablecoin,
+} from '../../../src/utils/transaction-tracker'
+import {
+    formatTransactionKey,
+    useBitcoinTransactionStore,
+} from '../../../src/store/bitcoin_transactions'
 
 type Prop = {
     ssi: string
@@ -55,12 +61,25 @@ var ThisModal: React.FC<Prop> = function ({
     const { t } = useTranslation()
     const { send_syron } = useSyronWithdrawal()
     const { getBox } = useICPHook()
+    // Zustand store for transaction state persistence
+    const {
+        nextNonce,
+        transactionHistory,
+        beginTransaction,
+        updateTransactionRecord,
+    } = useBitcoinTransactionStore()
 
     const [active, setActive] = useState(0)
     const [checkedStep, setCheckedStep] = useState(Array())
     const [isDisabled, setIsDisabled] = React.useState(false)
     const [isLoading, setIsLoading] = React.useState(false)
     const [recipient, setRecipient] = useState('')
+    const [amount, setAmount] = React.useState(_0)
+
+    const transactionType = getWithdrawTransactionKey(WithdrawStablecoin.SUSD)
+    const transactionKey = formatTransactionKey(nextNonce, transactionType)
+    const isTransactionRunning =
+        transactionHistory[transactionKey]?.status === 'pending' || false
 
     useEffect(() => {
         if (balance.eq(0)) {
@@ -69,6 +88,21 @@ var ThisModal: React.FC<Prop> = function ({
             setIsDisabled(false)
         }
     }, [balance])
+
+    // Use Zustand state for transaction status when modal reopens
+    useEffect(() => {
+        if (isTransactionRunning && !isLoading) {
+            setIsLoading(true)
+        }
+    }, [isTransactionRunning, isLoading])
+
+    // Cleanup transaction state when modal unmounts (but keep running transactions)
+    useEffect(() => {
+        return () => {
+            // Don't clear running transactions - let them persist
+            // Only clear if they're completed/failed
+        }
+    }, [])
 
     const menuActive = (id) => {
         setCheckedStep([...checkedStep, active])
@@ -87,7 +121,6 @@ var ThisModal: React.FC<Prop> = function ({
         }
     }
 
-    const [amount, setAmount] = React.useState(_0)
     const handleOnInput = React.useCallback((value: Big) => {
         setAmount(value)
     }, [])
@@ -116,6 +149,10 @@ var ThisModal: React.FC<Prop> = function ({
                 throw new Error('Insufficient Amount')
             }
 
+            const susd_sats = BigInt(amount.mul(100000000).toFixed(0))
+            console.log('susd_sats', susd_sats)
+            beginTransaction(transactionType, susd_sats, recipient)
+
             await send_syron(ssi, recipient, amount, isICP)
             toast.info(
                 <div className={styles.toastMessage}>
@@ -125,6 +162,7 @@ var ThisModal: React.FC<Prop> = function ({
                 { autoClose: false, closeOnClick: true }
             )
             await getBox(ssi)
+            updateTransactionRecord(transactionKey, { status: 'success' })
         } catch (error) {
             console.error('Syron Payment', error)
 
@@ -221,10 +259,24 @@ var ThisModal: React.FC<Prop> = function ({
                     { autoClose: false, closeOnClick: true }
                 )
             }
+            updateTransactionRecord(transactionKey, { status: 'failed' })
         } finally {
             setIsLoading(false)
         }
-    }, [ssi, recipient, sdb, amount, isLoading, isDisabled])
+    }, [
+        ssi,
+        recipient,
+        amount,
+        isLoading,
+        isDisabled,
+        getBox,
+        isICP,
+        send_syron,
+        beginTransaction,
+        updateTransactionRecord,
+        transactionKey,
+        transactionType,
+    ])
 
     // const copyToClipboard = (text: string) => {
     //     navigator.clipboard.writeText(text)
@@ -593,7 +645,7 @@ var ThisModal: React.FC<Prop> = function ({
 
                     <div className={styles.diagramContainer}>
                         <p className={styles.diagramLineLabel}>
-                            YOUR account&apos;s BALANCE (Sender)
+                            YOUR ACCOUNT BALANCE (Sender)
                         </p>
                         <p className={styles.diagramFlowSymbol}>|</p>
                         <p className={styles.diagramFlowSymbol}>Syron SUSD</p>
@@ -621,7 +673,12 @@ var ThisModal: React.FC<Prop> = function ({
                         )}
                     </div>
 
-                    <div className={styles.label}>Recipient&apos;s Address</div>
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>
+                            Recipient&apos;s Address
+                        </div>
+                        <div className={gstyles.headerDivider}></div>
+                    </div>
                     <div className={styles.inputWrapper}>
                         <input
                             type="text"
@@ -661,15 +718,16 @@ var ThisModal: React.FC<Prop> = function ({
 
                     {isICP ? null : (
                         <div className={styles.txt}>
-                            Syron will be transferred from your available SUSD
-                            balance to the recipient&apos;s Tyron account. The
-                            recipient must log in with their Bitcoin personal
-                            wallet to access the funds.
+                            Syron will be transferred from your account balance
+                            to the recipient&apos;s Tyron account. The recipient
+                            must log in with their Bitcoin self-custodial wallet
+                            to access the funds.
                         </div>
                     )}
 
-                    <div className={styles.label}>
-                        amount to transfer (susd)
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>AMOUNT TO transfer</div>
+                        <div className={gstyles.headerDivider}></div>
                     </div>
                     <SyronInput
                         balance={balance}
@@ -677,7 +735,6 @@ var ThisModal: React.FC<Prop> = function ({
                         onInput={handleOnInput}
                         disabled={isDisabled}
                     />
-
                     <div className={styles.btnConfirmWrapper}>
                         <button
                             // className={

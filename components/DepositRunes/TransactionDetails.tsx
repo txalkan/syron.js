@@ -8,14 +8,17 @@ import {
     TableHeaderCell,
 } from '../Table'
 import { useStore } from 'react-stores'
-import { $btc_wallet, $syron } from '../../src/store/syron'
+import { $syron } from '../../src/store/syron'
+import { useWalletInfoStore } from '../../src/store/wallet_info'
 import styles from './TransactionDetails.module.scss'
 import { toast } from 'react-toastify'
 import toastTheme from '../../src/hooks/toastTheme'
-import { mempoolFeeRate, unisatBalance } from '../../src/utils/unisat/httpUtils'
+import { mempoolFeeRate } from '../../src/utils/bitcoin/mempool'
+import { unisatBalance } from '../../src/utils/unisat/httpUtils'
 import { DepositBitcoin } from '../DepositBitcoin'
 import useICPHook from '../../src/hooks/useICP'
 import LoadingSpinner from '../LoadingSpinner'
+import { CopyButton } from '../CopyButton'
 
 // Constants
 const STABLE_DEPOSIT_THRESHOLD = 0.1
@@ -45,8 +48,7 @@ export function TransactionDetails({
     const isDepositable = availableForDeposit > 0
 
     // Get wallet address from store
-    const btcWallet = useStore($btc_wallet)
-    const walletAddress = btcWallet?.btc_addr
+    const { wallet } = useWalletInfoStore()
 
     // Get syron store
     const syron = useStore($syron)
@@ -188,8 +190,8 @@ export function TransactionDetails({
 
     // Handle deposit to Tyron account
     const handleDeposit = React.useCallback(async () => {
-        if (!walletAddress || !isDepositable) {
-            if (!walletAddress) {
+        if (!wallet.address || !isDepositable) {
+            if (!wallet.address) {
                 toast.error(
                     'Wallet not connected. Please connect your wallet first.',
                     { theme: toastTheme(isLight) }
@@ -206,11 +208,11 @@ export function TransactionDetails({
         setDepositStatus({ type: null, message: '' })
 
         try {
-            console.log('Depositing runes:', walletAddress, feeRate)
-            console.log('Wallet address type:', typeof walletAddress)
+            console.log('Depositing runes:', wallet.address, feeRate)
+            console.log('Wallet address type:', typeof wallet.address)
             console.log('Fee rate type:', typeof feeRate)
 
-            const result = await depositSyronRunes(walletAddress, feeRate)
+            const result = await depositSyronRunes(wallet.address, feeRate)
             // const result = { Ok: ['txId'] }
             if ('Ok' in result) {
                 console.log('Deposit successful:', result.Ok)
@@ -327,12 +329,15 @@ export function TransactionDetails({
             setIsDepositing(false)
         }
     }, [
-        walletAddress,
+        wallet.address,
         isDepositable,
         availableForDeposit,
         feeRate,
         gasFeeSats,
         syron,
+        depositSyronRunes,
+        isLight,
+        onConfirm,
     ])
 
     return (
@@ -794,45 +799,24 @@ export function TransactionDetails({
                                 <code className={styles.sdbAddress}>
                                     {sdbAddress || 'Loading...'}
                                 </code>
-                                <button
-                                    onClick={() => {
-                                        if (sdbAddress) {
-                                            navigator.clipboard.writeText(
-                                                sdbAddress
-                                            )
+                                <CopyButton
+                                    value={sdbAddress}
+                                    copyLabel="Copy SDB address"
+                                    copiedLabel="SDB address copied"
+                                    onCopied={(success) => {
+                                        if (success) {
                                             toast.success(
                                                 'SDB address copied to clipboard!',
                                                 { theme: toastTheme(isLight) }
                                             )
+                                        } else {
+                                            toast.error(
+                                                'Failed to copy SDB address.',
+                                                { theme: toastTheme(isLight) }
+                                            )
                                         }
                                     }}
-                                    className={styles.copyButton}
-                                    title="Copy SDB address"
-                                >
-                                    <svg
-                                        width="16"
-                                        height="16"
-                                        viewBox="0 0 24 24"
-                                        fill="none"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                    >
-                                        <rect
-                                            x="9"
-                                            y="9"
-                                            width="13"
-                                            height="13"
-                                            rx="2"
-                                            ry="2"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                        />
-                                        <path
-                                            d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"
-                                            stroke="currentColor"
-                                            strokeWidth="2"
-                                        />
-                                    </svg>
-                                </button>
+                                />
                             </div>
                             {/* <div className={styles.recommendedAmount}>
                                 <p>

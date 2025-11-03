@@ -1,10 +1,16 @@
+import {
+    getMinterAddress,
+    MinterType,
+    getWalletWindow,
+} from '../../config/wallet'
 import { InscribeOrderData } from './api-types'
-import { transaction_status } from './httpUtils'
+import { transaction_status } from '../bitcoin/mempool'
 
 export const inscribe_transfer = async (
     sdb: string,
     brc20_amt: number,
     fee_rate: number,
+    walletType: 'unisat' | 'okx' | null,
     collateral?: number,
     network_fee?: number
 ): Promise<string> => {
@@ -15,23 +21,55 @@ export const inscribe_transfer = async (
     // @brc20
     const ticker = 'SYRON'
 
-    //@network
-    const version = process.env.NEXT_PUBLIC_SYRON_VERSION
-    // Choose minter id based on version
-    let minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET
-    if (version === '2') {
-        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_MAINNET2
-    } else if (version === 'testnet') {
-        minterId = process.env.NEXT_PUBLIC_SYRON_MINTER_TESTNET
+    let receiveAddress = getMinterAddress(MinterType.BRC20)
+
+    console.log(
+        'receiveAddress for inscribe-transfer (brc20 minter)',
+        receiveAddress
+    )
+
+    if (!receiveAddress) {
+        // Enhanced error message with environment variable debugging
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
+        const isTestnet = process.env.NEXT_PUBLIC_SYRON_VERSION === 'testnet'
+        const expectedEnvVar = isTestnet
+            ? 'NEXT_PUBLIC_SYRON_MINTER_TESTNET'
+            : version === '2'
+              ? 'NEXT_PUBLIC_SYRON_MINTER_MAINNET2'
+              : 'NEXT_PUBLIC_SYRON_MINTER_MAINNET'
+
+        console.error('Environment variable debugging:', {
+            version,
+            isTestnet,
+            expectedEnvVar,
+            NEXT_PUBLIC_SYRON_VERSION: process.env.NEXT_PUBLIC_SYRON_VERSION,
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_MAINNET
+                ? 'SET'
+                : 'NOT_SET',
+            NEXT_PUBLIC_SYRON_MINTER_MAINNET2: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_MAINNET2
+                ? 'SET'
+                : 'NOT_SET',
+            NEXT_PUBLIC_SYRON_MINTER_TESTNET: process.env
+                .NEXT_PUBLIC_SYRON_MINTER_TESTNET
+                ? 'SET'
+                : 'NOT_SET',
+        })
+
+        throw new Error(
+            `The receiver address is not defined. Expected environment variable: ${expectedEnvVar}. ` +
+                `Current version: ${version || 'undefined'}, isTestnet: ${isTestnet}. ` +
+                `Please check your environment configuration.`
+        )
     }
-    let receiveAddress = minterId!
-    if (!receiveAddress) throw new Error('The receiver address is not defined')
 
     let devAddress
     let devFee
     if (!collateral) {
         // Choose treasury addr based on version
         let treasury_addr = process.env.NEXT_PUBLIC_SYRON_TREASURY_MAINNET
+        const version = process.env.NEXT_PUBLIC_SYRON_VERSION
         if (version === '2') {
             treasury_addr = process.env.NEXT_PUBLIC_SYRON_TREASURY_MAINNET2
         } else if (version === 'testnet') {
@@ -66,9 +104,9 @@ export const inscribe_transfer = async (
 
     console.log('Inscribe-transfer order: ', JSON.stringify(order, null, 2))
 
-    const unisat = (window as any).unisat
+    const walletWindow = getWalletWindow(walletType)
 
-    const txId = await unisat
+    const txId = await walletWindow
         .sendBitcoin(order.payAddress, order.amount, order.feeRate)
         .then(async (txId1) => {
             console.log(

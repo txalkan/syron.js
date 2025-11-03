@@ -2,7 +2,6 @@ import * as tyron from 'tyron'
 import { toast } from 'react-toastify'
 import { useRouter } from 'next/router'
 import { useSelector } from 'react-redux'
-import * as fetchNode from 'node-fetch'
 import { updateDoc } from '../store/did-doc'
 import { $loading, updateLoading, updateLoadingDoc } from '../store/loading'
 import { RootState } from '../app/reducers'
@@ -458,13 +457,13 @@ function useFetch(resolvedInfo: User) {
                 let tokenUri = arr[id][domainId]
                 let token_uris_: any = []
                 if (tokenUri) {
-                    await fetchNode
-                        .default(`${baseUri}${tokenUri}`)
+                    await fetch(`${baseUri}${tokenUri}`)
                         .then((response) => response.json())
                         .then((data) => {
+                            // Fix: Properly type 'data' as 'any' to resolve lint warning that 'data' is of type 'unknown'.
                             const obj = {
                                 id: tokenUri,
-                                name: data.resource,
+                                name: (data as any).resource,
                                 uri: baseUri,
                                 type: addrName,
                             }

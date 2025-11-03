@@ -1,12 +1,18 @@
 import React from 'react'
 import { Modal, Button, Typography } from 'antd'
 import styles from './index.module.scss'
-import ThreeDots from '../../Spinner/ThreeDots'
 import LoadingSpinner from '../../LoadingSpinner'
+import Image from 'next/image'
 import bitcoinIcon from '../../../src/assets/icons/bitcoin.png'
 import { toast } from 'react-toastify'
 
 const { Text } = Typography
+
+// Define a type for the formatLedgerValue options object
+type LedgerValueOptions = {
+    defaultUnit?: string
+    precision?: number
+}
 
 const ConfirmTransactionModal = ({
     isOpen,
@@ -23,14 +29,14 @@ const ConfirmTransactionModal = ({
     }
 
     // Helper function to extract numeric values from currency strings
-    const extractNumber = (str) => {
+    const extractNumber = (str: any): number => {
         if (!str) return 0
         const match = str.toString().match(/[\d,]+\.?\d*/)
         return match ? parseFloat(match[0].replace(/,/g, '')) : 0
     }
 
     // Calculate total amount to receive
-    const calculateTotalAmount = () => {
+    const calculateTotalAmount = (): string => {
         if (!onDetails.amount) return '0.00'
 
         const amount = extractNumber(onDetails.amount)
@@ -56,6 +62,161 @@ const ConfirmTransactionModal = ({
         const total = Math.max(0, amount - gasFee - daoFee)
 
         return `${total.toFixed(2)}`
+    }
+
+    const toLocaleValue = (value: number, precision?: number) => {
+        if (!Number.isFinite(value)) return '--'
+
+        const resolvedPrecision =
+            typeof precision === 'number'
+                ? precision
+                : Number.isInteger(value)
+                  ? 0
+                  : 2
+
+        if (value === 0) {
+            return new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 0,
+            }).format(value)
+        }
+
+        return new Intl.NumberFormat('en-US', {
+            minimumFractionDigits: resolvedPrecision,
+            maximumFractionDigits: resolvedPrecision,
+        }).format(value)
+    }
+
+    const formatLedgerValue = (
+        rawValue: any,
+        options: LedgerValueOptions = {}
+    ): { amount: string; unit: string } => {
+        if (rawValue === undefined || rawValue === null) {
+            return { amount: '--', unit: options.defaultUnit || '' }
+        }
+
+        const stringValue = rawValue.toString().trim()
+        if (!stringValue) {
+            return { amount: '--', unit: options.defaultUnit || '' }
+        }
+
+        const numericValue = extractNumber(stringValue)
+        if (/(sats)/i.test(stringValue)) {
+            return {
+                amount: toLocaleValue(numericValue, options.precision ?? 0),
+                unit: 'SATS',
+            }
+        }
+        if (/(susd)/i.test(stringValue)) {
+            return {
+                amount: toLocaleValue(
+                    numericValue,
+                    options.precision ??
+                        (Number.isInteger(numericValue) ? 0 : 2)
+                ),
+                unit: 'SUSD',
+            }
+        }
+        if (/(btc)/i.test(stringValue)) {
+            return {
+                amount: toLocaleValue(numericValue, options.precision ?? 8),
+                unit: 'BTC',
+            }
+        }
+        if (stringValue.includes('$')) {
+            return {
+                amount: toLocaleValue(
+                    numericValue,
+                    options.precision ??
+                        (Number.isInteger(numericValue) ? 0 : 2)
+                ),
+                unit: options.defaultUnit || 'SUSD',
+            }
+        }
+
+        return {
+            amount: toLocaleValue(
+                numericValue,
+                options.precision ?? (Number.isInteger(numericValue) ? 0 : 2)
+            ),
+            unit: options.defaultUnit || '',
+        }
+    }
+
+    const amountLabel =
+        onDetails.stablecoin === 'BRC-20'
+            ? 'SYRON BRC-20 AMOUNT'
+            : onDetails.stablecoin === 'RUNES'
+              ? 'RUNE•DOLLAR AMOUNT'
+              : 'SUSD AMOUNT'
+
+    // This typing avoids errors in TS/JS and adds correct structure
+    const ledgerRows: Array<{
+        key: string
+        label: string
+        amount: string
+        unit?: string
+    }> = []
+
+    if (onDetails.amount) {
+        ledgerRows.push({
+            key: 'amount',
+            label: amountLabel,
+            ...formatLedgerValue(onDetails.amount, {
+                defaultUnit: 'SUSD',
+                precision: 2,
+            }),
+        })
+    }
+
+    if (onDetails.btcAmount) {
+        ledgerRows.push({
+            key: 'btcAmount',
+            label: 'BTC ACQUIRED',
+            ...formatLedgerValue(onDetails.btcAmount, {
+                defaultUnit: 'BTC',
+                precision: 8,
+            }),
+        })
+    }
+
+    if (onDetails.fee) {
+        const feeDefaultPrecision =
+            typeof onDetails.fee === 'string' && onDetails.fee.includes('sats')
+                ? 0
+                : 2
+
+        ledgerRows.push({
+            key: 'daoFee',
+            label: 'DAO FEE',
+            ...formatLedgerValue(onDetails.fee, {
+                defaultUnit: 'SUSD',
+                precision: feeDefaultPrecision,
+            }),
+        })
+    }
+
+    if (onDetails.gas) {
+        ledgerRows.push({
+            key: 'networkFee',
+            label: 'MINER FEE',
+            ...formatLedgerValue(onDetails.gas, {
+                defaultUnit: 'SATS',
+                precision: 0,
+            }),
+        })
+    }
+
+    const totalOutputRaw = calculateTotalAmount()
+    const totalOutputFormatted = formatLedgerValue(totalOutputRaw, {
+        precision: 2,
+        defaultUnit: '',
+    }).amount
+
+    const resolveOutputToken = () => {
+        if (onDetails.stablecoin === 'BRC-20') return 'SYRON•BRC-20'
+        if (onDetails.stablecoin === 'RUNES') return 'RUNE•DOLLAR'
+        return 'SUSD'
     }
 
     return (
@@ -85,7 +246,7 @@ const ConfirmTransactionModal = ({
                 <div className={styles.summarySection}>
                     <div className={styles.summaryHeader}>
                         <div className={styles.summaryTitle}>
-                            Transaction Summary
+                            TRANSACTION SUMMARY
                         </div>
                         <button
                             className={styles.reloadButton}
@@ -94,66 +255,43 @@ const ConfirmTransactionModal = ({
                             title="Reload fee information"
                         >
                             {isReloadingFees ? (
-                                <LoadingSpinner size="sm" />
+                                <LoadingSpinner size="md" />
                             ) : (
                                 <span>↻</span>
                             )}
                         </button>
                     </div>
 
-                    {onDetails.amount && (
-                        <div className={styles.summaryRow}>
-                            <span className={styles.label}>
-                                {onDetails.stablecoin === 'BRC-20'
-                                    ? 'SYRON BRC-20 Amount'
-                                    : onDetails.stablecoin === 'RUNES'
-                                      ? 'RUNE•DOLLAR Amount'
-                                      : 'SUSD Amount'}
-                            </span>
-                            <span className={styles.value}>
-                                {onDetails.amount}
-                            </span>
-                        </div>
-                    )}
-
-                    {onDetails.btcAmount && (
-                        <div className={styles.summaryRow}>
-                            <div className={styles.labelGroup}>
-                                <span className={styles.label}>
-                                    BTC Acquired
+                    <div className={styles.ledgerBody}>
+                        {ledgerRows.map((row) => (
+                            <div key={row.key} className={styles.ledgerRow}>
+                                <span className={styles.ledgerLabel}>
+                                    {row.label}
                                 </span>
-                                <span className={styles.subLabel}>
-                                    After 1% max slippage
+                                <span
+                                    className={styles.ledgerDivider}
+                                    aria-hidden
+                                >
+                                    ···········································
                                 </span>
+                                <div className={styles.ledgerValueWrapper}>
+                                    <span className={styles.ledgerAmount}>
+                                        {row.amount}
+                                    </span>
+                                    {row.unit && (
+                                        <span className={styles.ledgerUnit}>
+                                            {row.unit}
+                                        </span>
+                                    )}
+                                </div>
                             </div>
-                            <span className={styles.value}>
-                                {onDetails.btcAmount}
-                            </span>
-                        </div>
-                    )}
-
-                    {onDetails.fee && (
-                        <div className={styles.summaryRow}>
-                            <span className={styles.label}>DAO Fee</span>
-                            <span className={styles.value}>
-                                {onDetails.fee}
-                            </span>
-                        </div>
-                    )}
+                        ))}
+                    </div>
 
                     {onDetails.feeDescription && (
                         <div className={styles.feeDescription}>
-                            <span className={styles.feeText}>
+                            <span className={styles.infoText}>
                                 {onDetails.feeDescription}
-                            </span>
-                        </div>
-                    )}
-
-                    {onDetails.gas && (
-                        <div className={styles.summaryRow}>
-                            <span className={styles.label}>Network Fee ≈</span>
-                            <span className={styles.value}>
-                                {onDetails.gas}
                             </span>
                         </div>
                     )}
@@ -162,21 +300,15 @@ const ConfirmTransactionModal = ({
                 {/* Big Total Amount Display */}
                 {/* Show SUSD amount (green box) only for withdrawals */}
                 {onDetails.title === 'Confirm Transaction' && (
-                    <div className={styles.bigTotalSection}>
-                        <div className={styles.bigTotalLabel}>
-                            Total Amount to Receive
+                    <div className={styles.totalOutputPanel}>
+                        <div className={styles.totalOutputLabel}>
+                            TOTAL RECEIVED
                         </div>
-                        <div className={styles.bigTotalAmount}>
-                            <div className={styles.amountValue}>
-                                {calculateTotalAmount()}
-                            </div>
-                            <div className={styles.tokenName}>
-                                {onDetails.stablecoin === 'BRC-20'
-                                    ? 'SYRON BRC-20'
-                                    : onDetails.stablecoin === 'RUNES'
-                                      ? 'RUNE•DOLLAR'
-                                      : 'SUSD'}
-                            </div>
+                        <div className={styles.totalOutputValue}>
+                            {totalOutputFormatted}
+                        </div>
+                        <div className={styles.totalOutputToken}>
+                            {resolveOutputToken()}
                         </div>
                     </div>
                 )}
@@ -185,7 +317,12 @@ const ConfirmTransactionModal = ({
                 {onDetails.title === 'Confirm BTC Purchase' && (
                     <div className={styles.totalSection}>
                         <div className={styles.bitcoinLogo}>
-                            <img src={bitcoinIcon.src} alt="Bitcoin" />
+                            <Image
+                                src={bitcoinIcon}
+                                alt="Bitcoin"
+                                width={40}
+                                height={40}
+                            />
                         </div>
                         <div className={styles.totalLabel}>
                             You will receive around
@@ -209,7 +346,7 @@ const ConfirmTransactionModal = ({
                 )}
 
                 <div className={styles.confirmationText}>
-                    Are you sure you want to proceed?
+                    Confirm to sign and execute transaction.
                 </div>
 
                 <div className={styles.actionButtons}>
@@ -224,7 +361,7 @@ const ConfirmTransactionModal = ({
                         type="primary"
                         onClick={
                             onDetails.title &&
-                            onDetails.title != 'Confirm BTC Purchase'
+                            onDetails.title !== 'Confirm BTC Purchase'
                                 ? () => {
                                       onConfirm()
                                       onClose()
@@ -234,13 +371,7 @@ const ConfirmTransactionModal = ({
                                       toast.info('Coming soon')
                                   }
                         }
-                        className={
-                            onDetails.title === 'Confirm Transaction'
-                                ? styles.confirmButtonGreen
-                                : onDetails.title === 'Confirm BTC Purchase'
-                                  ? styles.confirmButtonYellow
-                                  : styles.confirmButton
-                        }
+                        className={styles.confirmButton}
                         size="large"
                         loading={isLoading}
                     >

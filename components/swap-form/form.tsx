@@ -104,6 +104,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
     const [selectedDex, setSelectedDex] = React.useState('')
 
     const resolvedInfo = useStore($resolvedInfo)
+    const resolvedAddr = resolvedInfo?.addr ?? null
 
     const resolvedDomain =
         resolvedInfo?.user_domain! && resolvedInfo.user_domain
@@ -118,7 +119,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         ) {
             setIsDEFIx(false)
         }
-    }, [pair, tokensStore, wallet])
+    }, [pair, tokensStore, wallet, resolvedDomain])
 
     const controller_ = effectorStore($doc)?.controller.toLowerCase()
 
@@ -191,7 +192,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
                         pair[1].meta.symbol === 'ZIL'
                     ) {
                         const balance = await getSmartContract(
-                            resolvedInfo?.addr!,
+                            resolvedAddr!,
                             '_balance'
                         )
                         const balance_xwallet = Big(balance!.result._balance)
@@ -320,7 +321,15 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         }
 
         readBalances()
-    }, [pair, tokensStore, wallet, isDEFIx, zilpay_addr])
+    }, [
+        pair,
+        tokensStore,
+        wallet,
+        isDEFIx,
+        zilpay_addr,
+        getSmartContract,
+        resolvedAddr,
+    ])
     //@zilpay
     // const disabled = React.useMemo(() => {
     //     const amount = Big(pair[0].value)
@@ -437,7 +446,7 @@ export const SwapForm: React.FC<Prop> = ({ startPair }) => {
         if (Number(pair[0].value) > 0) {
             handleOnInput(pair[0].value)
         }
-    }, [liquidity, tokensStore])
+    }, [liquidity, tokensStore, handleOnInput, pair])
 
     // @review (zilpay)
     // useEffect(() => {

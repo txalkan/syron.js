@@ -139,7 +139,7 @@ export function AddPoolForm() {
         } catch (error) {
             console.error('exceptions', error)
         }
-    }, [tokensStore, token_index])
+    }, [tokensStore, token_index, dexname])
 
     const hasPool = React.useMemo(() => {
         try {
@@ -156,7 +156,7 @@ export function AddPoolForm() {
             console.error('hasPool', error)
             return false
         }
-    }, [liquidity, tokensStore, token_index])
+    }, [liquidity, tokensStore, token_index, dexname])
 
     // const disabled = React.useMemo(() => {
     //     try {
@@ -247,7 +247,7 @@ export function AddPoolForm() {
         } catch (error) {
             console.error('@ADD-POOL_effect:', String(error))
         }
-    }, [pair_amount, token_index, liquidity, tokensStore])
+    }, [pair_amount, token_index, liquidity, tokensStore, dexname])
 
     //@review: use effect for multidex/multitoken
     let token_base
@@ -292,7 +292,7 @@ export function AddPoolForm() {
             console.error('onlyTyron', error)
             return false
         }
-    }, [previewModal])
+    }, [balance_base, base_amount, token_base.decimals])
 
     return (
         <>

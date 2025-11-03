@@ -38,7 +38,7 @@ function Component() {
     useEffect(() => {
         const ver = checkVersion(resolvedInfo?.version!)
         setVersion(ver)
-    }, [resolvedDomain, resolvedSubdomain])
+    }, [resolvedDomain, resolvedSubdomain, checkVersion, resolvedInfo?.version])
 
     return (
         <div>

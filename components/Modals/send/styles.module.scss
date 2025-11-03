@@ -7,6 +7,7 @@
 
     @media only screen and (max-width: 800px) {
         margin-top: 2rem;
+        margin-bottom: 2rem;
     }
 }
 
@@ -231,16 +232,6 @@
 
 .succeededWithdrawal {
     border: 1px solid #ffff32;
-}
-
-.label {
-    color: #000;
-    padding-top: 2rem;
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-align: left;
-    text-transform: uppercase;
-    font-family: 'Courier New', 'GeistMono', Courier, monospace;
 }
 
 .txt {

@@ -1,9 +1,7 @@
 // @dev (syron)
 
-import Big from 'big.js'
+import { Big } from '../utils/big'
 import { CryptoState, VaultPair } from '../types/vault'
-
-Big.PE = 999
 
 export enum VaultDirection {
     Mint,

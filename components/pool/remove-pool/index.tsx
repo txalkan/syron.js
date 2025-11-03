@@ -130,15 +130,15 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
         }
         setLoading(false)
     }, [
-        base_amt,
         token_amt,
         dao_amt,
-        tokenAddress,
-        userContributions,
-        owner,
         el.token,
-        tokensStore,
         wallet,
+        amt,
+        el.base_lp,
+        el.daobalance,
+        el.token_lp,
+        rangeDAO,
     ])
 
     const hanldeRange = React.useCallback(
@@ -187,16 +187,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 console.error(error)
             }
         },
-        [
-            el,
-            //el.base_lp,
-            //el.token_lp,
-            tokensStore,
-            owner,
-            //token,
-            liquidity,
-            tokenAddress,
-        ]
+        [el, cien]
     )
 
     const hanldeRangeDAO = React.useCallback(
@@ -220,7 +211,7 @@ export const RemovePoolForm: React.FC<Prop> = ({ el }) => {
                 console.error(error)
             }
         },
-        [el, tokensStore, owner, liquidity, tokenAddress]
+        [el, cien]
     )
 
     // React.useEffect(() => {

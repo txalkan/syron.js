@@ -94,7 +94,7 @@ function Header() {
             }
         }
         isTydra(false)
-    }, [])
+    }, [getSmartContract, net, zilpay_addr, resolvedAddr])
 
     return (
         <>

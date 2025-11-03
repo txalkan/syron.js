@@ -34,29 +34,70 @@
     display: flex;
     justify-content: center;
     position: relative;
-    height: fit-content;
+    min-height: 100%;
+    padding: clamp(32px, 5vh, 64px) clamp(12px, 4vw, 40px);
     z-index: 1;
+    background: radial-gradient(
+        circle at top left,
+        rgba(255, 255, 255, 0.18) 0%,
+        rgba(20, 20, 20, 0.1) 55%,
+        transparent 100%
+    );
 
     @media only screen and (max-width: 800px) {
-        margin-top: 2rem;
+        padding: clamp(24px, 6vh, 48px) 16px;
     }
 }
 
 .innerContainer {
-    box-shadow: 1px 1px 2px rgba(255, 255, 50, 0.5);
-    background: #dbdbdb; //#2525258c;
-
+    position: relative;
+    display: flex;
     flex-direction: column;
-    padding: 7%;
-    border-radius: 11px;
+    padding: clamp(40px, 6vw, 72px);
+    border-radius: 22px;
+    border: 2px solid rgba(10, 10, 10, 0.85);
+    background: linear-gradient(
+        145deg,
+        rgba(255, 255, 255, 0.2),
+        rgba(235, 235, 235, 0.06)
+    );
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    box-shadow:
+        24px 24px 0 rgba(12, 12, 12, 0.85),
+        0 40px 90px rgba(12, 12, 12, 0.35);
+    overflow: hidden;
 
-    width: 100%; /* Default: Full width for smaller screens */
-    @media only screen and (min-width: 800px) {
-        width: 800px; /* Fixed width for screens wider than 500px */
-    }
+    width: min(860px, 100%);
 
     @media only screen and (max-width: 640px) {
-        padding: 5% 5% 8% 5%;
+        padding: clamp(28px, 7vw, 56px) clamp(20px, 5vw, 40px)
+            clamp(36px, 8vw, 64px);
+        border-radius: 18px;
+        box-shadow:
+            16px 16px 0 rgba(12, 12, 12, 0.75),
+            0 24px 60px rgba(12, 12, 12, 0.25);
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+        border-radius: inherit;
+        background:
+            radial-gradient(
+                circle at 15% 15%,
+                rgba(255, 255, 255, 0.45),
+                transparent 50%
+            ),
+            radial-gradient(
+                circle at 85% 25%,
+                rgba(255, 190, 92, 0.35),
+                transparent 55%
+            );
+        mix-blend-mode: screen;
+        opacity: 0.65;
     }
 }
 
@@ -90,28 +131,111 @@
 }
 
 .transactionStatus {
-    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
-    border: 1px solid #f59e0b;
-    border-radius: 12px;
-    padding: 16px 20px;
-    margin-bottom: 20px;
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 12px;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15);
+    gap: clamp(18px, 4vw, 32px);
+    padding: clamp(26px, 4vw, 40px) clamp(24px, 5.2vw, 46px);
+    margin-bottom: clamp(28px, 5vw, 48px);
+    border-radius: 30px;
+    border: 1.5px solid rgba(48, 48, 48, 0.35);
+    background: linear-gradient(135deg, #d1d1d1 0%, #bcbcbc 100%);
+    backdrop-filter: blur(32px);
+    -webkit-backdrop-filter: blur(32px);
+    box-shadow:
+        0 12px 22px rgba(0, 0, 0, 0.5),
+        0 34px 80px rgba(0, 0, 0, 0.25),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.15);
+    overflow: hidden;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(
+                circle at 12% 18%,
+                rgba(255, 225, 165, 0.48),
+                transparent 58%
+            ),
+            radial-gradient(
+                circle at 86% 24%,
+                rgba(200, 175, 255, 0.32),
+                transparent 60%
+            ),
+            linear-gradient(160deg, rgba(255, 255, 255, 0.22), transparent 65%);
+        mix-blend-mode: screen;
+        opacity: 0.6;
+        pointer-events: none;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: 14px;
+        border-radius: 22px;
+        border: 1px solid rgba(255, 255, 255, 0.18);
+        box-shadow: 0 0 22px rgba(255, 255, 255, 0.14);
+        mix-blend-mode: soft-light;
+        pointer-events: none;
+    }
 
     @media (max-width: 768px) {
-        padding: 14px 16px;
-        margin-bottom: 16px;
-        gap: 10px;
+        border-radius: 24px;
+        padding: clamp(22px, 5.8vw, 36px) clamp(22px, 6.4vw, 38px);
+        gap: clamp(16px, 4.4vw, 26px);
+        box-shadow:
+            0 24px 70px rgba(8, 10, 18, 0.36),
+            14px 14px 0 rgba(24, 26, 34, 0.16),
+            inset 0 0 0 1px rgba(255, 255, 255, 0.24);
     }
 }
 
-.statusIcon {
+.transactionStatus .statusIcon {
     flex-shrink: 0;
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
+    width: clamp(50px, 7.2vw, 74px);
+    height: clamp(50px, 7.2vw, 74px);
+    border-radius: 50%;
+    border: 1.1px solid rgba(34, 36, 44, 0.6);
+    background:
+        radial-gradient(
+            circle at 30% 30%,
+            rgba(255, 255, 255, 0.32),
+            transparent 56%
+        ),
+        linear-gradient(155deg, rgba(44, 46, 58, 0.96), rgba(18, 20, 30, 1));
+    color: rgba(210, 226, 255, 0.88);
+    box-shadow:
+        0 26px 52px rgba(10, 12, 22, 0.42),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.24);
+    position: relative;
+    overflow: hidden;
+}
+
+.transactionStatus .statusIcon::after {
+    content: '';
+    position: absolute;
+    inset: 6px;
+    border-radius: 50%;
+    border: 1px solid rgba(200, 175, 255, 0.55);
+    box-shadow: 0 0 18px rgba(200, 175, 255, 0.28);
+    opacity: 0.7;
+    animation: pulseRing 2s ease-in-out infinite;
+}
+
+@keyframes pulseRing {
+    0%,
+    100% {
+        opacity: 0.6;
+        transform: scale(0.98);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.04);
+    }
 }
 
 .statusContent {
@@ -119,26 +243,28 @@
 }
 
 .statusTitle {
-    font-weight: 600;
-    font-size: 14px;
-    color: #92400e;
-    margin-bottom: 4px;
+    font-weight: 700;
+    font-size: clamp(15px, 2.6vw, 21px);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #ededed;
+    margin-bottom: 10px;
     font-family: 'Courier New', 'GeistMono', Courier, monospace;
-
-    @media (max-width: 768px) {
-        font-size: 13px;
-    }
+    text-shadow:
+        0 2px 6px rgba(12, 15, 24, 0.35),
+        0 0 1px rgba(255, 255, 255, 0.25);
 }
 
 .statusText {
-    font-size: 13px;
-    color: #b45309;
-    line-height: 1.4;
+    font-size: clamp(12px, 2vw, 15px);
+    color: #c8afff;
+    line-height: 1.5;
+    max-width: 36ch;
+    letter-spacing: 0.04em;
     font-family: 'Courier New', 'GeistMono', Courier, monospace;
-
-    @media (max-width: 768px) {
-        font-size: 12px;
-    }
+    text-shadow:
+        0 2px 4px rgba(12, 15, 24, 0.22),
+        0 0 1px rgba(255, 255, 255, 0.2);
 }
 
 .transactionNote {
@@ -640,14 +766,64 @@
     }
 }
 
-.label {
-    color: #000;
-    padding-top: 2rem;
-    font-size: 0.8rem;
-    font-weight: 800;
-    text-align: left;
+.continueButton {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 46px;
+    border-radius: 6px;
+    border: 1px solid rgba(42, 26, 112, 0.8);
+    background: linear-gradient(180deg, #7a52ff 0%, #4c2ca3 100%);
+    box-shadow:
+        0 4px 0 #2f1e66,
+        0 14px 22px rgba(16, 10, 40, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    color: #f5f1ff;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    font-family: 'Courier New', 'GeistMono', Courier, monospace;
+    transition:
+        transform 0.12s ease,
+        box-shadow 0.12s ease;
+}
+
+.continueButton:hover {
+    transform: translateY(-1px);
+    box-shadow:
+        0 6px 0 #2f1e66,
+        0 20px 26px rgba(20, 12, 46, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.25);
+}
+
+.continueButton:active {
+    transform: translateY(2px);
+    box-shadow:
+        inset 0 3px 6px rgba(7, 4, 22, 0.6),
+        0 2px 0 #2f1e66;
+}
+
+.continueButtonDisabled,
+.continueButtonDisabled:hover,
+.continueButtonDisabled:active {
+    cursor: not-allowed;
+    background: linear-gradient(180deg, #4b4960 0%, #2f2d44 100%);
+    border-color: rgba(54, 52, 72, 0.9);
+    box-shadow:
+        inset 0 2px 4px rgba(0, 0, 0, 0.35),
+        0 0 0 transparent;
+    color: rgba(206, 204, 216, 0.45);
+    transform: none;
+}
+
+.continueButton:disabled {
+    cursor: not-allowed;
+}
+
+.continueButton:focus-visible {
+    outline: 2px solid rgba(180, 158, 255, 0.9);
+    outline-offset: 2px;
 }
 
 .diagramContainer {

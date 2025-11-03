@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { Modal } from '../../modal'
 import styles from './styles.module.scss'
+import gstyles from '../styles.module.scss'
 import Image from 'next/image'
 import { useTranslation } from 'next-i18next'
 import Close from '../../../src/assets/icons/ic_cross_black.svg'
@@ -15,14 +16,12 @@ import { toast } from 'react-toastify'
 import { extractRejectText } from '../../../src/utils/unisat/utils'
 import { useStore } from 'react-stores'
 import { $xr } from '../../../src/store/xr'
+import { useWalletInfoStore } from '../../../src/store/wallet_info'
 import { TransactionOutput } from '../../syron-102/txn-output'
-import { mempoolFeeRate } from '../../../src/utils/unisat/httpUtils'
+import { mempoolFeeRate } from '../../../src/utils/bitcoin/mempool'
 import ConfirmTransactionModal from '../confirm-txn'
-import {
-    $btc_wallet,
-    $syron,
-    updateSusdBalance,
-} from '../../../src/store/syron'
+import { getMempoolUrl } from '../../../src/config/wallet'
+import { $syron, updateSusdBalance } from '../../../src/store/syron'
 
 Big.PE = 999
 const _0 = Big(0)
@@ -220,11 +219,21 @@ var ThisModal: React.FC<Prop> = function ({
             setIsConfirmationOpen(false)
             setIsLoading(false)
         }
-    }, [ssi, sdb, amount, btcAmount, isLoading, isDisabled, isTxnRes, isTxnErr])
+    }, [
+        amount,
+        btcAmount,
+        buy_btc,
+        getBox,
+        isDisabled,
+        isLoading,
+        onClose,
+        ssi,
+        syron,
+    ])
 
     const [isConfirmationOpen, setIsConfirmationOpen] = useState(false)
     const [onDetails, setOnDetails] = useState({})
-    const btc_wallet = useStore($btc_wallet)
+    const { wallet } = useWalletInfoStore()
 
     const handleContinue = React.useCallback(async () => {
         if (isDisabled) return
@@ -260,7 +269,7 @@ var ThisModal: React.FC<Prop> = function ({
                 gas: `-${gas_fee.toFixed(8)} BTC`,
                 fee: `-${dao_fee.toFixed(8)} BTC`,
                 total_min: `${total_min.toFixed(8)} BTC`,
-                receiver: btc_wallet?.btc_addr,
+                receiver: wallet.address,
             }
             setOnDetails(details)
 
@@ -315,7 +324,7 @@ var ThisModal: React.FC<Prop> = function ({
                 )
             }
         }
-    }, [isDisabled, btcAmount])
+    }, [isDisabled, btcAmount, amount, wallet.address])
 
     const handleCloseConfirmation = () => {
         setIsConfirmationOpen(false)
@@ -375,7 +384,12 @@ var ThisModal: React.FC<Prop> = function ({
                         </div>
                     </div>
 
-                    <div className={styles.label}>amount to spend (susd)</div>
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>
+                            amount to spend (susd)
+                        </div>
+                        <div className={gstyles.headerDivider}></div>
+                    </div>
                     <SyronInput
                         balance={balance}
                         token={token}
@@ -383,7 +397,12 @@ var ThisModal: React.FC<Prop> = function ({
                         disabled={isDisabled}
                     />
 
-                    <div className={styles.label}>amount to receive (btc)</div>
+                    <div className={gstyles.header}>
+                        <div className={gstyles.label}>
+                            amount to receive (btc)
+                        </div>
+                        <div className={gstyles.headerDivider}></div>
+                    </div>
                     <div className={styles.txtRow}>
                         You will buy the BTC amount shown below and receive it
                         directly in your connected Bitcoin wallet.
@@ -455,17 +474,9 @@ var ThisModal: React.FC<Prop> = function ({
                                         className={styles.link}
                                         onClick={() => {
                                             //@network defaults to mainnet
-                                            let url: URL = new URL(
-                                                `https://mempool.space/tx/${isTxnRes}`
+                                            const url = getMempoolUrl(
+                                                `/tx/${isTxnRes}`
                                             )
-                                            const version =
-                                                process.env
-                                                    .NEXT_PUBLIC_SYRON_VERSION
-                                            if (version === 'testnet') {
-                                                url = new URL(
-                                                    `https://mempool.space/testnet4/tx/${isTxnRes}`
-                                                )
-                                            }
                                             window.open(url)
                                         }}
                                     >
@@ -497,21 +508,13 @@ var ThisModal: React.FC<Prop> = function ({
                                         className={styles.link}
                                         onClick={() => {
                                             //@network defaults to mainnet
-                                            let url: URL = new URL(
-                                                `https://mempool.space/address/${btc_wallet?.btc_addr}`
+                                            const url = getMempoolUrl(
+                                                `/address/${wallet.address}`
                                             )
-                                            const version =
-                                                process.env
-                                                    .NEXT_PUBLIC_SYRON_VERSION
-                                            if (version === 'testnet') {
-                                                url = new URL(
-                                                    `https://mempool.space/testnet4/address/${btc_wallet?.btc_addr}`
-                                                )
-                                            }
                                             window.open(url)
                                         }}
                                     >
-                                        {btc_wallet?.btc_addr}
+                                        {wallet.address}
                                     </div>
                                 </div>
                             )}

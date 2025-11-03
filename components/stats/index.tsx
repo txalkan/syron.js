@@ -91,7 +91,7 @@ function Component() {
             setTyronS$iSupply(String(tyrons$i_supply))
         }
         readSupply()
-    }, [reserves])
+    }, [reserves, daoTotalBalance, net, getSmartContract, pools_])
     const tyron_tvl = tyronReserve ? Big(tyronReserve).div(1e12).round(1) : 0
 
     const s$i_tvl = ssiReserve ? Big(ssiReserve).div(1e18).round(1) : 0

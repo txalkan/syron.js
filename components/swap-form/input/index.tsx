@@ -94,7 +94,7 @@ export const FormInput: React.FC<Prop> = ({
 
         const zils = dex.tokensToZil(value, token)
         return formatNumber(String(zils.mul(rate)), DEFAULT_CURRENCY)
-    }, [settings, value, tokensStore, token])
+    }, [settings, value, token])
 
     const handlePercent = React.useCallback(
         async (n: number) => {
@@ -136,7 +136,7 @@ export const FormInput: React.FC<Prop> = ({
                 })
             }
         },
-        [balance, token, onMax, gasLimit]
+        [balance, token, onMax, isController, isLight]
     )
 
     const handleOnInput = React.useCallback(
