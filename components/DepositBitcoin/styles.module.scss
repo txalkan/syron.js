@@ -30,6 +30,12 @@
     }
 }
 
+:global(.dark) .container {
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
 .drawerContent {
     background: #ffffff;
     width: 600px;
@@ -37,14 +43,14 @@
     height: calc(100vh - 140px); /* Account for header and footer */
     display: flex;
     flex-direction: column;
-    border-left: 1px solid #e5e7eb;
+    border-left: 1px solid rgba(var(--stroke), 0.3);
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 8px 0px;
 
     @media (max-width: 767px) {
         width: 100%;
         max-width: 100%;
         height: calc(100vh - 120px);
-        border: 1px solid #e5e7eb;
+        border: 1px solid rgba(var(--stroke), 0.3);
         box-shadow: rgba(0, 0, 0, 0.15) 0px 8px 24px 0px;
     }
 
@@ -58,7 +64,7 @@
     @include flex-between-row;
     padding: 16px 20px;
     border-bottom: 1px solid #e5e7eb;
-    background-color: #f9fafb;
+    background-color: rgba(var(--bg), 0.5);
 
     h3 {
         margin: 0;
@@ -117,7 +123,7 @@
     flex: 1;
     padding: 20px;
     overflow-y: auto;
-    background-color: #ffffff;
+    background-color: rgba(var(--bg), 0.6);
 
     .bookInfo {
         color: #6b7280;
@@ -155,7 +161,7 @@
     display: flex;
     gap: 12px;
     justify-content: flex-end;
-    background-color: #f9fafb;
+    background-color: rgba(var(--bg), 0.5);
 
     button {
         min-width: 80px;
@@ -561,7 +567,7 @@
 
 .sdbAddressLabel {
     font-size: 14px;
-    color: #374151;
+    color: rgb(var(--txt));
     margin: 0 0 12px 0;
     font-weight: 500;
     text-align: left;
@@ -581,7 +587,7 @@
 .sdbAddress {
     font-family: 'GeistSans', sans-serif !important;
     font-size: 13px;
-    color: #1f2937;
+    color: rgb(var(--txt));
     margin: 0;
     flex: 1;
     word-break: break-all;

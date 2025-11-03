@@ -4,6 +4,7 @@ import { mempoolFeeRate, mempoolUtxos } from './mempool'
 import * as btc from 'bitcoinjs-lib'
 import * as ecc from '@bitcoinerlab/secp256k1'
 import type { Big } from 'big.js'
+import { isMainnetSegwit } from './segwit'
 
 // Initialize ECC library once at module level
 btc.initEccLib(ecc)
@@ -27,8 +28,6 @@ interface DepositPsbtParams {
     feeAmount: bigint
     /** SDB address (recipient of the deposit) */
     sdbAddress: string
-    /** Loading state setter function */
-    setIsLoading: (loading: boolean) => void
 }
 
 interface DepositPsbtResult {
@@ -76,44 +75,15 @@ const validateDepositParams = (
         }
     }
 
-    // Basic address validation (Bitcoin address format)
-    if (
-        !sdbAddress.startsWith('bc1') &&
-        !sdbAddress.startsWith('1') &&
-        !sdbAddress.startsWith('3')
-    ) {
+    // Only support segwit addresses (P2WPKH or P2TR)
+    if (!isMainnetSegwit(sdbAddress)) {
         return {
             valid: false,
-            error: 'Invalid Bitcoin address format',
+            error: 'Invalid Bitcoin address format (only segwit addresses supported)',
         }
     }
 
     return { valid: true }
-}
-
-function isTaprootAddress(addr: string) {
-    return addr.startsWith('bc1p')
-}
-
-function isP2WPKHAddress(addr: string) {
-    return addr.startsWith('bc1') && addr.length === 42
-}
-
-function isLegacyAddress(addr: string) {
-    return addr.startsWith('1') && addr.length >= 26 && addr.length <= 35
-}
-
-function isP2SHAddress(addr: string) {
-    return addr.startsWith('3') && addr.length >= 26 && addr.length <= 35
-}
-
-function isValidBitcoinAddress(addr: string): boolean {
-    return (
-        isTaprootAddress(addr) ||
-        isP2WPKHAddress(addr) ||
-        isLegacyAddress(addr) ||
-        isP2SHAddress(addr)
-    )
 }
 
 function validateUtxo(utxo: Utxo): { valid: boolean; error?: string } {
@@ -138,8 +108,11 @@ function validateUtxo(utxo: Utxo): { valid: boolean; error?: string } {
         }
     }
 
-    if (!utxo.address || !isValidBitcoinAddress(utxo.address)) {
-        return { valid: false, error: 'Invalid Bitcoin address format' }
+    if (!utxo.address || !isMainnetSegwit(utxo.address)) {
+        return {
+            valid: false,
+            error: 'Invalid Bitcoin address format (only segwit addresses supported)',
+        }
     }
 
     if (
@@ -270,11 +243,9 @@ async function signAndPushPsbt(
 const createDepositPsbt = async (
     params: DepositPsbtParams
 ): Promise<DepositPsbtResult> => {
-    const { collateralAmount, feeAmount, sdbAddress, setIsLoading } = params
+    const { collateralAmount, feeAmount, sdbAddress } = params
 
     try {
-        setIsLoading(true)
-
         // Get wallet info
         const { wallet } = useWalletInfoStore.getState()
         if (!wallet || !wallet.type || !wallet.network) {
@@ -317,18 +288,6 @@ const createDepositPsbt = async (
         const btcjsNetwork = getBtcjsNetwork(wallet.network)
 
         if (utxos.length > 0) {
-            console.log(
-                'Creating deposit PSBT (multi-input) with provided utxos/outputs',
-                JSON.stringify(
-                    {
-                        utxoCount: utxos.length,
-                        outputs,
-                    },
-                    null,
-                    2
-                )
-            )
-
             // Validate all UTXOs before building PSBT
             for (const [i, utxo] of utxos.entries()) {
                 const { valid, error } = validateUtxo(utxo)
@@ -345,6 +304,8 @@ const createDepositPsbt = async (
                 outputs,
                 network: btcjsNetwork,
             })
+            console.log('BTC Deposit PSBT', psbt)
+
             const toSignInputs = utxos.map((utxo, index) => {
                 return { index, publicKey: utxo.pubkeyHex }
             })
@@ -378,8 +339,6 @@ const createDepositPsbt = async (
                       ? (error as { message: string }).message
                       : JSON.stringify(error),
         }
-    } finally {
-        setIsLoading(false)
     }
 }
 
@@ -394,24 +353,14 @@ function addrType(addr: string): AddrType {
     return addr.startsWith('bc1p') ? 'p2tr' : 'p2wpkh'
 }
 
-function estimateVbytes(
-    nIn: number,
-    inType: AddrType,
-    nOut: number,
-    outTypes: AddrType[]
-) {
+function estimateVbytes(nIn: number, inType: AddrType, outTypes: AddrType[]) {
     const base = 10
     const inBytes = nIn * IN_VB[inType]
     const outBytes = outTypes.reduce((sum, type) => sum + OUT_VB[type], 0)
-    return (
-        base +
-        inBytes +
-        outBytes +
-        (nOut - outTypes.length) * OUT_VB[outTypes[0]]
-    )
+    return base + inBytes + outBytes
 }
 
-function selectUtxosGreedy(
+function selectUtxos(
     utxos: { txid: string; vout: number; value: number }[],
     target: number,
     feeRate: number,
@@ -428,12 +377,7 @@ function selectUtxosGreedy(
         const nIn = selected.length
 
         const outTypesNoChange = [sdbType, sdbType]
-        const vbytesNoChange = estimateVbytes(
-            nIn,
-            walletType,
-            outTypesNoChange.length,
-            outTypesNoChange
-        )
+        const vbytesNoChange = estimateVbytes(nIn, walletType, outTypesNoChange)
         const feeNoChange = Math.ceil(vbytesNoChange * feeRate)
         const changeNoChange = inSum - target - feeNoChange
         console.log('changeNoChange', changeNoChange)
@@ -444,6 +388,7 @@ function selectUtxosGreedy(
                     inputs: selected,
                     change: 0,
                     fee: feeNoChange,
+                    vbytes: vbytesNoChange,
                 }
             }
         } else {
@@ -451,7 +396,6 @@ function selectUtxosGreedy(
             const vbytesWithChange = estimateVbytes(
                 nIn,
                 walletType,
-                outTypesWithChange.length,
                 outTypesWithChange
             )
             const feeWithChange = Math.ceil(vbytesWithChange * feeRate)
@@ -462,16 +406,18 @@ function selectUtxosGreedy(
                     inputs: selected,
                     change,
                     fee: feeWithChange,
+                    vbytes: vbytesWithChange,
                 }
             }
         }
     }
 
     return {
-        error: 'insufficient funds for target + fee',
+        error: 'Insufficient funds for collateral + fee amount.',
         inputs: [],
         change: 0,
         fee: 0,
+        vbytes: 0,
     }
 }
 
@@ -570,10 +516,11 @@ async function selectNeededUtxos(
         throw new Error('Fee rate is too high, please try again later.')
     }
 
+    // Sort UTXOs by value in descending order (use largest utxos first to minimize fees)
     const sorted = [...mempoolUtxosData].sort((a, b) => b.value - a.value)
 
     const target = Number(depositAmount)
-    const result = selectUtxosGreedy(
+    const result = selectUtxos(
         sorted,
         target,
         feeRate,
@@ -581,7 +528,7 @@ async function selectNeededUtxos(
         addrType(sdbAddress)
     )
 
-    console.log('result', result)
+    console.log('UTXO Selection Result', result)
 
     if ('error' in result) {
         throw new Error(result.error)

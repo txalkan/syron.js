@@ -85,13 +85,8 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
     const [collateralAmount, setCollateralAmount] = React.useState<Big>(_0)
     const [isFeeTooHigh, setIsFeeTooHigh] = React.useState(false)
 
-    // Fetch gas fee on component mount
-    React.useEffect(() => {
-        getGasFee()
-    }, [])
-
     // Function to update gas fee
-    async function getGasFee() {
+    const getGasFee = React.useCallback(async () => {
         setIsLoadingFee(true)
         try {
             const rate = await mempoolFeeRate()
@@ -106,7 +101,24 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
         } finally {
             setIsLoadingFee(false)
         }
-    }
+    }, [])
+
+    // Fetch gas fee on component mount and set up automatic polling
+    React.useEffect(() => {
+        if (!open) return // Don't poll if modal is closed
+
+        // Fetch immediately
+        getGasFee()
+
+        // Set up polling every 60 seconds (same as exchange rate polling)
+        const pollInterval = setInterval(() => {
+            getGasFee()
+        }, 60000) // 60 seconds
+
+        return () => {
+            clearInterval(pollInterval)
+        }
+    }, [open, getGasFee])
 
     // Function to refresh gas fee
     const handleRefreshFee = async () => {
@@ -155,6 +167,7 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
         }
 
         setError(null)
+        setIsLoading(true)
 
         try {
             console.log(
@@ -175,7 +188,6 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                 collateralAmount: BigInt(collateralAmount.toString()),
                 feeAmount: BigInt(feeAmount.toString()),
                 sdbAddress,
-                setIsLoading,
             })
 
             if (result.success) {
@@ -197,6 +209,8 @@ export function DepositBTC({ open, onClose, sdbAddress }: DepositProps) {
                     ? error.message
                     : 'Unknown error occurred'
             )
+        } finally {
+            setIsLoading(false)
         }
     }
 

@@ -45,9 +45,16 @@ export default async function handler(
         const data = await fetchAccountData(id, address)
         response.status(200).json({ data })
     } catch (error) {
-        console.error('@dev get-sdb-addr error:', error)
+        console.error(
+            '@dev get-sdb-addr error.message:',
+            error instanceof Error ? error.message : 'N/A'
+        )
+        console.error(
+            '@dev get-sdb-addr error stack:',
+            error instanceof Error ? error.stack : 'No stack trace'
+        )
         response.status(500).json({
-            error: error instanceof Error ? error.message : 'Unknown error',
+            error: error instanceof Error ? error.message : String(error),
         })
     }
 }
@@ -101,6 +108,7 @@ async function fetchAccountData(id: string, address: string) {
             exchange_rate: account.Ok.exchange_rate.toString(),
         }
     } else {
-        throw new Error(account.Err)
+        console.error('@dev account error:', JSON.stringify(account.Err))
+        throw new Error(JSON.stringify(account.Err))
     }
 }

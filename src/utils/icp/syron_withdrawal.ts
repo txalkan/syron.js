@@ -107,7 +107,10 @@ function useSyronWithdrawal() {
 
             await updateInscriptionInfo(txId)
             updateInscriptionTx(null)
-            return res
+            return {
+                txId,
+                result: res,
+            }
         } catch (error) {
             updateIcpTx(false)
             throw error

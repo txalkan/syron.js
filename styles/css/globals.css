@@ -138,6 +138,7 @@
     --bg-grad-2: 232, 240, 255;
     --glass: 255, 255, 255, 0.65;
     --glass-blur: 22px;
+    --glass-orange-bg: 255, 247, 237, 0.55;
     --stroke: 210, 220, 240;
     --shadow: 0 10px 30px rgba(15, 22, 40, 0.12);
     --purple: 124, 92, 255;
@@ -150,11 +151,12 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --bg: 12, 16, 28;
-        --bg-grad-1: 42, 52, 82;
-        --bg-grad-2: 24, 30, 52;
-        --glass: 24, 26, 40, 0.65;
+        --bg: 30, 35, 55;
+        --bg-grad-1: 50, 58, 85;
+        --bg-grad-2: 40, 45, 70;
+        --glass: 55, 60, 85, 0.55;
         --glass-blur: 24px;
+        --glass-orange-bg: 48, 32, 20, 0.55;
         --stroke: 120, 130, 160;
         --shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
         --purple: 164, 132, 255;
@@ -167,11 +169,12 @@
 }
 
 .dark {
-    --bg: 12, 16, 28;
-    --bg-grad-1: 42, 52, 82;
-    --bg-grad-2: 24, 30, 52;
-    --glass: 24, 26, 40, 0.65;
+    --bg: 30, 35, 55;
+    --bg-grad-1: 50, 58, 85;
+    --bg-grad-2: 40, 45, 70;
+    --glass: 55, 60, 85, 0.55;
     --glass-blur: 24px;
+    --glass-orange-bg: 48, 32, 20, 0.55;
     --stroke: 120, 130, 160;
     --shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
     --purple: 164, 132, 255;

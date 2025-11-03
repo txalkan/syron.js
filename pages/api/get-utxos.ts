@@ -2,34 +2,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import nextCors from 'nextjs-cors'
 import { unisatApi } from '../../src/utils/unisat/api'
-
-/**
- * Bitcoin address validation utility (same as in deposit-psbt.ts)
- */
-function isTaprootAddress(addr: string) {
-    return addr.startsWith('bc1p')
-}
-
-function isP2WPKHAddress(addr: string) {
-    return addr.startsWith('bc1') && addr.length === 42
-}
-
-function isLegacyAddress(addr: string) {
-    return addr.startsWith('1') && addr.length >= 26 && addr.length <= 35
-}
-
-function isP2SHAddress(addr: string) {
-    return addr.startsWith('3') && addr.length >= 26 && addr.length <= 35
-}
-
-function isValidBitcoinAddress(addr: string): boolean {
-    return (
-        isTaprootAddress(addr) ||
-        isP2WPKHAddress(addr) ||
-        isLegacyAddress(addr) ||
-        isP2SHAddress(addr)
-    )
-}
+import { isMainnetSegwit } from '../../src/utils/bitcoin/segwit'
 
 type Data = {
     data?: any[]
@@ -319,7 +292,7 @@ export default async function handler(
         }
 
         // Validate Bitcoin address using the same utility as deposit-psbt.ts
-        if (!isValidBitcoinAddress(address)) {
+        if (!isMainnetSegwit(address)) {
             response.status(400).json({
                 error: 'Invalid Bitcoin address format',
             })
@@ -376,9 +349,8 @@ export default async function handler(
                 utxo.vout >= 0 &&
                 utxo.value > 0 &&
                 utxo.status &&
-                utxo.status.confirmed === true
-                // &&
-                // utxo.value > 546
+                utxo.status.confirmed === true &&
+                utxo.value > 546 // 546 sats is usually the maximum amount of sats used in bitcoin-native assets utxos
             )
         })
 

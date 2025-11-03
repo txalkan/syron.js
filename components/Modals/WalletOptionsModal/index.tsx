@@ -55,30 +55,14 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                 <div className={styles.content}>
                     {/* Show info message when in OKX browser */}
                     {isInOKXBrowser && (
-                        <div
-                            style={{
-                                padding: '12px',
-                                marginBottom: '16px',
-                                backgroundColor: '#f0f9ff',
-                                borderRadius: '8px',
-                                border: '1px solid #bae6fd',
-                            }}
-                        >
-                            <p
-                                style={{
-                                    margin: 0,
-                                    fontSize: '13px',
-                                    color: '#0c4a6e',
-                                    lineHeight: '1.5',
-                                }}
-                            >
+                        <div className={styles.infoMessage}>
+                            <p>
                                 {t(
                                     'You are using OKX Wallet browser. Connect with OKX for the best experience.'
                                 )}
                             </p>
                         </div>
                     )}
-
                     {/* Only show UniSat option if NOT in OKX mobile browser */}
                     {!isInOKXBrowser && (
                         <div className={styles.walletOption}>
@@ -197,7 +181,31 @@ const WalletOptionsModal: React.FC<WalletOptionsModalProps> = ({
                         </div>
                     </div>
                 </div>
-
+                {/* Show reload hint if no wallets are detected */}
+                {!isInOKXBrowser && !isUnisatInstalled && !isOKXInstalled && (
+                    <div
+                        style={{
+                            padding: '12px',
+                            marginBottom: '16px',
+                            background: 'rgba(var(--glass-orange-bg))',
+                            borderRadius: '5px',
+                            backdropFilter: 'blur(7px)',
+                        }}
+                    >
+                        <p
+                            style={{
+                                margin: 0,
+                                fontSize: '0.75rem',
+                                color: 'rgb(var(--txt))',
+                                lineHeight: '1.5',
+                            }}
+                        >
+                            {t(
+                                'If you just installed a wallet extension, please reload the page for it to be detected.'
+                            )}
+                        </p>
+                    </div>
+                )}
                 <div className={styles.legalContainer}>
                     <div className={styles.legalText}>
                         By connecting your wallet, you agree to TyronDAO&apos;s{' '}

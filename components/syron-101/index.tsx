@@ -860,7 +860,7 @@ function Component() {
         return (
             <div className={styles.container}>
                 <div className={styles.heroSection}>
-                    <SyronInfoCard />
+                    <SyronInfoCard theme="classic" />
                     <div className={styles.heroCTA}>
                         <WalletConnection variant="hero" />
                     </div>
@@ -1725,7 +1725,7 @@ function Component() {
                         </>
                     ) : (
                         <div style={{ fontSize: '0.8rem' }}>
-                            Connect Wallet to access your Tyron account
+                            Connect Wallet to access your Tyron Account
                         </div>
                     )}
                 </div>
